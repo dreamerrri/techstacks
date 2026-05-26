@@ -13,7 +13,11 @@
         }
 
         .sidebar {
+<<<<<<< HEAD
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+=======
+            background: linear-gradient(135deg, #22ce9d 0%, #a6f3e0 100%);
+>>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             color: white;
             min-height: 100vh;
             padding: 20px 0;
@@ -68,9 +72,15 @@
             left: 20px;
             right: 20px;
             padding: 10px;
+<<<<<<< HEAD
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.5);
             color: white;
+=======
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(34, 206, 157, 0.7);
+            color: #064e3b;
+>>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             border-radius: 5px;
             cursor: pointer;
             text-align: center;
@@ -100,11 +110,19 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
+<<<<<<< HEAD
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+=======
+            background: linear-gradient(135deg, #22ce9d 0%, #a6f3e0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #065f46;
+>>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             font-weight: bold;
         }
 
@@ -131,6 +149,7 @@
         }
 
         .role-admin {
+<<<<<<< HEAD
             background: #fecaca;
             color: #991b1b;
         }
@@ -143,6 +162,20 @@
         .role-employee {
             background: #d1fae5;
             color: #065f46;
+=======
+            background: #d9f8ef;
+            color: #064e3b;
+        }
+
+        .role-hr {
+            background: #d9f8ef;
+            color: #064e3b;
+        }
+
+        .role-employee {
+            background: #d9f8ef;
+            color: #064e3b;
+>>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
         }
 
         .content {
@@ -269,7 +302,11 @@
 
                 <div class="stats-grid">
                     <div class="stat-card">
+<<<<<<< HEAD
                         <div class="stat-icon" style="color: #667eea;">
+=======
+                        <div class="stat-icon" style="color: #22ce9d;">
+>>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
                             <i class="fas fa-users"></i>
                         </div>
                         <div class="stat-value">245</div>
@@ -301,6 +338,7 @@
                 <div class="card">
                     <h2>Quick Actions</h2>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+<<<<<<< HEAD
                         <button style="padding: 15px; border: 2px solid #667eea; background: white; color: #667eea; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onclick="alert('Add Employee')">
                             <i class="fas fa-user-plus"></i> Add Employee
                         </button>
@@ -311,6 +349,18 @@
                             <i class="fas fa-file-alt"></i> View Reports
                         </button>
                         <button style="padding: 15px; border: 2px solid #667eea; background: white; color: #667eea; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onclick="alert('Manage Leaves')">
+=======
+                        <button style="padding: 15px; border: 2px solid #22ce9d; background: white; color: #22ce9d; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onclick="alert('Add Employee')">
+                            <i class="fas fa-user-plus"></i> Add Employee
+                        </button>
+                        <button style="padding: 15px; border: 2px solid #22ce9d; background: white; color: #22ce9d; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onclick="alert('Process Payroll')">
+                            <i class="fas fa-calculator"></i> Process Payroll
+                        </button>
+                        <button style="padding: 15px; border: 2px solid #22ce9d; background: white; color: #22ce9d; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onclick="alert('View Reports')">
+                            <i class="fas fa-file-alt"></i> View Reports
+                        </button>
+                        <button style="padding: 15px; border: 2px solid #22ce9d; background: white; color: #22ce9d; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onclick="alert('Manage Leaves')">
+>>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
                             <i class="fas fa-calendar-times"></i> Manage Leaves
                         </button>
                     </div>
@@ -335,7 +385,11 @@
                             <td style="padding: 10px 0; color: #6b7280;">Account Status</td>
                             <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">
                                 @if(auth()->user()->is_active)
+<<<<<<< HEAD
                                     <span style="color: #10b981;">
+=======
+                                    <span style="color: #22ce9d;">
+>>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
                                         <i class="fas fa-check-circle"></i> Active
                                     </span>
                                 @else
