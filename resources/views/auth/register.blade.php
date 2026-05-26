@@ -67,8 +67,8 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #34d399;
-            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
+            border-color: #22ce9d;
+            box-shadow: 0 0 0 3px rgba(34, 206, 157, 0.15);
         }
 
         .form-group input::placeholder {
@@ -111,7 +111,7 @@
 
         .strength-bar.strong {
             width: 100%;
-            background: #10b981;
+            background: #22ce9d;
         }
 
         .strength-text {
@@ -132,7 +132,7 @@
         }
 
         .strength-text.strong {
-            color: #10b981;
+            color: #22ce9d;
         }
 
         .password-requirements {
@@ -153,7 +153,7 @@
         }
 
         .requirement.met {
-            color: #10b981;
+            color: #22ce9d;
         }
 
         .requirement i {
@@ -190,7 +190,7 @@
         .register-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #34d399 0%, #2dd4bf 100%);
+            background: linear-gradient(135deg, #22ce9d 0%, #16a085 100%);
             color: white;
             border: none;
             border-radius: 5px;
@@ -203,7 +203,7 @@
 
         .register-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(45, 212, 191, 0.4);
+            box-shadow: 0 5px 20px rgba(34, 206, 157, 0.4);
         }
 
         .register-btn:active {

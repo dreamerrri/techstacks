@@ -34,8 +34,8 @@
         }
 
         .login-left {
-            background: linear-gradient(135deg, #2dd4bf 0%, #86efac 100%);
-            color: #065f46;
+            background: linear-gradient(135deg, #22ce9d 0%, #a6f3e0 100%);
+            color: #064e3b;
             padding: 60px 40px;
             display: flex;
             flex-direction: column;
@@ -118,8 +118,8 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #22ce9d;
+            box-shadow: 0 0 0 3px rgba(34, 206, 157, 0.12);
         }
 
         .form-group input::placeholder {
@@ -144,7 +144,7 @@
         }
 
         .remember-forgot a {
-            color: #10b981;
+            color: #22ce9d;
             text-decoration: none;
             font-weight: 500;
         }
@@ -156,7 +156,7 @@
         .login-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #34d399 0%, #2dd4bf 100%);
+            background: linear-gradient(135deg, #22ce9d 0%, #16a085 100%);
             color: white;
             border: none;
             border-radius: 5px;
@@ -168,7 +168,7 @@
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(45, 212, 191, 0.4);
+            box-shadow: 0 5px 20px rgba(34, 206, 157, 0.4);
         }
 
         .login-btn:active {
@@ -189,9 +189,9 @@
         }
 
         .alert-success {
-            background-color: #dcfce7;
-            color: #15803d;
-            border-left: 4px solid #22c55e;
+            background-color: #d9f8ef;
+            color: #064e3b;
+            border-left: 4px solid #22ce9d;
         }
 
         .error-message {

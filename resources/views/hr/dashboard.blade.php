@@ -13,7 +13,7 @@
         }
 
         .sidebar {
-            background: linear-gradient(135deg, #2dd4bf 0%, #a7f3d0 100%);
+            background: linear-gradient(135deg, #22ce9d 0%, #a6f3e0 100%);
             color: white;
             min-height: 100vh;
             padding: 20px 0;
@@ -68,9 +68,9 @@
             left: 20px;
             right: 20px;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            color: white;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(34, 206, 157, 0.7);
+            color: #064e3b;
             border-radius: 5px;
             cursor: pointer;
             text-align: center;
@@ -100,7 +100,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #2dd4bf 0%, #a7f3d0 100%);
+            background: linear-gradient(135deg, #22ce9d 0%, #a6f3e0 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -128,8 +128,8 @@
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
-            background: #d1fae5;
-            color: #065f46;
+            background: #d9f8ef;
+            color: #064e3b;
         }
 
         .content {
@@ -190,8 +190,8 @@
 
         .hr-badge {
             display: inline-block;
-            background: #d1fae5;
-            color: #065f46;
+            background: #d9f8ef;
+            color: #064e3b;
             padding: 8px 15px;
             border-radius: 20px;
             font-size: 12px;
@@ -296,7 +296,7 @@
                         <div class="stat-label">Pending Requests</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon" style="color: #10b981;">
+                        <div class="stat-icon" style="color: #22ce9d;">
                             <i class="fas fa-chart-pie"></i>
                         </div>
                         <div class="stat-value">7</div>
@@ -341,7 +341,7 @@
                             <td style="padding: 10px 0; color: #6b7280;">Account Status</td>
                             <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">
                                 @if(auth()->user()->is_active)
-                                    <span style="color: #10b981;">
+                                    <span style="color: #22ce9d;">
                                         <i class="fas fa-check-circle"></i> Active
                                     </span>
                                 @else
