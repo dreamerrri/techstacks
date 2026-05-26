@@ -13,7 +13,7 @@
         }
 
         .sidebar {
-            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            background: linear-gradient(135deg, #2dd4bf 0%, #a7f3d0 100%);
             color: white;
             min-height: 100vh;
             padding: 20px 0;
@@ -100,11 +100,11 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            background: linear-gradient(135deg, #2dd4bf 0%, #a7f3d0 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #065f46;
             font-weight: bold;
         }
 
@@ -128,8 +128,8 @@
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
-            background: #bfdbfe;
-            color: #1e40af;
+            background: #d1fae5;
+            color: #065f46;
         }
 
         .content {
@@ -190,8 +190,8 @@
 
         .hr-badge {
             display: inline-block;
-            background: #bfdbfe;
-            color: #1e40af;
+            background: #d1fae5;
+            color: #065f46;
             padding: 8px 15px;
             border-radius: 20px;
             font-size: 12px;

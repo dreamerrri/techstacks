@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -67,8 +67,8 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #34d399;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
         }
 
         .form-group input::placeholder {
@@ -190,7 +190,7 @@
         .register-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #34d399 0%, #2dd4bf 100%);
             color: white;
             border: none;
             border-radius: 5px;
@@ -203,7 +203,7 @@
 
         .register-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 20px rgba(45, 212, 191, 0.4);
         }
 
         .register-btn:active {

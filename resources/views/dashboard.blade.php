@@ -13,7 +13,7 @@
         }
 
         .sidebar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2dd4bf 0%, #a7f3d0 100%);
             color: white;
             min-height: 100vh;
             padding: 20px 0;
@@ -100,11 +100,11 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2dd4bf 0%, #a7f3d0 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #065f46;
             font-weight: bold;
         }
 
@@ -131,13 +131,13 @@
         }
 
         .role-admin {
-            background: #fecaca;
-            color: #991b1b;
+            background: #d1fae5;
+            color: #065f46;
         }
 
         .role-hr {
-            background: #bfdbfe;
-            color: #1e40af;
+            background: #d1fae5;
+            color: #065f46;
         }
 
         .role-employee {

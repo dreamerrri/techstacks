@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -34,8 +34,8 @@
         }
 
         .login-left {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #2dd4bf 0%, #86efac 100%);
+            color: #065f46;
             padding: 60px 40px;
             display: flex;
             flex-direction: column;
@@ -144,7 +144,7 @@
         }
 
         .remember-forgot a {
-            color: #667eea;
+            color: #10b981;
             text-decoration: none;
             font-weight: 500;
         }
@@ -156,7 +156,7 @@
         .login-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #34d399 0%, #2dd4bf 100%);
             color: white;
             border: none;
             border-radius: 5px;
@@ -168,7 +168,7 @@
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 20px rgba(45, 212, 191, 0.4);
         }
 
         .login-btn:active {

@@ -13,7 +13,7 @@
         }
 
         .sidebar {
-            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            background: linear-gradient(135deg, #2dd4bf 0%, #a7f3d0 100%);
             color: white;
             min-height: 100vh;
             padding: 20px 0;
@@ -68,9 +68,9 @@
             left: 20px;
             right: 20px;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            color: white;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(45, 212, 191, 0.7);
+            color: #065f46;
             border-radius: 5px;
             cursor: pointer;
             text-align: center;
@@ -78,7 +78,7 @@
         }
 
         .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 1);
         }
 
         .topbar {
@@ -100,11 +100,11 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            background: linear-gradient(135deg, #2dd4bf 0%, #a7f3d0 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #065f46;
             font-weight: bold;
         }
 
@@ -128,8 +128,8 @@
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
-            background: #fecaca;
-            color: #991b1b;
+            background: #d1fae5;
+            color: #065f46;
         }
 
         .content {
@@ -190,8 +190,8 @@
 
         .admin-badge {
             display: inline-block;
-            background: #fecaca;
-            color: #991b1b;
+            background: #d1fae5;
+            color: #065f46;
             padding: 8px 15px;
             border-radius: 20px;
             font-size: 12px;
