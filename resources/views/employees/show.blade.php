@@ -1,133 +1,109 @@
-{{-- resources/views/employees/show.blade.php --}}
 @extends('layouts.app')
 
 @section('title', $employee->full_name)
 
 @section('content')
-<div class="container mx-auto px-4 py-6 max-w-5xl">
 
-    {{-- Header --}}
-    <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-3">
-            <a href="{{ route('employees.index') }}" class="text-gray-500 hover:text-gray-700">← Back</a>
-            <h1 class="text-2xl font-bold text-gray-800">{{ $employee->full_name }}</h1>
-            <span class="px-2 py-1 rounded text-xs font-medium
-                {{ $employee->employment_status === 'Regular' ? 'bg-green-100 text-green-700' : '' }}
-                {{ $employee->employment_status === 'Probationary' ? 'bg-yellow-100 text-yellow-700' : '' }}
-                {{ $employee->employment_status === 'Contractual' ? 'bg-blue-100 text-blue-700' : '' }}
-                {{ $employee->employment_status === 'Part-time' ? 'bg-gray-100 text-gray-700' : '' }}
-            ">
-                {{ $employee->employment_status }}
-            </span>
-        </div>
-        <div class="flex gap-2">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <a href="{{ route('employees.index') }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
+            <i class="fas fa-arrow-left"></i> Back to Employee List
+        </a>
+        <div style="display:flex; gap:10px;">
             <a href="{{ route('employees.edit', $employee) }}"
-               class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm">
-                Edit
+               style="padding:8px 18px; background:#fef3c7; color:#92400e; border-radius:6px; text-decoration:none; font-size:14px; font-weight:600;">
+                <i class="fas fa-edit"></i> Edit
             </a>
             <form method="POST" action="{{ route('employees.archive', $employee) }}"
                   onsubmit="return confirm('Archive this employee?')">
                 @csrf @method('PATCH')
-                <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm">
-                    Archive
+                <button style="padding:8px 18px; background:#fecaca; color:#991b1b; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">
+                    <i class="fas fa-archive"></i> Archive
                 </button>
             </form>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {{-- Profile Header --}}
+    <div class="card" style="display:flex; align-items:center; gap:20px;">
+        <div style="width:70px; height:70px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:700; flex-shrink:0;">
+            {{ strtoupper(substr($employee->first_name, 0, 1)) }}
+        </div>
+        <div>
+            <h2 style="margin:0 0 4px; font-size:22px;">{{ $employee->full_name }}</h2>
+            <p style="margin:0; color:#6b7280;">{{ $employee->position }} — {{ $employee->department }}</p>
+            <span style="display:inline-block; margin-top:6px; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;
+                {{ $employee->employment_status === 'Regular' ? 'background:#d1fae5; color:#065f46;' : '' }}
+                {{ $employee->employment_status === 'Probationary' ? 'background:#fef3c7; color:#92400e;' : '' }}
+                {{ $employee->employment_status === 'Contractual' ? 'background:#dbeafe; color:#1e40af;' : '' }}
+                {{ $employee->employment_status === 'Part-time' ? 'background:#f3f4f6; color:#374151;' : '' }}
+            ">{{ $employee->employment_status }}</span>
+        </div>
+    </div>
 
-        {{-- Personal Information --}}
-        <div class="bg-white rounded shadow p-5">
-            <h2 class="font-semibold text-gray-700 border-b pb-2 mb-4">Personal Information</h2>
-            <dl class="space-y-3 text-sm">
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Employee ID</dt>
-                    <dd class="font-mono font-medium">{{ $employee->employee_id }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Full Name</dt>
-                    <dd class="font-medium">{{ $employee->full_name }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Birthdate</dt>
-                    <dd>{{ $employee->birthdate->format('F d, Y') }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Gender</dt>
-                    <dd>{{ $employee->gender }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Civil Status</dt>
-                    <dd>{{ $employee->civil_status }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Contact No.</dt>
-                    <dd>{{ $employee->contact_number }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Email</dt>
-                    <dd>{{ $employee->email }}</dd>
-                </div>
-                <div>
-                    <dt class="text-gray-500 mb-1">Address</dt>
-                    <dd>{{ $employee->address }}</dd>
-                </div>
-            </dl>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+        {{-- Personal Info --}}
+        <div class="card">
+            <h2><i class="fas fa-user" style="color:#dc2626;"></i> Personal Information</h2>
+            <table style="width:100%; border-collapse:collapse; font-size:14px;">
+                @foreach([
+                    ['Employee ID', $employee->employee_id],
+                    ['Birthdate', $employee->birthdate->format('F d, Y')],
+                    ['Gender', $employee->gender],
+                    ['Civil Status', $employee->civil_status],
+                    ['Contact No.', $employee->contact_number],
+                    ['Email', $employee->email],
+                    ['Address', $employee->address],
+                ] as [$label, $value])
+                <tr style="border-bottom:1px solid #e5e7eb;">
+                    <td style="padding:10px 0; color:#6b7280; width:40%;">{{ $label }}</td>
+                    <td style="padding:10px 0; font-weight:600; color:#1f2937;">{{ $value }}</td>
+                </tr>
+                @endforeach
+            </table>
         </div>
 
         {{-- Employment Details --}}
-        <div class="bg-white rounded shadow p-5">
-            <h2 class="font-semibold text-gray-700 border-b pb-2 mb-4">Employment Details</h2>
-            <dl class="space-y-3 text-sm">
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Department</dt>
-                    <dd class="font-medium">{{ $employee->department }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Position</dt>
-                    <dd>{{ $employee->position }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Date Hired</dt>
-                    <dd>{{ $employee->date_hired->format('F d, Y') }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Salary Type</dt>
-                    <dd>{{ $employee->salary_type }}</dd>
-                </div>
-                <div class="flex justify-between">
-                    <dt class="text-gray-500">Basic Salary</dt>
-                    <dd class="font-semibold text-green-700">
-                        ₱{{ number_format($employee->basic_salary, 2) }}
-                    </dd>
-                </div>
-            </dl>
+        <div class="card">
+            <h2><i class="fas fa-briefcase" style="color:#dc2626;"></i> Employment Details</h2>
+            <table style="width:100%; border-collapse:collapse; font-size:14px;">
+                @foreach([
+                    ['Department', $employee->department],
+                    ['Position', $employee->position],
+                    ['Date Hired', $employee->date_hired->format('F d, Y')],
+                    ['Salary Type', $employee->salary_type],
+                ] as [$label, $value])
+                <tr style="border-bottom:1px solid #e5e7eb;">
+                    <td style="padding:10px 0; color:#6b7280; width:40%;">{{ $label }}</td>
+                    <td style="padding:10px 0; font-weight:600; color:#1f2937;">{{ $value }}</td>
+                </tr>
+                @endforeach
+                <tr>
+                    <td style="padding:10px 0; color:#6b7280;">Basic Salary</td>
+                    <td style="padding:10px 0; font-weight:700; color:#dc2626; font-size:16px;">₱{{ number_format($employee->basic_salary, 2) }}</td>
+                </tr>
+            </table>
         </div>
 
         {{-- Government Contributions --}}
-        <div class="bg-white rounded shadow p-5 md:col-span-2">
-            <h2 class="font-semibold text-gray-700 border-b pb-2 mb-4">Government Contributions</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div>
-                    <p class="text-gray-500 mb-1">SSS Number</p>
-                    <p class="font-mono font-medium">{{ $employee->sss_number ?? '—' }}</p>
+        <div class="card" style="grid-column:span 2;">
+            <h2><i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions</h2>
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:20px;">
+                @foreach([
+                    ['SSS Number', $employee->sss_number, 'fa-shield-alt'],
+                    ['PhilHealth', $employee->philhealth_number, 'fa-heart'],
+                    ['Pag-IBIG', $employee->pagibig_number, 'fa-home'],
+                    ['TIN Number', $employee->tin_number, 'fa-file-invoice'],
+                ] as [$label, $value, $icon])
+                <div style="background:#f9fafb; padding:16px; border-radius:8px; text-align:center;">
+                    <div style="color:#dc2626; font-size:20px; margin-bottom:8px;"><i class="fas {{ $icon }}"></i></div>
+                    <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">{{ $label }}</div>
+                    <div style="font-weight:600; font-family:monospace; color:#1f2937;">{{ $value ?? '—' }}</div>
                 </div>
-                <div>
-                    <p class="text-gray-500 mb-1">PhilHealth Number</p>
-                    <p class="font-mono font-medium">{{ $employee->philhealth_number ?? '—' }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 mb-1">Pag-IBIG Number</p>
-                    <p class="font-mono font-medium">{{ $employee->pagibig_number ?? '—' }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 mb-1">TIN Number</p>
-                    <p class="font-mono font-medium">{{ $employee->tin_number ?? '—' }}</p>
-                </div>
+                @endforeach
             </div>
         </div>
 
     </div>
-</div>
+
 @endsection
