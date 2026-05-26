@@ -13,11 +13,7 @@
         }
 
         .sidebar {
-<<<<<<< HEAD
-            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-=======
             background: linear-gradient(135deg, #22ce9d 0%, #a6f3e0 100%);
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             color: white;
             min-height: 100vh;
             padding: 20px 0;
@@ -72,15 +68,9 @@
             left: 20px;
             right: 20px;
             padding: 10px;
-<<<<<<< HEAD
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            color: white;
-=======
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(34, 206, 157, 0.7);
             color: #065f46;
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             border-radius: 5px;
             cursor: pointer;
             text-align: center;
@@ -88,11 +78,7 @@
         }
 
         .logout-btn:hover {
-<<<<<<< HEAD
-            background: rgba(255, 255, 255, 0.3);
-=======
             background: rgba(255, 255, 255, 1);
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
         }
 
         .topbar {
@@ -114,19 +100,11 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-<<<<<<< HEAD
-            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-=======
             background: linear-gradient(135deg, #22ce9d 0%, #a6f3e0 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #065f46;
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             font-weight: bold;
         }
 
@@ -150,13 +128,8 @@
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
-<<<<<<< HEAD
-            background: #fecaca;
-            color: #991b1b;
-=======
             background: #d9f8ef;
             color: #064e3b;
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
         }
 
         .content {
@@ -217,13 +190,8 @@
 
         .admin-badge {
             display: inline-block;
-<<<<<<< HEAD
-            background: #fecaca;
-            color: #991b1b;
-=======
             background: #d9f8ef;
             color: #064e3b;
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             padding: 8px 15px;
             border-radius: 20px;
             font-size: 12px;
@@ -373,11 +341,7 @@
                             <td style="padding: 10px 0; color: #6b7280;">Account Status</td>
                             <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">
                                 @if(auth()->user()->is_active)
-<<<<<<< HEAD
-                                    <span style="color: #10b981;">
-=======
                                     <span style="color: #22ce9d;">
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
                                         <i class="fas fa-check-circle"></i> Active
                                     </span>
                                 @else

@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-<<<<<<< HEAD
-=======
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\PasswordValidator;
 use App\Services\JWTTokenService;
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -26,19 +23,6 @@ class AuthController extends Controller
     }
 
     /**
-<<<<<<< HEAD
-     * Handle login attempt
-     */
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        // Attempt to authenticate
-        if (Auth::attempt($credentials)) {
-=======
      * Show registration form
      */
     public function showRegister()
@@ -55,22 +39,11 @@ class AuthController extends Controller
 
         // Attempt to authenticate with secure password validation
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             $user = Auth::user();
 
             // Check if user is active
             if (!$user->isActive()) {
                 Auth::logout();
-<<<<<<< HEAD
-                return back()->with('error', 'Your account has been deactivated. Please contact administrator.');
-            }
-
-            // Update last login
-            $user->update(['last_login_at' => now()]);
-
-            $request->session()->regenerate();
-
-=======
                 $request->session()->invalidate();
                 return back()->with('error', 'Your account has been deactivated. Please contact administrator.');
             }
@@ -87,29 +60,21 @@ class AuthController extends Controller
                 'email' => $user->email,
                 'ip' => $request->ip(),
             ]);
-
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             // Redirect based on role
             return $this->redirectByRole($user);
         }
 
-<<<<<<< HEAD
-=======
         // Log failed login attempt
         \Illuminate\Support\Facades\Log::warning('Failed login attempt', [
             'email' => $credentials['email'],
             'ip' => $request->ip(),
         ]);
-
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
         throw ValidationException::withMessages([
             'email' => ['The provided credentials are incorrect.'],
         ]);
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Handle registration
      */
     public function register(RegisterRequest $request)
@@ -244,7 +209,6 @@ class AuthController extends Controller
     }
 
     /**
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
      * Redirect user based on their role
      */
     private function redirectByRole($user)
@@ -261,14 +225,6 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-<<<<<<< HEAD
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/')->with('success', 'You have been logged out successfully.');
-=======
         $user = Auth::user();
 
         if ($user) {
@@ -306,7 +262,6 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 401);
         }
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
     }
 
     /**

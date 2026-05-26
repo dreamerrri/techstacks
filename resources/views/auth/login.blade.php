@@ -15,11 +15,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-<<<<<<< HEAD
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-=======
             background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -38,13 +34,8 @@
         }
 
         .login-left {
-<<<<<<< HEAD
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-=======
             background: linear-gradient(135deg, #22ce9d 0%, #a6f3e0 100%);
             color: #064e3b;
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             padding: 60px 40px;
             display: flex;
             flex-direction: column;
@@ -127,13 +118,8 @@
 
         .form-group input:focus {
             outline: none;
-<<<<<<< HEAD
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-=======
             border-color: #22ce9d;
             box-shadow: 0 0 0 3px rgba(34, 206, 157, 0.12);
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
         }
 
         .form-group input::placeholder {
@@ -158,11 +144,7 @@
         }
 
         .remember-forgot a {
-<<<<<<< HEAD
-            color: #667eea;
-=======
             color: #22ce9d;
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             text-decoration: none;
             font-weight: 500;
         }
@@ -174,11 +156,7 @@
         .login-btn {
             width: 100%;
             padding: 12px;
-<<<<<<< HEAD
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-=======
             background: linear-gradient(135deg, #22ce9d 0%, #16a085 100%);
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             color: white;
             border: none;
             border-radius: 5px;
@@ -190,11 +168,7 @@
 
         .login-btn:hover {
             transform: translateY(-2px);
-<<<<<<< HEAD
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-=======
             box-shadow: 0 5px 20px rgba(34, 206, 157, 0.4);
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
         }
 
         .login-btn:active {
@@ -215,15 +189,9 @@
         }
 
         .alert-success {
-<<<<<<< HEAD
-            background-color: #dcfce7;
-            color: #15803d;
-            border-left: 4px solid #22c55e;
-=======
             background-color: #d9f8ef;
             color: #064e3b;
             border-left: 4px solid #22ce9d;
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
         }
 
         .error-message {
@@ -372,12 +340,9 @@
                 <p>Test Credentials:</p>
                 <p><strong>Admin:</strong> admin@company.com / password</p>
                 <p><strong>HR:</strong> hr@company.com / password</p>
-<<<<<<< HEAD
-=======
                 <p style="margin-top: 20px;">
-                    Don't have an account? <a href="{{ route('register') }}" style="color: #667eea; text-decoration: none; font-weight: 600;">Register here</a>
+                    Don't have an account? <a href="{{ route('register') }}" style="color: #22ce9d; text-decoration: none; font-weight: 600;">Register here</a>
                 </p>
->>>>>>> 6e8e425cc398210b56a9a3422f2e38cd2169470d
             </div>
         </div>
     </div>
