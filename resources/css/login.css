@@ -20,7 +20,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: white;
+      background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -47,6 +47,9 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+
+
+   
 }
 
 .login-left h2 {

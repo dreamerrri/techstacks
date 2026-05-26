@@ -1,134 +1,249 @@
+@import 'tailwindcss';
 
-/* ── Registration Form ── */
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
 
-.register-container {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    padding: 50px 40px;
-    max-width: 500px;
-    width: 90%;
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-.register-container h2 {
-    font-size: 28px;
-    color: #1f2937;
-    margin-bottom: 10px;
-    font-weight: 700;
-}
 
-.register-container p {
-    color: #6b7280;
-    margin-bottom: 30px;
-    font-size: 14px;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.password-strength {
-    margin-top: 10px;
-    display: none;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.strength-meter {
-    height: 6px;
-    background: #e5e7eb;
-    border-radius: 3px;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
+        .register-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 90%;
+        }
 
-.strength-bar {
-    height: 100%;
-    width: 0%;
-    transition: all 0.3s;
-}
+        .register-container h2 {
+            font-size: 28px;
+            color: #1f2937;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
 
-.strength-bar.weak   { width: 25%;  background: #dc2626; }
-.strength-bar.fair   { width: 50%;  background: #f59e0b; }
-.strength-bar.good   { width: 75%;  background: #3b82f6; }
-.strength-bar.strong { width: 100%; background: #10b981; }
+        .register-container p {
+            color: #6b7280;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
 
-.strength-text        { font-size: 12px; font-weight: 600; }
-.strength-text.weak   { color: #dc2626; }
-.strength-text.fair   { color: #f59e0b; }
-.strength-text.good   { color: #3b82f6; }
-.strength-text.strong { color: #10b981; }
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-.password-requirements {
-    background: #f3f4f6;
-    border-radius: 5px;
-    padding: 12px;
-    margin-top: 10px;
-    font-size: 12px;
-    display: none;
-}
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
 
-.requirement {
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #6b7280;
-}
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
 
-.requirement.met { color: #10b981; }
+        .form-group input:focus {
+            outline: none;
+            border-color: #22ce9d;
+            box-shadow: 0 0 0 3px rgba(34, 206, 157, 0.15);
+        }
 
-.requirement i {
-    width: 14px;
-    text-align: center;
-}
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
 
-.register-btn {
-    width: 100%;
-    padding: 12px;
-    background: #00c896;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    margin-top: 10px;
-}
+        .password-strength {
+            margin-top: 10px;
+            display: none;
+        }
 
-.register-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(0, 200, 150, 0.4);
-}
+        .strength-meter {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
 
-.register-btn:active {
-    transform: translateY(0);
-}
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+        }
 
-.register-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
+        .strength-bar.weak {
+            width: 25%;
+            background: #dc2626;
+        }
 
-.login-link {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #6b7280;
-}
+        .strength-bar.fair {
+            width: 50%;
+            background: #f59e0b;
+        }
 
-.login-link a {
-    color: #00c896;
-    text-decoration: none;
-    font-weight: 600;
-}
+        .strength-bar.good {
+            width: 75%;
+            background: #3b82f6;
+        }
 
-.login-link a:hover {
-    text-decoration: underline;
-}
+        .strength-bar.strong {
+            width: 100%;
+            background: #22ce9d;
+        }
 
-@media (max-width: 768px) {
-    .register-container {
-        padding: 30px 20px;
-    }
+        .strength-text {
+            font-size: 12px;
+            font-weight: 600;
+        }
 
-    .register-container h2 {
-        font-size: 24px;
-    }
-}
+        .strength-text.weak {
+            color: #dc2626;
+        }
+
+        .strength-text.fair {
+            color: #f59e0b;
+        }
+
+        .strength-text.good {
+            color: #3b82f6;
+        }
+
+        .strength-text.strong {
+            color: #22ce9d;
+        }
+
+        .password-requirements {
+            background: #f3f4f6;
+            border-radius: 5px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 12px;
+            display: none;
+        }
+
+        .requirement {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b7280;
+        }
+
+        .requirement.met {
+            color: #22ce9d;
+        }
+
+        .requirement i {
+            width: 14px;
+            text-align: center;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #dc2626;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .error-message i {
+            font-size: 14px;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #22ce9d 0%, #16a085 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(34, 206, 157, 0.4);
+        }
+
+        .register-btn:active {
+            transform: translateY(0);
+        }
+
+        .register-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .register-container {
+                padding: 30px 20px;
+            }
+
+            .register-container h2 {
+                font-size: 24px;
+            }
+        }
+    

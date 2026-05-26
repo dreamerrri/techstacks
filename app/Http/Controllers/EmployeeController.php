@@ -120,4 +120,57 @@ class EmployeeController extends Controller
             'tin_number'         => 'nullable|string|max:20',
         ]);
     }
+
+
+    // GET /api/employees
+public function apiIndex(Request $request)
+{
+    $query = Employee::active();
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('first_name', 'like', "%{$search}%")
+              ->orWhere('last_name', 'like', "%{$search}%")
+              ->orWhere('employee_id', 'like', "%{$search}%");
+        });
+    }
+
+    if ($request->filled('department'))
+        $query->where('department', $request->department);
+
+    if ($request->filled('status'))
+        $query->where('employment_status', $request->status);
+
+    return response()->json(['success' => true, 'data' => $query->paginate(15)]);
+}
+
+// GET /api/employees/{id}
+public function apiShow(Employee $employee)
+{
+    return response()->json(['success' => true, 'data' => $employee]);
+}
+
+// POST /api/employees
+public function apiStore(Request $request)
+{
+    $validated = $this->validateEmployee($request);
+    $employee  = Employee::create($validated);
+    return response()->json(['success' => true, 'message' => 'Employee created.', 'data' => $employee], 201);
+}
+
+// PUT /api/employees/{id}
+public function apiUpdate(Request $request, Employee $employee)
+{
+    $validated = $this->validateEmployee($request, $employee->id);
+    $employee->update($validated);
+    return response()->json(['success' => true, 'message' => 'Employee updated.', 'data' => $employee]);
+}
+
+// PATCH /api/employees/{id}/archive
+public function apiArchive(Employee $employee)
+{
+    $employee->update(['is_archived' => true]);
+    return response()->json(['success' => true, 'message' => 'Employee archived.']);
+}
 }

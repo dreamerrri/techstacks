@@ -60,6 +60,15 @@ Route::prefix('api')->group(function () {
     Route::post('/validate-password', [AuthController::class, 'validatePassword']);
 
     Route::middleware('jwt')->group(function () {
+
+    Route::prefix('employees')->group(function () {
+        Route::get('/',                          [EmployeeController::class, 'apiIndex']);
+        Route::post('/',                         [EmployeeController::class, 'apiStore']);
+        Route::get('/{employee}',                [EmployeeController::class, 'apiShow']);
+        Route::put('/{employee}',                [EmployeeController::class, 'apiUpdate']);
+        Route::patch('/{employee}/archive',      [EmployeeController::class, 'apiArchive']);
+    });
+    
         Route::post('/logout',        [AuthController::class, 'apiLogout']);
         Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
         Route::get('/user', function (Request $request) {

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - HR Management System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {{-- SweetAlert2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -104,20 +106,6 @@
             </div>
         </div>
 
-        {{-- Flash Messages --}}
-        <div style="padding: 0 40px; padding-top: 20px;">
-            @if(session('success'))
-                <div style="background:#d1fae5; color:#065f46; padding:12px 16px; border-radius:8px; margin-bottom:0;">
-                    <i class="fas fa-check-circle"></i> {{ session('success') }}
-                </div>
-            @endif
-            @if(session('error'))
-                <div style="background:#fee2e2; color:#991b1b; padding:12px 16px; border-radius:8px; margin-bottom:0;">
-                    <i class="fas fa-times-circle"></i> {{ session('error') }}
-                </div>
-            @endif
-        </div>
-
         {{-- Page Content --}}
         <div class="content">
             @yield('content')
@@ -125,5 +113,66 @@
 
     </div>
 </div>
+
+{{-- ── SweetAlert2 : Flash Notifications ── --}}
+<script>
+    // Toast helper — reusable anywhere via window.Toast.fire(...)
+    window.Toast = Swal.mixin({
+        toast:            true,
+        position:         'top-end',
+        showConfirmButton: false,
+        timer:            3500,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+    });
+
+    @if(session('success'))
+        Toast.fire({ icon: 'success', title: @json(session('success')) });
+    @endif
+
+    @if(session('error'))
+        Toast.fire({ icon: 'error', title: @json(session('error')) });
+    @endif
+
+    @if(session('warning'))
+        Toast.fire({ icon: 'warning', title: @json(session('warning')) });
+    @endif
+
+    @if(session('info'))
+        Toast.fire({ icon: 'info', title: @json(session('info')) });
+    @endif
+</script>
+
+{{-- ── SweetAlert2 : Confirm Dialogs (replaces all confirm() calls) ── --}}
+<script>
+    // Intercept any form with data-confirm attribute
+    // Usage: <form data-confirm="Are you sure?" data-confirm-title="Archive Employee?" data-confirm-icon="warning">
+    document.querySelectorAll('form[data-confirm]').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const message = form.dataset.confirm      || 'Are you sure you want to proceed?';
+            const title   = form.dataset.confirmTitle || 'Confirm Action';
+            const icon    = form.dataset.confirmIcon  || 'warning';
+            const btnText = form.dataset.confirmBtn   || 'Yes, proceed';
+
+            Swal.fire({
+                title:              title,
+                text:               message,
+                icon:               icon,
+                showCancelButton:   true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor:  '#6b7280',
+                confirmButtonText:  btnText,
+                cancelButtonText:   'Cancel',
+            }).then(function (result) {
+                if (result.isConfirmed) form.submit();
+            });
+        });
+    });
+</script>
+
 </body>
 </html>
