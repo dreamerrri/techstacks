@@ -87,7 +87,7 @@
     </div>
 
     {{-- Mobile page content --}}
-    <div class="mobile-content">
+    <div class="mobile-content bg-{{ $role }}">
         <div class="content">
             @yield('content')
         </div>
@@ -164,7 +164,7 @@
     </div>
 
     {{-- Main Content --}}
-    <div style="display: flex; flex-direction: column; height: 100vh; overflow-y: auto;">
+   <div class="bg-{{ $role }}" style="display: flex; flex-direction: column; height: 100vh; overflow-y: auto;">
 
         {{-- Topbar --}}
         <div class="topbar">
