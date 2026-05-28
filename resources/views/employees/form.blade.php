@@ -1,5 +1,5 @@
 @php
-    $input   = "width:100%; border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px; transition: border-color 0.2s;";
+    $input   = "width:100%; border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px; transition: border-color 0.2s; box-sizing:border-box;";
     $label   = "display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:4px;";
     $section = "font-size:16px; font-weight:700; color:#1f2937; border-bottom:2px solid #fecaca; padding-bottom:8px; margin-bottom:16px;";
 @endphp
@@ -7,7 +7,7 @@
 {{-- Personal Information --}}
 <div style="margin-bottom:32px;">
     <h3 style="{{ $section }}"><i class="fas fa-user" style="color:#dc2626;"></i> Personal Information</h3>
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
 
         <div>
             <label style="{{ $label }}">Employee ID <span style="color:#dc2626;">*</span></label>
@@ -105,7 +105,7 @@
             @error('email') <p style="color:#dc2626; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
         </div>
 
-        <div style="grid-column:span 3;">
+        <div style="grid-column: 1 / -1;">
             <label style="{{ $label }}">Address <span style="color:#dc2626;">*</span></label>
             <textarea name="address" id="address" rows="2"
                       style="{{ $input }}"
@@ -120,7 +120,7 @@
 {{-- Employment Details --}}
 <div style="margin-bottom:32px;">
     <h3 style="{{ $section }}"><i class="fas fa-briefcase" style="color:#dc2626;"></i> Employment Details</h3>
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
 
         <div>
             <label style="{{ $label }}">Department <span style="color:#dc2626;">*</span></label>
@@ -197,7 +197,7 @@
     <p style="font-size:12px; color:#6b7280; margin-bottom:16px; margin-top:-8px;">
         <i class="fas fa-info-circle"></i> These fields are optional but must follow the correct format if provided.
     </p>
-    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
 
         <div>
             <label style="{{ $label }}">SSS Number</label>
@@ -250,11 +250,10 @@
     </div>
 </div>
 
-{{-- ── Client-side Validation Script ── --}}
+{{-- Client-side Validation Script --}}
 <script>
 (function () {
 
-    // ── Rules ───────────────────────────────────────────────────────────────
     const rules = {
         required:   (v) => v.trim() !== ''                          || 'This field is required.',
         alpha:      (v) => v === '' || /^[a-zA-ZÀ-ÿ\s\-'\.]+$/.test(v.trim()) || 'Letters only.',
@@ -268,28 +267,23 @@
         tin:        (v) => v === '' || /^\d{3}-\d{3}-\d{3}$/.test(v.trim())    || 'Format must be XXX-XXX-XXX.',
     };
 
-    // ── Auto-format government ID fields ────────────────────────────────────
     function autoFormat(input, type) {
         input.addEventListener('input', function () {
             let digits = this.value.replace(/\D/g, '');
             let formatted = '';
             if (type === 'sss') {
-                // XX-XXXXXXX-X
                 if (digits.length > 2)  formatted = digits.slice(0,2) + '-' + digits.slice(2);
                 else                    formatted = digits;
                 if (digits.length > 9)  formatted = digits.slice(0,2) + '-' + digits.slice(2,9) + '-' + digits.slice(9,10);
             } else if (type === 'philhealth') {
-                // XX-XXXXXXXXX-X
                 if (digits.length > 2)  formatted = digits.slice(0,2) + '-' + digits.slice(2);
                 else                    formatted = digits;
                 if (digits.length > 11) formatted = digits.slice(0,2) + '-' + digits.slice(2,11) + '-' + digits.slice(11,12);
             } else if (type === 'pagibig') {
-                // XXXX-XXXX-XXXX
                 if (digits.length > 4)  formatted = digits.slice(0,4) + '-' + digits.slice(4);
                 else                    formatted = digits;
                 if (digits.length > 8)  formatted = digits.slice(0,4) + '-' + digits.slice(4,8) + '-' + digits.slice(8,12);
             } else if (type === 'tin') {
-                // XXX-XXX-XXX
                 if (digits.length > 3)  formatted = digits.slice(0,3) + '-' + digits.slice(3);
                 else                    formatted = digits;
                 if (digits.length > 6)  formatted = digits.slice(0,3) + '-' + digits.slice(3,6) + '-' + digits.slice(6,9);
@@ -303,7 +297,6 @@
     autoFormat(document.getElementById('pagibig_number'),    'pagibig');
     autoFormat(document.getElementById('tin_number'),        'tin');
 
-    // ── Validate a single field ──────────────────────────────────────────────
     function validateField(field) {
         const ruleList  = (field.dataset.validate || '').split('|').filter(Boolean);
         const errorEl   = field.parentElement.querySelector('.field-error');
@@ -327,16 +320,13 @@
         }
     }
 
-    // ── Attach blur listeners for real-time feedback ─────────────────────────
     document.querySelectorAll('[data-validate]').forEach(function (field) {
         field.addEventListener('blur',  () => validateField(field));
         field.addEventListener('input', () => {
-            // only clear error while typing — full check on blur
             if (field.style.borderColor === 'rgb(220, 38, 38)') validateField(field);
         });
     });
 
-    // ── Intercept form submit ────────────────────────────────────────────────
     const form = document.querySelector('form');
     if (form) {
         form.addEventListener('submit', function (e) {
@@ -346,8 +336,6 @@
             });
             if (!valid) {
                 e.preventDefault();
-                // scroll to first error
-                const first = document.querySelector('[data-validate]');
                 const firstError = [...document.querySelectorAll('[data-validate]')]
                     .find(f => f.style.borderColor === 'rgb(220, 38, 38)');
                 if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });

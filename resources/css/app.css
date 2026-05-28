@@ -13,7 +13,6 @@
 /* ── Dashboard custom styles ── */
 .sidebar { color: white; min-height: 100vh; padding: 20px 0; }
 .sidebar-admin { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); }
-/* -- .sidebar-admin { background: linear-gradient(to right, #116748, #00c896); } -- techstack color*/ 
 .sidebar-hr    { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); }
 .sidebar-user  { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
 
@@ -74,3 +73,60 @@
 .action-btn { padding: 15px; background: white; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s; width: 100%; }
 .action-btn:hover { opacity: 0.85; }
 
+/* ── Burger / responsive dropdown ── */
+.burger-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 6px 8px; border-radius: 5px;
+    color: white; transition: background 0.2s;
+    font-size: 20px; line-height: 1;
+}
+.burger-btn:hover { background: rgba(255,255,255,0.2); }
+
+.mobile-layout  { display: none; }
+.desktop-layout { display: grid; }
+
+.mobile-topbar {
+    padding: 12px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; z-index: 200;
+}
+
+.burger-dropdown {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease;
+    position: fixed; top: 56px; left: 0; right: 0; z-index: 199;
+}
+.burger-dropdown.open { max-height: calc(100vh - 56px); overflow-y: auto; }
+.burger-dropdown.open { max-height: 600px; overflow-y: auto; }
+.burger-dropdown .nav-item { margin: 2px 8px; border-radius: 5px; }
+
+.mobile-content { overflow-y: auto; }
+
+/* ── Responsive table / user cards ── */
+.user-table-wrapper { overflow-x: auto; }
+.user-mobile-cards  { display: none; }
+
+.user-card {
+    border: 1px solid #e5e7eb; border-radius: 8px;
+    padding: 14px; margin-bottom: 10px; background: white;
+}
+.user-card-header {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; margin-bottom: 4px;
+}
+.user-card-meta {
+    display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 8px;
+    border-top: 1px solid #f3f4f6;
+    margin-top: 10px; padding-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .mobile-layout  { display: block; }
+    .desktop-layout { display: none !important; }
+
+    .content { padding: 20px 16px; }
+
+    .user-table-wrapper { display: none !important; }
+    .user-mobile-cards  { display: block !important; }
+}
