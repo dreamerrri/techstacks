@@ -18,12 +18,9 @@
     $role    = $isAdmin ? 'admin' : ($isHR ? 'hr' : 'user');
 @endphp
 
-{{-- ═══════════════════════════════════════
-     MOBILE LAYOUT  (hidden on desktop)
-     ═══════════════════════════════════════ --}}
-<div class="mobile-layout">
+<div class="app-layout">
 
-    {{-- Mobile topbar --}}
+    {{-- Mobile topbar (visible on mobile only) --}}
     <div class="mobile-topbar sidebar-{{ $role }}">
         <div style="display:flex; align-items:center; gap:10px;">
             <button class="burger-btn" id="burgerBtn" aria-label="Toggle navigation" aria-expanded="false" aria-controls="burgerDropdown">
@@ -39,7 +36,7 @@
         </div>
     </div>
 
-    {{-- Burger dropdown --}}
+    {{-- Burger dropdown (visible on mobile only) --}}
     <div class="burger-dropdown sidebar-{{ $role }}" id="burgerDropdown">
         <a href="{{ route('dashboard') }}"
            class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -86,24 +83,8 @@
         </div>
     </div>
 
-    {{-- Mobile page content --}}
-    <div class="mobile-content">
-        <div class="content">
-            @yield('content')
-        </div>
-    </div>
-
-</div>
-
-{{-- ═══════════════════════════════════════
-     DESKTOP LAYOUT  (hidden on mobile)
-     ═══════════════════════════════════════ --}}
-<div class="desktop-layout" style="display: grid; grid-template-columns: 250px 1fr; height: 100vh; overflow: hidden;">
-
-    {{-- Sidebar --}}
-    <div class="sidebar sidebar-{{ $role }}"
-         style="position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; overflow-y: auto;">
-
+    {{-- Desktop Sidebar (visible on desktop only) --}}
+    <div class="sidebar sidebar-{{ $role }} desktop-sidebar">
         <div class="sidebar-header">
             <h1>HR System</h1>
             <p>
@@ -163,11 +144,10 @@
         </div>
     </div>
 
-    {{-- Main Content --}}
-    <div style="display: flex; flex-direction: column; height: 100vh; overflow-y: auto;">
-
-        {{-- Topbar --}}
-        <div class="topbar">
+    {{-- Main Content Area --}}
+    <div class="main-content">
+        {{-- Desktop Topbar (visible on desktop only) --}}
+        <div class="topbar desktop-topbar">
             <h2 style="margin: 0; color: #1f2937;">@yield('title')</h2>
             <div style="display: flex; align-items: center; gap: 15px;">
                 <div class="user-avatar avatar-{{ $role }}">
@@ -186,13 +166,43 @@
             </div>
         </div>
 
-        {{-- Page Content --}}
+        {{-- Page Content (rendered once) --}}
         <div class="content">
             @yield('content')
         </div>
-
     </div>
+
 </div>
+
+<script>
+    (function() {
+        function handleResponsiveLayout() {
+            const isMobile = window.innerWidth <= 768;
+            
+            // Toggle navigation elements
+            const desktopSidebar = document.querySelector('.desktop-sidebar');
+            const mobileTopbar = document.querySelector('.mobile-topbar');
+            const burgerDropdown = document.querySelector('.burger-dropdown');
+            const desktopTopbar = document.querySelector('.desktop-topbar');
+            
+            if (desktopSidebar) desktopSidebar.style.display = isMobile ? 'none' : 'flex';
+            if (mobileTopbar) mobileTopbar.style.display = isMobile ? 'flex' : 'none';
+            if (burgerDropdown) burgerDropdown.style.display = isMobile ? 'block' : 'none';
+            if (desktopTopbar) desktopTopbar.style.display = isMobile ? 'none' : 'flex';
+            
+            // Toggle table/cards in employee views
+            const tableWrapper = document.querySelector('.user-table-wrapper');
+            const mobileCards = document.querySelector('.user-mobile-cards');
+            
+            if (tableWrapper) tableWrapper.style.display = isMobile ? 'none' : 'block';
+            if (mobileCards) mobileCards.style.display = isMobile ? 'block' : 'none';
+        }
+        
+        // Run on load and resize
+        handleResponsiveLayout();
+        window.addEventListener('resize', handleResponsiveLayout);
+    })();
+</script>
 
 {{-- ── Flash toasts ── --}}
 @if(session('success') || session('error') || session('warning') || session('info'))
