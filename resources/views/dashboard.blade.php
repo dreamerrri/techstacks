@@ -24,7 +24,7 @@
     <span class="role-access-badge" style="background:#bfdbfe; color:#1e40af;">
         <i class="fas fa-user-tie"></i> HR Department Access
     </span>
-@endif 
+@endif
 
 <div class="welcome-message">
     Welcome, {{ $user->name }}!

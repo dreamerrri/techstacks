@@ -194,7 +194,7 @@
     </div>
 </div>
 
-{{-- ── Flash toasts — fired via Vite-bundled app.js after DOM ready ── --}}
+{{-- ── Flash toasts ── --}}
 @if(session('success') || session('error') || session('warning') || session('info'))
 <script>
     document.addEventListener('DOMContentLoaded', function () {
