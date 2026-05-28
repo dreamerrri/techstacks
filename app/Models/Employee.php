@@ -10,6 +10,7 @@ class Employee extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',  
         'employee_id',
         'first_name',
         'middle_name',
@@ -57,4 +58,7 @@ class Employee extends Model
     {
         return $query->where('is_archived', true);
     }
+
+
+    
 }

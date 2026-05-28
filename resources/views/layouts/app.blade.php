@@ -45,7 +45,7 @@
                 </a>
                 <a href="{{ route('employees.index') }}"
                    class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                    <i class="fas fa-user-tie"></i><span>Manage Staff</span>
+                    <i class="fas fa-user-tie"></i><span>Employee Management</span>
                 </a>
                 <a href="#" class="nav-item"><i class="fas fa-lock"></i><span>Access Control</span></a>
                 <a href="#" class="nav-item"><i class="fas fa-shield-alt"></i><span>System Security</span></a>

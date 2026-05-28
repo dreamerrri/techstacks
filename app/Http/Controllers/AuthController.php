@@ -191,8 +191,8 @@ class AuthController extends Controller
             $stats = [
                 [
                     'label' => 'Department',
-                    // Find this user's employee record if it exists
-                    'value' => Employee::where('email', $user->email)->value('department') ?? '—',
+                    // Find this user's employee record if it exists,
+                    'value' => $user->employee?->department ?? '—',
                     'icon'  => 'fa-building',
                     'color' => '#667eea',
                 ],
