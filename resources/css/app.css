@@ -94,8 +94,9 @@
 .burger-dropdown {
     max-height: 0; overflow: hidden;
     transition: max-height 0.3s ease;
-    position: sticky; top: 56px; z-index: 199;
+    position: fixed; top: 56px; left: 0; right: 0; z-index: 199;
 }
+.burger-dropdown.open { max-height: calc(100vh - 56px); overflow-y: auto; }
 .burger-dropdown.open { max-height: 600px; overflow-y: auto; }
 .burger-dropdown .nav-item { margin: 2px 8px; border-radius: 5px; }
 
