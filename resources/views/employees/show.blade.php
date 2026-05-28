@@ -14,7 +14,10 @@
                 <i class="fas fa-edit"></i> Edit
             </a>
             <form method="POST" action="{{ route('employees.archive', $employee) }}"
-                  onsubmit="return confirm('Archive this employee?')">
+                  data-confirm="This employee will be moved to the archive."
+                  data-confirm-title="Archive Employee?"
+                  data-confirm-icon="warning"
+                  data-confirm-btn="Yes, archive">
                 @csrf @method('PATCH')
                 <button style="padding:8px 18px; background:#fecaca; color:#991b1b; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">
                     <i class="fas fa-archive"></i> Archive

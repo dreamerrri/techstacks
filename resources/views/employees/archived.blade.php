@@ -37,7 +37,10 @@
                         <td class="px-4 py-3 text-gray-600">{{ $employee->position }}</td>
                         <td class="px-4 py-3">
                             <form method="POST" action="{{ route('employees.restore', $employee) }}"
-                                  onsubmit="return confirm('Restore this employee?')">
+                                  data-confirm="This employee will be restored to the active list."
+                                  data-confirm-title="Restore Employee?"
+                                  data-confirm-icon="question"
+                                  data-confirm-btn="Yes, restore">
                                 @csrf @method('PATCH')
                                 <button class="text-green-600 hover:underline text-xs">Restore</button>
                             </form>
