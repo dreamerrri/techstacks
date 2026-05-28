@@ -191,8 +191,8 @@ class AuthController extends Controller
             $stats = [
                 [
                     'label' => 'Department',
-                    // Find this user's employee record if it exists
-                    'value' => Employee::where('email', $user->email)->value('department') ?? '—',
+                    // Find this user's employee record if it exists,
+                    'value' => $user->employee?->department ?? '—',
                     'icon'  => 'fa-building',
                     'color' => '#667eea',
                 ],
@@ -310,7 +310,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'You have been logged out successfully.');
+        return redirect('/login')->with('success', 'You have been logged out successfully.');
     }
 
     public function apiLogout(Request $request)

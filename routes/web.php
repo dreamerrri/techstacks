@@ -20,42 +20,37 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-// Protected Routes — 'auth' middleware guarantees a logged-in session for everything below
+// Protected Routes
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Single dashboard for all roles.
-    // 'auth' middleware is the security gate — no unauthenticated user can reach it.
-    // Role-based data scoping is enforced inside AuthController::dashboard().
+    // All roles can reach /dashboard; the controller scopes data per role.
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
-    // Employee Management — accessible to authenticated users.
-    // Add ->middleware('role:admin,hr') here if employees should NOT access these routes.
-    Route::prefix('employees')->name('employees.')->group(function () {
-        Route::get('/',                     [EmployeeController::class, 'index'])->name('index');
-        Route::get('/create',               [EmployeeController::class, 'create'])->name('create');
-        Route::post('/',                    [EmployeeController::class, 'store'])->name('store');
-        Route::get('/archived',             [EmployeeController::class, 'archived'])->name('archived');
-        Route::get('/{employee}',           [EmployeeController::class, 'show'])->name('show');
-        Route::get('/{employee}/edit',      [EmployeeController::class, 'edit'])->name('edit');
-        Route::put('/{employee}',           [EmployeeController::class, 'update'])->name('update');
-        Route::patch('/{employee}/archive', [EmployeeController::class, 'archive'])->name('archive');
-        Route::patch('/{employee}/restore', [EmployeeController::class, 'restore'])->name('restore');
-    });
+    // Employee Management — admin and HR only.
+    Route::middleware('role:admin,hr')->prefix('employees')->name('employees.')->group(function () {
 
-    // Example: routes that are genuinely role-restricted (separate URL, separate controller action)
-    // Use this pattern only when different roles need a truly different page or data set,
-    // not just a different-colored dashboard.
-    //
-    // Route::middleware('role:admin')->group(function () {
-    //     Route::get('/admin/users',    [UserController::class, 'index'])->name('admin.users');
-    //     Route::get('/admin/audit',    [AuditController::class, 'index'])->name('admin.audit');
-    // });
-    //
-    // Route::middleware('role:hr')->group(function () {
-    //     Route::get('/hr/leaves',      [LeaveController::class, 'index'])->name('hr.leaves');
-    //     Route::get('/hr/payroll',     [PayrollController::class, 'index'])->name('hr.payroll');
-    // });
+        // ── Static routes FIRST (must come before the /{employee} wildcard) ──
+        Route::get('/',          [EmployeeController::class, 'index'])->name('index');
+        Route::get('/archived',  [EmployeeController::class, 'archived'])->name('archived');
+
+        // Create & Store — admin and HR
+        Route::middleware('role:admin,hr')->group(function () {
+            Route::get('/create', [EmployeeController::class, 'create'])->name('create');
+            Route::post('/',      [EmployeeController::class, 'store'])->name('store');
+        });
+
+        // ── Wildcard routes AFTER static ones ──
+        Route::get('/{employee}',      [EmployeeController::class, 'show'])->name('show');
+        Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->name('edit');
+        Route::put('/{employee}',      [EmployeeController::class, 'update'])->name('update');
+
+        // Archive & Restore — admin only
+        Route::middleware('role:admin')->group(function () {
+            Route::patch('/{employee}/archive', [EmployeeController::class, 'archive'])->name('archive');
+            Route::patch('/{employee}/restore', [EmployeeController::class, 'restore'])->name('restore');
+        });
+    });
 });
 
 // API Routes (JWT Authentication)
@@ -65,6 +60,15 @@ Route::prefix('api')->group(function () {
     Route::post('/validate-password', [AuthController::class, 'validatePassword']);
 
     Route::middleware('jwt')->group(function () {
+
+    Route::prefix('employees')->group(function () {
+        Route::get('/',                          [EmployeeController::class, 'apiIndex']);
+        Route::post('/',                         [EmployeeController::class, 'apiStore']);
+        Route::get('/{employee}',                [EmployeeController::class, 'apiShow']);
+        Route::put('/{employee}',                [EmployeeController::class, 'apiUpdate']);
+        Route::patch('/{employee}/archive',      [EmployeeController::class, 'apiArchive']);
+    });
+    
         Route::post('/logout',        [AuthController::class, 'apiLogout']);
         Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
         Route::get('/user', function (Request $request) {
