@@ -4,6 +4,7 @@ use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 
 // Public Routes
@@ -26,6 +27,12 @@ Route::middleware('auth')->group(function () {
 
     // All roles can reach /dashboard; the controller scopes data per role.
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+
+    Route::middleware('role:admin')->prefix('users')->name('users.')->group(function () {
+    Route::get('/',                    [UserController::class, 'index'])->name('index');
+    Route::patch('/{user}/toggle',     [UserController::class, 'toggleActive'])->name('toggle');
+    Route::patch('/{user}/role',       [UserController::class, 'updateRole'])->name('role');
+});
 
     // Employee Management — admin and HR only.
     Route::middleware('role:admin,hr')->prefix('employees')->name('employees.')->group(function () {

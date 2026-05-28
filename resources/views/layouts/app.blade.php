@@ -17,11 +17,10 @@
     $isHR    = $user->role === 'hr';
 @endphp
 
-<div style="display: grid; grid-template-columns: 250px 1fr; min-height: 100vh;">
-
+<div style="display: grid; grid-template-columns: 250px 1fr; height: 100vh; overflow: hidden;">
     {{-- Sidebar --}}
-    <div class="sidebar sidebar-{{ $isAdmin ? 'admin' : ($isHR ? 'hr' : 'user') }}"
-         style="position: relative; display: flex; flex-direction: column;">
+<div class="sidebar sidebar-{{ $isAdmin ? 'admin' : ($isHR ? 'hr' : 'user') }}"
+     style="position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; overflow-y: auto;">
 
         <div class="sidebar-header">
             <h1>HR System</h1>
@@ -40,12 +39,14 @@
             </a>
 
             @if($isAdmin)
-                <a href="#" class="nav-item">
-                    <i class="fas fa-users"></i><span>All Users</span>
-                </a>
+                {{-- After --}}
+<a href="{{ route('users.index') }}"
+   class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+    <i class="fas fa-users"></i><span>All Users</span>
+</a>
                 <a href="{{ route('employees.index') }}"
                    class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                    <i class="fas fa-user-tie"></i><span>Employee Management</span>
+                    <i class="fas fa-user-tie"></i><span>Employees</span>
                 </a>
                 <a href="#" class="nav-item"><i class="fas fa-lock"></i><span>Access Control</span></a>
                 <a href="#" class="nav-item"><i class="fas fa-shield-alt"></i><span>System Security</span></a>
@@ -82,7 +83,7 @@
     </div>
 
     {{-- Main Content --}}
-    <div style="display: flex; flex-direction: column;">
+   <div style="display: flex; flex-direction: column; height: 100vh; overflow-y: auto;">
 
         {{-- Topbar --}}
         <div class="topbar">
