@@ -34,19 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:hr')->group(function () {
         Route::get('/hr/dashboard', [AuthController::class, 'hrDashboard'])->name('hr.dashboard');
     });
-});
-
-// API Routes (JWT Authentication)
-Route::prefix('api')->group(function () {
-    Route::post('/login', [AuthController::class, 'apiLogin']);
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/validate-password', [AuthController::class, 'validatePassword']);
     
-    Route::middleware('jwt')->group(function () {
-        Route::post('/logout', [AuthController::class, 'apiLogout']);
-        Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
-        Route::get('/user', function (Request $request) {
-            return $request->user();
-        });
+    // HR Specialist Dashboard - Only accessible by HR Specialist role
+    Route::middleware('role:hr_specialist')->group(function () {
+        Route::get('/hr-specialist/dashboard', [AuthController::class, 'hrSpecialistDashboard'])->name('hr-specialist.dashboard');
     });
 });
