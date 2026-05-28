@@ -6,6 +6,7 @@
     <title>Register - HR Management System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<<<<<<< HEAD
     <style>
         * {
             margin: 0;
@@ -243,6 +244,9 @@
             }
         }
     </style>
+=======
+    @vite(['resources/css/register.css', 'resources/js/app.js'])
+>>>>>>> 41e6c0d28a9469a2871a765e3f245f872eebd9e8
 </head>
 <body>
     <div class="register-container">

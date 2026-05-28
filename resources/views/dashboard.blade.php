@@ -1,52 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - HR Management System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f3f4f6;
-        }
+@extends('layouts.app')
 
+<<<<<<< HEAD
         .sidebar {
             background: linear-gradient(135deg, #22ce9d 0%, #a6f3e0 100%);
             color: white;
             min-height: 100vh;
             padding: 20px 0;
         }
+=======
+@section('title')
+    @if($user->role === 'admin') Admin Dashboard
+    @elseif($user->role === 'hr') HR Dashboard
+    @else Dashboard
+    @endif
+@endsection
+>>>>>>> 41e6c0d28a9469a2871a765e3f245f872eebd9e8
 
-        .sidebar-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 20px;
-        }
+@section('content')
 
-        .sidebar-header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
+@php
+    $isAdmin = $user->role === 'admin';
+    $isHR    = $user->role === 'hr';
+    $color   = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
+@endphp
 
-        .sidebar-header p {
-            font-size: 12px;
-            opacity: 0.8;
-        }
+{{-- Role access badge --}}
+@if($isAdmin)
+    <span class="role-access-badge" style="background:#fecaca; color:#991b1b;">
+        <i class="fas fa-shield-alt"></i> Administrator Access
+    </span>
+@elseif($isHR)
+    <span class="role-access-badge" style="background:#bfdbfe; color:#1e40af;">
+        <i class="fas fa-user-tie"></i> HR Department Access
+    </span>
+@endif 
 
-        .nav-item {
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 5px 10px;
-            border-radius: 5px;
-        }
+<div class="welcome-message">
+    Welcome, {{ $user->name }}!
+    @if($isAdmin) You have full administrative access.
+    @elseif($isHR) You have HR access privileges.
+    @endif
+</div>
 
+<<<<<<< HEAD
         .nav-item:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: translateX(5px);
@@ -209,43 +205,22 @@
             <div class="sidebar-header">
                 <h1>HR System</h1>
                 <p>Management Portal</p>
+=======
+{{-- Stats --}}
+<div class="stats-grid">
+    @foreach($stats as $stat)
+        <div class="stat-card">
+            <div class="stat-icon" style="color: {{ $stat['color'] }};">
+                <i class="fas {{ $stat['icon'] }}"></i>
+>>>>>>> 41e6c0d28a9469a2871a765e3f245f872eebd9e8
             </div>
-
-            <nav>
-                <div class="nav-item active">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item">
-                    <i class="fas fa-users"></i>
-                    <span>Employees</span>
-                </div>
-                <div class="nav-item">
-                    <i class="fas fa-money-bill"></i>
-                    <span>Payroll</span>
-                </div>
-                <div class="nav-item">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>Attendance</span>
-                </div>
-                <div class="nav-item">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Reports</span>
-                </div>
-                <div class="nav-item">
-                    <i class="fas fa-cog"></i>
-                    <span>Settings</span>
-                </div>
-            </nav>
-
-            <form action="{{ route('logout') }}" method="POST" style="position: absolute; bottom: 0; width: 100%;">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </form>
+            <div class="stat-value">{{ $stat['value'] }}</div>
+            <div class="stat-label">{{ $stat['label'] }}</div>
         </div>
+    @endforeach
+</div>
 
+<<<<<<< HEAD
         <!-- Main Content -->
         <div>
             <!-- Topbar -->
@@ -359,6 +334,67 @@
                 </div>
             </div>
         </div>
+=======
+{{-- Quick Actions --}}
+<div class="card">
+    <h2>
+        @if($isAdmin) Administrative Actions
+        @elseif($isHR) HR Actions
+        @else Quick Actions
+        @endif
+    </h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+        @foreach($actions as $action)
+            <button class="action-btn" style="border: 2px solid {{ $color }}; color: {{ $color }};">
+                <i class="fas {{ $action['icon'] }}"></i> {{ $action['label'] }}
+            </button>
+        @endforeach
+>>>>>>> 41e6c0d28a9469a2871a765e3f245f872eebd9e8
     </div>
-</body>
-</html>
+</div>
+
+{{-- System Information --}}
+<div class="card">
+    <h2>System Information</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 10px 0; color: #6b7280; width: 200px;">Name</td>
+            <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">{{ $user->name }}</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 10px 0; color: #6b7280;">Email</td>
+            <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">{{ $user->email }}</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 10px 0; color: #6b7280;">Role</td>
+            <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">
+                @if($isAdmin) Administrator
+                @elseif($isHR) HR Personnel
+                @else Employee
+                @endif
+            </td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 10px 0; color: #6b7280;">Account Status</td>
+            <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">
+                @if($user->is_active)
+                    <span style="color: #10b981;"><i class="fas fa-check-circle"></i> Active</span>
+                @else
+                    <span style="color: #dc2626;"><i class="fas fa-times-circle"></i> Inactive</span>
+                @endif
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px 0; color: #6b7280;">Last Login</td>
+            <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">
+                @if($user->last_login_at)
+                    {{ $user->last_login_at->format('M d, Y H:i A') }}
+                @else
+                    First Login
+                @endif
+            </td>
+        </tr>
+    </table>
+</div>
+
+@endsection

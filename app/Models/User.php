@@ -74,4 +74,9 @@ class User extends Authenticatable
     {
         return $this->is_active;
     }
+
+    public function employee(): \Illuminate\Database\Eloquent\Relations\HasOne
+{
+    return $this->hasOne(\App\Models\Employee::class);
+}
 }

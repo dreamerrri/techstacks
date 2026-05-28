@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Employee;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\PasswordValidator;
@@ -14,223 +15,298 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * Show the login form
-     */
     public function showLogin()
     {
         return view('auth.login');
     }
 
-    /**
-     * Show registration form
-     */
     public function showRegister()
     {
         return view('auth.register');
     }
 
     /**
-     * Handle login attempt with enhanced security
+     * Handle login — all roles land on the same /dashboard route.
+     * The 'auth' middleware on that route is the security gate.
      */
     public function login(LoginRequest $request)
     {
         $credentials = $request->validated();
 
-        // Attempt to authenticate with secure password validation
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $user = Auth::user();
 
-            // Check if user is active
             if (!$user->isActive()) {
                 Auth::logout();
                 $request->session()->invalidate();
                 return back()->with('error', 'Your account has been deactivated. Please contact administrator.');
             }
 
-            // Update last login timestamp
             $user->update(['last_login_at' => now()]);
-
-            // Regenerate session for security
             $request->session()->regenerate();
 
-            // Log login activity (using Laravel logs)
             \Illuminate\Support\Facades\Log::info('User login', [
                 'user_id' => $user->id,
-                'email' => $user->email,
-                'ip' => $request->ip(),
+                'email'   => $user->email,
+                'ip'      => $request->ip(),
             ]);
+<<<<<<< HEAD
             // Redirect based on role
             return $this->redirectByRole($user);
+=======
+
+            return redirect()->route('dashboard');
+>>>>>>> 41e6c0d28a9469a2871a765e3f245f872eebd9e8
         }
 
-        // Log failed login attempt
         \Illuminate\Support\Facades\Log::warning('Failed login attempt', [
             'email' => $credentials['email'],
-            'ip' => $request->ip(),
+            'ip'    => $request->ip(),
         ]);
         throw ValidationException::withMessages([
             'email' => ['The provided credentials are incorrect.'],
         ]);
     }
 
-    /**
-     * Handle registration
-     */
     public function register(RegisterRequest $request)
     {
         $validated = $request->validated();
 
-        // Validate password strength
         $passwordValidation = PasswordValidator::validate($validated['password']);
-        
         if (!$passwordValidation['valid']) {
             return back()->withErrors(['password' => $passwordValidation['errors']]);
         }
 
-        // Check if password is common
         if (PasswordValidator::isCommonPassword($validated['password'])) {
             return back()->withErrors(['password' => 'This password is too common. Please choose a stronger password.']);
         }
 
-        // Create user
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => 'employee', // Default role
+            'name'      => $validated['name'],
+            'email'     => $validated['email'],
+            'password'  => Hash::make($validated['password']),
+            'role'      => 'employee', // default per DB enum
             'is_active' => true,
         ]);
 
         \Illuminate\Support\Facades\Log::info('User registration', [
             'user_id' => $user->id,
-            'email' => $user->email,
+            'email'   => $user->email,
         ]);
 
-        // Auto-login the user
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect('/dashboard')->with('success', 'Registration successful! Welcome to HR Management System.');
+        return redirect()->route('dashboard')->with('success', 'Registration successful! Welcome to HR Management System.');
     }
 
     /**
-     * Handle login via API with JWT token
+     * Dashboard — single route, role-scoped data.
+     *
+     * Security layers:
+     *   1. 'auth' middleware on the route: blocks unauthenticated requests entirely.
+     *   2. Role check here: each branch only queries and passes data
+     *      that the role is permitted to see. An employee can never
+     *      receive admin or HR data regardless of URL manipulation.
+     *
+     * The blade view uses the same $stats/$actions passed here,
+     * so there is no role-sensitive logic leaking into the frontend.
      */
+    public function dashboard()
+    {
+        $user = Auth::user();
+
+        // --- Admin: sees user/system-level stats ---
+        if ($user->role === 'admin') {
+            $stats = [
+                [
+                    'label' => 'Total Users',
+                    'value' => User::count(),
+                    'icon'  => 'fa-users',
+                    'color' => '#dc2626',
+                ],
+                [
+                    'label' => 'Admin Users',
+                    'value' => User::where('role', 'admin')->count(),
+                    'icon'  => 'fa-user-shield',
+                    'color' => '#991b1b',
+                ],
+                [
+                    'label' => 'HR Personnel',
+                    'value' => User::where('role', 'hr')->count(),
+                    'icon'  => 'fa-user-tie',
+                    'color' => '#fbbf24',
+                ],
+                [
+                    'label' => 'Active Accounts',
+                    'value' => User::where('is_active', true)->count(),
+                    'icon'  => 'fa-check-circle',
+                    'color' => '#10b981',
+                ],
+            ];
+
+            $actions = [
+                ['label' => 'Create User',   'icon' => 'fa-user-plus'],
+                ['label' => 'Manage Roles',  'icon' => 'fa-user-tag'],
+                ['label' => 'System Backup', 'icon' => 'fa-database'],
+                ['label' => 'View Logs',     'icon' => 'fa-history'],
+            ];
+        }
+
+        // --- HR: sees employee/HR-level stats ---
+        elseif ($user->role === 'hr') {
+            $stats = [
+                [
+                    'label' => 'Total Employees',
+                    'value' => Employee::where('is_archived', false)->count(),
+                    'icon'  => 'fa-users',
+                    'color' => '#2563eb',
+                ],
+                [
+                    'label' => 'Regular',
+                    'value' => Employee::where('employment_status', 'Regular')->where('is_archived', false)->count(),
+                    'icon'  => 'fa-calendar-check',
+                    'color' => '#1e40af',
+                ],
+                [
+                    'label' => 'Probationary',
+                    'value' => Employee::where('employment_status', 'Probationary')->where('is_archived', false)->count(),
+                    'icon'  => 'fa-clipboard-list',
+                    'color' => '#fbbf24',
+                ],
+                [
+                    'label' => 'Archived',
+                    'value' => Employee::where('is_archived', true)->count(),
+                    'icon'  => 'fa-archive',
+                    'color' => '#6b7280',
+                ],
+            ];
+
+            $actions = [
+                ['label' => 'Add Employee',   'icon' => 'fa-user-plus'],
+                ['label' => 'Payroll',        'icon' => 'fa-calculator'],
+                ['label' => 'Leave Requests', 'icon' => 'fa-inbox'],
+                ['label' => 'Reports',        'icon' => 'fa-file-pdf'],
+            ];
+        }
+
+        // --- Employee: sees only their own context, no sensitive counts ---
+        else {
+            $stats = [
+                [
+                    'label' => 'Department',
+                    // Find this user's employee record if it exists,
+                    'value' => $user->employee?->department ?? '—',
+                    'icon'  => 'fa-building',
+                    'color' => '#667eea',
+                ],
+                [
+                    'label' => 'Position',
+                    'value' => Employee::where('email', $user->email)->value('position') ?? '—',
+                    'icon'  => 'fa-id-badge',
+                    'color' => '#764ba2',
+                ],
+                [
+                    'label' => 'Employment Status',
+                    'value' => Employee::where('email', $user->email)->value('employment_status') ?? '—',
+                    'icon'  => 'fa-briefcase',
+                    'color' => '#fbbf24',
+                ],
+                [
+                    'label' => 'Date Hired',
+                    'value' => optional(Employee::where('email', $user->email)->value('date_hired'))->format('M d, Y') ?? '—',
+                    'icon'  => 'fa-calendar',
+                    'color' => '#10b981',
+                ],
+            ];
+
+            $actions = [
+                ['label' => 'My Profile',    'icon' => 'fa-user'],
+                ['label' => 'Payslips',      'icon' => 'fa-file-invoice-dollar'],
+                ['label' => 'Leave Request', 'icon' => 'fa-calendar-times'],
+                ['label' => 'Attendance',    'icon' => 'fa-clock'],
+            ];
+        }
+
+        return view('dashboard', compact('user', 'stats', 'actions'));
+    }
+
+    // -----------------------------------------------------------------------
+    // API (JWT)
+    // -----------------------------------------------------------------------
+
     public function apiLogin(LoginRequest $request)
     {
         $credentials = $request->validated();
-
-        // Find user by email
         $user = User::where('email', $credentials['email'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             \Illuminate\Support\Facades\Log::warning('Failed API login attempt', [
                 'email' => $credentials['email'],
-                'ip' => request()->ip(),
+                'ip'    => request()->ip(),
             ]);
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
-        // Check if user is active
         if (!$user->isActive()) {
-            \Illuminate\Support\Facades\Log::warning('Login attempt on deactivated account', [
-                'user_id' => $user->id,
-                'email' => $user->email,
-            ]);
             return response()->json(['error' => 'Account has been deactivated'], 403);
         }
 
-        // Generate JWT token
-        $token = JWTTokenService::generateToken($user);
+        $token        = JWTTokenService::generateToken($user);
         $refreshToken = JWTTokenService::createRefreshToken($user);
-
-        // Update last login
         $user->update(['last_login_at' => now()]);
 
-        \Illuminate\Support\Facades\Log::info('API login successful', [
-            'user_id' => $user->id,
-            'email' => $user->email,
-        ]);
-
         return response()->json([
-            'success' => true,
-            'message' => 'Login successful',
-            'token' => $token,
+            'success'       => true,
+            'message'       => 'Login successful',
+            'token'         => $token,
             'refresh_token' => $refreshToken,
             'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
+                'id'    => $user->id,
+                'name'  => $user->name,
                 'email' => $user->email,
-                'role' => $user->role,
+                'role'  => $user->role,
             ],
         ]);
     }
 
-    /**
-     * Refresh JWT token
-     */
     public function refreshToken(Request $request)
     {
         try {
-            $token = JWTTokenService::getTokenFromRequest($request);
+            $token    = JWTTokenService::getTokenFromRequest($request);
             $newToken = JWTTokenService::refreshToken($token);
-
-            return response()->json([
-                'success' => true,
-                'token' => $newToken,
-            ]);
+            return response()->json(['success' => true, 'token' => $newToken]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 401);
         }
     }
 
-    /**
-     * Validate password strength (for frontend)
-     */
     public function validatePassword(Request $request)
     {
         $password = $request->input('password');
-        
         if (!$password) {
             return response()->json(['error' => 'Password is required'], 400);
         }
 
         $validation = PasswordValidator::validate($password);
-        $isCommon = PasswordValidator::isCommonPassword($password);
+        $isCommon   = PasswordValidator::isCommonPassword($password);
 
         return response()->json([
-            'valid' => $validation['valid'] && !$isCommon,
-            'strength' => $validation['strength'],
-            'level' => $validation['level'],
-            'errors' => $validation['errors'],
+            'valid'     => $validation['valid'] && !$isCommon,
+            'strength'  => $validation['strength'],
+            'level'     => $validation['level'],
+            'errors'    => $validation['errors'],
             'is_common' => $isCommon,
         ]);
     }
 
-    /**
-     * Redirect user based on their role
-     */
-    private function redirectByRole($user)
-    {
-        return match ($user->role) {
-            'admin' => redirect('/admin/dashboard'),
-            'hr' => redirect('/hr/dashboard'),
-            default => redirect('/dashboard'),
-        };
-    }
-
-    /**
-     * Handle logout
-     */
     public function logout(Request $request)
     {
         $user = Auth::user();
-
         if ($user) {
             \Illuminate\Support\Facades\Log::info('User logout', [
                 'user_id' => $user->id,
-                'email' => $user->email,
+                'email'   => $user->email,
             ]);
         }
 
@@ -241,20 +317,17 @@ class AuthController extends Controller
         return redirect('/login')->with('success', 'You have been logged out successfully.');
     }
 
-    /**
-     * Handle API logout
-     */
     public function apiLogout(Request $request)
     {
         try {
-            $token = JWTTokenService::getTokenFromRequest($request);
+            $token   = JWTTokenService::getTokenFromRequest($request);
             $decoded = JWTTokenService::verifyToken($token);
-            
-            $user = User::find($decoded->user_id);
+            $user    = User::find($decoded->user_id);
+
             if ($user) {
                 \Illuminate\Support\Facades\Log::info('API logout', [
                     'user_id' => $user->id,
-                    'email' => $user->email,
+                    'email'   => $user->email,
                 ]);
             }
 
@@ -262,29 +335,5 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 401);
         }
-    }
-
-    /**
-     * Show user dashboard (generic)
-     */
-    public function dashboard()
-    {
-        return view('dashboard', ['user' => Auth::user()]);
-    }
-
-    /**
-     * Show admin dashboard
-     */
-    public function adminDashboard()
-    {
-        return view('admin.dashboard', ['user' => Auth::user()]);
-    }
-
-    /**
-     * Show HR dashboard
-     */
-    public function hrDashboard()
-    {
-        return view('hr.dashboard', ['user' => Auth::user()]);
     }
 }
