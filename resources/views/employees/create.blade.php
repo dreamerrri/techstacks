@@ -16,7 +16,7 @@
         <form method="POST" action="{{ route('employees.store') }}">
             @csrf
             @include('employees.form')
-            <div style="margin-top:24px; display:flex; gap:12px;">
+            <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap;">
                 <button type="submit"
                         style="padding:10px 24px; background:linear-gradient(135deg,#dc2626,#991b1b); color:white; border:none; border-radius:6px; cursor:pointer; font-weight:600;">
                     <i class="fas fa-save"></i> Save Employee
