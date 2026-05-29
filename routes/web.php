@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3366ff80e8e67623727beb538cbcc64a71a1094f
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AllowanceController;
 use App\Http\Controllers\BenefitController;
