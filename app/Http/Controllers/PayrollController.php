@@ -161,10 +161,17 @@ class PayrollController extends Controller
         $previewResult = $engine->compute($employeeData, $attendanceData, [], $benefits, $allowances, [], true);
         $grossPay = $previewResult['gross_pay'];
 
-        // Government contributions (Philippines standard rates)
-        $sssContribution = min($grossPay * 0.045, 900);
-        $philhealthContribution = min($grossPay * 0.0225, 1500);
-        $pagibigContribution = min($grossPay * 0.02, 100);
+        // Government contributions (use employee-specific rates or default Philippine standard rates)
+        $sssRate = $employee->sss_rate ?? 0.045;
+        $sssCap = $employee->sss_cap ?? 900;
+        $philhealthRate = $employee->philhealth_rate ?? 0.0225;
+        $philhealthCap = $employee->philhealth_cap ?? 1500;
+        $pagibigRate = $employee->pagibig_rate ?? 0.02;
+        $pagibigCap = $employee->pagibig_cap ?? 100;
+
+        $sssContribution = min($grossPay * $sssRate, $sssCap);
+        $philhealthContribution = min($grossPay * $philhealthRate, $philhealthCap);
+        $pagibigContribution = min($grossPay * $pagibigRate, $pagibigCap);
 
         // Calculate withholding tax
         $taxableIncome = $grossPay - $sssContribution - $philhealthContribution - $pagibigContribution;

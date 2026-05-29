@@ -71,6 +71,11 @@ Route::put('/profile/banner-color', [ProfileController::class, 'updateBannerColo
             Route::patch('/{employee}/archive', [EmployeeController::class, 'archive'])->name('archive');
             Route::patch('/{employee}/restore', [EmployeeController::class, 'restore'])->name('restore');
         });
+
+        // Government Contributions — admin and HR only
+        Route::middleware('role:admin,hr')->group(function () {
+            Route::patch('/{employee}/update-gov-contributions', [EmployeeController::class, 'updateGovContributions'])->name('update-gov-contributions');
+        });
     });
 
     // Attendance Management — admin and HR only (separate group to avoid prefix inheritance)
