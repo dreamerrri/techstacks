@@ -126,11 +126,11 @@
                                 <div style="display:flex; gap:8px;">
                                     <a href="{{ route('employees.show', $employee) }}"
                                        style="padding:5px 10px; background:#dbeafe; color:#1e40af; border-radius:5px; font-size:12px; text-decoration:none;">
-                                        <i class="fas fa-eye"></i> View
+                                        <i class="fas fa-eye"></i>
                                     </a>
                                     <a href="{{ route('employees.edit', $employee) }}"
                                        style="padding:5px 10px; background:#fef3c7; color:#92400e; border-radius:5px; font-size:12px; text-decoration:none;">
-                                        <i class="fas fa-edit"></i> Edit
+                                        <i class="fas fa-edit"></i>
                                     </a>
                                     <form method="POST" action="{{ route('employees.archive', $employee) }}"
                                           data-confirm="This employee will be moved to the archive."
@@ -140,7 +140,7 @@
                                           style="display:inline;">
                                         @csrf @method('PATCH')
                                         <button style="padding:5px 10px; background:#fecaca; color:#991b1b; border:none; border-radius:5px; font-size:12px; cursor:pointer;">
-                                            <i class="fas fa-archive"></i> Archive
+                                            <i class="fas fa-archive"></i>
                                         </button>
                                     </form>
                                 </div>
