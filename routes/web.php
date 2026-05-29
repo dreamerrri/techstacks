@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PayrollController;
 
 
 // Public Routes
@@ -57,6 +58,13 @@ Route::middleware('auth')->group(function () {
             Route::patch('/{employee}/archive', [EmployeeController::class, 'archive'])->name('archive');
             Route::patch('/{employee}/restore', [EmployeeController::class, 'restore'])->name('restore');
         });
+    });
+
+    // Payroll Management — all authenticated users can access
+    // Admin and HR can view all employees' payroll, employees can only view their own
+    Route::prefix('payroll')->name('payroll.')->group(function () {
+        Route::get('/',         [PayrollController::class, 'index'])->name('index');
+        Route::get('/{employee}', [PayrollController::class, 'show'])->name('show');
     });
 });
 
