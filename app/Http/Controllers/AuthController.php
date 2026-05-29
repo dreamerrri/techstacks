@@ -11,6 +11,7 @@ use App\Services\JWTTokenService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -81,9 +82,41 @@ class AuthController extends Controller
             'name'      => $validated['name'],
             'email'     => $validated['email'],
             'password'  => Hash::make($validated['password']),
-            'role'      => 'employee', // default per DB enum
+            'role'      => 'employee',
             'is_active' => true,
         ]);
+
+        // --- FIX: Auto-create a linked Employee record for every new registered user ---
+        if (!Employee::where('email', $validated['email'])->exists()) {
+            $nameParts = explode(' ', trim($validated['name']), 2);
+            $firstName = $nameParts[0];
+            $lastName  = $nameParts[1] ?? $nameParts[0];
+
+            $employee = Employee::create([
+                'user_id'           => $user->id,
+                'employee_id'       => 'EMP-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
+                'first_name'        => $firstName,
+                'last_name'         => $lastName,
+                'email'             => $validated['email'],
+                'birthdate'         => '1990-01-01',      // placeholder — HR should update
+                'gender'            => 'Other',
+                'civil_status'      => 'Single',
+                'address'           => '',
+                'contact_number'    => '',
+                'department'        => 'Unassigned',
+                'position'          => 'Unassigned',
+                'employment_status' => 'Probationary',
+                'date_hired'        => now()->toDateString(),
+                'salary_type'       => 'Monthly',
+                'basic_salary'      => 0,
+            ]);
+        } else {
+            // Employee record already exists (e.g. HR added them first) — just link the user_id
+            Employee::where('email', $validated['email'])
+                ->whereNull('user_id')
+                ->update(['user_id' => $user->id]);
+        }
+        // --- END FIX ---
 
         \Illuminate\Support\Facades\Log::info('User registration', [
             'user_id' => $user->id,
@@ -98,15 +131,6 @@ class AuthController extends Controller
 
     /**
      * Dashboard — single route, role-scoped data.
-     *
-     * Security layers:
-     *   1. 'auth' middleware on the route: blocks unauthenticated requests entirely.
-     *   2. Role check here: each branch only queries and passes data
-     *      that the role is permitted to see. An employee can never
-     *      receive admin or HR data regardless of URL manipulation.
-     *
-     * The blade view uses the same $stats/$actions passed here,
-     * so there is no role-sensitive logic leaking into the frontend.
      */
     public function dashboard()
     {
@@ -186,12 +210,11 @@ class AuthController extends Controller
             ];
         }
 
-        // --- Employee: sees only their own context, no sensitive counts ---
+        // --- Employee: sees only their own context ---
         else {
             $stats = [
                 [
                     'label' => 'Department',
-                    // Find this user's employee record if it exists,
                     'value' => $user->employee?->department ?? '—',
                     'icon'  => 'fa-building',
                     'color' => '#667eea',
