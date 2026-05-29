@@ -133,6 +133,28 @@ class EmployeeController extends Controller
             ->with('success', 'Employee restored successfully.');
     }
 
+    public function updateGovContributions(Request $request, Employee $employee)
+    {
+        // Authorization: Only HR and Admin can update government contributions
+        if (!auth()->user()->isAdmin() && !auth()->user()->isHR()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validated = $request->validate([
+            'sss_rate' => 'required|numeric|min:0|max:1',
+            'sss_cap' => 'required|numeric|min:0',
+            'philhealth_rate' => 'required|numeric|min:0|max:1',
+            'philhealth_cap' => 'required|numeric|min:0',
+            'pagibig_rate' => 'required|numeric|min:0|max:1',
+            'pagibig_cap' => 'required|numeric|min:0',
+        ]);
+
+        $employee->update($validated);
+
+        return redirect()->route('employees.show', $employee)
+            ->with('success', 'Government contribution rates updated successfully.');
+    }
+
     private function validateEmployee(Request $request, $ignoreId = null): array
     {
         return $request->validate([

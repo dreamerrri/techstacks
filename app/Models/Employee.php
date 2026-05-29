@@ -33,6 +33,12 @@ class Employee extends Model
         'philhealth_number',
         'pagibig_number',
         'tin_number',
+        'sss_rate',
+        'sss_cap',
+        'philhealth_rate',
+        'philhealth_cap',
+        'pagibig_rate',
+        'pagibig_cap',
         'is_archived',
     ];
 
@@ -41,6 +47,12 @@ class Employee extends Model
         'date_hired'  => 'date',
         'is_archived' => 'boolean',
         'basic_salary'=> 'decimal:2',
+        'sss_rate'    => 'decimal:4',
+        'sss_cap'     => 'decimal:2',
+        'philhealth_rate' => 'decimal:4',
+        'philhealth_cap'  => 'decimal:2',
+        'pagibig_rate'    => 'decimal:4',
+        'pagibig_cap'     => 'decimal:2',
     ];
 
     // Full name accessor
