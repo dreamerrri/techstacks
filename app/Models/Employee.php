@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 class Employee extends Model
 {
@@ -59,6 +61,11 @@ class Employee extends Model
         return $query->where('is_archived', true);
     }
 
-
+    public function payrollInputs(): HasMany
+{
+    return $this->hasMany(PayrollInput::class);
+}
     
+
+
 }

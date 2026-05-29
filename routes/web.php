@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\PayrollInputController;
+use App\Http\Controllers\PayrollPeriodController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
@@ -29,17 +32,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
     Route::middleware('role:admin')->prefix('users')->name('users.')->group(function () {
-    Route::get('/',                    [UserController::class, 'index'])->name('index');
-    Route::patch('/{user}/toggle',     [UserController::class, 'toggleActive'])->name('toggle');
-    Route::patch('/{user}/role',       [UserController::class, 'updateRole'])->name('role');
-});
+        Route::get('/',                [UserController::class, 'index'])->name('index');
+        Route::patch('/{user}/toggle', [UserController::class, 'toggleActive'])->name('toggle');
+        Route::patch('/{user}/role',   [UserController::class, 'updateRole'])->name('role');
+    });
 
     // Employee Management — admin and HR only.
     Route::middleware('role:admin,hr')->prefix('employees')->name('employees.')->group(function () {
 
         // ── Static routes FIRST (must come before the /{employee} wildcard) ──
-        Route::get('/',          [EmployeeController::class, 'index'])->name('index');
-        Route::get('/archived',  [EmployeeController::class, 'archived'])->name('archived');
+        Route::get('/',         [EmployeeController::class, 'index'])->name('index');
+        Route::get('/archived', [EmployeeController::class, 'archived'])->name('archived');
 
         // Create & Store — admin and HR
         Route::middleware('role:admin,hr')->group(function () {
@@ -58,6 +61,14 @@ Route::middleware('auth')->group(function () {
             Route::patch('/{employee}/restore', [EmployeeController::class, 'restore'])->name('restore');
         });
     });
+
+    // ── Payroll Module — admin and HR only ────────────────────
+    Route::middleware('role:admin,hr')->prefix('payroll')->name('payroll.')->group(function () {
+
+        // Blade page
+        Route::get('/', [PayrollController::class, 'index'])->name('index');
+
+    });
 });
 
 // API Routes (JWT Authentication)
@@ -68,14 +79,33 @@ Route::prefix('api')->group(function () {
 
     Route::middleware('jwt')->group(function () {
 
-    Route::prefix('employees')->group(function () {
-        Route::get('/',                          [EmployeeController::class, 'apiIndex']);
-        Route::post('/',                         [EmployeeController::class, 'apiStore']);
-        Route::get('/{employee}',                [EmployeeController::class, 'apiShow']);
-        Route::put('/{employee}',                [EmployeeController::class, 'apiUpdate']);
-        Route::patch('/{employee}/archive',      [EmployeeController::class, 'apiArchive']);
-    });
-    
+        Route::prefix('employees')->group(function () {
+            Route::get('/',                     [EmployeeController::class, 'apiIndex']);
+            Route::post('/',                    [EmployeeController::class, 'apiStore']);
+            Route::get('/{employee}',           [EmployeeController::class, 'apiShow']);
+            Route::put('/{employee}',           [EmployeeController::class, 'apiUpdate']);
+            Route::patch('/{employee}/archive', [EmployeeController::class, 'apiArchive']);
+        });
+
+        // ── Payroll API ────────────────────────────────────────
+        Route::prefix('payroll-periods')->name('api.payroll-periods.')->group(function () {
+            Route::get('/',                          [PayrollPeriodController::class, 'index'])->name('index');
+            Route::post('/',                         [PayrollPeriodController::class, 'store'])->name('store');
+            Route::get('/{payrollPeriod}',           [PayrollPeriodController::class, 'show'])->name('show');
+        });
+
+        Route::prefix('payroll-inputs')->name('api.payroll-inputs.')->group(function () {
+            Route::get('/',                          [PayrollInputController::class, 'index'])->name('index');   // ?payroll_period_id=1
+            Route::post('/',                         [PayrollInputController::class, 'store'])->name('store');
+            Route::put('/{payrollInput}',            [PayrollInputController::class, 'update'])->name('update');
+            Route::delete('/{payrollInput}',         [PayrollInputController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('payroll')->name('api.payroll.')->group(function () {
+            Route::post('/compute',                  [PayrollController::class, 'compute'])->name('compute');
+            Route::post('/finalize',                 [PayrollController::class, 'finalize'])->name('finalize');
+        });
+
         Route::post('/logout',        [AuthController::class, 'apiLogout']);
         Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
         Route::get('/user', function (Request $request) {
