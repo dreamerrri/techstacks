@@ -78,5 +78,6 @@ class User extends Authenticatable
     public function employee(): \Illuminate\Database\Eloquent\Relations\HasOne
 {
     return $this->hasOne(\App\Models\Employee::class);
+    return $this->hasOne(Employee::class);
 }
 }

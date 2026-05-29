@@ -32,9 +32,15 @@
             <span style="font-size:18px; font-weight:700; color:white;">HR System</span>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
-            <div class="user-avatar avatar-{{ $role }}" style="width:34px;height:34px;font-size:13px;">
-                {{ strtoupper(substr($user->name, 0, 1)) }}
-            </div>
+            <div class="user-avatar avatar-{{ $role }}" style="overflow:hidden; padding:0;">
+    @if($user->profile_photo)
+        <img src="{{ asset('storage/' . $user->profile_photo) }}"
+             alt="{{ $user->name }}"
+             style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+    @else
+        {{ strtoupper(substr($user->name, 0, 1)) }}
+    @endif
+</div>
             <span class="role-badge badge-{{ $role }}">{{ ucfirst($user->role) }}</span>
         </div>
     </div>
@@ -78,7 +84,7 @@
             <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
             <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
         @else
-            <a href="#" class="nav-item"><i class="fas fa-user"></i><span>My Profile</span></a>
+          <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}"></i><span>My Profile</span></a>
             <a href="{{ route('payroll.index') }}"
                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                 <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
@@ -164,7 +170,7 @@
                 <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
 
             @else
-                <a href="#" class="nav-item"><i class="fas fa-user"></i><span>My Profile</span></a>
+            <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}"><i class="fas fa-user"></i><span>My Profile</span></a>
                 <a href="{{ route('payroll.index') }}"
                    class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                     <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
@@ -190,9 +196,15 @@
 <div class="topbar" style="position:sticky; top:0; z-index:10;">    
             <h2 style="margin: 0; color: #1f2937;">@yield('title')</h2>
             <div style="display: flex; align-items: center; gap: 15px;">
-                <div class="user-avatar avatar-{{ $role }}">
-                    {{ strtoupper(substr($user->name, 0, 1)) }}
-                </div>
+           <div class="user-avatar avatar-{{ $role }}" style="width:34px;height:34px;font-size:13px; overflow:hidden; padding:0;">
+    @if($user->profile_photo)
+        <img src="{{ asset('storage/' . $user->profile_photo) }}"
+             alt="{{ $user->name }}"
+             style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+    @else
+        {{ strtoupper(substr($user->name, 0, 1)) }}
+    @endif
+</div>
                 <div>
                    <div class="user-name" style="font-size:14px; font-weight:600;">{{ $user->name }}</div>
 <div class="user-role" style="font-size:12px;">
