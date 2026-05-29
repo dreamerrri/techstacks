@@ -7,6 +7,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AllowanceController;
+use App\Http\Controllers\BenefitController;
 
 
 // Public Routes
@@ -68,6 +70,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/{attendance}/edit', [AttendanceController::class, 'edit'])->name('edit');
         Route::put('/{attendance}',      [AttendanceController::class, 'update'])->name('update');
         Route::delete('/{attendance}',   [AttendanceController::class, 'destroy'])->name('destroy');
+    });
+
+    // Allowance Management — admin and HR only
+    Route::middleware('role:admin,hr')->prefix('employees/{employee}/allowances')->name('allowances.')->group(function () {
+        Route::post('/', [AllowanceController::class, 'store'])->name('store');
+        Route::put('/{allowance}', [AllowanceController::class, 'update'])->name('update');
+        Route::delete('/{allowance}', [AllowanceController::class, 'destroy'])->name('destroy');
+    });
+
+    // Benefit Management — admin and HR only
+    Route::middleware('role:admin,hr')->prefix('employees/{employee}/benefits')->name('benefits.')->group(function () {
+        Route::post('/', [BenefitController::class, 'store'])->name('store');
+        Route::put('/{benefit}', [BenefitController::class, 'update'])->name('update');
+        Route::delete('/{benefit}', [BenefitController::class, 'destroy'])->name('destroy');
     });
 
     // Payroll Management — all authenticated users can access

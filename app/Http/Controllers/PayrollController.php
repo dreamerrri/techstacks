@@ -148,10 +148,14 @@ class PayrollController extends Controller
             'working_hours_per_day' => 8,
         ];
 
+        // Fetch active allowances and benefits
+        $allowances = $employee->activeAllowances()->pluck('amount')->toArray();
+        $benefits = $employee->activeBenefits()->pluck('amount')->toArray();
+
         // Calculate government contributions based on gross pay
         // First, calculate gross pay without deductions to get contribution bases
         $engine = new PayrollComputationEngine();
-        $previewResult = $engine->compute($employeeData, $attendanceData, [], [], [], [], true);
+        $previewResult = $engine->compute($employeeData, $attendanceData, [], $benefits, $allowances, [], true);
         $grossPay = $previewResult['gross_pay'];
 
         // Government contributions (Philippines standard rates)
@@ -167,7 +171,7 @@ class PayrollController extends Controller
         $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax];
 
         // Calculate final payroll with deductions
-        $result = $engine->compute($employeeData, $attendanceData, $deductions, [], [], [], false);
+        $result = $engine->compute($employeeData, $attendanceData, $deductions, $benefits, $allowances, [], false);
 
         // Add additional fields for view compatibility
         return [
@@ -180,6 +184,9 @@ class PayrollController extends Controller
             'night_differential_pay' => $result['night_differential'],
             'holiday_pay' => $result['holiday_pay'],
             'late_deduction' => $result['late_deduction'],
+            'allowance_benefits' => $result['allowances'] + $result['benefits'],
+            'allowances' => $result['allowances'],
+            'benefits' => $result['benefits'],
             'gross_pay' => $result['gross_pay'],
             'sss_contribution' => $sssContribution,
             'philhealth_contribution' => $philhealthContribution,

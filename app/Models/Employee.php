@@ -77,5 +77,29 @@ class Employee extends Model
         return $this->attendances()->orderBy('year', 'desc')->orderBy('month', 'desc')->first();
     }
 
+    // Relationship: allowances
+    public function allowances()
+    {
+        return $this->hasMany(\App\Models\Allowance::class);
+    }
+
+    // Relationship: benefits
+    public function benefits()
+    {
+        return $this->hasMany(\App\Models\Benefit::class);
+    }
+
+    // Get active allowances
+    public function activeAllowances()
+    {
+        return $this->allowances()->active();
+    }
+
+    // Get active benefits
+    public function activeBenefits()
+    {
+        return $this->benefits()->active();
+    }
+
 
 }

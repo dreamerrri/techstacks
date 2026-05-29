@@ -136,10 +136,18 @@
                 <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['late_hours'] ?? 0 }} late hours × ₱{{ number_format($payroll['hourly_rate'] ?? 0, 2) }}/hr</div>
             </div>
 
+            <div style="margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span style="color:#6b7280;">Allowance & Benefits</span>
+                    <span style="font-weight:600; color:#10b981;">+₱{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</span>
+                </div>
+                <div style="font-size:12px; color:#9ca3af;">Total active allowances and benefits</div>
+            </div>
+
             <div style="padding-top:10px; border-top:1px solid #e5e7eb;">
                 <div style="display:flex; justify-content:space-between; font-weight:600;">
                     <span style="color:#1f2937;">Total Earnings</span>
-                    <span style="color:#10b981;">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0), 2) }}</span>
+                    <span style="color:#10b981;">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['allowance_benefits'] ?? 0), 2) }}</span>
                 </div>
             </div>
         </div>
