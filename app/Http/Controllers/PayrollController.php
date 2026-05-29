@@ -49,7 +49,10 @@ class PayrollController extends Controller
             $query->where('department', $request->department);
         }
 
-        $employees = $query->orderBy('last_name')->paginate(15)->withQueryString();
+        $employees = $query->orderByRaw('CASE WHEN EXISTS (SELECT 1 FROM attendances WHERE attendances.employee_id = employees.id) THEN 0 ELSE 1 END')
+            ->orderBy('last_name')
+            ->paginate(15)
+            ->withQueryString();
         $departments = Employee::active()->distinct()->pluck('department');
 
         // Calculate payroll for each employee
