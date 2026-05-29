@@ -74,16 +74,26 @@ class AttendanceController extends Controller
     /**
      * Show the form for editing the specified attendance
      */
-    public function edit(Employee $employee, Attendance $attendance)
+    public function edit($employeeId, $attendanceId)
     {
+        $employee = Employee::findOrFail($employeeId);
+        $attendance = Attendance::where('id', $attendanceId)
+            ->where('employee_id', $employeeId)
+            ->firstOrFail();
+
         return view('attendance.edit', compact('employee', 'attendance'));
     }
 
     /**
      * Update the specified attendance
      */
-    public function update(Request $request, Employee $employee, Attendance $attendance)
+    public function update(Request $request, $employeeId, $attendanceId)
     {
+        $employee = Employee::findOrFail($employeeId);
+        $attendance = Attendance::where('id', $attendanceId)
+            ->where('employee_id', $employeeId)
+            ->firstOrFail();
+
         $validated = $request->validate([
             'days_worked' => 'required|integer|min:0|max:31',
             'regular_hours' => 'required|integer|min:0|max:744',
@@ -93,7 +103,16 @@ class AttendanceController extends Controller
             'regular_holiday_worked' => 'required|integer|min:0|max:31',
         ]);
 
-        $attendance->update($validated);
+        // Update using fill to ensure fillable fields are respected
+        $attendance->fill([
+            'days_worked' => $validated['days_worked'],
+            'regular_hours' => $validated['regular_hours'],
+            'overtime_hours' => $validated['overtime_hours'],
+            'late_hours' => $validated['late_hours'],
+            'night_differential_hours' => $validated['night_differential_hours'],
+            'regular_holiday_worked' => $validated['regular_holiday_worked'],
+        ]);
+        $attendance->save();
 
         return redirect()->route('employees.show', $employee)
             ->with('success', 'Attendance record updated successfully.');
@@ -102,8 +121,13 @@ class AttendanceController extends Controller
     /**
      * Remove the specified attendance
      */
-    public function destroy(Employee $employee, Attendance $attendance)
+    public function destroy($employeeId, $attendanceId)
     {
+        $employee = Employee::findOrFail($employeeId);
+        $attendance = Attendance::where('id', $attendanceId)
+            ->where('employee_id', $employeeId)
+            ->firstOrFail();
+
         $attendance->delete();
 
         return redirect()->route('employees.show', $employee)

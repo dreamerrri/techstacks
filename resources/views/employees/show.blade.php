@@ -96,7 +96,7 @@
                 <h2 style="margin:0;"><i class="fas fa-clock" style="color:#dc2626;"></i> Attendance Summary</h2>
                 @if(auth()->user()->isAdmin() || auth()->user()->isHR())
                     @php
-                        $attendance = $employee->currentAttendance();
+                        $attendance = $employee->latestAttendance();
                     @endphp
                     @if($attendance)
                         <a href="{{ route('attendance.edit', [$employee, $attendance]) }}"
@@ -114,13 +114,15 @@
             <div style="background:#f9fafb; padding:20px; border-radius:8px;">
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
                     @php
-                        $attendance = $employee->currentAttendance();
+                        $attendance = $employee->latestAttendance();
                         $daysWorked = $attendance->days_worked ?? 0;
                         $regularHours = $attendance->regular_hours ?? 0;
                         $overtimeHours = $attendance->overtime_hours ?? 0;
                         $lateHours = $attendance->late_hours ?? 0;
                         $nightDifferentialHours = $attendance->night_differential_hours ?? 0;
                         $regularHolidayWorked = $attendance->regular_holiday_worked ?? 0;
+                        $attendanceMonth = $attendance ? date('F', mktime(0, 0, 0, $attendance->month, 1)) : null;
+                        $attendanceYear = $attendance->year ?? null;
                     @endphp
 
                     <div style="text-align:center;">
@@ -154,9 +156,13 @@
                     </div>
                 </div>
 
-                @if(!$attendance)
+                @if($attendance)
+                    <div style="margin-top:16px; padding:12px; background:#dbeafe; border-radius:6px; font-size:12px; color:#1e40af; text-align:center;">
+                        <i class="fas fa-info-circle"></i> Showing attendance for {{ $attendanceMonth }} {{ $attendanceYear }}
+                    </div>
+                @else
                     <div style="margin-top:16px; padding:12px; background:#fef3c7; border-radius:6px; font-size:12px; color:#92400e; text-align:center;">
-                        <i class="fas fa-info-circle"></i> No attendance data for {{ date('F Y') }}
+                        <i class="fas fa-info-circle"></i> No attendance data found
                     </div>
                 @endif
             </div>

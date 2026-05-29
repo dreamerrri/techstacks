@@ -71,5 +71,11 @@ class Employee extends Model
         return $this->attendances()->currentMonth()->first();
     }
 
+    // Get most recent attendance record
+    public function latestAttendance()
+    {
+        return $this->attendances()->orderBy('year', 'desc')->orderBy('month', 'desc')->first();
+    }
+
 
 }
