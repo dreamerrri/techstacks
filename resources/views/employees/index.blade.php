@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Staff')
+
 
 @section('content')
 
@@ -43,50 +43,54 @@
     </div>
 
     {{-- Filters + Table --}}
-    <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
-            <h2 style="margin:0;">Employee List</h2>
-            <a href="{{ route('employees.archived') }}" style="color:#6b7280; font-size:13px; text-decoration:none;">
-                <i class="fas fa-archive"></i> View Archived
-            </a>
+    <div class="card" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
+
+        {{-- Sticky header: title + search --}}
+        <div style="position:sticky; top:0; z-index:10; background:white; padding:20px 25px 0; border-radius:10px 10px 0 0; box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+                <h2 style="margin:0;">Employee List</h2>
+                <a href="{{ route('employees.archived') }}" style="color:#6b7280; font-size:13px; text-decoration:none;">
+                    <i class="fas fa-archive"></i> View Archived
+                </a>
+            </div>
+
+            {{-- Search & Filters --}}
+            <form method="GET" action="{{ route('employees.index') }}"
+                  style="display:flex; flex-wrap:wrap; gap:10px; padding-bottom:16px; border-bottom:1px solid #e5e7eb;">
+                <input type="text" name="search" value="{{ request('search') }}"
+                       placeholder="Search name, ID, email..."
+                       style="flex:1; min-width:160px; border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
+                <select name="department"
+                        style="border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
+                    <option value="">All Departments</option>
+                    @foreach($departments as $dept)
+                        <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                    @endforeach
+                </select>
+                <select name="status"
+                        style="border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
+                    <option value="">All Status</option>
+                    @foreach(['Regular','Probationary','Contractual','Part-time'] as $s)
+                        <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
+                    @endforeach
+                </select>
+                <button type="submit"
+                        style="padding:8px 20px; background:#dc2626; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px;">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                @if(request()->hasAny(['search','department','status']))
+                    <a href="{{ route('employees.index') }}"
+                       style="padding:8px 16px; background:#f3f4f6; color:#6b7280; border-radius:6px; text-decoration:none; font-size:14px;">
+                        Clear
+                    </a>
+                @endif
+            </form>
         </div>
 
-        {{-- Search & Filters --}}
-        <form method="GET" action="{{ route('employees.index') }}"
-              style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
-            <input type="text" name="search" value="{{ request('search') }}"
-                   placeholder="Search name, ID, email..."
-                   style="flex:1; min-width:160px; border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
-            <select name="department"
-                    style="border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
-                <option value="">All Departments</option>
-                @foreach($departments as $dept)
-                    <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
-                @endforeach
-            </select>
-            <select name="status"
-                    style="border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
-                <option value="">All Status</option>
-                @foreach(['Regular','Probationary','Contractual','Part-time'] as $s)
-                    <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
-                @endforeach
-            </select>
-            <button type="submit"
-                    style="padding:8px 20px; background:#dc2626; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px;">
-                <i class="fas fa-search"></i> Search
-            </button>
-            @if(request()->hasAny(['search','department','status']))
-                <a href="{{ route('employees.index') }}"
-                   style="padding:8px 16px; background:#f3f4f6; color:#6b7280; border-radius:6px; text-decoration:none; font-size:14px;">
-                    Clear
-                </a>
-            @endif
-        </form>
-
-        {{-- Desktop Table --}}
-        <div class="user-table-wrapper">
+        {{-- Desktop Table — scrollable body --}}
+        <div class="user-table-wrapper" style="overflow-y:auto; max-height:62vh; padding:0 25px;">
             <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:700px;">
-                <thead>
+                <thead style="position:sticky; top:0; z-index:5;">
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Employee ID</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Full Name</th>
@@ -154,8 +158,10 @@
             </table>
         </div>
 
+        </div>{{-- end scrollable table wrapper --}}
+
         {{-- Mobile Cards --}}
-        <div class="user-mobile-cards">
+        <div class="user-mobile-cards" style="padding:16px;">
             @forelse($employees as $employee)
                 @php
                     $colors = [
@@ -217,7 +223,7 @@
             @endforelse
         </div>
 
-        <div style="margin-top:20px;">{{ $employees->links() }}</div>
+        <div style="padding:16px 25px; border-top:1px solid #e5e7eb;">{{ $employees->links() }}</div>
     </div>
 
 @endsection

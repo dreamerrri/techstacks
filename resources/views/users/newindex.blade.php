@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-
+@section('title', 'All Users')
 
 @section('content')
 
@@ -37,42 +37,49 @@
         </div>
     </div>
 
-    <div class="card">
-        <h2 style="margin-top:0;">User Accounts</h2>
+    {{-- Filters + Table --}}
+    <div class="card" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
 
-        {{-- Filters --}}
-        <form method="GET" action="{{ route('users.index') }}"
-              style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
-            <input type="text" name="search" value="{{ request('search') }}"
-                   placeholder="Search name or email..."
-                   style="flex:1; min-width:160px; border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
-            <select name="role" style="border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
-                <option value="">All Roles</option>
-                <option value="admin"    {{ request('role') === 'admin'    ? 'selected' : '' }}>Admin</option>
-                <option value="hr"       {{ request('role') === 'hr'       ? 'selected' : '' }}>HR</option>
-                <option value="employee" {{ request('role') === 'employee' ? 'selected' : '' }}>Employee</option>
-            </select>
-            <select name="status" style="border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
-                <option value="">All Status</option>
-                <option value="active"   {{ request('status') === 'active'   ? 'selected' : '' }}>Active</option>
-                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
-            </select>
-            <button type="submit"
-                    style="padding:8px 20px; background:#dc2626; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px;">
-                <i class="fas fa-search"></i> Search
-            </button>
-            @if(request()->hasAny(['search','role','status']))
-                <a href="{{ route('users.index') }}"
-                   style="padding:8px 16px; background:#f3f4f6; color:#6b7280; border-radius:6px; text-decoration:none; font-size:14px;">
-                    Clear
-                </a>
-            @endif
-        </form>
+        {{-- Sticky header: title + search --}}
+        <div style="position:sticky; top:0; z-index:10; background:white; padding:20px 25px 0; border-radius:10px 10px 0 0; box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+                <h2 style="margin:0;">User Accounts</h2>
+            </div>
 
-        {{-- Desktop Table --}}
-        <div class="user-table-wrapper">
+            {{-- Search & Filters --}}
+            <form method="GET" action="{{ route('users.index') }}"
+                  style="display:flex; flex-wrap:wrap; gap:10px; padding-bottom:16px; border-bottom:1px solid #e5e7eb;">
+                <input type="text" name="search" value="{{ request('search') }}"
+                       placeholder="Search name or email..."
+                       style="flex:1; min-width:160px; border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
+                <select name="role" style="border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
+                    <option value="">All Roles</option>
+                    <option value="admin"    {{ request('role') === 'admin'    ? 'selected' : '' }}>Admin</option>
+                    <option value="hr"       {{ request('role') === 'hr'       ? 'selected' : '' }}>HR</option>
+                    <option value="employee" {{ request('role') === 'employee' ? 'selected' : '' }}>Employee</option>
+                </select>
+                <select name="status" style="border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
+                    <option value="">All Status</option>
+                    <option value="active"   {{ request('status') === 'active'   ? 'selected' : '' }}>Active</option>
+                    <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                </select>
+                <button type="submit"
+                        style="padding:8px 20px; background:#dc2626; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px;">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                @if(request()->hasAny(['search','role','status']))
+                    <a href="{{ route('users.index') }}"
+                       style="padding:8px 16px; background:#f3f4f6; color:#6b7280; border-radius:6px; text-decoration:none; font-size:14px;">
+                        Clear
+                    </a>
+                @endif
+            </form>
+        </div>
+
+        {{-- Desktop Table — scrollable body --}}
+        <div class="user-table-wrapper" style="overflow-y:auto; max-height:62vh; padding:0 25px;">
             <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:600px;">
-                <thead>
+                <thead style="position:sticky; top:0; z-index:5;">
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Name</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Email</th>
@@ -161,7 +168,7 @@
         </div>
 
         {{-- Mobile Cards --}}
-        <div class="user-mobile-cards">
+        <div class="user-mobile-cards" style="padding:16px;">
             @forelse($users as $user)
                 @php
                     $roleColors = [
@@ -240,7 +247,7 @@
             @endforelse
         </div>
 
-        <div style="margin-top:20px;">{{ $users->links() }}</div>
+        <div style="padding:16px 25px; border-top:1px solid #e5e7eb;">{{ $users->links() }}</div>
     </div>
 
 @endsection
