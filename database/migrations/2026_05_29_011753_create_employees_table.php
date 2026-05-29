@@ -10,8 +10,7 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-
-            // Personal Information
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('employee_id')->unique();
             $table->string('first_name');
             $table->string('middle_name')->nullable();
@@ -22,24 +21,17 @@ return new class extends Migration
             $table->text('address');
             $table->string('contact_number');
             $table->string('email')->unique();
-
-            // Employment Details
             $table->string('department');
             $table->string('position');
             $table->enum('employment_status', ['Regular', 'Probationary', 'Contractual', 'Part-time']);
             $table->date('date_hired');
             $table->enum('salary_type', ['Monthly', 'Daily', 'Hourly']);
             $table->decimal('basic_salary', 10, 2);
-
-            // Government Contributions
             $table->string('sss_number')->nullable();
             $table->string('philhealth_number')->nullable();
             $table->string('pagibig_number')->nullable();
             $table->string('tin_number')->nullable();
-
-            // Soft archive
             $table->boolean('is_archived')->default(false);
-
             $table->timestamps();
         });
     }
