@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class PayrollPeriod extends Model
+{
+    protected $fillable = [
+        'cutoff_start',
+        'cutoff_end',
+        'payroll_date',
+        'status',
+        'created_by',
+    ];
+
+    protected $casts = [
+        'cutoff_start' => 'date',
+        'cutoff_end'   => 'date',
+        'payroll_date' => 'date',
+    ];
+
+    // ── Relationships ──────────────────────────────────────────
+
+    public function payrollInputs(): HasMany
+    {
+        return $this->hasMany(PayrollInput::class);
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    // ── Helpers ────────────────────────────────────────────────
+
+    public function isFinalized(): bool
+    {
+        return $this->status === 'finalized';
+    }
+
+    public function isDraft(): bool
+    {
+        return $this->status === 'draft';
+    }
+
+    public function getTotalGrossPayAttribute(): float
+    {
+        return $this->payrollInputs->sum('gross_pay');
+    }
+
+    public function getTotalNetPayAttribute(): float
+    {
+        return $this->payrollInputs->sum('net_pay');
+    }
+
+    public function getTotalDeductionsAttribute(): float
+    {
+        return $this->payrollInputs->sum('deductions');
+    }
+}
