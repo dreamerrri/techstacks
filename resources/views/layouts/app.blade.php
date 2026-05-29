@@ -59,6 +59,7 @@
                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                 <i class="fas fa-money-bill"></i><span>Payroll</span>
             </a>
+            <a href="#" class="nav-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
             <a href="#" class="nav-item"><i class="fas fa-lock"></i><span>Access Control</span></a>
             <a href="#" class="nav-item"><i class="fas fa-shield-alt"></i><span>System Security</span></a>
             <a href="#" class="nav-item"><i class="fas fa-cogs"></i><span>Settings</span></a>
@@ -184,18 +185,17 @@
     </div>
 
     {{-- Main Content --}}
-   <div class="bg-{{ $role }}" style="display: flex; flex-direction: column; height: 100vh; overflow-y: auto;">
-
+<div class="bg-{{ $role }}" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
         {{-- Topbar --}}
-        <div class="topbar">
+<div class="topbar" style="position:sticky; top:0; z-index:10;">    
             <h2 style="margin: 0; color: #1f2937;">@yield('title')</h2>
             <div style="display: flex; align-items: center; gap: 15px;">
                 <div class="user-avatar avatar-{{ $role }}">
                     {{ strtoupper(substr($user->name, 0, 1)) }}
                 </div>
                 <div>
-                    <div style="font-size:14px; font-weight:600; color:#1f2937;">{{ $user->name }}</div>
-                    <div style="font-size:12px; color:#6b7280;">
+                   <div class="user-name" style="font-size:14px; font-weight:600;">{{ $user->name }}</div>
+<div class="user-role" style="font-size:12px;">
                         @if($isAdmin) Administrator
                         @elseif($isHR) HR Personnel
                         @else Employee
@@ -207,8 +207,8 @@
         </div>
 
         {{-- Page Content --}}
-        <div class="content">
-            @yield('content')
+<div class="content" style="flex:1; overflow-y:auto;">
+                @yield('content')
         </div>
 
     </div>

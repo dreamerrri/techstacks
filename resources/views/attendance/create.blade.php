@@ -11,43 +11,19 @@
     $color = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
 @endphp
 
-{{-- Header --}}
-<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
-    <div>
-        <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="fas fa-clock"></i> Attendance Management
-        </div>
-        <p style="color:#6b7280; margin:0;">Add attendance record for {{ $employee->full_name }}</p>
-    </div>
-    <a href="{{ route('employees.show', $employee) }}"
-       style="padding:10px 20px; background:#f3f4f6; color:#6b7280; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px;">
-        <i class="fas fa-arrow-left"></i> Back to Employee
+<div style="margin-bottom:20px;">
+    <a href="{{ route('employees.show', $employee) }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
+        <i class="fas fa-arrow-left"></i> Back to Employee Profile
     </a>
 </div>
 
- {{-- Employee Info Card --}}
-<div class="card" style="margin-bottom:20px;">
-    <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-        <div style="width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg,{{ $color }},{{ $isAdmin ? '#991b1b' : ($isHR ? '#1e40af' : '#764ba2') }}); display:flex; align-items:center; justify-content:center; color:white; font-size:24px; font-weight:700; flex-shrink:0;">
-            {{ strtoupper(substr($employee->full_name, 0, 1)) }}
-        </div>
-        <div style="flex:1;">
-            <h2 style="margin:0 0 4px; font-size:18px; color:#1f2937;">{{ $employee->full_name }}</h2>
-            <div style="font-size:14px; color:#6b7280;">
-                <span>{{ $employee->position }}</span> — <span>{{ $employee->department }}</span>
-            </div>
-        </div>
-    </div>
-</div>
-
- {{-- Attendance Form --}}
 <div class="card">
-    <h2 style="margin:0 0 20px 0;">Attendance Details</h2>
+    <h2><i class="fas fa-clock" style="color:#dc2626;"></i> Add Attendance — {{ $employee->full_name }}</h2>
 
     <form method="POST" action="{{ route('attendance.store', $employee) }}">
         @csrf
 
-        {{-- Month and Year Selection --}}
+        {{-- Month and Year --}}
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-bottom:20px;">
             <div>
                 <label style="display:block; font-weight:600; color:#1f2937; margin-bottom:8px; font-size:14px;">Month</label>
@@ -117,14 +93,13 @@
             </div>
         </div>
 
-        {{-- Submit Button --}}
-        <div style="display:flex; gap:12px; margin-top:24px;">
+        <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap;">
             <button type="submit"
-                    style="padding:12px 24px; background:{{ $color }}; color:white; border:none; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600;">
+                    style="padding:10px 24px; background:linear-gradient(135deg,#dc2626,#991b1b); color:white; border:none; border-radius:6px; cursor:pointer; font-weight:600;">
                 <i class="fas fa-save"></i> Save Attendance Record
             </button>
             <a href="{{ route('employees.show', $employee) }}"
-               style="padding:12px 24px; background:#f3f4f6; color:#6b7280; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px;">
+               style="padding:10px 24px; background:#f3f4f6; color:#374151; border-radius:6px; text-decoration:none; font-weight:600;">
                 Cancel
             </a>
         </div>

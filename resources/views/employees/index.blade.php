@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-
+@section('title', 'Manage Employees')
 
 @section('content')
 
@@ -88,7 +88,7 @@
         </div>
 
         {{-- Desktop Table — scrollable body --}}
-        <div class="user-table-wrapper" style="overflow-y:auto; max-height:62vh; padding:0 25px;">
+        <div class="user-table-wrapper" style="overflow-y:auto; max-height:53vh; padding:0 25px;">
             <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:700px;">
                 <thead style="position:sticky; top:0; z-index:5;">
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">

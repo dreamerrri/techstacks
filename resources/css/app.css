@@ -177,14 +177,70 @@
     color: white;
     border-color: rgba(255,255,255,0.3);
 }
+.topbar {
+    position: relative;
+    overflow: hidden;
+}
+/* replace */
+.topbar::after {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 350px;
+    height: 280px;
+    border-radius: 50%;
+    opacity: 0.09;
+    background: white;
+    pointer-events: none;
+}
+
+.topbar::before {
+    display: none;
+}
 
 .topbar {
-    background: white;
-    padding: 16px 24px;
-    box-shadow: 0 1px 0 #e5e7eb, 0 2px 8px rgba(0,0,0,0.05);
+    padding: 14px 28px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.bg-admin .topbar {
+    background: linear-gradient(90deg, #1e1b2e 0%, #251c35 25%, #2d1f3d 55%, #331a38 80%, #2a1530 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+}
+.bg-hr .topbar {
+    background: linear-gradient(90deg, #0f2044 0%, #122a55 25%, #163761 55%, #0e4060 80%, #0a3352 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+}
+.bg-user .topbar {
+    background: linear-gradient(90deg, #0d3330 0%, #0e3834 25%, #0f3d38 55%, #103d38 80%, #104038 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+}
+
+/* Update text colors for dark topbar */
+.bg-admin .topbar h2,
+.bg-hr    .topbar h2,
+.bg-user  .topbar h2 {
+    color: white !important;
+}
+.bg-admin .topbar .user-name,
+.bg-hr    .topbar .user-name,
+.bg-user  .topbar .user-name {
+    color: rgba(255,255,255,0.9) !important;
+}
+.bg-admin .topbar .user-role,
+.bg-hr    .topbar .user-role,
+.bg-user  .topbar .user-role {
+    color: rgba(255,255,255,0.55) !important;
 }
 
 .user-info   { display: flex; align-items: center; gap: 15px; }
@@ -214,8 +270,109 @@
 .badge-user  { background: #d1fae5; color: #065f46; }
 
 .content { padding: 40px; }
-.card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
-.card h2 { color: #1f2937; margin-bottom: 20px; font-size: 22px; }
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.07), 0 12px 28px rgba(0,0,0,0.09);
+    transform: translateY(-1px);
+}
+.card h2 {
+    color: #1f2937;
+    margin: 0 0 20px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.card h2 i {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+/* ── Stat cards (Gross / Deductions / Net) ── */
+.card-stat {
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: none;
+}
+.card-stat::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    opacity: 0.08;
+    background: currentColor;
+}
+.card-stat .stat-icon-wrap {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin: 0 auto 14px;
+}
+.card-stat .stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+.card-stat .stat-value {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+}
+.card-stat .stat-sub {
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+/* Gross — green tint */
+.card-stat-green {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    color: #166534;
+    box-shadow: 0 4px 20px rgba(16,185,129,0.12);
+}
+.card-stat-green .stat-icon-wrap { background: rgba(16,185,129,0.15); color: #10b981; }
+
+/* Deductions — red tint */
+.card-stat-red {
+    background: linear-gradient(135deg, #fff5f5 0%, #fee2e2 100%);
+    color: #991b1b;
+    box-shadow: 0 4px 20px rgba(220,38,38,0.10);
+}
+.card-stat-red .stat-icon-wrap { background: rgba(220,38,38,0.12); color: #dc2626; }
+
+/* Net pay — highlighted green with border */
+.card-stat-net {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+    color: white;
+    box-shadow: 0 8px 28px rgba(6,78,59,0.3);
+    border: none;
+}
+.card-stat-net .stat-label { color: rgba(255,255,255,0.7); }
+.card-stat-net .stat-sub   { color: rgba(255,255,255,0.5); }
+.card-stat-net .stat-value { color: #6ee7b7; }
+.card-stat-net .stat-icon-wrap { background: rgba(255,255,255,0.12); color: white; }
 
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
 .stat-card  { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; }
