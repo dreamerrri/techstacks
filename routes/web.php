@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AllowanceController;
+use App\Http\Controllers\BenefitController;
 
 
 // Public Routes
@@ -62,12 +66,34 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // ── Payroll Module — admin and HR only ────────────────────
-    Route::middleware('role:admin,hr')->prefix('payroll')->name('payroll.')->group(function () {
+    // Attendance Management — admin and HR only (separate group to avoid prefix inheritance)
+    Route::middleware('role:admin,hr')->prefix('employees/{employee}/attendance')->name('attendance.')->group(function () {
+        Route::get('/create', [AttendanceController::class, 'create'])->name('create');
+        Route::post('/',      [AttendanceController::class, 'store'])->name('store');
+        Route::get('/{attendance}/edit', [AttendanceController::class, 'edit'])->name('edit');
+        Route::put('/{attendance}',      [AttendanceController::class, 'update'])->name('update');
+        Route::delete('/{attendance}',   [AttendanceController::class, 'destroy'])->name('destroy');
+    });
 
-        // Blade page
-        Route::get('/', [PayrollController::class, 'index'])->name('index');
+    // Allowance Management — admin and HR only
+    Route::middleware('role:admin,hr')->prefix('employees/{employee}/allowances')->name('allowances.')->group(function () {
+        Route::post('/', [AllowanceController::class, 'store'])->name('store');
+        Route::put('/{allowance}', [AllowanceController::class, 'update'])->name('update');
+        Route::delete('/{allowance}', [AllowanceController::class, 'destroy'])->name('destroy');
+    });
 
+    // Benefit Management — admin and HR only
+    Route::middleware('role:admin,hr')->prefix('employees/{employee}/benefits')->name('benefits.')->group(function () {
+        Route::post('/', [BenefitController::class, 'store'])->name('store');
+        Route::put('/{benefit}', [BenefitController::class, 'update'])->name('update');
+        Route::delete('/{benefit}', [BenefitController::class, 'destroy'])->name('destroy');
+    });
+
+    // Payroll Management — all authenticated users can access
+    // Admin and HR can view all employees' payroll, employees can only view their own
+    Route::prefix('payroll')->name('payroll.')->group(function () {
+        Route::get('/',         [PayrollController::class, 'index'])->name('index');
+        Route::get('/{employee}', [PayrollController::class, 'show'])->name('show');
     });
 });
 

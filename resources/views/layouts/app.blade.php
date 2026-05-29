@@ -55,6 +55,10 @@
                class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                 <i class="fas fa-user-tie"></i><span>Employees</span>
             </a>
+            <a href="{{ route('payroll.index') }}"
+               class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                <i class="fas fa-money-bill"></i><span>Payroll</span>
+            </a>
             <a href="#" class="nav-item"><i class="fas fa-lock"></i><span>Access Control</span></a>
             <a href="#" class="nav-item"><i class="fas fa-shield-alt"></i><span>System Security</span></a>
             <a href="#" class="nav-item"><i class="fas fa-cogs"></i><span>Settings</span></a>
@@ -64,14 +68,20 @@
                class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                 <i class="fas fa-users"></i><span>Employees</span>
             </a>
-            <a href="#" class="nav-item"><i class="fas fa-money-bill"></i><span>Payroll</span></a>
+            <a href="{{ route('payroll.index') }}"
+               class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                <i class="fas fa-money-bill"></i><span>Payroll</span>
+            </a>
             <a href="#" class="nav-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
             <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
             <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
             <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
         @else
             <a href="#" class="nav-item"><i class="fas fa-user"></i><span>My Profile</span></a>
-            <a href="#" class="nav-item"><i class="fas fa-file-invoice-dollar"></i><span>Payslips</span></a>
+            <a href="{{ route('payroll.index') }}"
+               class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
+            </a>
             <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
             <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
         @endif
@@ -129,6 +139,10 @@
                    class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                     <i class="fas fa-user-tie"></i><span>Employees</span>
                 </a>
+                <a href="{{ route('payroll.index') }}"
+                   class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                    <i class="fas fa-money-bill"></i><span>Payroll</span>
+                </a>
                 <a href="#" class="nav-item"><i class="fas fa-lock"></i><span>Access Control</span></a>
                 <a href="#" class="nav-item"><i class="fas fa-shield-alt"></i><span>System Security</span></a>
                 <a href="#" class="nav-item"><i class="fas fa-cogs"></i><span>Settings</span></a>
@@ -139,7 +153,10 @@
                    class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                     <i class="fas fa-users"></i><span>Employees</span>
                 </a>
-                <a href="#" class="nav-item"><i class="fas fa-money-bill"></i><span>Payroll</span></a>
+                <a href="{{ route('payroll.index') }}"
+                   class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                    <i class="fas fa-money-bill"></i><span>Payroll</span>
+                </a>
                 <a href="#" class="nav-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
                 <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
                 <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
@@ -147,7 +164,10 @@
 
             @else
                 <a href="#" class="nav-item"><i class="fas fa-user"></i><span>My Profile</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-file-invoice-dollar"></i><span>Payslips</span></a>
+                <a href="{{ route('payroll.index') }}"
+                   class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                    <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
+                </a>
                 <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
                 <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
             @endif

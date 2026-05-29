@@ -4,6 +4,12 @@
 
 @section('content')
 
+<style>
+.hidden-form {
+    display: none !important;
+}
+</style>
+
     {{-- Top nav --}}
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
         <a href="{{ route('employees.index') }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
@@ -90,6 +96,84 @@
             </table>
         </div>
 
+        {{-- Attendance Summary --}}
+        <div class="card" style="grid-column: span 2;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h2 style="margin:0;"><i class="fas fa-clock" style="color:#dc2626;"></i> Attendance Summary</h2>
+                @if(auth()->user()->isAdmin() || auth()->user()->isHR())
+                    @php
+                        $attendance = $employee->latestAttendance();
+                    @endphp
+                    @if($attendance)
+                        <a href="{{ route('attendance.edit', [$employee->id, $attendance->id]) }}"
+                           style="padding:6px 12px; background:#dbeafe; color:#1e40af; border-radius:6px; text-decoration:none; font-size:12px; font-weight:600;">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    @else
+                        <a href="{{ route('attendance.create', $employee) }}"
+                           style="padding:6px 12px; background:#d1fae5; color:#065f46; border-radius:6px; text-decoration:none; font-size:12px; font-weight:600;">
+                            <i class="fas fa-plus"></i> Add Attendance
+                        </a>
+                    @endif
+                @endif
+            </div>
+            <div style="background:#f9fafb; padding:20px; border-radius:8px;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
+                    @php
+                        $attendance = $employee->latestAttendance();
+                        $daysWorked = $attendance->days_worked ?? 0;
+                        $regularHours = $attendance->regular_hours ?? 0;
+                        $overtimeHours = $attendance->overtime_hours ?? 0;
+                        $lateHours = $attendance->late_hours ?? 0;
+                        $nightDifferentialHours = $attendance->night_differential_hours ?? 0;
+                        $regularHolidayWorked = $attendance->regular_holiday_worked ?? 0;
+                        $attendanceMonth = $attendance ? date('F', mktime(0, 0, 0, $attendance->month, 1)) : null;
+                        $attendanceYear = $attendance->year ?? null;
+                    @endphp
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Days Worked</div>
+                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $daysWorked }} Days</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Regular Hours</div>
+                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $regularHours }} Hours</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Overtime Hours</div>
+                        <div style="font-size:20px; font-weight:700; color:#dc2626;">{{ $overtimeHours }} Hours</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Late Hours</div>
+                        <div style="font-size:20px; font-weight:700; color:#dc2626;">{{ $lateHours }} Hour{{ $lateHours != 1 ? 's' : '' }}</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Night Diff Hours</div>
+                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $nightDifferentialHours }} Hours</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Regular Holiday</div>
+                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $regularHolidayWorked }} Day{{ $regularHolidayWorked != 1 ? 's' : '' }}</div>
+                    </div>
+                </div>
+
+                @if($attendance)
+                    <div style="margin-top:16px; padding:12px; background:#dbeafe; border-radius:6px; font-size:12px; color:#1e40af; text-align:center;">
+                        <i class="fas fa-info-circle"></i> Showing attendance for {{ $attendanceMonth }} {{ $attendanceYear }}
+                    </div>
+                @else
+                    <div style="margin-top:16px; padding:12px; background:#fef3c7; border-radius:6px; font-size:12px; color:#92400e; text-align:center;">
+                        <i class="fas fa-info-circle"></i> No attendance data found
+                    </div>
+                @endif
+            </div>
+        </div>
+
         {{-- Government Contributions (full-width) --}}
         <div class="card" style="grid-column: 1 / -1;">
             <h2><i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions</h2>
@@ -108,6 +192,181 @@
                 @endforeach
             </div>
         </div>
+
+        {{-- Allowances and Benefits (admin and HR only) --}}
+        @if(auth()->user()->isAdmin() || auth()->user()->isHR())
+        <div class="card" style="grid-column: 1 / -1;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h2 style="margin:0;"><i class="fas fa-gift" style="color:#dc2626;"></i> Allowances & Benefits</h2>
+                <div style="display:flex; gap:8px;">
+                    <button type="button" onclick="var form = document.getElementById('allowanceForm'); var other = document.getElementById('benefitForm'); if(form) { form.classList.remove('hidden-form'); } if(other) { other.classList.add('hidden-form'); }"
+                            style="padding:6px 12px; background:#d1fae5; color:#065f46; border:none; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600;">
+                        <i class="fas fa-plus"></i> Add Allowance
+                    </button>
+                    <button type="button" onclick="var form = document.getElementById('benefitForm'); var other = document.getElementById('allowanceForm'); if(form) { form.classList.remove('hidden-form'); } if(other) { other.classList.add('hidden-form'); }"
+                            style="padding:6px 12px; background:#dbeafe; color:#1e40af; border:none; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600;">
+                        <i class="fas fa-plus"></i> Add Benefit
+                    </button>
+                </div>
+            </div>
+
+            {{-- Allowances Section --}}
+            <div style="margin-bottom:24px;">
+                <h3 style="margin:0 0 12px 0; font-size:16px; color:#1f2937;">Allowances</h3>
+                @if($employee->activeAllowances()->count() > 0)
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                        @foreach($employee->activeAllowances as $allowance)
+                            <div style="background:#f9fafb; padding:12px; border-radius:6px; border-left:3px solid #10b981;">
+                                <div style="display:flex; justify-content:space-between; align-items:start;">
+                                    <div>
+                                        <div style="font-weight:600; color:#1f2937; font-size:14px;">{{ $allowance->name }}</div>
+                                        <div style="color:#6b7280; font-size:12px; margin-top:2px;">{{ $allowance->type }}</div>
+                                        @if($allowance->description)
+                                            <div style="color:#9ca3af; font-size:11px; margin-top:4px;">{{ $allowance->description }}</div>
+                                        @endif
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <div style="font-weight:700; color:#10b981; font-size:16px;">₱{{ number_format($allowance->amount, 2) }}</div>
+                                        <form method="POST" action="{{ route('allowances.destroy', [$employee, $allowance]) }}"
+                                              style="margin-top:4px;"
+                                              onsubmit="return confirm('Are you sure you want to delete this allowance?');">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" style="padding:2px 6px; background:#fecaca; color:#991b1b; border:none; border-radius:4px; cursor:pointer; font-size:10px;">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div style="padding:12px; background:#f9fafb; border-radius:6px; text-align:center; color:#9ca3af; font-size:13px;">
+                        No allowances added
+                    </div>
+                @endif
+            </div>
+
+            {{-- Benefits Section --}}
+            <div>
+                <h3 style="margin:0 0 12px 0; font-size:16px; color:#1f2937;">Benefits</h3>
+                @if($employee->activeBenefits()->count() > 0)
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                        @foreach($employee->activeBenefits() as $benefit)
+                            <div style="background:#f9fafb; padding:12px; border-radius:6px; border-left:3px solid #3b82f6;">
+                                <div style="display:flex; justify-content:space-between; align-items:start;">
+                                    <div>
+                                        <div style="font-weight:600; color:#1f2937; font-size:14px;">{{ $benefit->name }}</div>
+                                        <div style="color:#6b7280; font-size:12px; margin-top:2px;">{{ $benefit->type }}</div>
+                                        @if($benefit->description)
+                                            <div style="color:#9ca3af; font-size:11px; margin-top:4px;">{{ $benefit->description }}</div>
+                                        @endif
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <div style="font-weight:700; color:#3b82f6; font-size:16px;">₱{{ number_format($benefit->amount, 2) }}</div>
+                                        <form method="POST" action="{{ route('benefits.destroy', [$employee, $benefit]) }}"
+                                              style="margin-top:4px;"
+                                              onsubmit="return confirm('Are you sure you want to delete this benefit?');">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" style="padding:2px 6px; background:#fecaca; color:#991b1b; border:none; border-radius:4px; cursor:pointer; font-size:10px;">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div style="padding:12px; background:#f9fafb; border-radius:6px; text-align:center; color:#9ca3af; font-size:13px;">
+                        No benefits added
+                    </div>
+                @endif
+            </div>
+
+            {{-- Add Allowance Form (hidden by default) --}}
+            <div id="allowanceForm" style="margin-top:20px; padding:16px; background:#f0fdf4; border-radius:8px; border:1px solid #bbf7d0;">
+                <h4 style="margin:0 0 12px 0; font-size:14px; color:#065f46;">Add Allowance</h4>
+                <form method="POST" action="{{ route('allowances.store', $employee) }}">
+                    @csrf
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-bottom:12px;">
+                        <div>
+                            <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Name</label>
+                            <input type="text" name="name" required
+                                   style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Amount</label>
+                            <input type="number" name="amount" step="0.01" min="0" required
+                                   style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Type</label>
+                            <select name="type" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                                <option value="monthly">Monthly</option>
+                                <option value="one-time">One-time</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Description (optional)</label>
+                        <textarea name="description" rows="2"
+                                  style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-size:13px; resize:vertical;"></textarea>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button type="submit" style="padding:8px 16px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600;">
+                            <i class="fas fa-save"></i> Save Allowance
+                        </button>
+                        <button type="button" onclick="document.getElementById('allowanceForm').classList.add('hidden-form');"
+                                style="padding:8px 16px; background:#9ca3af; color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {{-- Add Benefit Form (hidden by default) --}}
+            <div id="benefitForm" style="margin-top:20px; padding:16px; background:#eff6ff; border-radius:8px; border:1px solid #bfdbfe;">
+                <h4 style="margin:0 0 12px 0; font-size:14px; color:#1e40af;">Add Benefit</h4>
+                <form method="POST" action="{{ route('benefits.store', $employee) }}">
+                    @csrf
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-bottom:12px;">
+                        <div>
+                            <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Name</label>
+                            <input type="text" name="name" required
+                                   style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Amount</label>
+                            <input type="number" name="amount" step="0.01" min="0" required
+                                   style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Type</label>
+                            <select name="type" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                                <option value="monthly">Monthly</option>
+                                <option value="one-time">One-time</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Description (optional)</label>
+                        <textarea name="description" rows="2"
+                                  style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-size:13px; resize:vertical;"></textarea>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button type="submit" style="padding:8px 16px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600;">
+                            <i class="fas fa-save"></i> Save Benefit
+                        </button>
+                        <button type="button" onclick="document.getElementById('benefitForm').classList.add('hidden-form');"
+                                style="padding:8px 16px; background:#9ca3af; color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @endif
 
     </div>
 

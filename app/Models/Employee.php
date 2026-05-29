@@ -61,11 +61,47 @@ class Employee extends Model
         return $query->where('is_archived', true);
     }
 
-    public function payrollInputs(): HasMany
-{
-    return $this->hasMany(PayrollInput::class);
-}
-    
+    // Relationship: attendance records
+    public function attendances()
+    {
+        return $this->hasMany(\App\Models\Attendance::class);
+    }
+
+    // Get current month's attendance
+    public function currentAttendance()
+    {
+        return $this->attendances()->currentMonth()->first();
+    }
+
+    // Get most recent attendance record
+    public function latestAttendance()
+    {
+        return $this->attendances()->orderBy('year', 'desc')->orderBy('month', 'desc')->first();
+    }
+
+    // Relationship: allowances
+    public function allowances()
+    {
+        return $this->hasMany(\App\Models\Allowance::class);
+    }
+
+    // Relationship: benefits
+    public function benefits()
+    {
+        return $this->hasMany(\App\Models\Benefit::class);
+    }
+
+    // Get active allowances
+    public function activeAllowances()
+    {
+        return $this->allowances()->active();
+    }
+
+    // Get active benefits
+    public function activeBenefits()
+    {
+        return $this->benefits()->active();
+    }
 
 
 }

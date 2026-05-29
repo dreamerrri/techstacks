@@ -2,91 +2,220 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PayrollInput;
-use App\Models\PayrollPeriod;
-use Illuminate\Http\JsonResponse;
+use App\Models\Employee;
+use App\Services\Payroll\PayrollComputationEngine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PayrollController extends Controller
 {
     /**
-     * POST /payroll/compute
-     * Live computation endpoint — takes raw inputs, returns gross/net.
-     * Used by the frontend to show real-time preview without saving.
+     * Show payroll preview for employees
+     * Admin and HR can see all employees' payroll
+     * Regular employees can only see their own payroll
      */
-    public function compute(Request $request): JsonResponse
+    public function index(Request $request)
     {
-        $validated = $request->validate([
-            'daily_rate'     => 'required|numeric|min:0',
-            'days_worked'    => 'required|numeric|min:0',
-            'overtime_hours' => 'nullable|numeric|min:0',
-            'late_hours'     => 'nullable|numeric|min:0',
-            'allowances'     => 'nullable|numeric|min:0',
-            'deductions'     => 'nullable|numeric|min:0',
-        ]);
+        $user = Auth::user();
+        $isAdmin = $user->isAdmin();
+        $isHR = $user->isHR();
 
-        $input = new PayrollInput([
-            'daily_rate'     => $validated['daily_rate'],
-            'days_worked'    => $validated['days_worked'],
-            'overtime_hours' => $validated['overtime_hours'] ?? 0,
-            'late_hours'     => $validated['late_hours'] ?? 0,
-            'allowances'     => $validated['allowances'] ?? 0,
-            'deductions'     => $validated['deductions'] ?? 0,
-        ]);
+        // Filter employees based on role
+        if ($isAdmin || $isHR) {
+            // Admin and HR can see all active employees
+            $query = Employee::active();
+        } else {
+            // Regular employees can only see their own payroll
+            $employee = $user->employee;
+            if (!$employee) {
+                return redirect()->route('dashboard')
+                    ->with('error', 'No employee record found for your account.');
+            }
+            $query = Employee::where('id', $employee->id);
+        }
 
-        $input->computePay();
+        // Search functionality
+        if ($request->filled('search') && ($isAdmin || $isHR)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('employee_id', 'like', "%{$search}%");
+            });
+        }
 
-        return response()->json([
-            'gross_pay' => $input->gross_pay,
-            'net_pay'   => $input->net_pay,
-        ]);
+        // Filter by department (admin and HR only)
+        if ($request->filled('department') && ($isAdmin || $isHR)) {
+            $query->where('department', $request->department);
+        }
+
+        $employees = $query->orderBy('last_name')->paginate(15)->withQueryString();
+        $departments = Employee::active()->distinct()->pluck('department');
+
+        // Calculate payroll for each employee
+        $payrollData = [];
+        foreach ($employees as $employee) {
+            $payrollData[$employee->id] = $this->calculatePayroll($employee);
+        }
+
+        return view('payroll.index', compact('employees', 'departments', 'payrollData', 'isAdmin', 'isHR'));
     }
 
     /**
-     * POST /payroll/finalize
-     * Finalize a draft payroll period.
-     * - Requires at least one encoded employee.
-     * - Recomputes all inputs before locking.
-     * - Sets status to 'finalized' — no further edits allowed.
+     * Show detailed payroll preview for a specific employee
      */
-    public function finalize(Request $request): JsonResponse
+    public function show(Employee $employee)
     {
-        $request->validate([
-            'payroll_period_id' => 'required|exists:payroll_periods,id',
-        ]);
+        $user = Auth::user();
+        $isAdmin = $user->isAdmin();
+        $isHR = $user->isHR();
 
-        $period = PayrollPeriod::with('payrollInputs')->findOrFail($request->payroll_period_id);
-
-        if ($period->isFinalized()) {
-            return response()->json(['message' => 'Payroll period is already finalized.'], 422);
+        // Check access: admin and HR can see any employee, regular employees can only see themselves
+        if (!$isAdmin && !$isHR) {
+            $userEmployee = $user->employee;
+            if (!$userEmployee || $userEmployee->id !== $employee->id) {
+                return redirect()->route('payroll.index')
+                    ->with('error', 'You can only view your own payroll.');
+            }
         }
 
-        if ($period->payrollInputs->isEmpty()) {
-            return response()->json(['message' => 'Cannot finalize a period with no encoded employees.'], 422);
-        }
+        $payrollData = $this->calculatePayroll($employee);
 
-        // Recompute all inputs before locking
-        foreach ($period->payrollInputs as $input) {
-            $input->computePay()->save();
-        }
-
-        $period->update(['status' => 'finalized']);
-
-        // Reload totals after recompute
-        $period->load('payrollInputs');
-
-        return response()->json([
-            'message'      => 'Payroll period finalized successfully.',
-            'period_id'    => $period->id,
-            'status'       => $period->status,
-            'total_gross'  => $period->total_gross_pay,
-            'total_net'    => $period->total_net_pay,
-            'employee_count' => $period->payrollInputs->count(),
-        ]);
+        return view('payroll.show', compact('employee', 'payrollData', 'isAdmin', 'isHR'));
     }
 
-    public function index()
-{
-    return view('payroll.index');
-}
+    /**
+     * Calculate payroll for an employee using PayrollComputationEngine
+     */
+    private function calculatePayroll(Employee $employee): array
+    {
+        $basicSalary = $employee->basic_salary;
+        $salaryType = $employee->salary_type;
+
+        // Calculate hourly and daily rates based on salary type
+        $hourlyRate = match ($salaryType) {
+            'Monthly' => $basicSalary / 22 / 8, // 22 days, 8 hours per day
+            'Daily' => $basicSalary / 8,
+            'Hourly' => $basicSalary,
+            default => $basicSalary / 22 / 8,
+        };
+
+        $dailyRate = match ($salaryType) {
+            'Monthly' => $basicSalary / 22,
+            'Daily' => $basicSalary,
+            'Hourly' => $basicSalary * 8,
+            default => $basicSalary / 22,
+        };
+
+        // Get attendance data for current month
+        $attendance = $employee->currentAttendance();
+
+        // If no current month attendance, try to get the latest attendance record
+        if (!$attendance) {
+            $attendance = $employee->latestAttendance();
+            \Log::info('No current month attendance, using latest attendance for employee ' . $employee->id);
+        }
+
+        // Prepare attendance array for engine (handle null attendance)
+        $attendanceData = [];
+        if ($attendance) {
+            $attendanceData = [
+                'days_worked' => $attendance->days_worked ?? 0,
+                'regular_hours' => $attendance->regular_hours ?? 0,
+                'overtime_hours' => $attendance->overtime_hours ?? 0,
+                'late_hours' => $attendance->late_hours ?? 0,
+                'night_differential_hours' => $attendance->night_differential_hours ?? 0,
+                'regular_holiday_worked' => $attendance->regular_holiday_worked ?? 0,
+            ];
+            \Log::info('Attendance data found for employee ' . $employee->id, $attendanceData);
+        } else {
+            // Default to zero if no attendance record
+            $attendanceData = [
+                'days_worked' => 0,
+                'regular_hours' => 0,
+                'overtime_hours' => 0,
+                'late_hours' => 0,
+                'night_differential_hours' => 0,
+                'regular_holiday_worked' => 0,
+            ];
+            \Log::warning('No attendance data found for employee ' . $employee->id);
+        }
+
+        // Prepare employee data for engine
+        $employeeData = [
+            'monthly_salary' => $basicSalary,
+            'working_days_per_month' => 22,
+            'working_hours_per_day' => 8,
+        ];
+
+        // Fetch active allowances and benefits
+        $allowances = $employee->activeAllowances()->pluck('amount')->toArray();
+        $benefits = $employee->activeBenefits()->pluck('amount')->toArray();
+
+        // Calculate government contributions based on gross pay
+        // First, calculate gross pay without deductions to get contribution bases
+        $engine = new PayrollComputationEngine();
+        $previewResult = $engine->compute($employeeData, $attendanceData, [], $benefits, $allowances, [], true);
+        $grossPay = $previewResult['gross_pay'];
+
+        // Government contributions (Philippines standard rates)
+        $sssContribution = min($grossPay * 0.045, 900);
+        $philhealthContribution = min($grossPay * 0.0225, 1500);
+        $pagibigContribution = min($grossPay * 0.02, 100);
+
+        // Calculate withholding tax
+        $taxableIncome = $grossPay - $sssContribution - $philhealthContribution - $pagibigContribution;
+        $withholdingTax = $this->calculateTax($taxableIncome);
+
+        // Total deductions
+        $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax];
+
+        // Calculate final payroll with deductions
+        $result = $engine->compute($employeeData, $attendanceData, $deductions, $benefits, $allowances, [], false);
+
+        // Add additional fields for view compatibility
+        return [
+            'basic_salary' => $basicSalary,
+            'salary_type' => $salaryType,
+            'hourly_rate' => $hourlyRate,
+            'daily_rate' => $dailyRate,
+            'base_pay' => $result['basic_salary'],
+            'overtime_pay' => $result['overtime_pay'],
+            'night_differential_pay' => $result['night_differential'],
+            'holiday_pay' => $result['holiday_pay'],
+            'late_deduction' => $result['late_deduction'],
+            'allowance_benefits' => $result['allowances'] + $result['benefits'],
+            'allowances' => $result['allowances'],
+            'benefits' => $result['benefits'],
+            'gross_pay' => $result['gross_pay'],
+            'sss_contribution' => $sssContribution,
+            'philhealth_contribution' => $philhealthContribution,
+            'pagibig_contribution' => $pagibigContribution,
+            'withholding_tax' => $withholdingTax,
+            'total_deductions' => $result['deductions'],
+            'net_pay' => $result['net_pay'],
+            'taxable_income' => $taxableIncome,
+            'attendance_data' => $attendanceData,
+        ];
+    }
+
+    /**
+     * Calculate withholding tax based on Philippine tax brackets
+     */
+    private function calculateTax(float $taxableIncome): float
+    {
+        if ($taxableIncome <= 20832) {
+            return 0;
+        } elseif ($taxableIncome <= 33333) {
+            return ($taxableIncome - 20832) * 0.20;
+        } elseif ($taxableIncome <= 66667) {
+            return 2500 + ($taxableIncome - 33333) * 0.25;
+        } elseif ($taxableIncome <= 166667) {
+            return 10833.33 + ($taxableIncome - 66667) * 0.30;
+        } elseif ($taxableIncome <= 666667) {
+            return 40833.33 + ($taxableIncome - 166667) * 0.32;
+        } else {
+            return 200833.33 + ($taxableIncome - 666667) * 0.35;
+        }
+    }
 }

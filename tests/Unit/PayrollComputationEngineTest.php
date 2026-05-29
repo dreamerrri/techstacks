@@ -11,13 +11,14 @@ class PayrollComputationEngineTest extends TestCase
     {
         $engine = new PayrollComputationEngine();
         $employeeData = [
-            'daily_rate' => 1000,
-            'hourly_rate' => 125,
+            'monthly_salary' => 22000,
+            'working_days_per_month' => 22,
+            'working_hours_per_day' => 8,
         ];
         $attendance = [
             'days_worked' => 22,
             'overtime_hours' => 10,
-            'holiday_hours' => 8,
+            'holiday_days' => 8,
             'night_hours' => 12,
         ];
         $deductions = [500, 200];
@@ -28,12 +29,12 @@ class PayrollComputationEngineTest extends TestCase
 
         $this->assertEquals(22000, $result['basic_salary']);
         $this->assertEquals(1562.5, $result['overtime_pay']);
-        $this->assertEquals(2000, $result['holiday_pay']);
+        $this->assertEquals(16000, $result['holiday_pay']);
         $this->assertEquals(150, $result['night_differential']);
         $this->assertEquals(1500, $result['allowances']);
         $this->assertEquals(300, $result['benefits']);
         $this->assertEquals(700, $result['deductions']);
-        $this->assertEquals(27512.5, $result['gross_pay']);
-        $this->assertEquals(26812.5, $result['net_pay']);
+        $this->assertEquals(41512.5, $result['gross_pay']);
+        $this->assertEquals(40812.5, $result['net_pay']);
     }
 }
