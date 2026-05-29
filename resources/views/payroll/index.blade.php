@@ -104,10 +104,18 @@
                             ₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}
                         </td>
                         <td style="padding:12px; text-align:center;">
-                            <a href="{{ route('payroll.show', $employee) }}"
-                               style="padding:5px 10px; background:#dbeafe; color:#1e40af; border-radius:5px; font-size:12px; text-decoration:none;">
-                                <i class="fas fa-eye"></i> View
-                            </a>
+                            @if(($payroll['gross_pay'] ?? 0) == 0)
+                                <a href="javascript:void(0)"
+                                   onclick="alert('This employee has no payroll data yet.')"
+                                   style="padding:5px 10px; background:#f3f4f6; color:#9ca3af; border-radius:5px; font-size:12px; text-decoration:none; cursor:not-allowed;">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            @else
+                                <a href="{{ route('payroll.show', $employee) }}"
+                                   style="padding:5px 10px; background:#dbeafe; color:#1e40af; border-radius:5px; font-size:12px; text-decoration:none;">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            @endif
                         </td>
                     </tr>
                 @empty
@@ -185,10 +193,18 @@
                 </div>
 
                 <div class="user-card-meta" style="margin-top:10px; padding-top:10px; border-top:1px solid #f3f4f6;">
-                    <a href="{{ route('payroll.show', $employee) }}"
-                       style="padding:5px 12px; background:#dbeafe; color:#1e40af; border-radius:5px; font-size:12px; text-decoration:none;">
-                        <i class="fas fa-eye"></i> View Details
-                    </a>
+                    @if(($payroll['gross_pay'] ?? 0) == 0)
+                        <a href="javascript:void(0)"
+                           onclick="alert('This employee has no payroll data yet.')"
+                           style="padding:5px 12px; background:#f3f4f6; color:#9ca3af; border-radius:5px; font-size:12px; text-decoration:none; cursor:not-allowed;">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                    @else
+                        <a href="{{ route('payroll.show', $employee) }}"
+                           style="padding:5px 12px; background:#dbeafe; color:#1e40af; border-radius:5px; font-size:12px; text-decoration:none;">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                    @endif
                 </div>
             </div>
         @empty
