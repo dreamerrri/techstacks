@@ -59,6 +59,17 @@ class Employee extends Model
         return $query->where('is_archived', true);
     }
 
+    // Relationship: attendance records
+    public function attendances()
+    {
+        return $this->hasMany(\App\Models\Attendance::class);
+    }
 
-    
+    // Get current month's attendance
+    public function currentAttendance()
+    {
+        return $this->attendances()->currentMonth()->first();
+    }
+
+
 }

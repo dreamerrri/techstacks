@@ -90,6 +90,60 @@
             </table>
         </div>
 
+        {{-- Attendance Summary --}}
+        <div class="card" style="grid-column: span 2;">
+            <h2><i class="fas fa-clock" style="color:#dc2626;"></i> Attendance Summary</h2>
+            <div style="background:#f9fafb; padding:20px; border-radius:8px;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
+                    @php
+                        $attendance = $employee->currentAttendance();
+                        $daysWorked = $attendance->days_worked ?? 0;
+                        $regularHours = $attendance->regular_hours ?? 0;
+                        $overtimeHours = $attendance->overtime_hours ?? 0;
+                        $lateHours = $attendance->late_hours ?? 0;
+                        $nightDifferentialHours = $attendance->night_differential_hours ?? 0;
+                        $regularHolidayWorked = $attendance->regular_holiday_worked ?? 0;
+                    @endphp
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Days Worked</div>
+                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $daysWorked }} Days</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Regular Hours</div>
+                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $regularHours }} Hours</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Overtime Hours</div>
+                        <div style="font-size:20px; font-weight:700; color:#dc2626;">{{ $overtimeHours }} Hours</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Late Hours</div>
+                        <div style="font-size:20px; font-weight:700; color:#dc2626;">{{ $lateHours }} Hour{{ $lateHours != 1 ? 's' : '' }}</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Night Diff Hours</div>
+                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $nightDifferentialHours }} Hours</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Regular Holiday</div>
+                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $regularHolidayWorked }} Day{{ $regularHolidayWorked != 1 ? 's' : '' }}</div>
+                    </div>
+                </div>
+
+                @if(!$attendance)
+                    <div style="margin-top:16px; padding:12px; background:#fef3c7; border-radius:6px; font-size:12px; color:#92400e; text-align:center;">
+                        <i class="fas fa-info-circle"></i> No attendance data for {{ date('F Y') }}
+                    </div>
+                @endif
+            </div>
+        </div>
+
         {{-- Government Contributions (full-width) --}}
         <div class="card" style="grid-column: 1 / -1;">
             <h2><i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions</h2>
