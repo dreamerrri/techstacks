@@ -94,6 +94,21 @@ class AttendanceController extends Controller
             ->where('employee_id', $employeeId)
             ->firstOrFail();
 
+        // Log current attendance data before update
+        \Log::info('Attendance before update:', [
+            'id' => $attendance->id,
+            'employee_id' => $attendance->employee_id,
+            'days_worked' => $attendance->days_worked,
+            'regular_hours' => $attendance->regular_hours,
+            'overtime_hours' => $attendance->overtime_hours,
+            'late_hours' => $attendance->late_hours,
+            'night_differential_hours' => $attendance->night_differential_hours,
+            'regular_holiday_worked' => $attendance->regular_holiday_worked,
+        ]);
+
+        // Log request data
+        \Log::info('Request data:', $request->all());
+
         $validated = $request->validate([
             'days_worked' => 'required|integer|min:0|max:31',
             'regular_hours' => 'required|integer|min:0|max:744',
@@ -103,16 +118,29 @@ class AttendanceController extends Controller
             'regular_holiday_worked' => 'required|integer|min:0|max:31',
         ]);
 
-        // Update using fill to ensure fillable fields are respected
-        $attendance->fill([
-            'days_worked' => $validated['days_worked'],
-            'regular_hours' => $validated['regular_hours'],
-            'overtime_hours' => $validated['overtime_hours'],
-            'late_hours' => $validated['late_hours'],
-            'night_differential_hours' => $validated['night_differential_hours'],
-            'regular_holiday_worked' => $validated['regular_holiday_worked'],
-        ]);
+        // Log validated data
+        \Log::info('Validated data:', $validated);
+
+        // Update using direct assignment to ensure data is saved
+        $attendance->days_worked = $validated['days_worked'];
+        $attendance->regular_hours = $validated['regular_hours'];
+        $attendance->overtime_hours = $validated['overtime_hours'];
+        $attendance->late_hours = $validated['late_hours'];
+        $attendance->night_differential_hours = $validated['night_differential_hours'];
+        $attendance->regular_holiday_worked = $validated['regular_holiday_worked'];
         $attendance->save();
+
+        // Log attendance data after update
+        \Log::info('Attendance after update:', [
+            'id' => $attendance->id,
+            'employee_id' => $attendance->employee_id,
+            'days_worked' => $attendance->days_worked,
+            'regular_hours' => $attendance->regular_hours,
+            'overtime_hours' => $attendance->overtime_hours,
+            'late_hours' => $attendance->late_hours,
+            'night_differential_hours' => $attendance->night_differential_hours,
+            'regular_holiday_worked' => $attendance->regular_holiday_worked,
+        ]);
 
         return redirect()->route('employees.show', $employee)
             ->with('success', 'Attendance record updated successfully.');

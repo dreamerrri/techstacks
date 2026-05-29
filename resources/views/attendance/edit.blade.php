@@ -49,7 +49,7 @@
 <div class="card">
     <h2 style="margin:0 0 20px 0;">Attendance Details</h2>
 
-    <form method="POST" action="{{ route('attendance.update', [$employee, $attendance]) }}">
+    <form method="POST" action="{{ route('attendance.update', [$employee->id, $attendance->id]) }}">
         @csrf @method('PUT')
 
         {{-- Attendance Values --}}
@@ -103,23 +103,25 @@
                     style="padding:12px 24px; background:{{ $color }}; color:white; border:none; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600;">
                 <i class="fas fa-save"></i> Update Attendance Record
             </button>
-            <form method="POST" action="{{ route('attendance.destroy', [$employee, $attendance]) }}"
-                  data-confirm="This attendance record will be permanently deleted."
-                  data-confirm-title="Delete Attendance Record?"
-                  data-confirm-icon="warning"
-                  data-confirm-btn="Yes, delete"
-                  style="display:inline;">
-                @csrf @method('DELETE')
-                <button type="submit"
-                        style="padding:12px 24px; background:#fecaca; color:#991b1b; border:none; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600;">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-            </form>
             <a href="{{ route('employees.show', $employee) }}"
                style="padding:12px 24px; background:#f3f4f6; color:#6b7280; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px;">
                 Cancel
             </a>
         </div>
+    </form>
+
+    {{-- Delete Form (separate from update form) --}}
+    <form method="POST" action="{{ route('attendance.destroy', [$employee->id, $attendance->id]) }}"
+          data-confirm="This attendance record will be permanently deleted."
+          data-confirm-title="Delete Attendance Record?"
+          data-confirm-icon="warning"
+          data-confirm-btn="Yes, delete"
+          style="display:inline; margin-top:24px;">
+        @csrf @method('DELETE')
+        <button type="submit"
+                style="padding:12px 24px; background:#fecaca; color:#991b1b; border:none; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600;">
+            <i class="fas fa-trash"></i> Delete
+        </button>
     </form>
 </div>
 

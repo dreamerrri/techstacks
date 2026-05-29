@@ -99,7 +99,7 @@
                         $attendance = $employee->latestAttendance();
                     @endphp
                     @if($attendance)
-                        <a href="{{ route('attendance.edit', [$employee, $attendance]) }}"
+                        <a href="{{ route('attendance.edit', [$employee->id, $attendance->id]) }}"
                            style="padding:6px 12px; background:#dbeafe; color:#1e40af; border-radius:6px; text-decoration:none; font-size:12px; font-weight:600;">
                             <i class="fas fa-edit"></i> Edit
                         </a>

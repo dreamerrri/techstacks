@@ -36,7 +36,8 @@ class PayrollComputationEngine
         $dailyRate = round($monthlySalary / $workingDaysPerMonth, 2);
         $hourlyRate = round($dailyRate / $workingHoursPerDay, 2);
 
-        // 1. Basic Salary (cutoff)
+        // 1. Basic Salary - calculate based on days worked (cutoff period)
+        // Daily Rate × Days Worked = Cutoff Pay
         $daysWorked = $attendance['days_worked'] ?? 0;
         $basicSalary = round($dailyRate * $daysWorked, 2);
 
@@ -45,29 +46,35 @@ class PayrollComputationEngine
         $overtimePay = round($hourlyRate * 1.25 * $overtimeHours, 2);
 
         // 3. Holiday Pay (daily rate × holiday days)
-        $holidayDays = $attendance['holiday_days'] ?? 0;
+        // Support both 'holiday_days' and 'regular_holiday_worked' for compatibility
+        $holidayDays = $attendance['holiday_days'] ?? ($attendance['regular_holiday_worked'] ?? 0);
         $holidayPay = round($dailyRate * 2 * $holidayDays, 2);
 
         // 4. Night Differential
-        $nightHours = $attendance['night_hours'] ?? 0;
+        // Support both 'night_hours' and 'night_differential_hours' for compatibility
+        $nightHours = $attendance['night_hours'] ?? ($attendance['night_differential_hours'] ?? 0);
         $nightDiff = round(($hourlyRate * 0.10) * $nightHours, 2);
 
-        // 5. Allowances & Benefits
+        // 5. Late Deduction
+        $lateHours = $attendance['late_hours'] ?? 0;
+        $lateDeduction = round($hourlyRate * $lateHours, 2);
+
+        // 6. Allowances & Benefits
         $totalAllowances = round(array_sum($allowances), 2);
         $totalBenefits = round(array_sum($benefits), 2);
 
-        // 6. Manual Adjustments
+        // 7. Manual Adjustments
         $manualAdd = isset($manualAdjustments['add']) ? (float)$manualAdjustments['add'] : 0.0;
         $manualSubtract = isset($manualAdjustments['subtract']) ? (float)$manualAdjustments['subtract'] : 0.0;
 
-        // 7. Gross Pay
-        $grossPay = $basicSalary + $overtimePay + $holidayPay + $nightDiff + $totalAllowances + $totalBenefits + $manualAdd - $manualSubtract;
+        // 8. Gross Pay
+        $grossPay = $basicSalary + $overtimePay + $holidayPay + $nightDiff + $totalAllowances + $totalBenefits + $manualAdd - $manualSubtract - $lateDeduction;
         $grossPay = round($grossPay, 2);
 
-        // 8. Deductions
+        // 9. Deductions
         $totalDeductions = round(array_sum($deductions), 2);
 
-        // 9. Net Pay
+        // 10. Net Pay
         $netPay = $preview ? $grossPay : round($grossPay - $totalDeductions, 2);
 
         return [
@@ -78,6 +85,7 @@ class PayrollComputationEngine
             'overtime_pay' => $overtimePay,
             'holiday_pay' => $holidayPay,
             'night_differential' => $nightDiff,
+            'late_deduction' => $lateDeduction,
             'allowances' => $totalAllowances,
             'benefits' => $totalBenefits,
             'manual_add' => $manualAdd,
