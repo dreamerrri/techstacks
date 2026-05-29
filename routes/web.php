@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\AttendanceController;
 
 
 // Public Routes
@@ -58,6 +59,15 @@ Route::middleware('auth')->group(function () {
             Route::patch('/{employee}/archive', [EmployeeController::class, 'archive'])->name('archive');
             Route::patch('/{employee}/restore', [EmployeeController::class, 'restore'])->name('restore');
         });
+    });
+
+    // Attendance Management — admin and HR only (separate group to avoid prefix inheritance)
+    Route::middleware('role:admin,hr')->prefix('employees/{employee}/attendance')->name('attendance.')->group(function () {
+        Route::get('/create', [AttendanceController::class, 'create'])->name('create');
+        Route::post('/',      [AttendanceController::class, 'store'])->name('store');
+        Route::get('/{attendance}/edit', [AttendanceController::class, 'edit'])->name('edit');
+        Route::put('/{attendance}',      [AttendanceController::class, 'update'])->name('update');
+        Route::delete('/{attendance}',   [AttendanceController::class, 'destroy'])->name('destroy');
     });
 
     // Payroll Management — all authenticated users can access

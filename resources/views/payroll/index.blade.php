@@ -67,7 +67,7 @@
                 <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Employee</th>
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Department</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase;">Monthly Salary</th>
+                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase;">Gross Pay</th>
                     <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase;">SSS</th>
                     <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase;">PhilHealth</th>
                     <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase;">Pag-IBIG</th>
@@ -89,7 +89,7 @@
                         </td>
                         <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
                         <td style="padding:12px; text-align:right; font-weight:600; color:#1f2937;">
-                            ₱{{ number_format($payroll['monthly_salary'] ?? 0, 2) }}
+                            ₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}
                         </td>
                         <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</td>
                         <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</td>
@@ -147,8 +147,8 @@
 
                 <div style="margin-top:12px; padding-top:12px; border-top:1px solid #f3f4f6;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                        <span style="color:#6b7280;">Monthly Salary:</span>
-                        <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['monthly_salary'] ?? 0, 2) }}</span>
+                        <span style="color:#6b7280;">Gross Pay:</span>
+                        <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span>
                     </div>
                     <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                         <span style="color:#6b7280;">SSS:</span>

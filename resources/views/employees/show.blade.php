@@ -92,7 +92,25 @@
 
         {{-- Attendance Summary --}}
         <div class="card" style="grid-column: span 2;">
-            <h2><i class="fas fa-clock" style="color:#dc2626;"></i> Attendance Summary</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h2 style="margin:0;"><i class="fas fa-clock" style="color:#dc2626;"></i> Attendance Summary</h2>
+                @if(auth()->user()->isAdmin() || auth()->user()->isHR())
+                    @php
+                        $attendance = $employee->currentAttendance();
+                    @endphp
+                    @if($attendance)
+                        <a href="{{ route('attendance.edit', [$employee, $attendance]) }}"
+                           style="padding:6px 12px; background:#dbeafe; color:#1e40af; border-radius:6px; text-decoration:none; font-size:12px; font-weight:600;">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    @else
+                        <a href="{{ route('attendance.create', $employee) }}"
+                           style="padding:6px 12px; background:#d1fae5; color:#065f46; border-radius:6px; text-decoration:none; font-size:12px; font-weight:600;">
+                            <i class="fas fa-plus"></i> Add Attendance
+                        </a>
+                    @endif
+                @endif
+            </div>
             <div style="background:#f9fafb; padding:20px; border-radius:8px;">
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
                     @php

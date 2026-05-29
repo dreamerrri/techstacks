@@ -57,10 +57,10 @@
     {{-- Gross Pay Card --}}
     <div class="card" style="text-align:center; margin-bottom:0;">
         <div style="font-size:28px; color:#10b981; margin-bottom:8px;"><i class="fas fa-coins"></i></div>
-        <div style="font-size:14px; color:#6b7280; margin-bottom:4px;">Monthly Gross Pay</div>
-        <div style="font-size:28px; font-weight:700; color:#1f2937;">₱{{ number_format($payroll['monthly_salary'] ?? 0, 2) }}</div>
+        <div style="font-size:14px; color:#6b7280; margin-bottom:4px;">Gross Pay</div>
+        <div style="font-size:28px; font-weight:700; color:#1f2937;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</div>
         <div style="font-size:12px; color:#6b7280; margin-top:4px;">
-            Basic: ₱{{ number_format($payroll['basic_salary'] ?? 0, 2) }} ({{ $payroll['salary_type'] ?? 'Monthly' }})
+            Based on attendance data
         </div>
     </div>
 
@@ -70,7 +70,7 @@
         <div style="font-size:14px; color:#6b7280; margin-bottom:4px;">Total Deductions</div>
         <div style="font-size:28px; font-weight:700; color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</div>
         <div style="font-size:12px; color:#6b7280; margin-top:4px;">
-            {{ number_format(($payroll['total_deductions'] ?? 0) / ($payroll['monthly_salary'] ?? 1) * 100, 1) }}% of gross
+            {{ number_format(($payroll['total_deductions'] ?? 0) / ($payroll['gross_pay'] ?? 1) * 100, 1) }}% of gross
         </div>
     </div>
 
@@ -90,6 +90,60 @@
     <h2 style="margin:0 0 20px 0;">Detailed Breakdown</h2>
 
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(350px, 1fr)); gap:30px;">
+        {{-- Attendance-Based Earnings --}}
+        <div>
+            <h3 style="margin:0 0 15px 0; color:#1f2937; font-size:18px; border-bottom:2px solid #e5e7eb; padding-bottom:8px;">
+                <i class="fas fa-clock" style="color:#10b981;"></i> Attendance-Based Earnings
+            </h3>
+
+            <div style="margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span style="color:#6b7280;">Base Pay</span>
+                    <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</span>
+                </div>
+                <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['regular_hours'] ?? 0 }} regular hours × ₱{{ number_format($payroll['hourly_rate'] ?? 0, 2) }}/hr</div>
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span style="color:#6b7280;">Overtime Pay</span>
+                    <span style="font-weight:600; color:#10b981;">+₱{{ number_format($payroll['overtime_pay'] ?? 0, 2) }}</span>
+                </div>
+                <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }} OT hours × 1.25 × ₱{{ number_format($payroll['hourly_rate'] ?? 0, 2) }}/hr</div>
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span style="color:#6b7280;">Night Differential Pay</span>
+                    <span style="font-weight:600; color:#10b981;">+₱{{ number_format($payroll['night_differential_pay'] ?? 0, 2) }}</span>
+                </div>
+                <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['night_differential_hours'] ?? 0 }} night hours × 10% × ₱{{ number_format($payroll['hourly_rate'] ?? 0, 2) }}/hr</div>
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span style="color:#6b7280;">Holiday Pay</span>
+                    <span style="font-weight:600; color:#10b981;">+₱{{ number_format($payroll['holiday_pay'] ?? 0, 2) }}</span>
+                </div>
+                <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['regular_holiday_worked'] ?? 0 }} holiday days × 2 × ₱{{ number_format($payroll['daily_rate'] ?? 0, 2) }}/day</div>
+            </div>
+
+            <div style="margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span style="color:#6b7280;">Late Deduction</span>
+                    <span style="font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['late_deduction'] ?? 0, 2) }}</span>
+                </div>
+                <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['late_hours'] ?? 0 }} late hours × ₱{{ number_format($payroll['hourly_rate'] ?? 0, 2) }}/hr</div>
+            </div>
+
+            <div style="padding-top:10px; border-top:1px solid #e5e7eb;">
+                <div style="display:flex; justify-content:space-between; font-weight:600;">
+                    <span style="color:#1f2937;">Total Earnings</span>
+                    <span style="color:#10b981;">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0), 2) }}</span>
+                </div>
+            </div>
+        </div>
+
         {{-- Government Contributions --}}
         <div>
             <h3 style="margin:0 0 15px 0; color:#1f2937; font-size:18px; border-bottom:2px solid #e5e7eb; padding-bottom:8px;">
@@ -101,7 +155,7 @@
                     <span style="color:#6b7280;">SSS Contribution</span>
                     <span style="font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</span>
                 </div>
-                <div style="font-size:12px; color:#9ca3af;">4.5% of monthly salary (capped at ₱900)</div>
+                <div style="font-size:12px; color:#9ca3af;">4.5% of gross pay (capped at ₱900)</div>
             </div>
 
             <div style="margin-bottom:15px;">
@@ -109,7 +163,7 @@
                     <span style="color:#6b7280;">PhilHealth Contribution</span>
                     <span style="font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</span>
                 </div>
-                <div style="font-size:12px; color:#9ca3af;">2.25% of monthly salary (capped at ₱1,500)</div>
+                <div style="font-size:12px; color:#9ca3af;">2.25% of gross pay (capped at ₱1,500)</div>
             </div>
 
             <div style="margin-bottom:15px;">
@@ -117,7 +171,7 @@
                     <span style="color:#6b7280;">Pag-IBIG Contribution</span>
                     <span style="font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</span>
                 </div>
-                <div style="font-size:12px; color:#9ca3af;">2% of monthly salary (capped at ₱100)</div>
+                <div style="font-size:12px; color:#9ca3af;">2% of gross pay (capped at ₱100)</div>
             </div>
 
             <div style="padding-top:10px; border-top:1px solid #e5e7eb;">
@@ -165,8 +219,8 @@
     {{-- Summary --}}
     <div style="margin-top:30px; padding-top:20px; border-top:2px solid #e5e7eb;">
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:16px;">
-            <span style="color:#6b7280;">Gross Monthly Pay</span>
-            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['monthly_salary'] ?? 0, 2) }}</span>
+            <span style="color:#6b7280;">Gross Pay</span>
+            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span>
         </div>
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:16px;">
             <span style="color:#dc2626;">Less: Government Contributions</span>
@@ -175,6 +229,10 @@
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:16px;">
             <span style="color:#dc2626;">Less: Withholding Tax</span>
             <span style="font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:16px;">
+            <span style="color:#dc2626;">Less: Late Deductions</span>
+            <span style="font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['late_deduction'] ?? 0, 2) }}</span>
         </div>
         <div style="display:flex; justify-content:space-between; margin-top:15px; padding-top:15px; border-top:2px solid #10b981; font-size:20px;">
             <span style="font-weight:700; color:#1f2937;">NET PAY</span>

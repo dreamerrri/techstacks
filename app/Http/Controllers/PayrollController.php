@@ -91,43 +91,97 @@ class PayrollController extends Controller
         $basicSalary = $employee->basic_salary;
         $salaryType = $employee->salary_type;
 
-        // Calculate monthly salary based on salary type
-        $monthlySalary = match ($salaryType) {
-            'Monthly' => $basicSalary,
-            'Daily' => $basicSalary * 22, // Assuming 22 working days per month
-            'Hourly' => $basicSalary * 8 * 22, // 8 hours/day, 22 days/month
-            default => $basicSalary,
+        // Calculate hourly and daily rates
+        $hourlyRate = match ($salaryType) {
+            'Monthly' => $basicSalary / 22 / 8, // 22 days, 8 hours per day
+            'Daily' => $basicSalary / 8,
+            'Hourly' => $basicSalary,
+            default => $basicSalary / 22 / 8,
         };
 
+        $dailyRate = match ($salaryType) {
+            'Monthly' => $basicSalary / 22,
+            'Daily' => $basicSalary,
+            'Hourly' => $basicSalary * 8,
+            default => $basicSalary / 22,
+        };
+
+        // Get attendance data for current month
+        $attendance = $employee->currentAttendance();
+
+        // Calculate base salary based on actual days worked
+        $daysWorked = $attendance->days_worked ?? 0;
+        $regularHours = $attendance->regular_hours ?? 0;
+        $overtimeHours = $attendance->overtime_hours ?? 0;
+        $lateHours = $attendance->late_hours ?? 0;
+        $nightDifferentialHours = $attendance->night_differential_hours ?? 0;
+        $regularHolidayWorked = $attendance->regular_holiday_worked ?? 0;
+
+        // Calculate base pay based on actual hours worked
+        $basePay = $regularHours * $hourlyRate;
+
+        // Calculate overtime pay (1.25x of hourly rate)
+        $overtimePay = $overtimeHours * $hourlyRate * 1.25;
+
+        // Calculate night differential pay (10% additional of hourly rate)
+        $nightDifferentialPay = $nightDifferentialHours * $hourlyRate * 0.10;
+
+        // Calculate holiday pay (2x of daily rate for regular holidays)
+        $holidayPay = $regularHolidayWorked * $dailyRate * 2;
+
+        // Calculate late deduction (deduct hourly rate for late hours)
+        $lateDeduction = $lateHours * $hourlyRate;
+
+        // Calculate gross pay
+        $grossPay = $basePay + $overtimePay + $nightDifferentialPay + $holidayPay - $lateDeduction;
+
         // Government contributions (Philippines standard rates)
-        // SSS: 4.5% of monthly salary (capped)
-        $sssContribution = min($monthlySalary * 0.045, 900);
+        // SSS: 4.5% of gross pay (capped)
+        $sssContribution = min($grossPay * 0.045, 900);
 
-        // PhilHealth: 2.25% of monthly salary (capped)
-        $philhealthContribution = min($monthlySalary * 0.0225, 1500);
+        // PhilHealth: 2.25% of gross pay (capped)
+        $philhealthContribution = min($grossPay * 0.0225, 1500);
 
-        // Pag-IBIG: 2% of monthly salary (capped at 100)
-        $pagibigContribution = min($monthlySalary * 0.02, 100);
+        // Pag-IBIG: 2% of gross pay (capped at 100)
+        $pagibigContribution = min($grossPay * 0.02, 100);
 
         // Withholding Tax (simplified calculation)
         // Tax brackets for monthly income (Philippines)
-        $taxableIncome = $monthlySalary - $sssContribution - $philhealthContribution - $pagibigContribution;
+        $taxableIncome = $grossPay - $sssContribution - $philhealthContribution - $pagibigContribution;
         $withholdingTax = $this->calculateTax($taxableIncome);
 
+        // Total deductions
+        $totalDeductions = $sssContribution + $philhealthContribution + $pagibigContribution + $withholdingTax + $lateDeduction;
+
         // Net pay
-        $netPay = $monthlySalary - $sssContribution - $philhealthContribution - $pagibigContribution - $withholdingTax;
+        $netPay = $grossPay - $totalDeductions;
 
         return [
             'basic_salary' => $basicSalary,
             'salary_type' => $salaryType,
-            'monthly_salary' => $monthlySalary,
+            'hourly_rate' => $hourlyRate,
+            'daily_rate' => $dailyRate,
+            'base_pay' => $basePay,
+            'overtime_pay' => $overtimePay,
+            'night_differential_pay' => $nightDifferentialPay,
+            'holiday_pay' => $holidayPay,
+            'late_deduction' => $lateDeduction,
+            'gross_pay' => $grossPay,
             'sss_contribution' => $sssContribution,
             'philhealth_contribution' => $philhealthContribution,
             'pagibig_contribution' => $pagibigContribution,
-            'total_deductions' => $sssContribution + $philhealthContribution + $pagibigContribution + $withholdingTax,
             'withholding_tax' => $withholdingTax,
+            'total_deductions' => $totalDeductions,
             'net_pay' => $netPay,
             'taxable_income' => $taxableIncome,
+            'attendance_data' => [
+                'days_worked' => $daysWorked,
+                'regular_hours' => $regularHours,
+                'overtime_hours' => $overtimeHours,
+                'late_hours' => $lateHours,
+                'night_differential_hours' => $nightDifferentialHours,
+                'regular_holiday_worked' => $regularHolidayWorked,
+            ],
         ];
     }
 
