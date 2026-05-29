@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'All Users page')
+@section('title', 'All Users')
 
 @section('content')
 
@@ -167,11 +167,6 @@
             </table>
         </div>
 
-    
-
-       
-    </div>
-
         {{-- Mobile Cards --}}
         <div class="user-mobile-cards" style="padding:16px;">
             @forelse($users as $user)
@@ -251,5 +246,8 @@
                 </div>
             @endforelse
         </div>
- <div style="padding:16px 25px; border-top:1px solid #e5e7eb;">{{ $users->links() }}</div>
+
+        <div style="padding:16px 25px; border-top:1px solid #e5e7eb;">{{ $users->links() }}</div>
+    </div>
+
 @endsection

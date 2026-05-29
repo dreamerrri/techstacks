@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class EmployeeController extends Controller
 {
@@ -47,7 +50,29 @@ class EmployeeController extends Controller
     {
         $validated = $this->validateEmployee($request);
 
-        Employee::create($validated);
+        $employee = Employee::create($validated);
+
+        // --- FIX: Auto-create a linked User account when an employee is added ---
+        $existingUser = User::where('email', $validated['email'])->first();
+
+        if (!$existingUser) {
+            // No user account exists yet — create one with a random temporary password
+            $user = User::create([
+                'name'      => $validated['first_name'] . ' ' . $validated['last_name'],
+                'email'     => $validated['email'],
+                'password'  => Hash::make(Str::random(16)), // temporary; user should reset
+                'role'      => 'employee',
+                'is_active' => true,
+            ]);
+
+            $employee->update(['user_id' => $user->id]);
+        } else {
+            // User already exists (e.g. registered before HR added them) — just link the records
+            if (is_null($existingUser->employee?->id)) {
+                $employee->update(['user_id' => $existingUser->id]);
+            }
+        }
+        // --- END FIX ---
 
         return redirect()->route('employees.index')
             ->with('success', 'Employee created successfully.');
@@ -69,6 +94,18 @@ class EmployeeController extends Controller
         $validated = $this->validateEmployee($request, $employee->id);
 
         $employee->update($validated);
+
+        // --- FIX: Keep the linked User name/email in sync if they changed ---
+        if ($employee->user_id) {
+            $linkedUser = User::find($employee->user_id);
+            if ($linkedUser) {
+                $linkedUser->update([
+                    'name'  => $validated['first_name'] . ' ' . $validated['last_name'],
+                    'email' => $validated['email'],
+                ]);
+            }
+        }
+        // --- END FIX ---
 
         return redirect()->route('employees.show', $employee)
             ->with('success', 'Employee updated successfully.');
@@ -122,56 +159,77 @@ class EmployeeController extends Controller
         ]);
     }
 
+    // -----------------------------------------------------------------------
+    // API
+    // -----------------------------------------------------------------------
 
     // GET /api/employees
-public function apiIndex(Request $request)
-{
-    $query = Employee::active();
+    public function apiIndex(Request $request)
+    {
+        $query = Employee::active();
 
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('first_name', 'like', "%{$search}%")
-              ->orWhere('last_name', 'like', "%{$search}%")
-              ->orWhere('employee_id', 'like', "%{$search}%");
-        });
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('employee_id', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('department'))
+            $query->where('department', $request->department);
+
+        if ($request->filled('status'))
+            $query->where('employment_status', $request->status);
+
+        return response()->json(['success' => true, 'data' => $query->paginate(15)]);
     }
 
-    if ($request->filled('department'))
-        $query->where('department', $request->department);
+    // GET /api/employees/{id}
+    public function apiShow(Employee $employee)
+    {
+        return response()->json(['success' => true, 'data' => $employee]);
+    }
 
-    if ($request->filled('status'))
-        $query->where('employment_status', $request->status);
+    // POST /api/employees
+    public function apiStore(Request $request)
+    {
+        $validated = $this->validateEmployee($request);
+        $employee  = Employee::create($validated);
 
-    return response()->json(['success' => true, 'data' => $query->paginate(15)]);
-}
+        // --- FIX: Also auto-create a User account via API ---
+        $existingUser = User::where('email', $validated['email'])->first();
 
-// GET /api/employees/{id}
-public function apiShow(Employee $employee)
-{
-    return response()->json(['success' => true, 'data' => $employee]);
-}
+        if (!$existingUser) {
+            $user = User::create([
+                'name'      => $validated['first_name'] . ' ' . $validated['last_name'],
+                'email'     => $validated['email'],
+                'password'  => Hash::make(Str::random(16)),
+                'role'      => 'employee',
+                'is_active' => true,
+            ]);
+            $employee->update(['user_id' => $user->id]);
+        } else {
+            $employee->update(['user_id' => $existingUser->id]);
+        }
+        // --- END FIX ---
 
-// POST /api/employees
-public function apiStore(Request $request)
-{
-    $validated = $this->validateEmployee($request);
-    $employee  = Employee::create($validated);
-    return response()->json(['success' => true, 'message' => 'Employee created.', 'data' => $employee], 201);
-}
+        return response()->json(['success' => true, 'message' => 'Employee created.', 'data' => $employee], 201);
+    }
 
-// PUT /api/employees/{id}
-public function apiUpdate(Request $request, Employee $employee)
-{
-    $validated = $this->validateEmployee($request, $employee->id);
-    $employee->update($validated);
-    return response()->json(['success' => true, 'message' => 'Employee updated.', 'data' => $employee]);
-}
+    // PUT /api/employees/{id}
+    public function apiUpdate(Request $request, Employee $employee)
+    {
+        $validated = $this->validateEmployee($request, $employee->id);
+        $employee->update($validated);
+        return response()->json(['success' => true, 'message' => 'Employee updated.', 'data' => $employee]);
+    }
 
-// PATCH /api/employees/{id}/archive
-public function apiArchive(Employee $employee)
-{
-    $employee->update(['is_archived' => true]);
-    return response()->json(['success' => true, 'message' => 'Employee archived.']);
-}
+    // PATCH /api/employees/{id}/archive
+    public function apiArchive(Employee $employee)
+    {
+        $employee->update(['is_archived' => true]);
+        return response()->json(['success' => true, 'message' => 'Employee archived.']);
+    }
 }
