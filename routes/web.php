@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/profile',  [ProfileController::class, 'show'])->name('profile.show');
 Route::put('/profile',  [ProfileController::class, 'update'])->name('profile.update');
+Route::put('/profile/personal', [ProfileController::class, 'updatePersonal'])->name('profile.personal');
     Route::middleware('role:admin')->prefix('users')->name('users.')->group(function () {
         Route::get('/',                [UserController::class, 'index'])->name('index');
         Route::patch('/{user}/toggle', [UserController::class, 'toggleActive'])->name('toggle');

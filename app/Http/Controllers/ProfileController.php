@@ -86,4 +86,32 @@ class ProfileController extends Controller
 
         return back()->with('success', 'Banner colour updated.');
     }
+    public function updatePersonal(Request $request)
+{
+    $user     = Auth::user();
+    $employee = $user->employee;
+
+    if (!$employee) {
+        return back()->with('error', 'No employee record found.');
+    }
+
+    $request->validate([
+        'first_name'     => ['required', 'string', 'max:100'],
+        'middle_name'    => ['nullable', 'string', 'max:100'],
+        'last_name'      => ['required', 'string', 'max:100'],
+        'birthdate'      => ['required', 'date', 'before:today'],
+        'gender'         => ['required', 'in:Male,Female,Other'],
+        'civil_status'   => ['required', 'in:Single,Married,Widowed,Separated'],
+        'contact_number' => ['required', 'string', 'max:20'],
+        'address'        => ['required', 'string'],
+    ]);
+
+    $employee->update($request->only([
+        'first_name', 'middle_name', 'last_name',
+        'birthdate', 'gender', 'civil_status',
+        'contact_number', 'address',
+    ]));
+
+    return back()->with('success', 'Personal information updated.');
+}
 }
