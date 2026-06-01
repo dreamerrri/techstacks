@@ -398,8 +398,8 @@
 }
 .burger-btn:hover { background: rgba(255,255,255,0.2); }
 
-.mobile-layout  { display: none !important; position: absolute !important; left: -9999px !important; top: -9999px !important; visibility: hidden !important; }
-.desktop-layout { display: flex !important; }
+.mobile-layout  { display: block; }
+.desktop-layout { display: none !important; }
 
 .mobile-topbar {
     padding: 12px 16px;
@@ -438,43 +438,11 @@
 }
 
 @media (max-width: 768px) {
-    .mobile-layout  { display: block !important; position: static !important; left: auto !important; top: auto !important; visibility: visible !important; }
+    .mobile-layout  { display: block; }
     .desktop-layout { display: none !important; }
 
     .content { padding: 20px 16px; }
 
     .user-table-wrapper { display: none !important; }
     .user-mobile-cards  { display: block !important; }
-
-    /* Stack grid on mobile */
-    div[style*="grid-template-columns:1fr 350px"] {
-        grid-template-columns: 1fr !important;
-    }
-}
-
-/* Ensure payroll form grid works in desktop view */
-@media (min-width: 769px) {
-    .payroll-form-grid {
-        grid-template-columns: 1fr 350px !important;
-        display: grid !important;
-        width: 100% !important;
-        gap: 24px !important;
-    }
-
-    /* Ensure preview panel card is visible */
-    .payroll-form-grid > div:nth-child(2) {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        width: 350px !important;
-        min-width: 350px !important;
-    }
-
-    /* Ensure preview panel content is visible */
-    #previewPanel {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        min-height: 100px !important;
-    }
 }   
