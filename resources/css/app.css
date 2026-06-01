@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
@@ -396,8 +398,8 @@
 }
 .burger-btn:hover { background: rgba(255,255,255,0.2); }
 
-.mobile-layout  { display: block; }
-.desktop-layout { display: none !important; }
+.mobile-layout  { display: none; }
+.desktop-layout { display: grid; }
 
 .mobile-topbar {
     padding: 12px 16px;
