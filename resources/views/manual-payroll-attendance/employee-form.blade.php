@@ -33,7 +33,7 @@
     </div>
 </div>
 
-<div style="display:grid; grid-template-columns:1fr 350px; gap:24px;">
+<div class="payroll-form-grid" style="display:grid; grid-template-columns:1fr 350px; gap:24px;">
     {{-- Attendance Encoding Form --}}
     <div class="card" style="padding:0; overflow:hidden;">
         <div style="padding:20px 25px; border-bottom:1px solid #e5e7eb;">
@@ -46,30 +46,21 @@
             <input type="hidden" name="payroll_period_id" value="{{ $payrollPeriod->id }}">
             <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
-            <div style="margin-bottom:20px; position:relative; z-index:1;">
+            <div style="margin-bottom:20px;">
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Rate Type</label>
-                <div style="display:flex; gap:20px;">
-                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-                        <input type="radio" name="rate_type" value="daily" checked
-                               onchange="updateRateLabel()"
-                               style="cursor:pointer;">
-                        <span style="font-size:14px; color:#374151;">Daily Rate</span>
-                    </label>
-                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-                        <input type="radio" name="rate_type" value="monthly"
-                               onchange="updateRateLabel()"
-                               style="cursor:pointer;">
-                        <span style="font-size:14px; color:#374151;">Monthly Rate</span>
-                    </label>
+                <div style="padding:10px 12px; background:#f9fafb; border:1px solid #d1d5db; border-radius:6px; font-size:14px; color:#374151;">
+                    <input type="hidden" name="rate_type" value="{{ $employee->salary_type === 'Monthly' ? 'monthly' : 'daily' }}">
+                    <span style="font-weight:600;">{{ ucfirst($employee->salary_type === 'Monthly' ? 'Monthly' : 'Daily') }} Rate</span>
+                    <span style="color:#6b7280; margin-left:8px;">(based on employee salary type)</span>
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; position:relative; z-index:1;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
                 <div>
-                    <label id="rateLabel" style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Daily Rate</label>
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">{{ $employee->salary_type === 'Monthly' ? 'Monthly' : 'Daily' }} Rate</label>
                     <input type="number" name="daily_rate" step="0.01" min="0" required
                            value="{{ $isEdit ? $payrollInput->daily_rate : $dailyRate }}"
-                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; position:relative; z-index:2; pointer-events:auto !important;"
+                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
                            oninput="window.dailyRateValue = this.value; console.log('Daily rate changed:', this.value)">
                     <p style="color:#6b7280; font-size:12px; margin-top:4px;">Based on {{ $employee->salary_type ?? 'N/A' }} salary (₱{{ number_format($employee->basic_salary ?? 0, 2) }})</p>
                 </div>
@@ -77,41 +68,41 @@
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Days Worked</label>
                     <input type="number" name="days_worked" step="0.5" min="0" max="31" required
                            value="{{ $isEdit ? $payrollInput->days_worked : '0' }}"
-                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; position:relative; z-index:2; pointer-events:auto !important;"
+                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
                            oninput="window.daysWorkedValue = this.value; console.log('Days worked changed:', this.value)">
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; position:relative; z-index:1;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Overtime Hours</label>
                     <input type="number" name="overtime_hours" step="0.5" min="0"
                            value="{{ $isEdit ? $payrollInput->overtime_hours : '0' }}"
-                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; position:relative; z-index:2; pointer-events:auto !important;"
+                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
                            oninput="window.overtimeHoursValue = this.value; console.log('Overtime hours changed:', this.value)">
                 </div>
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Late Hours</label>
                     <input type="number" name="late_hours" step="0.5" min="0"
                            value="{{ $isEdit ? $payrollInput->late_hours : '0' }}"
-                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; position:relative; z-index:2; pointer-events:auto !important;"
+                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
                            oninput="window.lateHoursValue = this.value; console.log('Late hours changed:', this.value)">
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; position:relative; z-index:1;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;">
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Allowances</label>
                     <input type="number" name="allowances" step="0.01" min="0"
                            value="{{ $isEdit ? $payrollInput->allowances : '0' }}"
-                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; position:relative; z-index:2; pointer-events:auto !important;"
+                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
                            oninput="window.allowancesValue = this.value; console.log('Allowances changed:', this.value)">
                 </div>
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Deductions</label>
                     <input type="number" name="deductions" step="0.01" min="0"
                            value="{{ $isEdit ? $payrollInput->deductions : '0' }}"
-                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; position:relative; z-index:2; pointer-events:auto !important;"
+                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
                            oninput="window.deductionsValue = this.value; console.log('Deductions changed:', this.value)">
                 </div>
             </div>
@@ -218,15 +209,6 @@ window.lateHoursValue = '{{ $isEdit ? $payrollInput->late_hours : '0' }}';
 window.allowancesValue = '{{ $isEdit ? $payrollInput->allowances : '0' }}';
 window.deductionsValue = '{{ $isEdit ? $payrollInput->deductions : '0' }}';
 
-function updateRateLabel() {
-    const rateType = document.querySelector('input[name="rate_type"]:checked').value;
-    const rateLabel = document.getElementById('rateLabel');
-    if (rateType === 'monthly') {
-        rateLabel.textContent = 'Monthly Rate';
-    } else {
-        rateLabel.textContent = 'Daily Rate';
-    }
-}
 
 function handleSaveAttendance(event) {
     event.preventDefault();
@@ -243,7 +225,7 @@ function handleSaveAttendance(event) {
     formData.append('payroll_period_id', form.querySelector('[name="payroll_period_id"]').value);
     formData.append('employee_id', form.querySelector('[name="employee_id"]').value);
     formData.append('daily_rate', window.dailyRateValue);
-    formData.append('rate_type', document.querySelector('input[name="rate_type"]:checked').value);
+    formData.append('rate_type', form.querySelector('[name="rate_type"]').value);
     formData.append('days_worked', window.daysWorkedValue);
     formData.append('overtime_hours', window.overtimeHoursValue);
     formData.append('late_hours', window.lateHoursValue);
@@ -294,102 +276,108 @@ function handleSaveAttendance(event) {
 }
 
 function previewPayroll() {
-    clearTimeout(previewTimeout);
-    previewTimeout = setTimeout(() => {
-        const form = document.getElementById('attendanceForm');
-        const formData = new FormData();
-        
-        formData.append('payroll_period_id', form.querySelector('[name="payroll_period_id"]').value);
-        formData.append('employee_id', form.querySelector('[name="employee_id"]').value);
-        formData.append('daily_rate', window.dailyRateValue);
-        formData.append('rate_type', document.querySelector('input[name="rate_type"]:checked').value);
-        formData.append('days_worked', window.daysWorkedValue);
-        formData.append('overtime_hours', window.overtimeHoursValue);
-        formData.append('late_hours', window.lateHoursValue);
-        formData.append('allowances', window.allowancesValue);
-        formData.append('deductions', window.deductionsValue);
-        formData.append('_token', '{{ csrf_token() }}');
-        
-        console.log('Previewing payroll with values:', {
-            daily_rate: window.dailyRateValue,
-            days_worked: window.daysWorkedValue,
-            overtime_hours: window.overtimeHoursValue,
-            late_hours: window.lateHoursValue,
-            allowances: window.allowancesValue,
-            deductions: window.deductionsValue
-        });
-        
-        fetch('{{ route('manual-payroll-attendance.preview') }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Preview response data:', data);
-            if(data.success) {
-                // Data is nested under preview key
-                const previewData = data.preview || {};
-                if(previewData.gross_pay !== undefined && previewData.net_pay !== undefined) {
-                    const previewPanel = document.getElementById('previewPanel');
-                    if(previewPanel) {
-                        previewPanel.innerHTML = `
-                            <div style="margin-bottom:16px;">
-                                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                    <span style="color:#6b7280;">Basic Salary:</span>
-                                    <span style="font-weight:600; color:#1f2937;">₱${previewData.basic_salary ? previewData.basic_salary.toFixed(2) : '0.00'}</span>
-                                </div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                    <span style="color:#6b7280;">Overtime Pay:</span>
-                                    <span style="color:#10b981;">+₱${previewData.overtime_pay ? previewData.overtime_pay.toFixed(2) : '0.00'}</span>
-                                </div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                    <span style="color:#6b7280;">Allowances:</span>
-                                    <span style="color:#10b981;">+₱${previewData.allowances ? previewData.allowances.toFixed(2) : '0.00'}</span>
-                                </div>
-                                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                    <span style="color:#6b7280;">Late Deduction:</span>
-                                    <span style="color:#dc2626;">-₱${previewData.late_deduction ? previewData.late_deduction.toFixed(2) : '0.00'}</span>
-                                </div>
+    console.log('Preview button clicked');
+    const form = document.getElementById('attendanceForm');
+    if (!form) {
+        console.error('Form not found');
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append('payroll_period_id', form.querySelector('[name="payroll_period_id"]').value);
+    formData.append('employee_id', form.querySelector('[name="employee_id"]').value);
+    formData.append('daily_rate', window.dailyRateValue);
+    formData.append('rate_type', form.querySelector('[name="rate_type"]').value);
+    formData.append('days_worked', window.daysWorkedValue);
+    formData.append('overtime_hours', window.overtimeHoursValue);
+    formData.append('late_hours', window.lateHoursValue);
+    formData.append('allowances', window.allowancesValue);
+    formData.append('deductions', window.deductionsValue);
+    formData.append('_token', '{{ csrf_token() }}');
+
+    console.log('Previewing payroll with values:', {
+        daily_rate: window.dailyRateValue,
+        days_worked: window.daysWorkedValue,
+        overtime_hours: window.overtimeHoursValue,
+        late_hours: window.lateHoursValue,
+        allowances: window.allowancesValue,
+        deductions: window.deductionsValue
+    });
+
+    fetch('{{ route('manual-payroll-attendance.preview') }}', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+        body: formData
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Preview response data:', data);
+        if(data.success) {
+            const previewData = data.preview || {};
+            if(previewData.gross_pay !== undefined && previewData.net_pay !== undefined) {
+                const previewPanel = document.getElementById('previewPanel');
+                if(previewPanel) {
+                    previewPanel.innerHTML = `
+                        <div style="margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Basic Salary:</span>
+                                <span style="font-weight:600; color:#1f2937;">₱${previewData.basic_salary ? previewData.basic_salary.toFixed(2) : '0.00'}</span>
                             </div>
-                            <div style="padding:12px; background:#f9fafb; border-radius:6px; margin-bottom:16px;">
-                                <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:700; color:#1f2937;">
-                                    <span>Gross Pay:</span>
-                                    <span>₱${previewData.gross_pay.toFixed(2)}</span>
-                                </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Overtime Pay:</span>
+                                <span style="color:#10b981;">+₱${previewData.overtime_pay ? previewData.overtime_pay.toFixed(2) : '0.00'}</span>
                             </div>
-                            <div style="margin-bottom:16px;">
-                                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                    <span style="color:#6b7280;">Deductions:</span>
-                                    <span style="color:#dc2626;">-₱${previewData.deductions ? previewData.deductions.toFixed(2) : '0.00'}</span>
-                                </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Allowances:</span>
+                                <span style="color:#10b981;">+₱${previewData.allowances ? previewData.allowances.toFixed(2) : '0.00'}</span>
                             </div>
-                            <div style="padding:16px; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); border-radius:6px;">
-                                <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:700; color:white;">
-                                    <span>Net Pay:</span>
-                                    <span>₱${previewData.net_pay.toFixed(2)}</span>
-                                </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Late Deduction:</span>
+                                <span style="color:#dc2626;">-₱${previewData.late_deduction ? previewData.late_deduction.toFixed(2) : '0.00'}</span>
                             </div>
-                        `;
-                    } else {
-                        console.error('Preview panel element not found');
-                    }
+                        </div>
+                        <div style="padding:12px; background:#f9fafb; border-radius:6px; margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:700; color:#1f2937;">
+                                <span>Gross Pay:</span>
+                                <span>₱${previewData.gross_pay.toFixed(2)}</span>
+                            </div>
+                        </div>
+                        <div style="margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Deductions:</span>
+                                <span style="color:#dc2626;">-₱${previewData.deductions ? previewData.deductions.toFixed(2) : '0.00'}</span>
+                            </div>
+                        </div>
+                        <div style="padding:16px; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); border-radius:6px;">
+                            <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:700; color:white;">
+                                <span>Net Pay:</span>
+                                <span>₱${previewData.net_pay.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `;
+                    console.log('Preview panel updated successfully');
                 } else {
-                    console.error('Missing gross_pay or net_pay in response:', data);
+                    console.error('Preview panel element not found');
                 }
             } else {
-                console.error('Preview failed:', data.message || 'Unknown error');
+                console.error('Missing gross_pay or net_pay in response:', data);
             }
-        })
-        .catch(error => {
-            console.error('Error previewing payroll:', error);
-            document.getElementById('grossPay').textContent = 'Error: ' + error.message;
-            document.getElementById('netPay').textContent = 'Error: ' + error.message;
-        });
-    }, 500);
+        } else {
+            console.error('Preview failed:', data.message || 'Unknown error');
+            alert('Preview failed: ' + (data.message || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error previewing payroll:', error);
+        alert('Error previewing payroll: ' + error.message);
+    });
 }
 
 let previewTimeout;
