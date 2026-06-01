@@ -4,11 +4,11 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PayrollInputController;
 use App\Http\Controllers\PayrollPeriodController;
+use App\Http\Controllers\ManualPayrollAttendanceController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AllowanceController;
 use App\Http\Controllers\BenefitController;
 
@@ -70,14 +70,6 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // Attendance Management — admin and HR only (separate group to avoid prefix inheritance)
-    Route::middleware('role:admin,hr')->prefix('employees/{employee}/attendance')->name('attendance.')->group(function () {
-        Route::get('/create', [AttendanceController::class, 'create'])->name('create');
-        Route::post('/',      [AttendanceController::class, 'store'])->name('store');
-        Route::get('/{attendance}/edit', [AttendanceController::class, 'edit'])->name('edit');
-        Route::put('/{attendance}',      [AttendanceController::class, 'update'])->name('update');
-        Route::delete('/{attendance}',   [AttendanceController::class, 'destroy'])->name('destroy');
-    });
 
     // Allowance Management — admin and HR only
     Route::middleware('role:admin,hr')->prefix('employees/{employee}/allowances')->name('allowances.')->group(function () {
@@ -98,6 +90,25 @@ Route::middleware('auth')->group(function () {
     Route::prefix('payroll')->name('payroll.')->group(function () {
         Route::get('/',         [PayrollController::class, 'index'])->name('index');
         Route::get('/{employee}', [PayrollController::class, 'show'])->name('show');
+    });
+
+    // Manual Payroll Attendance Encoding — admin and HR only
+    Route::middleware('role:admin,hr')->prefix('manual-payroll-attendance')->name('manual-payroll-attendance.')->group(function () {
+        Route::get('/',                              [ManualPayrollAttendanceController::class, 'index'])->name('index');
+        Route::get('/period/{payrollPeriod}',        [ManualPayrollAttendanceController::class, 'showPeriod'])->name('period');
+        Route::get('/period/{payrollPeriod}/employee/{employee}', [ManualPayrollAttendanceController::class, 'showEmployeeForm'])->name('employee-form');
+        Route::get('/period/{payrollPeriod}/summary', [ManualPayrollAttendanceController::class, 'getPeriodSummary'])->name('summary');
+        Route::post('/preview',                      [ManualPayrollAttendanceController::class, 'preview'])->name('preview');
+        Route::post('/save',                         [ManualPayrollAttendanceController::class, 'save'])->name('save');
+        Route::post('/adjustments',                  [ManualPayrollAttendanceController::class, 'saveAdjustment'])->name('adjustments');
+        Route::delete('/adjustments/{adjustment}',    [ManualPayrollAttendanceController::class, 'deleteAdjustment'])->name('delete-adjustment');
+    });
+
+    // Payroll Period Routes — admin and HR only
+    Route::middleware('role:admin,hr')->prefix('payroll-periods')->name('payroll-periods.')->group(function () {
+        Route::get('/create', [PayrollPeriodController::class, 'create'])->name('create');
+        Route::post('/', [PayrollPeriodController::class, 'store'])->name('store');
+        Route::post('/{payrollPeriod}/finalize', [PayrollPeriodController::class, 'finalize'])->name('finalize');
     });
 });
 

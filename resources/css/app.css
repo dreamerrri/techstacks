@@ -395,8 +395,8 @@
 }
 .burger-btn:hover { background: rgba(255,255,255,0.2); }
 
-.mobile-layout  { display: none; }
-.desktop-layout { display: grid; }
+.mobile-layout  { display: block; }
+.desktop-layout { display: none !important; }
 
 .mobile-topbar {
     padding: 12px 16px;

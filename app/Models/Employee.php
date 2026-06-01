@@ -73,22 +73,34 @@ class Employee extends Model
         return $query->where('is_archived', true);
     }
 
-    // Relationship: attendance records
-    public function attendances()
+    // Relationship: payroll input records
+    public function payrollInputs()
     {
-        return $this->hasMany(\App\Models\Attendance::class);
+        return $this->hasMany(\App\Models\PayrollInput::class);
     }
 
-    // Get current month's attendance
-    public function currentAttendance()
+    // Get current payroll period's payroll input
+    public function currentPayrollInput()
     {
-        return $this->attendances()->currentMonth()->first();
+        $currentPeriod = \App\Models\PayrollPeriod::where('status', 'draft')
+            ->where('cutoff_start', '<=', now())
+            ->where('cutoff_end', '>=', now())
+            ->first();
+        
+        if ($currentPeriod) {
+            return $this->payrollInputs()->where('payroll_period_id', $currentPeriod->id)->first();
+        }
+        
+        return null;
     }
 
-    // Get most recent attendance record
-    public function latestAttendance()
+    // Get most recent payroll input record
+    public function latestPayrollInput()
     {
-        return $this->attendances()->orderBy('year', 'desc')->orderBy('month', 'desc')->first();
+        return $this->payrollInputs()
+            ->with('payrollPeriod')
+            ->orderByDesc('payroll_period_id')
+            ->first();
     }
 
     // Relationship: allowances

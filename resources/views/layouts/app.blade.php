@@ -109,11 +109,11 @@
 {{-- ═══════════════════════════════════════
      DESKTOP LAYOUT  (hidden on mobile)
      ═══════════════════════════════════════ --}}
-<div class="desktop-layout" style="display: grid; grid-template-columns: 250px 1fr; height: 100vh; overflow: hidden;">
+<div class="desktop-layout" style="display: flex; height: 100vh; pointer-events: auto !important; position: relative;">
 
     {{-- Sidebar --}}
     <div class="sidebar sidebar-{{ $role }}"
-         style="position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; overflow-y: auto;">
+         style="position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; overflow-y: auto; pointer-events: auto !important;">
 
         <div class="sidebar-header">
             <h1>HR System</h1>
@@ -185,9 +185,9 @@
     </div>
 
     {{-- Main Content --}}
-<div class="bg-{{ $role }}" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
+<div class="bg-{{ $role }}" style="display: flex; flex-direction: column; height: 100vh; pointer-events:auto; flex: 1;">
         {{-- Topbar --}}
-<div class="topbar" style="position:sticky; top:0; z-index:10;">    
+<div class="topbar" style="position:sticky; top:0; z-index:10; pointer-events:auto;">
             <h2 style="margin: 0; color: #1f2937;">@yield('title')</h2>
             <div style="display: flex; align-items: center; gap: 15px;">
                 <div class="user-avatar avatar-{{ $role }}">
@@ -207,7 +207,7 @@
         </div>
 
         {{-- Page Content --}}
-<div class="content" style="flex:1; overflow-y:auto;">
+<div class="content" style="flex:1; overflow-y:auto; padding: 20px;">
                 @yield('content')
         </div>
 
@@ -233,6 +233,8 @@
     });
 </script>
 @endif
+
+@yield('scripts')
 
 </body>
 </html>

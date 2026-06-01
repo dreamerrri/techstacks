@@ -119,12 +119,6 @@
                             ₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}
                         </td>
                         <td style="padding:12px; text-align:center;">
-<<<<<<< HEAD
-                            <a href="{{ route('payroll.show', $employee) }}"
-                               style="padding:5px 10px; background:#dbeafe; color:#1e40af; border-radius:5px; font-size:12px; text-decoration:none;">
-                                <i class="fas fa-eye"></i>
-                            </a>
-=======
                             @if(($payroll['gross_pay'] ?? 0) == 0)
                                 <a href="javascript:void(0)"
                                    onclick="alert('This employee has no payroll data yet.')"
@@ -137,7 +131,6 @@
                                     <i class="fas fa-eye"></i> View
                                 </a>
                             @endif
->>>>>>> 3366ff80e8e67623727beb538cbcc64a71a1094f
                         </td>
                     </tr>
                 @empty
@@ -152,8 +145,6 @@
         </table>
     </div>
 
-<<<<<<< HEAD
-=======
     {{-- Mobile Cards --}}
     <div class="user-mobile-cards">
         @forelse($employees as $employee)
@@ -240,7 +231,6 @@
     </div>
 
     <div style="margin-top:20px;">{{ $employees->links() }}</div>
->>>>>>> 3366ff80e8e67623727beb538cbcc64a71a1094f
 </div>
 
 {{-- Mobile Cards --}}

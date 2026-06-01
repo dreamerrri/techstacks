@@ -29,6 +29,14 @@ class PayrollPeriod extends Model
         return $this->hasMany(PayrollInput::class);
     }
 
+    /**
+     * Get payroll inputs or return empty collection if null
+     */
+    public function getPayrollInputsAttribute()
+    {
+        return $this->getRelationValue('payrollInputs') ?? $this->payrollInputs()->get();
+    }
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -48,16 +56,16 @@ class PayrollPeriod extends Model
 
     public function getTotalGrossPayAttribute(): float
     {
-        return $this->payrollInputs->sum('gross_pay');
+        return $this->payrollInputs ? $this->payrollInputs->sum('gross_pay') : 0;
     }
 
     public function getTotalNetPayAttribute(): float
     {
-        return $this->payrollInputs->sum('net_pay');
+        return $this->payrollInputs ? $this->payrollInputs->sum('net_pay') : 0;
     }
 
     public function getTotalDeductionsAttribute(): float
     {
-        return $this->payrollInputs->sum('deductions');
+        return $this->payrollInputs ? $this->payrollInputs->sum('deductions') : 0;
     }
 }

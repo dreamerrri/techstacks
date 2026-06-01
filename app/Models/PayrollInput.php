@@ -12,6 +12,7 @@ class PayrollInput extends Model
         'payroll_period_id',
         'employee_id',
         'daily_rate',
+        'rate_type',
         'days_worked',
         'overtime_hours',
         'late_hours',
@@ -57,22 +58,53 @@ class PayrollInput extends Model
      */
     public function computePay(): static
     {
-        $hourlyRate = $this->daily_rate / 8;
+        \Log::info('Computing pay for payroll input', [
+            'daily_rate' => $this->daily_rate,
+            'days_worked' => $this->days_worked,
+            'overtime_hours' => $this->overtime_hours,
+            'late_hours' => $this->late_hours,
+            'allowances' => $this->allowances,
+            'deductions' => $this->deductions,
+        ]);
 
-        $this->gross_pay = round(
-            ($this->days_worked * $this->daily_rate)
-            + ($this->overtime_hours * $hourlyRate)
-            - ($this->late_hours * $hourlyRate)
-            + $this->allowances,
-            2
+        // Use PayrollComputationEngine for consistency
+        $engine = new \App\Services\Payroll\PayrollComputationEngine();
+        
+        // Convert rate to monthly salary based on rate type
+        $monthlySalary = ($this->rate_type === 'monthly') ? $this->daily_rate : ($this->daily_rate * 22);
+        
+        $employeeData = [
+            'monthly_salary' => $monthlySalary,
+            'working_days_per_month' => 22,
+            'working_hours_per_day' => 8,
+        ];
+
+        $attendance = [
+            'days_worked' => $this->days_worked,
+            'overtime_hours' => $this->overtime_hours,
+            'late_hours' => $this->late_hours,
+        ];
+
+        $deductions = [$this->deductions];
+        $allowances = [$this->allowances];
+
+        $result = $engine->compute(
+            $employeeData,
+            $attendance,
+            $deductions,
+            [],
+            $allowances,
+            [],
+            false // not preview mode
         );
 
-        $this->gross_pay = max(0, $this->gross_pay);
+        $this->gross_pay = $result['gross_pay'];
+        $this->net_pay = $result['net_pay'];
 
-        $this->net_pay = round(
-            max(0, $this->gross_pay - $this->deductions),
-            2
-        );
+        \Log::info('Payroll computation complete', [
+            'gross_pay' => $this->gross_pay,
+            'net_pay' => $this->net_pay,
+        ]);
 
         return $this;
     }

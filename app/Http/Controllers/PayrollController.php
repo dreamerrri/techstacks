@@ -49,7 +49,7 @@ class PayrollController extends Controller
             $query->where('department', $request->department);
         }
 
-        $employees = $query->orderByRaw('CASE WHEN EXISTS (SELECT 1 FROM attendances WHERE attendances.employee_id = employees.id) THEN 0 ELSE 1 END')
+        $employees = $query->orderByRaw('CASE WHEN EXISTS (SELECT 1 FROM payroll_inputs WHERE payroll_inputs.employee_id = employees.id) THEN 0 ELSE 1 END')
             ->orderBy('last_name')
             ->paginate(15)
             ->withQueryString();
@@ -110,29 +110,29 @@ class PayrollController extends Controller
             default => $basicSalary / 22,
         };
 
-        // Get attendance data for current month
-        $attendance = $employee->currentAttendance();
+        // Get payroll input data for current payroll period
+        $payrollInput = $employee->currentPayrollInput();
 
-        // If no current month attendance, try to get the latest attendance record
-        if (!$attendance) {
-            $attendance = $employee->latestAttendance();
-            \Log::info('No current month attendance, using latest attendance for employee ' . $employee->id);
+        // If no current payroll input, try to get the latest payroll input record
+        if (!$payrollInput) {
+            $payrollInput = $employee->latestPayrollInput();
+            \Log::info('No current payroll period input, using latest payroll input for employee ' . $employee->id);
         }
 
-        // Prepare attendance array for engine (handle null attendance)
+        // Prepare attendance array for engine (handle null payroll input)
         $attendanceData = [];
-        if ($attendance) {
+        if ($payrollInput) {
             $attendanceData = [
-                'days_worked' => $attendance->days_worked ?? 0,
-                'regular_hours' => $attendance->regular_hours ?? 0,
-                'overtime_hours' => $attendance->overtime_hours ?? 0,
-                'late_hours' => $attendance->late_hours ?? 0,
-                'night_differential_hours' => $attendance->night_differential_hours ?? 0,
-                'regular_holiday_worked' => $attendance->regular_holiday_worked ?? 0,
+                'days_worked' => $payrollInput->days_worked ?? 0,
+                'regular_hours' => ($payrollInput->days_worked ?? 0) * 8, // Calculate regular hours from days worked
+                'overtime_hours' => $payrollInput->overtime_hours ?? 0,
+                'late_hours' => $payrollInput->late_hours ?? 0,
+                'night_differential_hours' => 0, // Not tracked in payroll_inputs
+                'regular_holiday_worked' => 0, // Not tracked in payroll_inputs
             ];
-            \Log::info('Attendance data found for employee ' . $employee->id, $attendanceData);
+            \Log::info('Payroll input data found for employee ' . $employee->id, $attendanceData);
         } else {
-            // Default to zero if no attendance record
+            // Default to zero if no payroll input record
             $attendanceData = [
                 'days_worked' => 0,
                 'regular_hours' => 0,
@@ -141,7 +141,7 @@ class PayrollController extends Controller
                 'night_differential_hours' => 0,
                 'regular_holiday_worked' => 0,
             ];
-            \Log::warning('No attendance data found for employee ' . $employee->id);
+            \Log::warning('No payroll input data found for employee ' . $employee->id);
         }
 
         // Prepare employee data for engine

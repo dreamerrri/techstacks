@@ -17,6 +17,7 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
-        "latest": "^0.2.0"
+        "latest": "^0.2.0",
+        "node": "^24.16.0"
     }
 }

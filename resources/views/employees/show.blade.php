@@ -96,23 +96,23 @@
             </table>
         </div>
 
-        {{-- Attendance Summary --}}
+        {{-- Payroll Input Summary --}}
         <div class="card" style="grid-column: span 2;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                <h2 style="margin:0;"><i class="fas fa-clock" style="color:#dc2626;"></i> Attendance Summary</h2>
+                <h2 style="margin:0;"><i class="fas fa-clock" style="color:#dc2626;"></i> Payroll Input Summary</h2>
                 @if(auth()->user()->isAdmin() || auth()->user()->isHR())
                     @php
-                        $attendance = $employee->latestAttendance();
+                        $payrollInput = $employee->latestPayrollInput();
                     @endphp
-                    @if($attendance)
-                        <a href="{{ route('attendance.edit', [$employee->id, $attendance->id]) }}"
+                    @if($payrollInput)
+                        <a href="{{ route('manual-payroll-attendance.employee-form', [$payrollInput->payrollPeriod, $employee]) }}"
                            style="padding:6px 12px; background:#dbeafe; color:#1e40af; border-radius:6px; text-decoration:none; font-size:12px; font-weight:600;">
                             <i class="fas fa-edit"></i> Edit
                         </a>
                     @else
-                        <a href="{{ route('attendance.create', $employee) }}"
+                        <a href="{{ route('manual-payroll-attendance.index') }}"
                            style="padding:6px 12px; background:#d1fae5; color:#065f46; border-radius:6px; text-decoration:none; font-size:12px; font-weight:600;">
-                            <i class="fas fa-plus"></i> Add Attendance
+                            <i class="fas fa-plus"></i> Add Payroll Input
                         </a>
                     @endif
                 @endif
@@ -120,55 +120,55 @@
             <div style="background:#f9fafb; padding:20px; border-radius:8px;">
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
                     @php
-                        $attendance = $employee->latestAttendance();
-                        $daysWorked = $attendance->days_worked ?? 0;
-                        $regularHours = $attendance->regular_hours ?? 0;
-                        $overtimeHours = $attendance->overtime_hours ?? 0;
-                        $lateHours = $attendance->late_hours ?? 0;
-                        $nightDifferentialHours = $attendance->night_differential_hours ?? 0;
-                        $regularHolidayWorked = $attendance->regular_holiday_worked ?? 0;
-                        $attendanceMonth = $attendance ? date('F', mktime(0, 0, 0, $attendance->month, 1)) : null;
-                        $attendanceYear = $attendance->year ?? null;
+                        $payrollInput = $employee->latestPayrollInput();
+                        $daysWorked = $payrollInput->days_worked ?? 0;
+                        $overtimeHours = $payrollInput->overtime_hours ?? 0;
+                        $lateHours = $payrollInput->late_hours ?? 0;
+                        $allowances = $payrollInput->allowances ?? 0;
+                        $deductions = $payrollInput->deductions ?? 0;
+                        $grossPay = $payrollInput->gross_pay ?? 0;
+                        $netPay = $payrollInput->net_pay ?? 0;
+                        $period = $payrollInput ? $payrollInput->payrollPeriod : null;
                     @endphp
 
                     <div style="text-align:center;">
                         <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Days Worked</div>
-                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $daysWorked }} Days</div>
-                    </div>
-
-                    <div style="text-align:center;">
-                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Regular Hours</div>
-                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $regularHours }} Hours</div>
+                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ number_format($daysWorked, 1) }} Days</div>
                     </div>
 
                     <div style="text-align:center;">
                         <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Overtime Hours</div>
-                        <div style="font-size:20px; font-weight:700; color:#dc2626;">{{ $overtimeHours }} Hours</div>
+                        <div style="font-size:20px; font-weight:700; color:#dc2626;">{{ number_format($overtimeHours, 1) }} Hours</div>
                     </div>
 
                     <div style="text-align:center;">
                         <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Late Hours</div>
-                        <div style="font-size:20px; font-weight:700; color:#dc2626;">{{ $lateHours }} Hour{{ $lateHours != 1 ? 's' : '' }}</div>
+                        <div style="font-size:20px; font-weight:700; color:#dc2626;">{{ number_format($lateHours, 1) }} Hour{{ $lateHours != 1 ? 's' : '' }}</div>
                     </div>
 
                     <div style="text-align:center;">
-                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Night Diff Hours</div>
-                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $nightDifferentialHours }} Hours</div>
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Allowances</div>
+                        <div style="font-size:20px; font-weight:700; color:#10b981;">₱{{ number_format($allowances, 2) }}</div>
                     </div>
 
                     <div style="text-align:center;">
-                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Regular Holiday</div>
-                        <div style="font-size:20px; font-weight:700; color:#1f2937;">{{ $regularHolidayWorked }} Day{{ $regularHolidayWorked != 1 ? 's' : '' }}</div>
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Deductions</div>
+                        <div style="font-size:20px; font-weight:700; color:#dc2626;">₱{{ number_format($deductions, 2) }}</div>
+                    </div>
+
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Net Pay</div>
+                        <div style="font-size:20px; font-weight:700; color:#10b981;">₱{{ number_format($netPay, 2) }}</div>
                     </div>
                 </div>
 
-                @if($attendance)
+                @if($payrollInput && $period)
                     <div style="margin-top:16px; padding:12px; background:#dbeafe; border-radius:6px; font-size:12px; color:#1e40af; text-align:center;">
-                        <i class="fas fa-info-circle"></i> Showing attendance for {{ $attendanceMonth }} {{ $attendanceYear }}
+                        <i class="fas fa-info-circle"></i> Showing payroll input for period: {{ $period->cutoff_start->format('M d') }} - {{ $period->cutoff_end->format('M d, Y') }}
                     </div>
                 @else
                     <div style="margin-top:16px; padding:12px; background:#fef3c7; border-radius:6px; font-size:12px; color:#92400e; text-align:center;">
-                        <i class="fas fa-info-circle"></i> No attendance data found
+                        <i class="fas fa-info-circle"></i> No payroll input data found
                     </div>
                 @endif
             </div>

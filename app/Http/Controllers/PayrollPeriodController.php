@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Auth;
 class PayrollPeriodController extends Controller
 {
     /**
+     * GET /payroll-periods/create
+     * Show form to create a new payroll period.
+     */
+    public function create()
+    {
+        return view('payroll-periods.create');
+    }
+
+    /**
      * GET /payroll-periods
      * List all payroll periods, latest first.
      */
@@ -89,6 +98,35 @@ class PayrollPeriodController extends Controller
                 'net_pay'        => $i->net_pay,
                 'adjustments'    => $i->adjustments,
             ]),
+        ]);
+    }
+
+    /**
+     * POST /payroll-periods/{id}/finalize
+     * Finalize a payroll period (change status from draft to finalized).
+     */
+    public function finalize(PayrollPeriod $payrollPeriod): JsonResponse
+    {
+        if ($payrollPeriod->isFinalized()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Payroll period is already finalized.',
+            ], 422);
+        }
+
+        if ($payrollPeriod->payrollInputs->count() === 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cannot finalize a payroll period with no encoded employees.',
+            ], 422);
+        }
+
+        $payrollPeriod->update(['status' => 'finalized']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Payroll period finalized successfully.',
+            'payroll_period' => $payrollPeriod,
         ]);
     }
 }
