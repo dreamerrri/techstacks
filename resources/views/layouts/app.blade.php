@@ -107,6 +107,7 @@
         <div class="content">
             @yield('content')
         </div>
+        @yield('scripts')
     </div>
 
 </div>
@@ -276,6 +277,7 @@
 <div class="content" style="flex:1; overflow-y:auto;">
                 @yield('content')
         </div>
+        @yield('scripts')
 
     </div>
 </div>

@@ -322,8 +322,11 @@ function previewPayroll() {
         if(data.success) {
             const previewData = data.preview || {};
             if(previewData.gross_pay !== undefined && previewData.net_pay !== undefined) {
-                const previewPanel = document.getElementById('previewPanel');
-                if(previewPanel) {
+                // Update all preview panels (both mobile and desktop)
+                const previewPanels = document.querySelectorAll('#previewPanel');
+                console.log('Found preview panels:', previewPanels.length);
+                previewPanels.forEach((previewPanel, index) => {
+                    console.log('Updating preview panel', index);
                     previewPanel.innerHTML = `
                         <div style="margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
@@ -362,10 +365,8 @@ function previewPayroll() {
                             </div>
                         </div>
                     `;
-                    console.log('Preview panel updated successfully');
-                } else {
-                    console.error('Preview panel element not found');
-                }
+                });
+                console.log('All preview panels updated successfully');
             } else {
                 console.error('Missing gross_pay or net_pay in response:', data);
             }

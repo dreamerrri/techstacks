@@ -445,4 +445,41 @@
 
     .user-table-wrapper { display: none !important; }
     .user-mobile-cards  { display: block !important; }
+}
+
+/* Ensure payroll form grid works in desktop view */
+@media (min-width: 769px) {
+    .payroll-form-grid {
+        grid-template-columns: 1fr 350px !important;
+        display: grid !important;
+        width: 100% !important;
+        gap: 24px !important;
+    }
+
+    /* Ensure preview panel card is visible */
+    .payroll-form-grid > div:nth-child(2) {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 350px !important;
+        min-width: 350px !important;
+        height: auto !important;
+    }
+
+    /* Ensure preview panel content is visible */
+    #previewPanel {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        min-height: 100px !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* Ensure all preview panel children are visible */
+    #previewPanel > * {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
 }   
