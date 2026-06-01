@@ -65,10 +65,7 @@
                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                 <i class="fas fa-money-bill"></i><span>Payroll</span>
             </a>
-            <a href="{{ route('manual-payroll-attendance.index') }}"
-               class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
-                <i class="fas fa-calendar-check"></i><span>Attendance</span>
-            </a>
+            <a href="#" class="nav-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
             <a href="#" class="nav-item"><i class="fas fa-lock"></i><span>Access Control</span></a>
             <a href="#" class="nav-item"><i class="fas fa-shield-alt"></i><span>System Security</span></a>
             <a href="#" class="nav-item"><i class="fas fa-cogs"></i><span>Settings</span></a>
@@ -82,10 +79,7 @@
                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                 <i class="fas fa-money-bill"></i><span>Payroll</span>
             </a>
-            <a href="{{ route('manual-payroll-attendance.index') }}"
-               class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
-                <i class="fas fa-calendar-check"></i><span>Attendance</span>
-            </a>
+            <a href="#" class="nav-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
             <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
             <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
             <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
@@ -95,10 +89,7 @@
                 <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
             </a>
             <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
-            <a href="{{ route('manual-payroll-attendance.index') }}"
-               class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
-                <i class="fas fa-clock"></i><span>Attendance</span>
-            </a>
+            <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
         @endif
 
         <div style="padding: 10px 20px 15px;">
@@ -123,11 +114,11 @@
 {{-- ═══════════════════════════════════════
      DESKTOP LAYOUT  (hidden on mobile)
      ═══════════════════════════════════════ --}}
-<div class="desktop-layout" style="display: flex; height: 100vh; pointer-events: auto !important; position: relative;">
+<div class="desktop-layout" style="display: grid; grid-template-columns: 250px 1fr; height: 100vh; overflow: hidden;">
 
     {{-- Sidebar --}}
     <div class="sidebar sidebar-{{ $role }}"
-         style="position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; overflow-y: auto; pointer-events: auto !important;">
+         style="position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; overflow-y: auto;">
 
         <div class="sidebar-header">
             <h1>HR System</h1>
@@ -172,10 +163,7 @@
                    class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                     <i class="fas fa-money-bill"></i><span>Payroll</span>
                 </a>
-                <a href="{{ route('manual-payroll-attendance.index') }}"
-               class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
-                <i class="fas fa-calendar-check"></i><span>Attendance</span>
-            </a>
+                <a href="#" class="nav-item"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
                 <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
                 <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
                 <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
@@ -187,10 +175,7 @@
                     <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
                 </a>
                 <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
-                <a href="{{ route('manual-payroll-attendance.index') }}"
-               class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
-                <i class="fas fa-clock"></i><span>Attendance</span>
-            </a>
+                <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
             @endif
         </nav>
 
@@ -205,7 +190,7 @@
     </div>
 
     {{-- Main Content --}}
-<div class="bg-{{ $role }}" style="display: flex; flex-direction: column; height: 100vh; pointer-events:auto; flex: 1;">
+<div class="bg-{{ $role }}" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
         {{-- Topbar --}}
 <div class="topbar" style="position:sticky; top:0; z-index:999;">    
             <h2 style="margin: 0; color: #1f2937;">@yield('title')</h2>
@@ -288,7 +273,7 @@
         </div>
 
         {{-- Page Content --}}
-<div class="content" style="flex:1; overflow-y:auto; padding: 20px;">
+<div class="content" style="flex:1; overflow-y:auto;">
                 @yield('content')
         </div>
 
@@ -323,8 +308,6 @@ document.addEventListener('click', function(e) {
 });
 </script>
 @endif
-
-@yield('scripts')
 
 </body>
 </html>
