@@ -14,8 +14,11 @@ class PayrollInput extends Model
         'daily_rate',
         'rate_type',
         'days_worked',
+        'regular_hours',
         'overtime_hours',
         'late_hours',
+        'holiday_days',
+        'night_differential_hours',
         'allowances',
         'deductions',
         'gross_pay',
@@ -23,14 +26,17 @@ class PayrollInput extends Model
     ];
 
     protected $casts = [
-        'daily_rate'     => 'float',
-        'days_worked'    => 'float',
-        'overtime_hours' => 'float',
-        'late_hours'     => 'float',
-        'allowances'     => 'float',
-        'deductions'     => 'float',
-        'gross_pay'      => 'float',
-        'net_pay'        => 'float',
+        'daily_rate'              => 'float',
+        'days_worked'             => 'float',
+        'regular_hours'          => 'float',
+        'overtime_hours'          => 'float',
+        'late_hours'              => 'float',
+        'holiday_days'            => 'float',
+        'night_differential_hours' => 'float',
+        'allowances'              => 'float',
+        'deductions'              => 'float',
+        'gross_pay'               => 'float',
+        'net_pay'                 => 'float',
     ];
 
     // ── Relationships ──────────────────────────────────────────
@@ -63,6 +69,8 @@ class PayrollInput extends Model
             'days_worked' => $this->days_worked,
             'overtime_hours' => $this->overtime_hours,
             'late_hours' => $this->late_hours,
+            'holiday_days' => $this->holiday_days,
+            'night_differential_hours' => $this->night_differential_hours,
             'allowances' => $this->allowances,
             'deductions' => $this->deductions,
         ]);
@@ -81,21 +89,56 @@ class PayrollInput extends Model
 
         $attendance = [
             'days_worked' => $this->days_worked,
+            'regular_hours' => $this->regular_hours ?? 0,
             'overtime_hours' => $this->overtime_hours,
             'late_hours' => $this->late_hours,
+            'holiday_days' => $this->holiday_days ?? 0,
+            'night_differential_hours' => $this->night_differential_hours ?? 0,
         ];
 
-        $deductions = [$this->deductions];
         $allowances = [$this->allowances];
 
+        // First, calculate gross pay without deductions to get contribution bases
+        $previewResult = $engine->compute($employeeData, $attendance, [], [], $allowances, [], true);
+        $grossPay = $previewResult['gross_pay'];
+
+        // Get employee for government contribution rates
+        $employee = $this->employee;
+        
+        // Government contributions (use employee-specific rates or default Philippine standard rates)
+        $sssRate = $employee->sss_rate ?? 0.045;
+        $sssCap = $employee->sss_cap ?? 900;
+        $philhealthRate = $employee->philhealth_rate ?? 0.0225;
+        $philhealthCap = $employee->philhealth_cap ?? 1500;
+        $pagibigRate = $employee->pagibig_rate ?? 0.02;
+        $pagibigCap = $employee->pagibig_cap ?? 100;
+
+        $sssContribution = min($grossPay * $sssRate, $sssCap);
+        $philhealthContribution = min($grossPay * $philhealthRate, $philhealthCap);
+        $pagibigContribution = min($grossPay * $pagibigRate, $pagibigCap);
+
+        // Calculate withholding tax
+        $taxableIncome = $grossPay - $sssContribution - $philhealthContribution - $pagibigContribution;
+        $withholdingTax = $this->calculateTax($taxableIncome);
+
+        // Total government contributions
+        $governmentDeductions = $sssContribution + $philhealthContribution + $pagibigContribution + $withholdingTax;
+
+        // Add manual deductions
+        $manualDeductions = $this->deductions;
+
+        // Total deductions
+        $totalDeductions = $governmentDeductions + $manualDeductions;
+
+        // Calculate final payroll with all deductions
         $result = $engine->compute(
             $employeeData,
             $attendance,
-            $deductions,
+            [$totalDeductions],
             [],
             $allowances,
             [],
-            false // not preview mode
+            false // not preview mode for final calculation
         );
 
         $this->gross_pay = $result['gross_pay'];
@@ -104,8 +147,30 @@ class PayrollInput extends Model
         \Log::info('Payroll computation complete', [
             'gross_pay' => $this->gross_pay,
             'net_pay' => $this->net_pay,
+            'government_deductions' => $governmentDeductions,
+            'manual_deductions' => $manualDeductions,
         ]);
 
         return $this;
+    }
+
+    /**
+     * Calculate withholding tax based on Philippine tax brackets
+     */
+    private function calculateTax(float $taxableIncome): float
+    {
+        if ($taxableIncome <= 20832) {
+            return 0;
+        } elseif ($taxableIncome <= 33333) {
+            return ($taxableIncome - 20832) * 0.20;
+        } elseif ($taxableIncome <= 66667) {
+            return 2500 + ($taxableIncome - 33333) * 0.25;
+        } elseif ($taxableIncome <= 166667) {
+            return 10833.33 + ($taxableIncome - 66667) * 0.30;
+        } elseif ($taxableIncome <= 666667) {
+            return 40833.33 + ($taxableIncome - 166667) * 0.32;
+        } else {
+            return 200833.33 + ($taxableIncome - 666667) * 0.35;
+        }
     }
 }
