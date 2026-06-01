@@ -129,13 +129,6 @@
                 </td>
                 <td style="padding:10px 0; font-weight:600; color:#10b981; text-align:right;">+₱{{ number_format($payroll['holiday_pay'] ?? 0, 2) }}</td>
             </tr>
-            <tr style="border-bottom:1px solid #e5e7eb;">
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Late Deduction
-                    <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['late_hours'] ?? 0 }} late hrs × ₱{{ number_format($payroll['hourly_rate'] ?? 0, 2) }}/hr</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['late_deduction'] ?? 0, 2) }}</td>
-            </tr>
             <tr>
                 <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
                     Allowance & Benefits
@@ -177,6 +170,13 @@
             </tr>
             <tr style="border-bottom:1px solid #e5e7eb;">
                 <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
+                    Late Deduction
+                    <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['late_hours'] ?? 0 }} late hrs × ₱{{ number_format($payroll['hourly_rate'] ?? 0, 2) }}/hr</div>
+                </td>
+                <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['late_deduction'] ?? 0, 2) }}</td>
+            </tr>
+            <tr style="border-bottom:1px solid #e5e7eb;">
+                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
                     Manual Deductions
                     <div style="font-size:12px; color:#9ca3af;">Deductions from manual payroll attendance</div>
                 </td>
@@ -185,7 +185,7 @@
         </table>
         <div style="margin-top:10px; padding-top:10px; border-top:2px solid #e5e7eb; display:flex; justify-content:space-between; font-weight:700; font-size:15px;">
             <span style="color:#1f2937;">Total Contributions & Deductions</span>
-            <span style="color:#dc2626;">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['manual_deductions'] ?? 0), 2) }}</span>
+            <span style="color:#dc2626;">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['late_deduction'] ?? 0) + ($payroll['manual_deductions'] ?? 0), 2) }}</span>
         </div>
     </div>
 
@@ -229,16 +229,12 @@
                 <td style="padding:12px 0; font-weight:600; color:#1f2937; text-align:right;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</td>
             </tr>
             <tr style="border-bottom:1px solid #e5e7eb;">
-                <td style="padding:12px 0; color:#dc2626;">Less: Government Contributions</td>
-                <td style="padding:12px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0), 2) }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #e5e7eb;">
-                <td style="padding:12px 0; color:#dc2626;">Less: Withholding Tax</td>
-                <td style="padding:12px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</td>
+                <td style="padding:12px 0; color:#dc2626;">Less: Government Contributions & Deductions</td>
+                <td style="padding:12px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['late_deduction'] ?? 0) + ($payroll['manual_deductions'] ?? 0), 2) }}</td>
             </tr>
             <tr style="border-bottom:2px solid #e5e7eb;">
-                <td style="padding:12px 0; color:#dc2626;">Less: Late Deductions</td>
-                <td style="padding:12px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['late_deduction'] ?? 0, 2) }}</td>
+                <td style="padding:12px 0; color:#dc2626;">Less: Withholding Tax</td>
+                <td style="padding:12px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</td>
             </tr>
             <tr>
                 <td style="padding:16px 0; font-weight:700; color:#1f2937; font-size:18px;">NET PAY</td>
