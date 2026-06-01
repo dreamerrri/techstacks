@@ -129,23 +129,80 @@ class ManualPayrollAttendanceController extends Controller
             'late_hours' => $validated['late_hours'] ?? 0,
         ];
 
-        $deductions = [$validated['deductions'] ?? 0];
         $allowances = [$validated['allowances'] ?? 0];
 
+        // First, calculate gross pay without deductions to get contribution bases
+        $previewResult = $engine->compute($employeeData, $attendance, [], [], $allowances, [], true);
+        $grossPay = $previewResult['gross_pay'];
+
+        // Government contributions (use employee-specific rates or default Philippine standard rates)
+        $sssRate = $employee->sss_rate ?? 0.045;
+        $sssCap = $employee->sss_cap ?? 900;
+        $philhealthRate = $employee->philhealth_rate ?? 0.0225;
+        $philhealthCap = $employee->philhealth_cap ?? 1500;
+        $pagibigRate = $employee->pagibig_rate ?? 0.02;
+        $pagibigCap = $employee->pagibig_cap ?? 100;
+
+        $sssContribution = min($grossPay * $sssRate, $sssCap);
+        $philhealthContribution = min($grossPay * $philhealthRate, $philhealthCap);
+        $pagibigContribution = min($grossPay * $pagibigRate, $pagibigCap);
+
+        // Calculate withholding tax
+        $taxableIncome = $grossPay - $sssContribution - $philhealthContribution - $pagibigContribution;
+        $withholdingTax = $this->calculateTax($taxableIncome);
+
+        // Total government contributions
+        $governmentDeductions = $sssContribution + $philhealthContribution + $pagibigContribution + $withholdingTax;
+
+        // Add manual deductions
+        $manualDeductions = $validated['deductions'] ?? 0;
+
+        // Total deductions
+        $totalDeductions = $governmentDeductions + $manualDeductions;
+
+        // Calculate final payroll with all deductions
         $result = $engine->compute(
             $employeeData,
             $attendance,
-            $deductions,
+            [$totalDeductions],
             [],
             $allowances,
             [],
-            true // preview mode
+            false // not preview mode for final calculation
         );
+
+        // Add government contribution breakdown to result
+        $result['sss_contribution'] = $sssContribution;
+        $result['philhealth_contribution'] = $philhealthContribution;
+        $result['pagibig_contribution'] = $pagibigContribution;
+        $result['withholding_tax'] = $withholdingTax;
+        $result['government_deductions'] = $governmentDeductions;
+        $result['manual_deductions'] = $manualDeductions;
 
         return response()->json([
             'success' => true,
             'preview' => $result,
         ]);
+    }
+
+    /**
+     * Calculate withholding tax based on Philippine tax brackets
+     */
+    private function calculateTax(float $taxableIncome): float
+    {
+        if ($taxableIncome <= 20832) {
+            return 0;
+        } elseif ($taxableIncome <= 33333) {
+            return ($taxableIncome - 20832) * 0.20;
+        } elseif ($taxableIncome <= 66667) {
+            return 2500 + ($taxableIncome - 33333) * 0.25;
+        } elseif ($taxableIncome <= 166667) {
+            return 10833.33 + ($taxableIncome - 66667) * 0.30;
+        } elseif ($taxableIncome <= 666667) {
+            return 40833.33 + ($taxableIncome - 166667) * 0.32;
+        } else {
+            return 200833.33 + ($taxableIncome - 666667) * 0.35;
+        }
     }
 
     /**

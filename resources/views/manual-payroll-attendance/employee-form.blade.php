@@ -354,8 +354,30 @@ function previewPayroll() {
                         </div>
                         <div style="margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                <span style="color:#6b7280;">Deductions:</span>
-                                <span style="color:#dc2626;">-₱${previewData.deductions ? previewData.deductions.toFixed(2) : '0.00'}</span>
+                                <span style="color:#6b7280;">SSS Contribution:</span>
+                                <span style="color:#dc2626;">-₱${previewData.sss_contribution ? parseFloat(previewData.sss_contribution).toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">PhilHealth Contribution:</span>
+                                <span style="color:#dc2626;">-₱${previewData.philhealth_contribution ? parseFloat(previewData.philhealth_contribution).toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Pag-IBIG Contribution:</span>
+                                <span style="color:#dc2626;">-₱${previewData.pagibig_contribution ? parseFloat(previewData.pagibig_contribution).toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Withholding Tax:</span>
+                                <span style="color:#dc2626;">-₱${previewData.withholding_tax ? parseFloat(previewData.withholding_tax).toFixed(2) : '0.00'}</span>
+                            </div>
+                            @if($isEdit)
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Manual Deductions:</span>
+                                <span style="color:#dc2626;">-₱${previewData.manual_deductions ? parseFloat(previewData.manual_deductions).toFixed(2) : '0.00'}</span>
+                            </div>
+                            @endif
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px; font-weight:600; color:#1f2937; padding-top:8px; border-top:1px solid #e5e7eb;">
+                                <span>Total Deductions:</span>
+                                <span style="color:#dc2626;">-₱${previewData.deductions ? parseFloat(previewData.deductions).toFixed(2) : '0.00'}</span>
                             </div>
                         </div>
                         <div style="padding:16px; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); border-radius:6px;">
