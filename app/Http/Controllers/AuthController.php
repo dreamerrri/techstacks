@@ -94,7 +94,6 @@ class AuthController extends Controller
 
             $employee = Employee::create([
                 'user_id'           => $user->id,
-                'employee_id'       => 'EMP-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
                 'first_name'        => $firstName,
                 'last_name'         => $lastName,
                 'email'             => $validated['email'],

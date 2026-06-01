@@ -15,10 +15,7 @@
 {{-- ============================================================
      BANNER
      ============================================================ --}}
-<div id="profile-banner"
-     style="background:#ffffff;border-radius:16px;padding:32px 28px;margin-bottom:20px;
-            position:relative;overflow:visible;
-            box-shadow:0 1px 3px rgba(0,0,0,0.08);border:1px solid #e5e7eb;">
+    <div id="profile-banner" class="card" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
 
     {{-- Avatar + info --}}
     <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">

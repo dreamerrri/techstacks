@@ -9,15 +9,7 @@
     <h3 style="{{ $section }}"><i class="fas fa-user" style="color:#dc2626;"></i> Personal Information</h3>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
 
-        <div>
-            <label style="{{ $label }}">Employee ID <span style="color:#dc2626;">*</span></label>
-            <input type="text" name="employee_id" id="employee_id"
-                   value="{{ old('employee_id', $employee->employee_id ?? '') }}"
-                   style="{{ $input }} {{ $errors->has('employee_id') ? 'border-color:#dc2626;' : '' }}"
-                   data-validate="required">
-            <p class="field-error" style="color:#dc2626; font-size:12px; margin-top:4px; display:none;"></p>
-            @error('employee_id') <p style="color:#dc2626; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
-        </div>
+ 
 
         <div>
             <label style="{{ $label }}">First Name <span style="color:#dc2626;">*</span></label>
@@ -122,22 +114,27 @@
     <h3 style="{{ $section }}"><i class="fas fa-briefcase" style="color:#dc2626;"></i> Employment Details</h3>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
 
-        <div>
+        
+         <div>
             <label style="{{ $label }}">Department <span style="color:#dc2626;">*</span></label>
-            <input type="text" name="department" id="department"
-                   value="{{ old('department', $employee->department ?? '') }}"
-                   style="{{ $input }}"
-                   data-validate="required">
+            <select name="department" id="Department" style="{{ $input }}" data-validate="required">
+                <option value="">Select Department</option>
+                @foreach(['Sales','Marketing','Human Resources','Information Technology'] as $dept)
+                    <option value="{{ $dept }}" {{ old('department', $employee->department ?? '') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                @endforeach
+            </select>
             <p class="field-error" style="color:#dc2626; font-size:12px; margin-top:4px; display:none;"></p>
             @error('department') <p style="color:#dc2626; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
         </div>
 
-        <div>
+         <div>
             <label style="{{ $label }}">Position <span style="color:#dc2626;">*</span></label>
-            <input type="text" name="position" id="position"
-                   value="{{ old('position', $employee->position ?? '') }}"
-                   style="{{ $input }}"
-                   data-validate="required">
+            <select name="position" id="position" style="{{ $input }}" data-validate="required">
+                <option value="">Select Position</option>
+                @foreach(['Manager','Supervisor','Employee'] as $pos)
+                    <option value="{{ $pos }}" {{ old('position', $employee->position ?? '') == $pos ? 'selected' : '' }}>{{ $pos }}</option>
+                @endforeach
+            </select>
             <p class="field-error" style="color:#dc2626; font-size:12px; margin-top:4px; display:none;"></p>
             @error('position') <p style="color:#dc2626; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
         </div>
@@ -153,6 +150,7 @@
             <p class="field-error" style="color:#dc2626; font-size:12px; margin-top:4px; display:none;"></p>
             @error('employment_status') <p style="color:#dc2626; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
         </div>
+        
 
         <div>
             <label style="{{ $label }}">Date Hired <span style="color:#dc2626;">*</span></label>

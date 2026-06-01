@@ -177,9 +177,12 @@
     color: white;
     border-color: rgba(255,255,255,0.3);
 }
+.notif-open {
+    display: block !important;
+}
 .topbar {
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 /* replace */
 .topbar::after {

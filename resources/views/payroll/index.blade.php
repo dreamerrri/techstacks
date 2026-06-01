@@ -94,8 +94,8 @@
                                     {{ strtoupper(substr($employee->full_name, 0, 1)) }}
                                 </div>
                                 <div>
-                                    <div style="font-weight:600; color:#1f2937;">{{ $employee->full_name }}</div>
-                                    <div style="font-size:12px; color:#6b7280; font-family:monospace;">{{ $employee->employee_id }}</div>
+<a href="{{ route('employees.show', $employee) }}"
+   style="font-weight:600; color:#1f2937; text-decoration:none;">{{ $employee->full_name }}</a>                                    <div style="font-size:12px; color:#6b7280; font-family:monospace;">{{ $employee->employee_id }}</div>
                                 </div>
                             </div>
                         </td>
@@ -133,11 +133,13 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
+</div>{{-- end table wrapper --}}
 
-    {{-- Mobile Cards --}}
-    <div class="user-mobile-cards">
-        @forelse($employees as $employee)
+</div>{{-- end card --}}
+
+{{-- Mobile Cards --}}
+<div class="user-mobile-cards" style="padding:16px;">
+            @forelse($employees as $employee)
             @php $payroll = $payrollData[$employee->id] ?? []; @endphp
             <div class="user-card">
                 <div class="user-card-header">
@@ -146,8 +148,12 @@
                             {{ strtoupper(substr($employee->full_name, 0, 1)) }}
                         </div>
                         <div>
-                            <div style="font-weight:600; color:#1f2937; font-size:14px;">{{ $employee->full_name }}</div>
-                            <div style="font-size:12px; color:#6b7280; font-family:monospace;">{{ $employee->employee_id }}</div>
+<div style="font-weight:600; color:#1f2937; font-size:14px;">
+    <a href="{{ route('employees.show', $employee) }}"
+       style="color:#1f2937; text-decoration:none; font-weight:600;">
+        {{ $employee->full_name }}
+    </a>
+</div>                            <div style="font-size:12px; color:#6b7280; font-family:monospace;">{{ $employee->employee_id }}</div>
                         </div>
                     </div>
                     <span style="padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; background:#fef3c7; color:#92400e;">
@@ -160,40 +166,49 @@
                     <span><i class="fas fa-briefcase" style="width:14px;"></i> {{ $employee->position }}</span>
                 </div>
 
-                <div style="margin-top:12px; padding-top:12px; border-top:1px solid #f3f4f6;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                        <span style="color:#6b7280;">Gross Pay:</span>
-                        <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                        <span style="color:#6b7280;">Allowance & Benefits:</span>
-                        <span style="color:#10b981;">+₱{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                        <span style="color:#6b7280;">SSS:</span>
-                        <span style="color:#dc2626;">-₱{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                        <span style="color:#6b7280;">PhilHealth:</span>
-                        <span style="color:#dc2626;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                        <span style="color:#6b7280;">Pag-IBIG:</span>
-                        <span style="color:#dc2626;">-₱{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                        <span style="color:#6b7280;">Tax:</span>
-                        <span style="color:#dc2626;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                        <span style="color:#6b7280; font-weight:600;">Total Deductions:</span>
-                        <span style="color:#dc2626; font-weight:600;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; font-size:15px; font-weight:700; color:#10b981;">
-                        <span>Net Pay:</span>
-                        <span>₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</span>
-                    </div>
-                </div>
+          <div style="margin-top:12px; border-top:1px solid #f3f4f6;">
+    <button type="button"
+            onclick="var d=this.nextElementSibling; var i=this.querySelector('i'); d.style.display=d.style.display==='none'?'block':'none'; i.classList.toggle('fa-chevron-down'); i.classList.toggle('fa-chevron-up');"
+            style="width:100%; padding:10px 0; background:none; border:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:600; color:#6b7280;">
+        <span>View Payroll Breakdown</span>
+        <i class="fas fa-chevron-down" style="font-size:11px;"></i>
+    </button>
+
+    <div style="display:none;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+            <span style="color:#6b7280;">Gross Pay:</span>
+            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+            <span style="color:#6b7280;">Allowance & Benefits:</span>
+            <span style="color:#10b981;">+₱{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+            <span style="color:#6b7280;">SSS:</span>
+            <span style="color:#dc2626;">-₱{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+            <span style="color:#6b7280;">PhilHealth:</span>
+            <span style="color:#dc2626;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+            <span style="color:#6b7280;">Pag-IBIG:</span>
+            <span style="color:#dc2626;">-₱{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+            <span style="color:#6b7280;">Tax:</span>
+            <span style="color:#dc2626;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+            <span style="color:#6b7280; font-weight:600;">Total Deductions:</span>
+            <span style="color:#dc2626; font-weight:600;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:15px; font-weight:700; color:#10b981; padding-bottom:10px;">
+            <span>Net Pay:</span>
+            <span>₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</span>
+        </div>
+    </div>
+</div>
 
                 <div class="user-card-meta" style="margin-top:10px; padding-top:10px; border-top:1px solid #f3f4f6;">
                     @if(($payroll['gross_pay'] ?? 0) == 0)

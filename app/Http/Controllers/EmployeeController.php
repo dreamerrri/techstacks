@@ -158,7 +158,6 @@ class EmployeeController extends Controller
     private function validateEmployee(Request $request, $ignoreId = null): array
     {
         return $request->validate([
-            'employee_id'        => 'required|string|unique:employees,employee_id' . ($ignoreId ? ",{$ignoreId}" : ''),
             'first_name'         => 'required|string|max:100',
             'middle_name'        => 'nullable|string|max:100',
             'last_name'          => 'required|string|max:100',
