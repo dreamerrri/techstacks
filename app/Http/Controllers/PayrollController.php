@@ -127,8 +127,8 @@ class PayrollController extends Controller
                 'regular_hours' => ($payrollInput->days_worked ?? 0) * 8, // Calculate regular hours from days worked
                 'overtime_hours' => $payrollInput->overtime_hours ?? 0,
                 'late_hours' => $payrollInput->late_hours ?? 0,
-                'night_differential_hours' => 0, // Not tracked in payroll_inputs
-                'regular_holiday_worked' => 0, // Not tracked in payroll_inputs
+                'night_differential_hours' => $payrollInput->night_differential_hours ?? 0,
+                'holiday_days' => $payrollInput->holiday_days ?? 0,
             ];
             \Log::info('Payroll input data found for employee ' . $employee->id, $attendanceData);
         } else {
@@ -139,7 +139,7 @@ class PayrollController extends Controller
                 'overtime_hours' => 0,
                 'late_hours' => 0,
                 'night_differential_hours' => 0,
-                'regular_holiday_worked' => 0,
+                'holiday_days' => 0,
             ];
             \Log::warning('No payroll input data found for employee ' . $employee->id);
         }
@@ -177,8 +177,11 @@ class PayrollController extends Controller
         $taxableIncome = $grossPay - $sssContribution - $philhealthContribution - $pagibigContribution;
         $withholdingTax = $this->calculateTax($taxableIncome);
 
+        // Get manual deductions from payroll input
+        $manualDeductions = $payrollInput ? ($payrollInput->deductions ?? 0) : 0;
+
         // Total deductions
-        $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax];
+        $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax, $manualDeductions];
 
         // Calculate final payroll with deductions
         $result = $engine->compute($employeeData, $attendanceData, $deductions, $benefits, $allowances, [], false);
@@ -202,6 +205,7 @@ class PayrollController extends Controller
             'philhealth_contribution' => $philhealthContribution,
             'pagibig_contribution' => $pagibigContribution,
             'withholding_tax' => $withholdingTax,
+            'manual_deductions' => $manualDeductions,
             'total_deductions' => $result['deductions'],
             'net_pay' => $result['net_pay'],
             'taxable_income' => $taxableIncome,

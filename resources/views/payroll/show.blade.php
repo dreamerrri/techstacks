@@ -125,7 +125,7 @@
             <tr style="border-bottom:1px solid #e5e7eb;">
                 <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
                     Holiday Pay
-                    <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['regular_holiday_worked'] ?? 0 }} holiday days × 2 × ₱{{ number_format($payroll['daily_rate'] ?? 0, 2) }}/day</div>
+                    <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }} holiday days × 2 × ₱{{ number_format($payroll['daily_rate'] ?? 0, 2) }}/day</div>
                 </td>
                 <td style="padding:10px 0; font-weight:600; color:#10b981; text-align:right;">+₱{{ number_format($payroll['holiday_pay'] ?? 0, 2) }}</td>
             </tr>
@@ -150,9 +150,9 @@
         </div>
     </div>
 
-    {{-- Government Contributions --}}
+    {{-- Government Contributions & Deductions --}}
     <div class="card">
-        <h2><i class="fas fa-landmark" style="background:rgba(37,99,235,0.1); color:#2563eb;"></i> Government Contributions</h2>
+        <h2><i class="fas fa-landmark" style="background:rgba(37,99,235,0.1); color:#2563eb;"></i> Government Contributions & Deductions</h2>
         <table style="width:100%; border-collapse:collapse; font-size:14px;">
             <tr style="border-bottom:1px solid #e5e7eb;">
                 <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
@@ -168,17 +168,24 @@
                 </td>
                 <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</td>
             </tr>
-            <tr>
+            <tr style="border-bottom:1px solid #e5e7eb;">
                 <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
                     Pag-IBIG Contribution
                     <div style="font-size:12px; color:#9ca3af;">2% of gross pay (capped at ₱100)</div>
                 </td>
                 <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</td>
             </tr>
+            <tr style="border-bottom:1px solid #e5e7eb;">
+                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
+                    Manual Deductions
+                    <div style="font-size:12px; color:#9ca3af;">Deductions from manual payroll attendance</div>
+                </td>
+                <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['manual_deductions'] ?? 0, 2) }}</td>
+            </tr>
         </table>
         <div style="margin-top:10px; padding-top:10px; border-top:2px solid #e5e7eb; display:flex; justify-content:space-between; font-weight:700; font-size:15px;">
-            <span style="color:#1f2937;">Total Contributions</span>
-            <span style="color:#dc2626;">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0), 2) }}</span>
+            <span style="color:#1f2937;">Total Contributions & Deductions</span>
+            <span style="color:#dc2626;">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['manual_deductions'] ?? 0), 2) }}</span>
         </div>
     </div>
 
