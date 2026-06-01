@@ -113,7 +113,12 @@
                         @endphp
                         <tr style="border-bottom:1px solid #e5e7eb;">
                             <td style="padding:12px; font-family:monospace; color:#6b7280;">{{ $employee->employee_id }}</td>
-                            <td style="padding:12px; font-weight:600; color:#1f2937;">{{ $employee->full_name }}</td>
+                     <td style="padding:12px; font-weight:600; color:#1f2937;">
+    <a href="{{ route('employees.show', $employee) }}"
+       style="color:#1f2937; text-decoration:none; font-weight:600;">
+        {{ $employee->full_name }}
+    </a>
+</td>
                             <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
                             <td style="padding:12px; color:#6b7280;">{{ $employee->position }}</td>
                             <td style="padding:12px;">
@@ -174,11 +179,24 @@
                 <div class="user-card">
                     <div class="user-card-header">
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:700; flex-shrink:0;">
-                                {{ strtoupper(substr($employee->full_name, 0, 1)) }}
-                            </div>
+                          <div style="width:38px; height:38px; border-radius:50%; overflow:hidden; flex-shrink:0;">
+    @if($employee->user?->profile_photo)
+        <img src="{{ asset('storage/' . $employee->user->profile_photo) }}"
+             alt="{{ $employee->full_name }}"
+             style="width:100%; height:100%; object-fit:cover;">
+    @else
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:700;">
+            {{ strtoupper(substr($employee->full_name, 0, 1)) }}
+        </div>
+    @endif
+</div>
                             <div>
-                                <div style="font-weight:600; color:#1f2937; font-size:14px;">{{ $employee->full_name }}</div>
+                           <div style="font-weight:600; color:#1f2937; font-size:14px;">
+    <a href="{{ route('employees.show', $employee) }}"
+       style="color:#1f2937; text-decoration:none; font-weight:600;">
+        {{ $employee->full_name }}
+    </a>
+</div>
                                 <div style="font-size:12px; color:#6b7280; font-family:monospace;">{{ $employee->employee_id }}</div>
                             </div>
                         </div>

@@ -54,7 +54,15 @@ class Employee extends Model
         'pagibig_rate'    => 'decimal:4',
         'pagibig_cap'     => 'decimal:2',
     ];
+protected static function boot()
+{
+    parent::boot();
 
+    static::creating(function ($employee) {
+        $latest = static::max('id') ?? 0;
+        $employee->employee_id = 'EMP-' . str_pad(($latest + 1), 4, '0', STR_PAD_LEFT);
+    });
+}
     // Full name accessor
     public function getFullNameAttribute(): string
     {
@@ -126,6 +134,12 @@ class Employee extends Model
     {
         return $this->benefits()->active();
     }
+
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+{
+    return $this->belongsTo(User::class);
+}
 
 
 }

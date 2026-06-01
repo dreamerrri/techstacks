@@ -35,9 +35,17 @@
 
     {{-- Profile Header --}}
     <div class="card" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-        <div style="width:70px; height:70px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:700; flex-shrink:0;">
+       <div style="width:70px; height:70px; border-radius:50%; overflow:hidden; flex-shrink:0;">
+    @if($employee->user?->profile_photo)
+        <img src="{{ asset('storage/' . $employee->user->profile_photo) }}"
+             alt="{{ $employee->full_name }}"
+             style="width:100%; height:100%; object-fit:cover;">
+    @else
+        <div style="width:70px; height:70px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:700;">
             {{ strtoupper(substr($employee->first_name, 0, 1)) }}
         </div>
+    @endif
+</div>
         <div>
             <h2 style="margin:0 0 4px; font-size:22px;">{{ $employee->full_name }}</h2>
             <p style="margin:0; color:#6b7280;">{{ $employee->position }} — {{ $employee->department }}</p>

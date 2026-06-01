@@ -19,28 +19,51 @@
         <i class="fas fa-arrow-left"></i> Back to Payroll List
     </a>
 </div>
-
 {{-- Profile Header --}}
-<div class="card" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-    <div style="width:70px; height:70px; border-radius:50%; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:700; flex-shrink:0;">
-        {{ strtoupper(substr($employee->full_name, 0, 1)) }}
-    </div>
-    <div style="flex:1;">
-        <h2 style="margin:0 0 4px; font-size:22px;">{{ $employee->full_name }}</h2>
-        <p style="margin:0; color:#6b7280;">{{ $employee->position }} — {{ $employee->department }}</p>
-        <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:6px; font-size:13px; color:#6b7280;">
-            <span><i class="fas fa-id-badge" style="width:14px;"></i> {{ $employee->employee_id }}</span>
-            <span><i class="fas fa-calendar" style="width:14px;"></i> {{ $employee->date_hired->format('M d, Y') }}</span>
-            <span><i class="fas fa-money-bill-wave" style="width:14px;"></i> {{ $employee->salary_type }} Salary</span>
+<div class="card">
+    {{-- Top row: avatar + info + status --}}
+    <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
+        <div style="width:70px; height:70px; border-radius:50%; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:700; flex-shrink:0;">
+            {{ strtoupper(substr($employee->full_name, 0, 1)) }}
+        </div>
+        <div style="flex:1;">
+            <h2 style="margin:0 0 4px; font-size:22px;">{{ $employee->full_name }}</h2>
+            <p style="margin:0; color:#6b7280;">{{ $employee->position }} — {{ $employee->department }}</p>
+            <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:6px; font-size:13px; color:#6b7280;">
+                <span><i class="fas fa-id-badge" style="width:14px;"></i> {{ $employee->employee_id }}</span>
+                <span><i class="fas fa-calendar" style="width:14px;"></i> {{ $employee->date_hired->format('M d, Y') }}</span>
+                <span><i class="fas fa-money-bill-wave" style="width:14px;"></i> {{ $employee->salary_type }} Salary</span>
+            </div>
+        </div>
+        <div style="text-align:right;">
+            <span style="display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;
+                {{ $employee->employment_status === 'Regular'      ? 'background:#d1fae5; color:#065f46;'  : '' }}
+                {{ $employee->employment_status === 'Probationary' ? 'background:#fef3c7; color:#92400e;'  : '' }}
+                {{ $employee->employment_status === 'Contractual'  ? 'background:#dbeafe; color:#1e40af;'  : '' }}
+                {{ $employee->employment_status === 'Part-time'    ? 'background:#f3f4f6; color:#374151;'  : '' }}
+            ">{{ $employee->employment_status }}</span>
         </div>
     </div>
-    <div style="text-align:right;">
-        <span style="display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;
-            {{ $employee->employment_status === 'Regular'      ? 'background:#d1fae5; color:#065f46;'  : '' }}
-            {{ $employee->employment_status === 'Probationary' ? 'background:#fef3c7; color:#92400e;'  : '' }}
-            {{ $employee->employment_status === 'Contractual'  ? 'background:#dbeafe; color:#1e40af;'  : '' }}
-            {{ $employee->employment_status === 'Part-time'    ? 'background:#f3f4f6; color:#374151;'  : '' }}
-        ">{{ $employee->employment_status }}</span>
+
+    {{-- Bottom row: Government IDs (full width) --}}
+    <div style="border-top:1px solid #e5e7eb; padding-top:16px;">
+        <h2 style="margin:0 0 12px; font-size:15px; font-weight:600; color:#1f2937;">
+            <i class="fas fa-id-card" style="background:rgba(220,38,38,0.1); color:#dc2626; padding:6px; border-radius:6px; margin-right:8px;"></i> Government IDs
+        </h2>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
+            @foreach([
+                ['SSS Number',        $employee->sss_number,       'fa-shield-alt'],
+                ['PhilHealth Number', $employee->philhealth_number, 'fa-heart'],
+                ['Pag-IBIG Number',   $employee->pagibig_number,    'fa-home'],
+                ['TIN Number',        $employee->tin_number,        'fa-file-invoice'],
+            ] as [$label, $value, $icon])
+            <div style="background:#f9fafb; padding:16px; border-radius:8px; text-align:center;">
+                <div style="color:#dc2626; font-size:20px; margin-bottom:8px;"><i class="fas {{ $icon }}"></i></div>
+                <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">{{ $label }}</div>
+                <div style="font-weight:600; font-family:monospace; color:#1f2937; font-size:13px; word-break:break-all;">{{ $value ?? '—' }}</div>
+            </div>
+            @endforeach
+        </div>
     </div>
 </div>
 
@@ -73,8 +96,7 @@
 </div>
 
 {{-- Detail Cards Grid --}}
-<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
-
+<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;">
     {{-- Attendance-Based Earnings --}}
     <div class="card">
         <h2><i class="fas fa-clock" style="background:rgba(16,185,129,0.1); color:#10b981;"></i> Attendance-Based Earnings</h2>
@@ -190,24 +212,6 @@
         </div>
     </div>
 
-    {{-- Government IDs (full-width) --}}
-    <div class="card" style="grid-column: 1 / -1;">
-        <h2><i class="fas fa-id-card" style="background:rgba(220,38,38,0.1); color:#dc2626;"></i> Government IDs</h2>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
-            @foreach([
-                ['SSS Number',       $employee->sss_number,       'fa-shield-alt'],
-                ['PhilHealth Number',$employee->philhealth_number, 'fa-heart'],
-                ['Pag-IBIG Number',  $employee->pagibig_number,    'fa-home'],
-                ['TIN Number',       $employee->tin_number,        'fa-file-invoice'],
-            ] as [$label, $value, $icon])
-            <div style="background:#f9fafb; padding:16px; border-radius:8px; text-align:center;">
-                <div style="color:#dc2626; font-size:20px; margin-bottom:8px;"><i class="fas {{ $icon }}"></i></div>
-                <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">{{ $label }}</div>
-                <div style="font-weight:600; font-family:monospace; color:#1f2937; font-size:13px; word-break:break-all;">{{ $value ?? '—' }}</div>
-            </div>
-            @endforeach
-        </div>
-    </div>
 
     {{-- Pay Summary (full-width) --}}
     <div class="card" style="grid-column: 1 / -1;">

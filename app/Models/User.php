@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+         'profile_photo',
         'is_active',
         'last_login_at',
     ];
@@ -75,8 +76,9 @@ class User extends Authenticatable
         return $this->is_active;
     }
 
-    public function employee(): \Illuminate\Database\Eloquent\Relations\HasOne
+   // Replace the broken employee() method
+public function employee(): \Illuminate\Database\Eloquent\Relations\HasOne
 {
-    return $this->hasOne(\App\Models\Employee::class);
+    return $this->hasOne(Employee::class);
 }
 }
