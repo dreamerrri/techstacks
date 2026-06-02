@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\Permission;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -52,7 +53,8 @@ class RoleController extends Controller
     public function show(Role $role)
     {
         $role->load('permissions', 'users');
-        return view('roles.show', compact('role'));
+        $availableUsers = User::where('role', '!=', $role->slug)->get();
+        return view('roles.show', compact('role', 'availableUsers'));
     }
 
     public function edit(Role $role)
@@ -110,5 +112,47 @@ class RoleController extends Controller
 
         return redirect()->route('roles.index')
             ->with('success', 'Role deleted successfully.');
+    }
+
+    public function assignUser(Request $request, Role $role)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $user = User::find($request->user_id);
+        
+        if ($role->users()->where('user_id', $user->id)->exists()) {
+            return back()->with('error', 'User already has this role.');
+        }
+
+        $role->users()->attach($user->id);
+        $user->update(['role' => $role->slug]);
+
+        Log::info('User assigned to role', [
+            'role_id' => $role->id,
+            'user_id' => $user->id,
+            'assigned_by' => auth()->id(),
+        ]);
+
+        return back()->with('success', "User {$user->name} assigned to {$role->name} role successfully.");
+    }
+
+    public function removeUser(Request $request, Role $role, User $user)
+    {
+        if (!$role->users()->where('user_id', $user->id)->exists()) {
+            return back()->with('error', 'User does not have this role.');
+        }
+
+        $role->users()->detach($user->id);
+        $user->update(['role' => 'employee']);
+
+        Log::info('User removed from role', [
+            'role_id' => $role->id,
+            'user_id' => $user->id,
+            'removed_by' => auth()->id(),
+        ]);
+
+        return back()->with('success', "User {$user->name} removed from {$role->name} role successfully.");
     }
 }

@@ -142,6 +142,8 @@ Route::put('/profile/banner-color', [ProfileController::class, 'updateBannerColo
         Route::get('/{role}/edit', [RoleController::class, 'edit'])->name('edit');
         Route::put('/{role}', [RoleController::class, 'update'])->name('update');
         Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy');
+        Route::post('/{role}/assign-user', [RoleController::class, 'assignUser'])->name('assign.user');
+        Route::delete('/{role}/users/{user}', [RoleController::class, 'removeUser'])->name('remove.user');
     });
 
     Route::middleware('permission:manage.permissions')->prefix('permissions')->name('permissions.')->group(function () {
