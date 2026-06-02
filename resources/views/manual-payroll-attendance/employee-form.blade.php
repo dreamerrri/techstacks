@@ -73,6 +73,15 @@
                 </div>
             </div>
 
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Regular Hours</label>
+                <input type="number" name="regular_hours" step="0.5" min="0"
+                       value="{{ $isEdit ? ($payrollInput->regular_hours ?? '0') : '0' }}"
+                       style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
+                       oninput="window.regularHoursValue = this.value; console.log('Regular hours changed:', this.value)">
+                <p style="color:#6b7280; font-size:12px; margin-top:4px;">Total regular hours worked (excluding overtime)</p>
+            </div>
+
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Overtime Hours</label>
@@ -90,21 +99,75 @@
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;">
-                <div>
-                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Allowances</label>
-                    <input type="number" name="allowances" step="0.01" min="0"
-                           value="{{ $isEdit ? $payrollInput->allowances : '0' }}"
-                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                           oninput="window.allowancesValue = this.value; console.log('Allowances changed:', this.value)">
+            <div style="margin-bottom:24px;">
+                <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Holiday Days Worked</label>
+                <input type="number" name="holiday_days" step="0.5" min="0"
+                       value="{{ $isEdit ? ($payrollInput->holiday_days ?? '0') : '0' }}"
+                       style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
+                       oninput="window.holidayDaysValue = this.value; console.log('Holiday days changed:', this.value)">
+                <p style="color:#6b7280; font-size:12px; margin-top:4px;">Number of regular holidays worked (paid at 200% of daily rate)</p>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Night Differential Hours</label>
+                <input type="number" name="night_differential_hours" step="0.5" min="0"
+                       value="{{ $isEdit ? ($payrollInput->night_differential_hours ?? '0') : '0' }}"
+                       style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
+                       oninput="window.nightDifferentialHoursValue = this.value; console.log('Night differential hours changed:', this.value)">
+                <p style="color:#6b7280; font-size:12px; margin-top:4px;">Hours worked during night shift (paid at 10% premium of hourly rate)</p>
+            </div>
+
+            {{-- Allowances & Benefits Section --}}
+            <div style="margin-bottom:24px;">
+                <label style="display:block; font-weight:600; color:#374151; margin-bottom:12px; font-size:14px;">Allowances & Benefits</label>
+                
+                @php
+                    $totalAllowances = $employee->activeAllowances->sum('amount');
+                    $totalBenefits = $employee->activeBenefits->sum('amount');
+                    $totalAllowancesAndBenefits = $totalAllowances + $totalBenefits;
+                @endphp
+                
+                <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; padding:16px;">
+                    @if($employee->activeAllowances->count() > 0 || $employee->activeBenefits->count() > 0)
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:12px;">
+                            @foreach($employee->activeAllowances as $allowance)
+                                <div style="background:#fff; padding:10px; border-radius:4px; border-left:3px solid #10b981; display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <div style="font-weight:600; color:#1f2937; font-size:13px;">{{ $allowance->name }}</div>
+                                        <div style="color:#6b7280; font-size:11px;">{{ $allowance->type }}</div>
+                                    </div>
+                                    <div style="font-weight:700; color:#10b981; font-size:14px;">₱{{ number_format($allowance->amount, 2) }}</div>
+                                </div>
+                            @endforeach
+                            @foreach($employee->activeBenefits as $benefit)
+                                <div style="background:#fff; padding:10px; border-radius:4px; border-left:3px solid #3b82f6; display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <div style="font-weight:600; color:#1f2937; font-size:13px;">{{ $benefit->name }}</div>
+                                        <div style="color:#6b7280; font-size:11px;">{{ $benefit->type }}</div>
+                                    </div>
+                                    <div style="font-weight:700; color:#3b82f6; font-size:14px;">₱{{ number_format($benefit->amount, 2) }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div style="padding-top:12px; border-top:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:600; color:#374151; font-size:14px;">Total Allowances & Benefits:</span>
+                            <span style="font-weight:700; color:#10b981; font-size:16px;">₱{{ number_format($totalAllowancesAndBenefits, 2) }}</span>
+                        </div>
+                    @else
+                        <div style="text-align:center; color:#9ca3af; font-size:13px; padding:8px;">
+                            No allowances or benefits configured for this employee.
+                        </div>
+                    @endif
                 </div>
-                <div>
-                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Deductions</label>
-                    <input type="number" name="deductions" step="0.01" min="0"
-                           value="{{ $isEdit ? $payrollInput->deductions : '0' }}"
-                           style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                           oninput="window.deductionsValue = this.value; console.log('Deductions changed:', this.value)">
-                </div>
+                <input type="hidden" name="allowances" value="{{ $totalAllowancesAndBenefits }}">
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Deductions</label>
+                <input type="number" name="deductions" step="0.01" min="0"
+                       value="{{ $isEdit ? $payrollInput->deductions : '0' }}"
+                       style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
+                       oninput="window.deductionsValue = this.value; console.log('Deductions changed:', this.value)">
             </div>
 
             <div style="display:flex; gap:12px;">
@@ -204,9 +267,12 @@ console.log('JavaScript loaded successfully');
 // Initialize global variables with default values
 window.dailyRateValue = '{{ $isEdit ? $payrollInput->daily_rate : $dailyRate }}';
 window.daysWorkedValue = '{{ $isEdit ? $payrollInput->days_worked : '0' }}';
+window.regularHoursValue = '{{ $isEdit ? ($payrollInput->regular_hours ?? '0') : '0' }}';
 window.overtimeHoursValue = '{{ $isEdit ? $payrollInput->overtime_hours : '0' }}';
 window.lateHoursValue = '{{ $isEdit ? $payrollInput->late_hours : '0' }}';
-window.allowancesValue = '{{ $isEdit ? $payrollInput->allowances : '0' }}';
+window.holidayDaysValue = '{{ $isEdit ? ($payrollInput->holiday_days ?? '0') : '0' }}';
+window.nightDifferentialHoursValue = '{{ $isEdit ? ($payrollInput->night_differential_hours ?? '0') : '0' }}';
+window.allowancesValue = '{{ $totalAllowancesAndBenefits ?? '0' }}';
 window.deductionsValue = '{{ $isEdit ? $payrollInput->deductions : '0' }}';
 
 
@@ -227,8 +293,11 @@ function handleSaveAttendance(event) {
     formData.append('daily_rate', window.dailyRateValue);
     formData.append('rate_type', form.querySelector('[name="rate_type"]').value);
     formData.append('days_worked', window.daysWorkedValue);
+    formData.append('regular_hours', window.regularHoursValue);
     formData.append('overtime_hours', window.overtimeHoursValue);
     formData.append('late_hours', window.lateHoursValue);
+    formData.append('holiday_days', window.holidayDaysValue);
+    formData.append('night_differential_hours', window.nightDifferentialHoursValue);
     formData.append('allowances', window.allowancesValue);
     formData.append('deductions', window.deductionsValue);
     formData.append('_token', '{{ csrf_token() }}');
@@ -237,8 +306,11 @@ function handleSaveAttendance(event) {
     console.log('Using stored values:', {
         daily_rate: window.dailyRateValue,
         days_worked: window.daysWorkedValue,
+        regular_hours: window.regularHoursValue,
         overtime_hours: window.overtimeHoursValue,
         late_hours: window.lateHoursValue,
+        holiday_days: window.holidayDaysValue,
+        night_differential_hours: window.nightDifferentialHoursValue,
         allowances: window.allowancesValue,
         deductions: window.deductionsValue
     });
@@ -290,8 +362,11 @@ function previewPayroll() {
     formData.append('daily_rate', window.dailyRateValue);
     formData.append('rate_type', form.querySelector('[name="rate_type"]').value);
     formData.append('days_worked', window.daysWorkedValue);
+    formData.append('regular_hours', window.regularHoursValue);
     formData.append('overtime_hours', window.overtimeHoursValue);
     formData.append('late_hours', window.lateHoursValue);
+    formData.append('holiday_days', window.holidayDaysValue);
+    formData.append('night_differential_hours', window.nightDifferentialHoursValue);
     formData.append('allowances', window.allowancesValue);
     formData.append('deductions', window.deductionsValue);
     formData.append('_token', '{{ csrf_token() }}');
@@ -299,8 +374,11 @@ function previewPayroll() {
     console.log('Previewing payroll with values:', {
         daily_rate: window.dailyRateValue,
         days_worked: window.daysWorkedValue,
+        regular_hours: window.regularHoursValue,
         overtime_hours: window.overtimeHoursValue,
         late_hours: window.lateHoursValue,
+        holiday_days: window.holidayDaysValue,
+        night_differential_hours: window.nightDifferentialHoursValue,
         allowances: window.allowancesValue,
         deductions: window.deductionsValue
     });
@@ -334,8 +412,20 @@ function previewPayroll() {
                                 <span style="font-weight:600; color:#1f2937;">₱${previewData.basic_salary ? previewData.basic_salary.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Regular Hours:</span>
+                                <span style="font-weight:600; color:#1f2937;">${window.regularHoursValue || '0.00'} hrs</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                                 <span style="color:#6b7280;">Overtime Pay:</span>
                                 <span style="color:#10b981;">+₱${previewData.overtime_pay ? previewData.overtime_pay.toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Holiday Pay:</span>
+                                <span style="color:#10b981;">+₱${previewData.holiday_pay ? previewData.holiday_pay.toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Night Differential:</span>
+                                <span style="color:#10b981;">+₱${previewData.night_differential ? previewData.night_differential.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                                 <span style="color:#6b7280;">Allowances:</span>

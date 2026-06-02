@@ -80,6 +80,9 @@ class ManualPayrollAttendanceController extends Controller
         // Compute daily rate based on employee's salary type
         $dailyRate = $this->computeDailyRate($employee);
 
+        // Load employee's active allowances and benefits
+        $employee->load(['activeAllowances', 'activeBenefits']);
+
         return view('manual-payroll-attendance.employee-form', compact(
             'payrollPeriod',
             'employee',
@@ -99,8 +102,11 @@ class ManualPayrollAttendanceController extends Controller
             'daily_rate' => 'required|numeric|min:0',
             'rate_type' => 'required|in:daily,monthly',
             'days_worked' => 'required|numeric|min:0|max:31',
+            'regular_hours' => 'nullable|numeric|min:0',
             'overtime_hours' => 'nullable|numeric|min:0',
             'late_hours' => 'nullable|numeric|min:0',
+            'holiday_days' => 'nullable|numeric|min:0',
+            'night_differential_hours' => 'nullable|numeric|min:0',
             'allowances' => 'nullable|numeric|min:0',
             'deductions' => 'nullable|numeric|min:0',
         ]);
@@ -125,8 +131,11 @@ class ManualPayrollAttendanceController extends Controller
 
         $attendance = [
             'days_worked' => $validated['days_worked'],
+            'regular_hours' => $validated['regular_hours'] ?? 0,
             'overtime_hours' => $validated['overtime_hours'] ?? 0,
             'late_hours' => $validated['late_hours'] ?? 0,
+            'holiday_days' => $validated['holiday_days'] ?? 0,
+            'night_differential_hours' => $validated['night_differential_hours'] ?? 0,
         ];
 
         $allowances = [$validated['allowances'] ?? 0];
@@ -220,8 +229,11 @@ class ManualPayrollAttendanceController extends Controller
                 'daily_rate' => 'required|numeric|min:0',
                 'rate_type' => 'required|in:daily,monthly',
                 'days_worked' => 'required|numeric|min:0|max:31',
+                'regular_hours' => 'nullable|numeric|min:0',
                 'overtime_hours' => 'nullable|numeric|min:0',
                 'late_hours' => 'nullable|numeric|min:0',
+                'holiday_days' => 'nullable|numeric|min:0',
+                'night_differential_hours' => 'nullable|numeric|min:0',
                 'allowances' => 'nullable|numeric|min:0',
                 'deductions' => 'nullable|numeric|min:0',
             ]);
@@ -250,8 +262,11 @@ class ManualPayrollAttendanceController extends Controller
                     'daily_rate' => $validated['daily_rate'],
                     'rate_type' => $validated['rate_type'],
                     'days_worked' => $validated['days_worked'],
+                    'regular_hours' => $validated['regular_hours'] ?? 0,
                     'overtime_hours' => $validated['overtime_hours'] ?? 0,
                     'late_hours' => $validated['late_hours'] ?? 0,
+                    'holiday_days' => $validated['holiday_days'] ?? 0,
+                    'night_differential_hours' => $validated['night_differential_hours'] ?? 0,
                     'allowances' => $validated['allowances'] ?? 0,
                     'deductions' => $validated['deductions'] ?? 0,
                 ]);
@@ -266,8 +281,11 @@ class ManualPayrollAttendanceController extends Controller
                     'daily_rate' => $validated['daily_rate'],
                     'rate_type' => $validated['rate_type'],
                     'days_worked' => $validated['days_worked'],
+                    'regular_hours' => $validated['regular_hours'] ?? 0,
                     'overtime_hours' => $validated['overtime_hours'] ?? 0,
                     'late_hours' => $validated['late_hours'] ?? 0,
+                    'holiday_days' => $validated['holiday_days'] ?? 0,
+                    'night_differential_hours' => $validated['night_differential_hours'] ?? 0,
                     'allowances' => $validated['allowances'] ?? 0,
                     'deductions' => $validated['deductions'] ?? 0,
                 ]);
