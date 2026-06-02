@@ -13,6 +13,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AllowanceController;
 use App\Http\Controllers\BenefitController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\AuditLogController;
 
 
 // Public Routes
@@ -39,10 +42,10 @@ Route::middleware('auth')->group(function () {
 Route::get('/profile',  [ProfileController::class, 'show'])->name('profile.show');
 Route::put('/profile',  [ProfileController::class, 'update'])->name('profile.update');
 Route::put('/profile/personal', [ProfileController::class, 'updatePersonal'])->name('profile.personal');
-    Route::middleware('role:admin')->prefix('users')->name('users.')->group(function () {
+    Route::middleware('permission:view.users')->prefix('users')->name('users.')->group(function () {
         Route::get('/',                [UserController::class, 'index'])->name('index');
-        Route::patch('/{user}/toggle', [UserController::class, 'toggleActive'])->name('toggle');
-        Route::patch('/{user}/role',   [UserController::class, 'updateRole'])->name('role');
+        Route::patch('/{user}/toggle', [UserController::class, 'toggleActive'])->name('toggle')->middleware('permission:edit.users');
+        Route::patch('/{user}/role',   [UserController::class, 'updateRole'])->name('role')->middleware('permission:manage.user.roles');
     });
 
     Route::get('/profile',              [ProfileController::class, 'show'])->name('profile.show');
@@ -51,45 +54,45 @@ Route::post('/profile/photo',       [ProfileController::class, 'updatePhoto'])->
 Route::put('/profile/banner-color', [ProfileController::class, 'updateBannerColor'])->name('profile.banner-color');
 
     // Employee Management — admin and HR only.
-    Route::middleware('role:admin,hr')->prefix('employees')->name('employees.')->group(function () {
+    Route::middleware('permission:view.employees')->prefix('employees')->name('employees.')->group(function () {
 
         // ── Static routes FIRST (must come before the /{employee} wildcard) ──
         Route::get('/',         [EmployeeController::class, 'index'])->name('index');
         Route::get('/archived', [EmployeeController::class, 'archived'])->name('archived');
 
         // Create & Store — admin and HR
-        Route::middleware('role:admin,hr')->group(function () {
+        Route::middleware('permission:create.employees')->group(function () {
             Route::get('/create', [EmployeeController::class, 'create'])->name('create');
             Route::post('/',      [EmployeeController::class, 'store'])->name('store');
         });
 
         // ── Wildcard routes AFTER static ones ──
         Route::get('/{employee}',      [EmployeeController::class, 'show'])->name('show');
-        Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->name('edit');
-        Route::put('/{employee}',      [EmployeeController::class, 'update'])->name('update');
+        Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->name('edit')->middleware('permission:edit.employees');
+        Route::put('/{employee}',      [EmployeeController::class, 'update'])->name('update')->middleware('permission:edit.employees');
 
         // Archive & Restore — admin only
-        Route::middleware('role:admin')->group(function () {
+        Route::middleware('permission:archive.employees')->group(function () {
             Route::patch('/{employee}/archive', [EmployeeController::class, 'archive'])->name('archive');
             Route::patch('/{employee}/restore', [EmployeeController::class, 'restore'])->name('restore');
         });
 
         // Government Contributions — admin and HR only
-        Route::middleware('role:admin,hr')->group(function () {
+        Route::middleware('permission:edit.gov.contributions')->group(function () {
             Route::patch('/{employee}/update-gov-contributions', [EmployeeController::class, 'updateGovContributions'])->name('update-gov-contributions');
         });
     });
 
 
     // Allowance Management — admin and HR only
-    Route::middleware('role:admin,hr')->prefix('employees/{employee}/allowances')->name('allowances.')->group(function () {
+    Route::middleware('permission:manage.allowances')->prefix('employees/{employee}/allowances')->name('allowances.')->group(function () {
         Route::post('/', [AllowanceController::class, 'store'])->name('store');
         Route::put('/{allowance}', [AllowanceController::class, 'update'])->name('update');
         Route::delete('/{allowance}', [AllowanceController::class, 'destroy'])->name('destroy');
     });
 
     // Benefit Management — admin and HR only
-    Route::middleware('role:admin,hr')->prefix('employees/{employee}/benefits')->name('benefits.')->group(function () {
+    Route::middleware('permission:manage.benefits')->prefix('employees/{employee}/benefits')->name('benefits.')->group(function () {
         Route::post('/', [BenefitController::class, 'store'])->name('store');
         Route::put('/{benefit}', [BenefitController::class, 'update'])->name('update');
         Route::delete('/{benefit}', [BenefitController::class, 'destroy'])->name('destroy');
@@ -103,7 +106,7 @@ Route::put('/profile/banner-color', [ProfileController::class, 'updateBannerColo
     });
 
     // Manual Payroll Attendance Encoding — admin and HR only
-    Route::middleware('role:admin,hr')->prefix('manual-payroll-attendance')->name('manual-payroll-attendance.')->group(function () {
+    Route::middleware('permission:edit.attendance')->prefix('manual-payroll-attendance')->name('manual-payroll-attendance.')->group(function () {
         Route::get('/',                              [ManualPayrollAttendanceController::class, 'index'])->name('index');
         Route::get('/period/{payrollPeriod}',        [ManualPayrollAttendanceController::class, 'showPeriod'])->name('period');
         Route::get('/period/{payrollPeriod}/employee/{employee}', [ManualPayrollAttendanceController::class, 'showEmployeeForm'])->name('employee-form');
@@ -115,7 +118,7 @@ Route::put('/profile/banner-color', [ProfileController::class, 'updateBannerColo
     });
 
     // Payroll Period Routes — admin and HR only
-    Route::middleware('role:admin,hr')->prefix('payroll-periods')->name('payroll-periods.')->group(function () {
+    Route::middleware('permission:manage.payroll.periods')->prefix('payroll-periods')->name('payroll-periods.')->group(function () {
         Route::get('/create', [PayrollPeriodController::class, 'create'])->name('create');
         Route::post('/', [PayrollPeriodController::class, 'store'])->name('store');
         Route::post('/{payrollPeriod}/finalize', [PayrollPeriodController::class, 'finalize'])->name('finalize');
@@ -123,11 +126,37 @@ Route::put('/profile/banner-color', [ProfileController::class, 'updateBannerColo
 
     // Government Contributions Routes — all authenticated users can view, admin and HR can edit
     Route::prefix('government-contributions')->name('government-contributions.')->group(function () {
-        Route::get('/', [GovernmentContributionsController::class, 'index'])->name('index');
-        Route::get('/{employee}', [GovernmentContributionsController::class, 'show'])->name('show');
-        Route::middleware('role:admin,hr')->group(function () {
+        Route::get('/', [GovernmentContributionsController::class, 'index'])->name('index')->middleware('permission:view.gov.contributions');
+        Route::get('/{employee}', [GovernmentContributionsController::class, 'show'])->name('show')->middleware('permission:view.gov.contributions');
+        Route::middleware('permission:edit.gov.contributions')->group(function () {
             Route::patch('/{employee}', [GovernmentContributionsController::class, 'update'])->name('update');
         });
+    });
+
+    // RBAC Management Routes — admin only
+    Route::middleware('permission:manage.roles')->prefix('roles')->name('roles.')->group(function () {
+        Route::get('/', [RoleController::class, 'index'])->name('index');
+        Route::get('/create', [RoleController::class, 'create'])->name('create');
+        Route::post('/', [RoleController::class, 'store'])->name('store');
+        Route::get('/{role}', [RoleController::class, 'show'])->name('show');
+        Route::get('/{role}/edit', [RoleController::class, 'edit'])->name('edit');
+        Route::put('/{role}', [RoleController::class, 'update'])->name('update');
+        Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::middleware('permission:manage.permissions')->prefix('permissions')->name('permissions.')->group(function () {
+        Route::get('/', [PermissionController::class, 'index'])->name('index');
+        Route::get('/create', [PermissionController::class, 'create'])->name('create');
+        Route::post('/', [PermissionController::class, 'store'])->name('store');
+        Route::get('/{permission}', [PermissionController::class, 'show'])->name('show');
+        Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->name('edit');
+        Route::put('/{permission}', [PermissionController::class, 'update'])->name('update');
+        Route::delete('/{permission}', [PermissionController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::middleware('permission:view.audit.logs')->prefix('audit-logs')->name('audit-logs.')->group(function () {
+        Route::get('/', [AuditLogController::class, 'index'])->name('index');
+        Route::get('/{auditLog}', [AuditLogController::class, 'show'])->name('show');
     });
 });
 
