@@ -39,6 +39,7 @@ class Employee extends Model
         'philhealth_cap',
         'pagibig_rate',
         'pagibig_cap',
+        'withholding_tax_rate',
         'is_archived',
     ];
 
@@ -53,6 +54,7 @@ class Employee extends Model
         'philhealth_cap'  => 'decimal:2',
         'pagibig_rate'    => 'decimal:4',
         'pagibig_cap'     => 'decimal:2',
+        'withholding_tax_rate' => 'decimal:4',
     ];
 protected static function boot()
 {

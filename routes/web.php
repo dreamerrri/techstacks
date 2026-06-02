@@ -5,6 +5,7 @@ use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PayrollInputController;
 use App\Http\Controllers\PayrollPeriodController;
 use App\Http\Controllers\ManualPayrollAttendanceController;
+use App\Http\Controllers\GovernmentContributionsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
@@ -118,6 +119,15 @@ Route::put('/profile/banner-color', [ProfileController::class, 'updateBannerColo
         Route::get('/create', [PayrollPeriodController::class, 'create'])->name('create');
         Route::post('/', [PayrollPeriodController::class, 'store'])->name('store');
         Route::post('/{payrollPeriod}/finalize', [PayrollPeriodController::class, 'finalize'])->name('finalize');
+    });
+
+    // Government Contributions Routes — all authenticated users can view, admin and HR can edit
+    Route::prefix('government-contributions')->name('government-contributions.')->group(function () {
+        Route::get('/', [GovernmentContributionsController::class, 'index'])->name('index');
+        Route::get('/{employee}', [GovernmentContributionsController::class, 'show'])->name('show');
+        Route::middleware('role:admin,hr')->group(function () {
+            Route::patch('/{employee}', [GovernmentContributionsController::class, 'update'])->name('update');
+        });
     });
 });
 

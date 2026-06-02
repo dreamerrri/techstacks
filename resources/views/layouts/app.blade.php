@@ -61,6 +61,10 @@
                class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                 <i class="fas fa-user-tie"></i><span>Employees</span>
             </a>
+            <a href="{{ route('government-contributions.index') }}"
+               class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
+                <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+            </a>
             <a href="{{ route('payroll.index') }}"
                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                 <i class="fas fa-money-bill"></i><span>Payroll</span>
@@ -74,6 +78,10 @@
             <a href="{{ route('employees.index') }}"
                class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                 <i class="fas fa-users"></i><span>Employees</span>
+            </a>
+            <a href="{{ route('government-contributions.index') }}"
+               class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
+                <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
             </a>
             <a href="{{ route('payroll.index') }}"
                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
@@ -146,6 +154,10 @@
                    class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                     <i class="fas fa-user-tie"></i><span>Employees</span>
                 </a>
+                <a href="{{ route('government-contributions.index') }}"
+                   class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
+                    <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+                </a>
                 <a href="{{ route('payroll.index') }}"
                    class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                     <i class="fas fa-money-bill"></i><span>Payroll</span>
@@ -159,6 +171,10 @@
                 <a href="{{ route('employees.index') }}"
                    class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                     <i class="fas fa-users"></i><span>Employees</span>
+                </a>
+                <a href="{{ route('government-contributions.index') }}"
+                   class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
+                    <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
                 </a>
                 <a href="{{ route('payroll.index') }}"
                    class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
