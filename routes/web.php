@@ -100,10 +100,12 @@ Route::put('/profile/banner-color', [ProfileController::class, 'updateBannerColo
 
     // Payroll Management — all authenticated users can access
     // Admin and HR can view all employees' payroll, employees can only view their own
-    Route::prefix('payroll')->name('payroll.')->group(function () {
-        Route::get('/',         [PayrollController::class, 'index'])->name('index');
-        Route::get('/{employee}', [PayrollController::class, 'show'])->name('show');
-    });
+// ✅ Correct
+Route::prefix('payroll')->name('payroll.')->group(function () {
+    Route::get('/',                        [PayrollController::class, 'index'])->name('index');
+    Route::get('/{employee}/payslip',      [PayrollController::class, 'downloadPayslip'])->name('payslip');
+    Route::get('/{employee}',              [PayrollController::class, 'show'])->name('show');
+});
 
     // Manual Payroll Attendance Encoding — admin and HR only
     Route::middleware('permission:edit.attendance')->prefix('manual-payroll-attendance')->name('manual-payroll-attendance.')->group(function () {

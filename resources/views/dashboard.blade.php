@@ -46,7 +46,7 @@
     @endforeach
 </div>
 
-{{-- Quick Actions --}}
+{{-- Quick Actions  the action buttons are dynamically replace by labels in the controller--}}
 <div class="card">
     <h2>
         @if($isAdmin) Administrative Actions
@@ -55,11 +55,13 @@
         @endif
     </h2>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
-        @foreach($actions as $action)
-            <button class="action-btn" style="border: 2px solid {{ $color }}; color: {{ $color }};">
-                <i class="fas {{ $action['icon'] }}"></i> {{ $action['label'] }}
-            </button>
-        @endforeach
+       @foreach($actions as $action)
+    <a href="{{ $action['route'] }}"
+       class="action-btn"
+       style="border: 2px solid {{ $color }}; color: {{ $color }}; text-decoration: none; display:flex; align-items:center; justify-content:center; gap:8px;">
+        <i class="fas {{ $action['icon'] }}"></i> {{ $action['label'] }}
+    </a>
+@endforeach
     </div>
 </div>
 
