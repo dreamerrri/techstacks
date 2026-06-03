@@ -122,10 +122,7 @@ class AuthController extends Controller
             'email'   => $user->email,
         ]);
 
-        Auth::login($user);
-        $request->session()->regenerate();
-
-        return redirect()->route('dashboard')->with('success', 'Registration successful! Welcome to HR Management System.');
+       return redirect()->route('login')->with('success', 'Registration successful! Please log in.');
     }
 
     /**
