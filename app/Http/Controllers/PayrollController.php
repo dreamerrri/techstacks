@@ -175,8 +175,16 @@ class PayrollController extends Controller
         $pagibigContribution = min($grossPay * $pagibigRate, $pagibigCap);
 
         // Calculate withholding tax
-        $taxableIncome = $grossPay - $sssContribution - $philhealthContribution - $pagibigContribution;
-        $withholdingTax = $this->calculateTax($taxableIncome);
+        $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
+        \Log::info('Withholding tax calculation', [
+            'gross_pay' => $grossPay,
+            'sss_contribution' => $sssContribution,
+            'philhealth_contribution' => $philhealthContribution,
+            'pagibig_contribution' => $pagibigContribution,
+            'total_contributions' => $totalContributions,
+        ]);
+        $withholdingTax = $this->calculateTax($grossPay, $totalContributions);
+        \Log::info('Withholding tax result', ['withholding_tax' => $withholdingTax]);
 
         // Get manual deductions from payroll input
         $manualDeductions = $payrollInput ? ($payrollInput->deductions ?? 0) : 0;
@@ -215,23 +223,32 @@ class PayrollController extends Controller
     }
 
     /**
-     * Calculate withholding tax based on Philippine tax brackets
+     * Calculate withholding tax based on annual computation
+     * Formula: (Salary - Contributions) * 12 = Annual Total
+     * Annual Total - 250,000 = Taxable Annual Total
+     * Taxable Annual Total * 15% = Tax Rate
+     * Tax Rate / 12 = Gross Pay Tax
      */
-    private function calculateTax(float $taxableIncome): float
+    private function calculateTax(float $grossPay, float $totalContributions): float
     {
-        if ($taxableIncome <= 20832) {
+        // Calculate annual total: (Salary - Contributions) * 12
+        $annualTotal = ($grossPay - $totalContributions) * 12;
+        
+        // Subtract tax exemption (250,000 from income tax table)
+        $taxableAnnualTotal = $annualTotal - 250000;
+        
+        // If taxable annual total is zero or negative, no tax
+        if ($taxableAnnualTotal <= 0) {
             return 0;
-        } elseif ($taxableIncome <= 33333) {
-            return ($taxableIncome - 20832) * 0.20;
-        } elseif ($taxableIncome <= 66667) {
-            return 2500 + ($taxableIncome - 33333) * 0.25;
-        } elseif ($taxableIncome <= 166667) {
-            return 10833.33 + ($taxableIncome - 66667) * 0.30;
-        } elseif ($taxableIncome <= 666667) {
-            return 40833.33 + ($taxableIncome - 166667) * 0.32;
-        } else {
-            return 200833.33 + ($taxableIncome - 666667) * 0.35;
         }
+        
+        // Apply 15% tax rate (graduated tax rates from tax table)
+        $taxRate = $taxableAnnualTotal * 0.15;
+        
+        // Convert back to monthly tax
+        $grossPayTax = $taxRate / 12;
+        
+        return round($grossPayTax, 2);
     }
 
 public function downloadPayslip(Employee $employee)
