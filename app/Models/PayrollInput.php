@@ -105,17 +105,24 @@ class PayrollInput extends Model
         // Get employee for government contribution rates
         $employee = $this->employee;
         
-        // Government contributions (use employee-specific rates or default Philippine standard rates)
-        $sssRate = $employee->sss_rate ?? 0.045;
-        $sssCap = $employee->sss_cap ?? 900;
-        $philhealthRate = $employee->philhealth_rate ?? 0.0225;
-        $philhealthCap = $employee->philhealth_cap ?? 1500;
-        $pagibigRate = $employee->pagibig_rate ?? 0.02;
-        $pagibigCap = $employee->pagibig_cap ?? 100;
-
-        $sssContribution = min($grossPay * $sssRate, $sssCap);
-        $philhealthContribution = min($grossPay * $philhealthRate, $philhealthCap);
-        $pagibigContribution = min($grossPay * $pagibigRate, $pagibigCap);
+        // Government contributions are based on basic salary, not gross pay
+        // (gross pay includes overtime, allowances, etc. which should not affect contribution calculations)
+        $basicSalary = $employee->basic_salary;
+        
+        // SSS Contribution using official bracket table (Circular No. 2024-006)
+        $sssService = new \App\Services\SssContributionService();
+        $sssCalculation = $sssService->calculate($basicSalary);
+        $sssContribution = $sssCalculation['employee_share'];
+        
+        // PhilHealth Contribution using official 2025/2026 table
+        $philHealthService = new \App\Services\PhilHealthContributionService();
+        $philHealthCalculation = $philHealthService->calculate($basicSalary);
+        $philhealthContribution = $philHealthCalculation['employee_share'];
+        
+        // Pag-IBIG Contribution using official 2026 table
+        $pagIbigService = new \App\Services\PagIbigContributionService();
+        $pagIbigCalculation = $pagIbigService->calculate($basicSalary);
+        $pagibigContribution = $pagIbigCalculation['employee_share'];
 
         // Calculate withholding tax
         $taxableIncome = $grossPay - $sssContribution - $philhealthContribution - $pagibigContribution;
