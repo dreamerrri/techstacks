@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Services\Payroll\PayrollComputationEngine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PayrollController extends Controller
 {
@@ -232,4 +233,29 @@ class PayrollController extends Controller
             return 200833.33 + ($taxableIncome - 666667) * 0.35;
         }
     }
+
+public function downloadPayslip(Employee $employee)
+{
+    $user = Auth::user();
+    $isAdmin = $user->isAdmin();
+    $isHR = $user->isHR();
+
+    if (!$isAdmin && !$isHR) {
+        $userEmployee = $user->employee;
+        if (!$userEmployee || $userEmployee->id !== $employee->id) {
+            return redirect()->route('payroll.index')
+                ->with('error', 'You can only download your own payslip.');
+        }
+    }
+
+    $payrollData = $this->calculatePayroll($employee);
+
+    $pdf = Pdf::loadView('payroll.payslip', [
+        'employee'    => $employee,
+        'payroll'     => $payrollData,
+        'generatedAt' => now()->format('F d, Y h:i A'),
+    ])->setPaper('a4', 'portrait');
+
+    return $pdf->download("payslip-{$employee->employee_id}.pdf");
+}
 }
