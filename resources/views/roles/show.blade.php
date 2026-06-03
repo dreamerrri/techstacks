@@ -3,119 +3,154 @@
 @section('title', 'Role Details')
 
 @section('content')
-<div class="page-header">
-    <h1>Role Details: {{ $role->name }}</h1>
-    <a href="{{ route('roles.index') }}" class="btn btn-secondary">
-        <i class="fas fa-arrow-left"></i> Back
-    </a>
-</div>
 
-<div class="card">
-    <div class="card-body">
-        <div class="detail-section">
-            <h3>Role Information</h3>
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <label>Name:</label>
-                    <span>{{ $role->name }}</span>
+    @php
+        $label   = "display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:4px;";
+        $section = "font-size:16px; font-weight:700; color:#1f2937; border-bottom:2px solid #fecaca; padding-bottom:8px; margin-bottom:16px;";
+        $input   = "width:100%; border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px; box-sizing:border-box;";
+    @endphp
+
+    <div style="margin-bottom:20px;">
+        <a href="{{ route('roles.index') }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
+            <i class="fas fa-arrow-left"></i> Back to Roles
+        </a>
+    </div>
+
+    @if(session('success'))
+        <div style="margin-bottom:16px; padding:12px 16px; background:#d1fae5; color:#065f46; border-radius:8px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div style="margin-bottom:16px; padding:12px 16px; background:#fee2e2; color:#991b1b; border-radius:8px;">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <div class="card">
+        {{-- Header --}}
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+            <div style="display:flex; align-items:center; gap:14px;">
+                <div style="width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:20px; font-weight:700; flex-shrink:0;">
+                    {{ strtoupper(substr($role->name, 0, 1)) }}
                 </div>
-                <div class="detail-item">
-                    <label>Slug:</label>
-                    <span><code>{{ $role->slug }}</code></span>
+                <div>
+                    <h2 style="margin:0; color:#1f2937; font-size:20px;">{{ $role->name }}</h2>
+                    <code style="font-size:12px; color:#6b7280; background:#f3f4f6; padding:2px 8px; border-radius:4px;">{{ $role->slug }}</code>
                 </div>
-                <div class="detail-item">
-                    <label>Description:</label>
-                    <span>{{ $role->description ?? '-' }}</span>
+            </div>
+            <a href="{{ route('roles.edit', $role) }}"
+               style="padding:8px 16px; background:linear-gradient(135deg,#dc2626,#991b1b); color:white; border-radius:6px; text-decoration:none; font-size:14px; font-weight:600;">
+                <i class="fas fa-edit"></i> Edit Role
+            </a>
+        </div>
+
+        {{-- Role Info --}}
+        <div style="margin-bottom:32px;">
+            <h3 style="{{ $section }}"><i class="fas fa-user-tag" style="color:#dc2626;"></i> Role Information</h3>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+                <div>
+                    <span style="{{ $label }}">Description</span>
+                    <span style="font-size:14px; color:#374151;">{{ $role->description ?? '—' }}</span>
                 </div>
-                <div class="detail-item">
-                    <label>Status:</label>
-                    <span>
-                        @if($role->is_active)
-                            <span class="badge badge-success">Active</span>
-                        @else
-                            <span class="badge badge-danger">Inactive</span>
-                        @endif
-                    </span>
+                <div>
+                    <span style="{{ $label }}">Status</span>
+                    @if($role->is_active)
+                        <span style="padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#d1fae5; color:#065f46;">Active</span>
+                    @else
+                        <span style="padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#fee2e2; color:#991b1b;">Inactive</span>
+                    @endif
+                </div>
+                <div>
+                    <span style="{{ $label }}">Total Users</span>
+                    <span style="font-size:14px; color:#374151;">{{ $role->users->count() }}</span>
+                </div>
+                <div>
+                    <span style="{{ $label }}">Total Permissions</span>
+                    <span style="font-size:14px; color:#374151;">{{ $role->permissions->count() }}</span>
                 </div>
             </div>
         </div>
 
-        <div class="detail-section">
-            <h3>Permissions ({{ $role->permissions->count() }})</h3>
+        {{-- Permissions --}}
+        <div style="margin-bottom:32px;">
+            <h3 style="{{ $section }}"><i class="fas fa-key" style="color:#dc2626;"></i> Permissions ({{ $role->permissions->count() }})</h3>
             @if($role->permissions->count() > 0)
-                <div class="permissions-list">
-                    @foreach($role->permissions->groupBy('module') as $module => $permissions)
-                        <div class="permission-module">
-                            <h4>{{ ucfirst($module) }}</h4>
-                            <ul>
-                                @foreach($permissions as $permission)
-                                    <li>{{ $permission->name }}</li>
-                                @endforeach
-                            </ul>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+                    @foreach($role->permissions->groupBy('module') as $module => $modulePerms)
+                        <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:12px;">
+                            <div style="font-size:12px; font-weight:700; color:#374151; text-transform:uppercase; margin-bottom:8px; letter-spacing:0.05em;">
+                                {{ ucfirst($module) }}
+                            </div>
+                            @foreach($modulePerms as $permission)
+                                <div style="display:flex; align-items:center; gap:6px; font-size:13px; color:#374151; margin-bottom:4px;">
+                                    <i class="fas fa-check-circle" style="color:#10b981; font-size:11px;"></i>
+                                    {{ $permission->name }}
+                                </div>
+                            @endforeach
                         </div>
                     @endforeach
                 </div>
             @else
-                <p class="text-muted">No permissions assigned.</p>
+                <p style="color:#9ca3af; font-size:14px;">No permissions assigned to this role.</p>
             @endif
         </div>
 
-        <div class="detail-section">
-            <h3>Users ({{ $role->users->count() }})</h3>
-            
+        {{-- Users --}}
+        <div>
+            <h3 style="{{ $section }}"><i class="fas fa-users" style="color:#dc2626;"></i> Assigned Users ({{ $role->users->count() }})</h3>
+
             {{-- Assign User Form --}}
             @if($availableUsers->count() > 0)
-                <form method="POST" action="{{ route('roles.assign.user', $role) }}" style="margin-bottom: 20px;">
+                <form method="POST" action="{{ route('roles.assign.user', $role) }}" style="margin-bottom:20px;">
                     @csrf
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <select name="user_id" required style="flex: 1; padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px;">
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <select name="user_id" required
+                                style="flex:1; min-width:200px; border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px;">
                             <option value="">Select a user to assign...</option>
                             @foreach($availableUsers as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
                             @endforeach
                         </select>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit"
+                                style="padding:8px 16px; background:linear-gradient(135deg,#dc2626,#991b1b); color:white; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer;">
                             <i class="fas fa-user-plus"></i> Assign User
                         </button>
                     </div>
                 </form>
-            @else
-                <p class="text-muted" style="margin-bottom: 20px;">All users are already assigned to this role.</p>
             @endif
 
             @if($role->users->count() > 0)
-                <div class="users-list">
-                    @foreach($role->users as $user)
-                        <div class="user-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 8px;">
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <div class="user-avatar" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #dc2626, #991b1b); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
-                                <div class="user-info">
-                                    <div class="user-name" style="font-weight: 600;">{{ $user->name }}</div>
-                                    <div class="user-email" style="color: #6b7280; font-size: 14px;">{{ $user->email }}</div>
-                                </div>
+                @foreach($role->users as $user)
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid #e5e7eb; border-radius:8px; margin-bottom:8px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; flex-shrink:0;">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
                             </div>
-                            @if($user->id !== auth()->id())
-                                <form method="POST" action="{{ route('roles.remove.user', [$role, $user]) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to remove {{ $user->name }} from this role?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-user-minus"></i> Remove
-                                    </button>
-                                </form>
-                            @endif
+                            <div>
+                                <div style="font-weight:600; color:#1f2937; font-size:14px;">{{ $user->name }}</div>
+                                <div style="color:#6b7280; font-size:12px;">{{ $user->email }}</div>
+                            </div>
                         </div>
-                    @endforeach
-                </div>
+                        @if($user->id !== auth()->id())
+                            <form method="POST" action="{{ route('roles.remove.user', [$role, $user]) }}"
+                                  data-confirm="This user will be removed from the {{ $role->name }} role."
+                                  data-confirm-title="Remove User?"
+                                  data-confirm-icon="warning"
+                                  data-confirm-btn="Yes, remove">
+                                @csrf @method('DELETE')
+                                <button style="padding:5px 12px; background:#fee2e2; color:#991b1b; border:none; border-radius:5px; font-size:12px; cursor:pointer;">
+                                    <i class="fas fa-user-minus"></i> Remove
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+                @endforeach
             @else
-                <p class="text-muted">No users assigned to this role.</p>
+                <p style="color:#9ca3af; font-size:14px;">No users assigned to this role.</p>
             @endif
         </div>
-
-        <div class="form-actions">
-            <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning">
-                <i class="fas fa-edit"></i> Edit Role
-            </a>
-        </div>
     </div>
-</div>
+
 @endsection
