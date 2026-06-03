@@ -306,24 +306,36 @@
 </div>
 
 {{-- ── Flash toasts ── --}}
-@if(session('success') || session('error') || session('warning') || session('info'))
 <script>
+    window.Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+
+    @if(session('success') || session('error') || session('warning') || session('info'))
     document.addEventListener('DOMContentLoaded', function () {
         @if(session('success'))
-            window.Toast?.fire({ icon: 'success', title: @json(session('success')) });
+            window.Toast.fire({ icon: 'success', title: @json(session('success')) });
         @endif
         @if(session('error'))
-            window.Toast?.fire({ icon: 'error',   title: @json(session('error'))   });
+            window.Toast.fire({ icon: 'error',   title: @json(session('error'))   });
         @endif
         @if(session('warning'))
-            window.Toast?.fire({ icon: 'warning', title: @json(session('warning')) });
+            window.Toast.fire({ icon: 'warning', title: @json(session('warning')) });
         @endif
         @if(session('info'))
-            window.Toast?.fire({ icon: 'info',    title: @json(session('info'))    });
+            window.Toast.fire({ icon: 'info',    title: @json(session('info'))    });
         @endif
     });
+    @endif
 </script>
-@endif
 
 <script>
 document.addEventListener('click', function(e) {

@@ -161,12 +161,12 @@ class AuthController extends Controller
                 ],
             ];
 
-            $actions = [
-                ['label' => 'Create User',   'icon' => 'fa-user-plus'],
-                ['label' => 'Manage Roles',  'icon' => 'fa-user-tag'],
-                ['label' => 'System Backup', 'icon' => 'fa-database'],
-                ['label' => 'View Logs',     'icon' => 'fa-history'],
-            ];
+$actions = [
+    ['label' => 'Create Users', 'icon' => 'fa-user-plus',  'route' => route('employees.create')],
+    ['label' => 'Manage Roles',    'icon' => 'fa-user-tag',   'route' => route('roles.index')],
+    ['label' => 'System Backup',   'icon' => 'fa-database',   'route' => '#'],
+    ['label' => 'View Logs',       'icon' => 'fa-history',    'route' => route('audit-logs.index')],
+];
         }
 
         // --- HR: sees employee/HR-level stats ---
@@ -199,11 +199,11 @@ class AuthController extends Controller
             ];
 
             $actions = [
-                ['label' => 'Add Employee',   'icon' => 'fa-user-plus'],
-                ['label' => 'Payroll',        'icon' => 'fa-calculator'],
-                ['label' => 'Leave Requests', 'icon' => 'fa-inbox'],
-                ['label' => 'Reports',        'icon' => 'fa-file-pdf'],
-            ];
+    ['label' => 'Add Employee',  'icon' => 'fa-user-plus',           'route' => route('employees.create')],
+    ['label' => 'Payroll',       'icon' => 'fa-calculator',          'route' => route('payroll.index')],
+    ['label' => 'Leave Requests','icon' => 'fa-inbox',               'route' => '#'],
+    ['label' => 'Reports',       'icon' => 'fa-file-pdf',            'route' => '#'],
+];
         }
 
         // --- Employee: sees only their own context ---
@@ -236,11 +236,11 @@ class AuthController extends Controller
             ];
 
             $actions = [
-                ['label' => 'My Profile',    'icon' => 'fa-user'],
-                ['label' => 'Payslips',      'icon' => 'fa-file-invoice-dollar'],
-                ['label' => 'Leave Request', 'icon' => 'fa-calendar-times'],
-                ['label' => 'Attendance',    'icon' => 'fa-clock'],
-            ];
+    ['label' => 'My Profile',    'icon' => 'fa-user',                'route' => route('profile.show')],
+    ['label' => 'Payslips',      'icon' => 'fa-file-invoice-dollar', 'route' => route('payroll.index')],
+    ['label' => 'Leave Request', 'icon' => 'fa-calendar-times',      'route' => '#'],
+    ['label' => 'Attendance',    'icon' => 'fa-clock',               'route' => '#'],
+];
         }
 
         return view('dashboard', compact('user', 'stats', 'actions'));

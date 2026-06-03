@@ -226,6 +226,10 @@
                            style="padding:5px 12px; background:#dbeafe; color:#1e40af; border-radius:5px; font-size:12px; text-decoration:none;">
                             <i class="fas fa-eye"></i> View Details
                         </a>
+                            <a href="{{ route('payroll.payslip', $employee) }}"
+       style="padding:5px 10px; background:#d1fae5; color:#065f46; border-radius:5px; font-size:12px; text-decoration:none; margin-left:4px;">
+        <i class="fas fa-file-download"></i>
+    </a>
                     @endif
                 </div>
             </div>
