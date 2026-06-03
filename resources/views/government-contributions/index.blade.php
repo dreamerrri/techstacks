@@ -82,6 +82,7 @@
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Full Name</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Department</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Position</th>
+                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Basic Salary</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Status</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Actions</th>
                     </tr>
@@ -106,6 +107,7 @@
                             </td>
                             <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
                             <td style="padding:12px; color:#6b7280;">{{ $employee->position }}</td>
+                            <td style="padding:12px; font-weight:600; color:#1f2937;">₱{{ number_format($employee->basic_salary, 2) }}</td>
                             <td style="padding:12px;">
                                 <span style="padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600; {{ $colors[$employee->employment_status] ?? '' }}">
                                     {{ $employee->employment_status }}
@@ -122,7 +124,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" style="padding:40px; text-align:center; color:#9ca3af;">
+                            <td colspan="7" style="padding:40px; text-align:center; color:#9ca3af;">
                                 <i class="fas fa-users" style="font-size:32px; margin-bottom:10px; display:block;"></i>
                                 No employees found.
                             </td>
@@ -177,6 +179,7 @@
                     <div style="margin-top:10px; font-size:13px; color:#6b7280; display:flex; flex-wrap:wrap; gap:6px 16px;">
                         <span><i class="fas fa-building" style="width:14px;"></i> {{ $employee->department }}</span>
                         <span><i class="fas fa-briefcase" style="width:14px;"></i> {{ $employee->position }}</span>
+                        <span><i class="fas fa-money-bill-wave" style="width:14px;"></i> ₱{{ number_format($employee->basic_salary, 2) }}</span>
                     </div>
 
                     <div class="user-card-meta" style="margin-top:10px; padding-top:10px; border-top:1px solid #f3f4f6; display:flex; gap:8px; flex-wrap:wrap;">

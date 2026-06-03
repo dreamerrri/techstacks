@@ -27,6 +27,7 @@
         <div>
             <h2 style="margin:0 0 4px; font-size:22px;">{{ $employee->full_name }}</h2>
             <p style="margin:0; color:#6b7280;">{{ $employee->position }} — {{ $employee->department }}</p>
+            <p style="margin:4px 0 0; color:#1f2937; font-weight:600; font-size:14px;">Basic Salary: ₱{{ number_format($employee->basic_salary, 2) }}</p>
             <span style="display:inline-block; margin-top:6px; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;
                 {{ $employee->employment_status === 'Regular'      ? 'background:#d1fae5; color:#065f46;'  : '' }}
                 {{ $employee->employment_status === 'Probationary' ? 'background:#fef3c7; color:#92400e;'  : '' }}
