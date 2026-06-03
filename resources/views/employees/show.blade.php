@@ -182,86 +182,18 @@
             </div>
         </div>
 
-        {{-- Government Contributions (full-width) --}}
+        {{-- Government Contributions Link (full-width) --}}
         <div class="card" style="grid-column: 1 / -1;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                <h2 style="margin:0;"><i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions</h2>
-            </div>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
-                @foreach([
-                    ['SSS Number',  $employee->sss_number,       'fa-shield-alt'],
-                    ['PhilHealth',  $employee->philhealth_number, 'fa-heart'],
-                    ['Pag-IBIG',    $employee->pagibig_number,    'fa-home'],
-                    ['TIN Number',  $employee->tin_number,        'fa-file-invoice'],
-                ] as [$label, $value, $icon])
-                <div style="background:#f9fafb; padding:16px; border-radius:8px; text-align:center;">
-                    <div style="color:#dc2626; font-size:20px; margin-bottom:8px;"><i class="fas {{ $icon }}"></i></div>
-                    <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">{{ $label }}</div>
-                    <div style="font-weight:600; font-family:monospace; color:#1f2937; font-size:13px; word-break:break-all;">{{ $value ?? '—' }}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 style="margin:0;"><i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions</h2>
+                    <p style="margin:4px 0 0 0; color:#6b7280; font-size:13px;">View and manage government contribution rates for this employee.</p>
                 </div>
-                @endforeach
+                <a href="{{ route('government-contributions.show', $employee) }}"
+                   style="padding:8px 16px; background:#dbeafe; color:#1e40af; border-radius:6px; text-decoration:none; font-size:13px; font-weight:600;">
+                    <i class="fas fa-eye"></i> View Contributions
+                </a>
             </div>
-
-            {{-- Government Contribution Rates Form (HR/Admin only) --}}
-            @if(auth()->user()->isAdmin() || auth()->user()->isHR())
-            <div id="govContribForm" style="margin-top:20px; padding:20px; background:#eff6ff; border-radius:8px; border:1px solid #bfdbfe;">
-                <h4 style="margin:0 0 16px 0; font-size:14px; color:#1e40af;">Edit Government Contribution Rates</h4>
-                <form method="POST" action="{{ route('employees.update-gov-contributions', $employee) }}">
-                    @csrf @method('PATCH')
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:16px;">
-                        {{-- SSS --}}
-                        <div style="background:#f9fafb; padding:12px; border-radius:6px;">
-                            <h5 style="margin:0 0 8px 0; font-size:13px; color:#1f2937; font-weight:600;">SSS</h5>
-                            <div style="margin-bottom:8px;">
-                                <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Rate (%)</label>
-                                <input type="number" name="sss_rate" step="0.0001" min="0" max="1" value="{{ $employee->sss_rate }}"
-                                       style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Cap (₱)</label>
-                                <input type="number" name="sss_cap" step="0.01" min="0" value="{{ $employee->sss_cap }}"
-                                       style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                            </div>
-                        </div>
-
-                        {{-- PhilHealth --}}
-                        <div style="background:#f9fafb; padding:12px; border-radius:6px;">
-                            <h5 style="margin:0 0 8px 0; font-size:13px; color:#1f2937; font-weight:600;">PhilHealth</h5>
-                            <div style="margin-bottom:8px;">
-                                <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Rate (%)</label>
-                                <input type="number" name="philhealth_rate" step="0.0001" min="0" max="1" value="{{ $employee->philhealth_rate }}"
-                                       style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Cap (₱)</label>
-                                <input type="number" name="philhealth_cap" step="0.01" min="0" value="{{ $employee->philhealth_cap }}"
-                                       style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                            </div>
-                        </div>
-
-                        {{-- Pag-IBIG --}}
-                        <div style="background:#f9fafb; padding:12px; border-radius:6px;">
-                            <h5 style="margin:0 0 8px 0; font-size:13px; color:#1f2937; font-weight:600;">Pag-IBIG</h5>
-                            <div style="margin-bottom:8px;">
-                                <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Rate (%)</label>
-                                <input type="number" name="pagibig_rate" step="0.0001" min="0" max="1" value="{{ $employee->pagibig_rate }}"
-                                       style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                            </div>
-                            <div>
-                                <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Cap (₱)</label>
-                                <input type="number" name="pagibig_cap" step="0.01" min="0" value="{{ $employee->pagibig_cap }}"
-                                       style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                            </div>
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:8px;">
-                        <button type="submit" style="padding:8px 16px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600;">
-                            <i class="fas fa-save"></i> Save Changes
-                        </button>
-                    </div>
-                </form>
-            </div>
-            @endif
         </div>
 
         {{-- Allowances and Benefits (admin and HR only) --}}

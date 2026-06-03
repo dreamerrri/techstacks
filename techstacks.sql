@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2026 at 04:13 AM
+-- Generation Time: Jun 02, 2026 at 04:43 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -47,7 +47,8 @@ CREATE TABLE `allowances` (
 
 INSERT INTO `allowances` (`id`, `employee_id`, `name`, `amount`, `type`, `description`, `is_active`, `effective_date`, `end_date`, `created_at`, `updated_at`) VALUES
 (1, 22, 'manuela', 1500.00, 'one-time', 'advance', 1, NULL, NULL, '2026-05-28 22:18:29', '2026-05-28 22:18:29'),
-(3, 22, 'manuela', 1500.00, 'one-time', NULL, 1, NULL, NULL, '2026-05-28 22:23:45', '2026-05-28 22:23:45');
+(3, 22, 'manuela', 1500.00, 'one-time', NULL, 1, NULL, NULL, '2026-05-28 22:23:45', '2026-05-28 22:23:45'),
+(4, 5, 'pang internet', 3000.00, 'one-time', NULL, 1, NULL, NULL, '2026-06-01 00:41:46', '2026-06-01 00:41:46');
 
 -- --------------------------------------------------------
 
@@ -69,15 +70,6 @@ CREATE TABLE `attendances` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `attendances`
---
-
-INSERT INTO `attendances` (`id`, `employee_id`, `month`, `year`, `days_worked`, `regular_hours`, `overtime_hours`, `late_hours`, `night_differential_hours`, `regular_holiday_worked`, `created_at`, `updated_at`) VALUES
-(14, 15, '5', '2026', 13, 100, 0, 0, 0, 0, '2026-05-28 21:25:11', '2026-05-28 23:53:04'),
-(15, 22, '5', '2026', 11, 88, 6, 1, 4, 1, '2026-05-28 21:26:16', '2026-05-29 00:00:23'),
-(17, 27, '5', '2026', 12, 96, 2, 2, 1, 2, '2026-05-29 00:03:15', '2026-05-29 00:03:15');
 
 -- --------------------------------------------------------
 
@@ -171,8 +163,8 @@ INSERT INTO `employees` (`id`, `user_id`, `employee_id`, `first_name`, `middle_n
 (1, 1, 'EMP-4873', 'Admin', 'Carleton', 'User', '1979-02-20', 'Other', 'Married', '71493 Kunze Mills\nPort Morganstad, ND 84716', '+1-606-420-2072', 'admin@company.com', 'Sales', 'Postsecondary Teacher', 'Part-time', '2016-07-24', 'Monthly', 83328.00, '32-3132616-3', '61-825703476-0', '0286-0155-5965', '221-341-179-174', 0.0450, 900.00, 0.0225, 1500.00, 0.0200, 100.00, 0, '2026-05-27 23:57:33', '2026-05-27 23:57:33'),
 (2, 2, 'EMP-9515', 'HR', 'Marquis', 'Manager', '2023-04-13', 'Female', 'Separated', '38438 Hyman Isle\nWest Nonatown, TX 87900-7573', '(425) 441-0783', 'hr@company.com', 'HR', 'HR Manager', 'Regular', '1994-02-06', 'Daily', 74458.00, '97-3073922-6', '88-051787322-7', '1414-7874-6088', '777-165-518-796', 0.0450, 900.00, 0.0225, 1500.00, 0.0200, 100.00, 0, '2026-05-27 23:57:33', '2026-05-27 23:57:33'),
 (3, 3, 'EMP-9689', 'HR', 'Caitlyn', 'Specialist', '1994-03-07', 'Other', 'Married', '1469 Paula Points\nKossbury, MA 29507', '279-563-4672', 'hrspecialist@company.com', 'HR', 'HR Specialist', 'Regular', '2003-11-17', 'Daily', 34100.00, '41-1330398-5', '54-160227035-7', '7952-2475-4127', '794-516-893-151', 0.0450, 900.00, 0.0225, 1500.00, 0.0200, 100.00, 0, '2026-05-27 23:57:33', '2026-05-27 23:57:33'),
-(4, 4, 'EMP-9548', 'John', 'Eveline', 'Doe', '2021-09-25', 'Female', 'Separated', '8001 Orin Bypass Suite 746\nNikolausburgh, DE 27721', '641-678-1902', 'john@company.com', 'IT', 'Job Printer', 'Contractual', '2004-03-24', 'Monthly', 31815.00, '73-2662784-8', '25-932282902-1', '5160-5097-0668', '461-309-968-361', 0.0450, 900.00, 0.0225, 1500.00, 0.0200, 100.00, 0, '2026-05-27 23:57:33', '2026-05-27 23:57:33'),
-(5, 5, 'EMP-8311', 'Jane', NULL, 'Smith', '1996-11-23', 'Female', 'Married', '7586 Kaleb Terrace\nEast Glennie, DE 57399', '(646) 767-1389', 'jane@company.com', 'Operations', 'Foreign Language Teacher', 'Part-time', '1981-11-30', 'Monthly', 89253.00, '39-2737819-3', '56-466058920-7', '5403-0332-7421', '268-519-280-041', 0.0450, 900.00, 0.0225, 1500.00, 0.0200, 100.00, 0, '2026-05-27 23:57:33', '2026-05-27 23:57:33'),
+(4, 4, 'EMP-9548', 'John', 'Eveline', 'Doe', '2021-09-25', 'Female', 'Separated', '8001 Orin Bypass Suite 746\r\nNikolausburgh, DE 27721', '641-678-1902', 'john@company.com', 'Information Technology', 'Employee', 'Regular', '2004-03-24', 'Monthly', 30000.00, '73-2662784-8', '25-932282902-1', '5160-5097-0668', '461-309-968-361', 0.0900, 15000.00, 0.0225, 1500.00, 0.0200, 100.00, 0, '2026-05-27 23:57:33', '2026-06-01 18:23:51'),
+(5, 5, 'EMP-8311', 'Jane', NULL, 'Smith', '1996-11-23', 'Female', 'Married', '7586 Kaleb Terrace\r\nEast Glennie, DE 57399', '(646) 767-1389', 'jane@company.com', 'Information Technology', 'Supervisor', 'Regular', '1981-11-30', 'Monthly', 25000.00, '39-2737819-3', '56-466058920-7', '5403-0332-7421', '268-519-280-041', 0.0450, 560.00, 0.0225, 300.00, 0.0200, 100.00, 0, '2026-05-27 23:57:33', '2026-06-01 01:37:16'),
 (6, 6, 'EMP-3372', 'Cooper', 'Ronny', 'Bogan', '1995-02-16', 'Other', 'Widowed', '921 Keebler Forges Suite 327\r\nKesslerborough, NV 26963', '(470) 456-6579', 'darien54@example.org', 'Marketing', 'Material Movers', 'Part-time', '1997-02-02', 'Hourly', 74528.00, '99-0347997-5', '17-970158606-2', '6001-4701-5494', '256-597-384-994', 0.0450, 900.00, 0.0225, 1500.00, 0.0200, 100.00, 0, '2026-05-27 23:57:33', '2026-05-28 21:55:08'),
 (7, 7, 'EMP-3452', 'Clinton', 'Alize', 'Gottlieb', '1985-12-10', 'Male', 'Married', '90304 Marquardt Run Apt. 598\nPort Hardy, NV 75673', '+1-539-438-7927', 'aparker@example.com', 'IT', 'Video Editor', 'Probationary', '2001-08-15', 'Monthly', 57995.00, '49-5049335-3', '74-692607564-7', '3819-9322-3323', '001-662-604-453', 0.0450, 900.00, 0.0225, 1500.00, 0.0200, 100.00, 0, '2026-05-27 23:57:33', '2026-05-27 23:57:33'),
 (8, 8, 'EMP-3292', 'Paxton', 'Leonardo', 'Spencer', '1996-03-12', 'Other', 'Married', '79729 Wyman Plains\nSouth Sister, FL 03910-1642', '+1 (703) 442-9431', 'gabriella44@example.net', 'Marketing', 'System Administrator', 'Probationary', '2004-11-22', 'Daily', 31405.00, '82-7668564-7', '24-994042234-7', '1788-8619-1289', '452-343-047-815', 0.0450, 900.00, 0.0225, 1500.00, 0.0200, 100.00, 0, '2026-05-27 23:57:33', '2026-05-27 23:57:33'),
@@ -276,7 +268,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (10, '2026_05_29_083906_add_government_contributions_to_employees_table', 4),
 (11, '2026_05_29_022254_create_payroll_periods_table', 5),
 (12, '2026_05_29_022303_create_payroll_inputs_table', 6),
-(13, '2026_05_29_022309_create_payroll_adjustments_table', 7);
+(13, '2026_05_29_022309_create_payroll_adjustments_table', 7),
+(14, '2026_06_01_052848_add_rate_type_to_payroll_inputs_table', 8),
+(15, '2026_06_01_053820_add_rate_type_column_to_payroll_inputs_table_again', 9),
+(16, '2026_06_01_081655_add_holiday_days_to_payroll_inputs_table', 10),
+(17, '2026_06_01_083043_add_night_differential_hours_to_payroll_inputs_table', 11),
+(18, '2026_06_01_084805_add_regular_hours_to_payroll_inputs_table', 12);
 
 -- --------------------------------------------------------
 
@@ -317,9 +314,13 @@ CREATE TABLE `payroll_inputs` (
   `payroll_period_id` bigint(20) UNSIGNED NOT NULL,
   `employee_id` bigint(20) UNSIGNED NOT NULL,
   `daily_rate` decimal(10,2) NOT NULL,
+  `rate_type` varchar(255) NOT NULL DEFAULT 'daily',
   `days_worked` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `regular_hours` decimal(8,2) NOT NULL DEFAULT 0.00,
   `overtime_hours` decimal(5,2) NOT NULL DEFAULT 0.00,
   `late_hours` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `holiday_days` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `night_differential_hours` decimal(5,2) NOT NULL DEFAULT 0.00,
   `allowances` decimal(10,2) NOT NULL DEFAULT 0.00,
   `deductions` decimal(10,2) NOT NULL DEFAULT 0.00,
   `gross_pay` decimal(10,2) NOT NULL DEFAULT 0.00,
@@ -327,6 +328,17 @@ CREATE TABLE `payroll_inputs` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `payroll_inputs`
+--
+
+INSERT INTO `payroll_inputs` (`id`, `payroll_period_id`, `employee_id`, `daily_rate`, `rate_type`, `days_worked`, `regular_hours`, `overtime_hours`, `late_hours`, `holiday_days`, `night_differential_hours`, `allowances`, `deductions`, `gross_pay`, `net_pay`, `created_at`, `updated_at`) VALUES
+(1, 3, 5, 25000.00, 'monthly', 11.00, 88.00, 6.00, 1.00, 1.00, 4.00, 3000.00, 1000.00, 18752.83, 16387.01, '2026-05-31 18:44:48', '2026-06-01 01:03:52'),
+(2, 3, 6, 200.00, 'daily', 25.00, 0.00, 0.00, 2.00, 0.00, 0.00, 0.00, 0.00, 4950.00, 4950.00, '2026-05-31 18:55:33', '2026-05-31 22:51:22'),
+(3, 3, 4, 30000.00, 'monthly', 11.00, 88.00, 6.00, 1.00, 1.00, 0.00, 0.00, 0.00, 18835.31, 17463.93, '2026-05-31 19:21:49', '2026-06-01 17:46:51'),
+(4, 2, 5, 25000.00, 'monthly', 24.00, 106.00, 2.00, 0.00, 0.00, 6.00, 3000.00, 0.00, 30713.00, 27968.80, '2026-06-01 18:11:58', '2026-06-01 18:13:48'),
+(5, 4, 4, 30000.00, 'monthly', 23.00, 106.00, 2.00, 3.00, 0.00, 0.00, 0.00, 0.00, 31278.49, 27826.18, '2026-06-01 18:15:31', '2026-06-01 18:15:31');
 
 -- --------------------------------------------------------
 
@@ -351,7 +363,9 @@ CREATE TABLE `payroll_periods` (
 
 INSERT INTO `payroll_periods` (`id`, `cutoff_start`, `cutoff_end`, `payroll_date`, `status`, `created_by`, `created_at`, `updated_at`) VALUES
 (1, '2026-06-01', '2026-06-22', '2026-06-30', 'draft', 2, '2026-05-31 17:42:43', '2026-05-31 17:42:43'),
-(2, '2026-06-01', '2026-06-22', '2026-06-22', 'draft', 2, '2026-05-31 17:43:09', '2026-05-31 17:43:09');
+(2, '2026-06-01', '2026-06-22', '2026-06-22', 'draft', 2, '2026-05-31 17:43:09', '2026-05-31 17:43:09'),
+(3, '2026-05-01', '2026-05-31', '2026-06-01', 'finalized', 1, '2026-05-31 18:33:40', '2026-06-01 18:04:28'),
+(4, '2026-06-02', '2026-06-30', '2026-07-01', 'draft', 2, '2026-06-01 18:14:40', '2026-06-01 18:14:40');
 
 -- --------------------------------------------------------
 
@@ -400,8 +414,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `role`, `is_active`, `last_login_at`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin User', 'admin@company.com', 'admin', 1, '2026-05-31 17:54:08', '2026-05-27 23:57:33', '$2y$12$Rep4sY0z235RbU1Bt3lkEOjKcqMweVVrcToRTezgHQcDeTNc2I9yG', 'aikOSg32veNEWKDuq1EOFOaxRkPAYKeumRpbusLPpoAymTfg74VPJls1Nr0K', '2026-05-27 23:57:33', '2026-05-31 17:54:08'),
-(2, 'HR Manager', 'hr@company.com', 'hr', 1, '2026-05-31 17:37:20', '2026-05-27 23:57:33', '$2y$12$Rep4sY0z235RbU1Bt3lkEOjKcqMweVVrcToRTezgHQcDeTNc2I9yG', '17NB62105od3MAKlXGFwhWTPX26Q96ckAF3qq6n6RWs9ZhnOS4ZXhk1laFek', '2026-05-27 23:57:33', '2026-05-31 17:37:20'),
+(1, 'Admin User', 'admin@company.com', 'admin', 1, '2026-05-31 22:54:32', '2026-05-27 23:57:33', '$2y$12$Rep4sY0z235RbU1Bt3lkEOjKcqMweVVrcToRTezgHQcDeTNc2I9yG', 'ri9GWpiSnnNJovpIY15aeZ7ATwI7aHzsf1EQMWkWXw40OX7trB50r8BlqwmV', '2026-05-27 23:57:33', '2026-05-31 22:54:32'),
+(2, 'HR Manager', 'hr@company.com', 'hr', 1, '2026-06-01 17:46:20', '2026-05-27 23:57:33', '$2y$12$Rep4sY0z235RbU1Bt3lkEOjKcqMweVVrcToRTezgHQcDeTNc2I9yG', 'sNvY7JH7nb3CauhJ8bVepACnG3IUqi4TRRvSJ3PwS94pPtaxeQp1q0Thk165', '2026-05-27 23:57:33', '2026-06-01 17:46:20'),
 (3, 'HR Specialist', 'hrspecialist@company.com', 'hr', 1, NULL, '2026-05-27 23:57:33', '$2y$12$Rep4sY0z235RbU1Bt3lkEOjKcqMweVVrcToRTezgHQcDeTNc2I9yG', 'I99RCbTyoN', '2026-05-27 23:57:33', '2026-05-27 23:57:33'),
 (4, 'John Doe', 'john@company.com', 'employee', 1, NULL, '2026-05-27 23:57:33', '$2y$12$Rep4sY0z235RbU1Bt3lkEOjKcqMweVVrcToRTezgHQcDeTNc2I9yG', 'Cnp963ORXA', '2026-05-27 23:57:33', '2026-05-27 23:57:33'),
 (5, 'Jane Smith', 'jane@company.com', 'employee', 1, NULL, '2026-05-27 23:57:33', '$2y$12$Rep4sY0z235RbU1Bt3lkEOjKcqMweVVrcToRTezgHQcDeTNc2I9yG', 'OTlWTklm69', '2026-05-27 23:57:33', '2026-05-27 23:57:33'),
@@ -553,7 +567,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `allowances`
 --
 ALTER TABLE `allowances`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `attendances`
@@ -589,7 +603,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `payroll_adjustments`
@@ -601,13 +615,13 @@ ALTER TABLE `payroll_adjustments`
 -- AUTO_INCREMENT for table `payroll_inputs`
 --
 ALTER TABLE `payroll_inputs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `payroll_periods`
 --
 ALTER TABLE `payroll_periods`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
