@@ -67,7 +67,7 @@
     </div>
 
     {{-- Desktop Table --}}
-    <div class="user-table-wrapper" style="overflow-y:auto; max-height:53vh; padding:0 25px;">
+    <div class="user-table-wrapper" style="overflow-y:auto; max-height:55vh; padding:0 25px;">
         <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:900px;">
             <thead style="position:sticky; top:0; z-index:5;">
                 <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
