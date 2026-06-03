@@ -100,7 +100,7 @@ class ManualPayrollAttendanceController extends Controller
         $validated = $request->validate([
             'employee_id' => 'required|exists:employees,id',
             'daily_rate' => 'required|numeric|min:0',
-            'rate_type' => 'required|in:daily,monthly',
+            'rate_type' => 'required|in:daily',
             'days_worked' => 'required|numeric|min:0|max:31',
             'regular_hours' => 'nullable|numeric|min:0',
             'overtime_hours' => 'nullable|numeric|min:0',
@@ -116,12 +116,8 @@ class ManualPayrollAttendanceController extends Controller
         // Use PayrollComputationEngine for consistency with PayrollInput::computePay()
         $engine = new PayrollComputationEngine();
         
-        // Convert rate to monthly salary based on rate type
-        if ($validated['rate_type'] === 'monthly') {
-            $monthlySalary = $validated['daily_rate'];
-        } else {
-            $monthlySalary = $validated['daily_rate'] * 22; // Convert daily rate to monthly
-        }
+        // Convert daily rate to monthly salary using the formula: daily_rate * 22
+        $monthlySalary = $validated['daily_rate'] * 22;
         
         $employeeData = [
             'monthly_salary' => $monthlySalary,
@@ -227,7 +223,7 @@ class ManualPayrollAttendanceController extends Controller
                 'payroll_period_id' => 'required|exists:payroll_periods,id',
                 'employee_id' => 'required|exists:employees,id',
                 'daily_rate' => 'required|numeric|min:0',
-                'rate_type' => 'required|in:daily,monthly',
+                'rate_type' => 'required|in:daily',
                 'days_worked' => 'required|numeric|min:0|max:31',
                 'regular_hours' => 'nullable|numeric|min:0',
                 'overtime_hours' => 'nullable|numeric|min:0',
@@ -413,14 +409,13 @@ class ManualPayrollAttendanceController extends Controller
     // ── Private helpers ────────────────────────────────────────
 
     /**
-     * Convert employees.basic_salary to a daily rate based on salary_type.
+     * Convert employees.basic_salary to a daily rate using the formula:
+     * BSM X 12 / 52 / 40 X 8
+     * Where: BSM = Basic Salary per Month, 12 = number of months, 52 = number of weeks,
+     * 40 = hours per week, 8 = hours per day
      */
     private function computeDailyRate(Employee $employee): float
     {
-        return round(match($employee->salary_type) {
-            'Monthly' => $employee->basic_salary / 22,
-            'Hourly'  => $employee->basic_salary * 8,
-            default   => $employee->basic_salary,   // Daily
-        }, 2);
+        return round(($employee->basic_salary * 12) / 52 / 40 * 8, 2);
     }
 }
