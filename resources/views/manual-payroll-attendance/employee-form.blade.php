@@ -49,20 +49,20 @@
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Rate Type</label>
                 <div style="padding:10px 12px; background:#f9fafb; border:1px solid #d1d5db; border-radius:6px; font-size:14px; color:#374151;">
-                    <input type="hidden" name="rate_type" value="{{ $employee->salary_type === 'Monthly' ? 'monthly' : 'daily' }}">
-                    <span style="font-weight:600;">{{ ucfirst($employee->salary_type === 'Monthly' ? 'Monthly' : 'Daily') }} Rate</span>
-                    <span style="color:#6b7280; margin-left:8px;">(based on employee salary type)</span>
+                    <input type="hidden" name="rate_type" value="daily">
+                    <span style="font-weight:600;">Daily Rate</span>
+                    <span style="color:#6b7280; margin-left:8px;">(computed using BSM X 12 / 52 / 40 X 8)</span>
                 </div>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
                 <div>
-                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">{{ $employee->salary_type === 'Monthly' ? 'Monthly' : 'Daily' }} Rate</label>
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Daily Rate</label>
                     <input type="number" name="daily_rate" step="0.01" min="0" required
                            value="{{ $isEdit ? $payrollInput->daily_rate : $dailyRate }}"
                            style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
                            oninput="window.dailyRateValue = this.value; console.log('Daily rate changed:', this.value)">
-                    <p style="color:#6b7280; font-size:12px; margin-top:4px;">Based on {{ $employee->salary_type ?? 'N/A' }} salary (₱{{ number_format($employee->basic_salary ?? 0, 2) }})</p>
+                    <p style="color:#6b7280; font-size:12px; margin-top:4px;">Based on basic salary (₱{{ number_format($employee->basic_salary ?? 0, 2) }})</p>
                 </div>
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Days Worked</label>

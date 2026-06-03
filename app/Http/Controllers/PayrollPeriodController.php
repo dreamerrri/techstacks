@@ -45,7 +45,7 @@ class PayrollPeriodController extends Controller
      * POST /payroll-periods
      * Create a new payroll period (draft).
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'cutoff_start' => 'required|date',
@@ -59,7 +59,8 @@ class PayrollPeriodController extends Controller
             'created_by' => Auth::id(),
         ]);
 
-        return response()->json($period, 201);
+        return redirect()->route('manual-payroll-attendance.index')
+            ->with('success', "Payroll period created successfully. Cutoff: {$period->cutoff_start->toDateString()} to {$period->cutoff_end->toDateString()}, Payroll date: {$period->payroll_date->toDateString()}");
     }
 
     /**
