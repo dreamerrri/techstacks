@@ -57,79 +57,70 @@
             @endforeach
         </div>
 
-        {{-- Government Contribution Rates Form (HR/Admin only) --}}
-        @if(auth()->user()->isAdmin() || auth()->user()->isHR())
-        <div id="govContribForm" style="margin-top:20px; padding:20px; background:#eff6ff; border-radius:8px; border:1px solid #bfdbfe;">
-            <h4 style="margin:0 0 16px 0; font-size:14px; color:#1e40af;">Edit Government Contribution Rates</h4>
-            <form method="POST" action="{{ route('government-contributions.update', $employee) }}">
-                @csrf @method('PATCH')
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:16px;">
-                    {{-- SSS --}}
-                    <div style="background:#f9fafb; padding:12px; border-radius:6px;">
-                        <h5 style="margin:0 0 8px 0; font-size:13px; color:#1f2937; font-weight:600;">SSS</h5>
-                        <div style="margin-bottom:8px;">
-                            <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Rate (%)</label>
-                            <input type="number" name="sss_rate" step="0.0001" min="0" max="1" value="{{ $employee->sss_rate }}"
-                                   style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                        </div>
-                        <div>
-                            <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Cap (₱)</label>
-                            <input type="number" name="sss_cap" step="0.01" min="0" value="{{ $employee->sss_cap }}"
-                                   style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                        </div>
-                    </div>
-
-                    {{-- PhilHealth --}}
-                    <div style="background:#f9fafb; padding:12px; border-radius:6px;">
-                        <h5 style="margin:0 0 8px 0; font-size:13px; color:#1f2937; font-weight:600;">PhilHealth</h5>
-                        <div style="margin-bottom:8px;">
-                            <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Rate (%)</label>
-                            <input type="number" name="philhealth_rate" step="0.0001" min="0" max="1" value="{{ $employee->philhealth_rate }}"
-                                   style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                        </div>
-                        <div>
-                            <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Cap (₱)</label>
-                            <input type="number" name="philhealth_cap" step="0.01" min="0" value="{{ $employee->philhealth_cap }}"
-                                   style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                        </div>
-                    </div>
-
-                    {{-- Pag-IBIG --}}
-                    <div style="background:#f9fafb; padding:12px; border-radius:6px;">
-                        <h5 style="margin:0 0 8px 0; font-size:13px; color:#1f2937; font-weight:600;">Pag-IBIG</h5>
-                        <div style="margin-bottom:8px;">
-                            <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Rate (%)</label>
-                            <input type="number" name="pagibig_rate" step="0.0001" min="0" max="1" value="{{ $employee->pagibig_rate }}"
-                                   style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                        </div>
-                        <div>
-                            <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Cap (₱)</label>
-                            <input type="number" name="pagibig_cap" step="0.01" min="0" value="{{ $employee->pagibig_cap }}"
-                                   style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                        </div>
-                    </div>
-
-                    {{-- Withholding Tax --}}
-                    <div style="background:#f9fafb; padding:12px; border-radius:6px;">
-                        <h5 style="margin:0 0 8px 0; font-size:13px; color:#1f2937; font-weight:600;">Withholding Tax</h5>
-                        <div>
-                            <label style="display:block; font-size:11px; color:#6b7280; margin-bottom:4px;">Rate (%)</label>
-                            <input type="number" name="withholding_tax_rate" step="0.0001" min="0" max="1" value="{{ $employee->withholding_tax_rate ?? 0.0000 }}"
-                                   style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:4px; font-size:12px;">
-                        </div>
-                        <div style="margin-top:8px; font-size:10px; color:#6b7280;">
-                            Note: 0.0000 = Use standard Philippine tax brackets
-                        </div>
-                    </div>
+        {{-- SSS Contribution Breakdown --}}
+        <div style="margin-top:24px; padding:20px; background:#eff6ff; border-radius:8px; border:1px solid #bfdbfe;">
+            <h4 style="margin:0 0 16px 0; font-size:14px; color:#1e40af; font-weight:600;">
+                <i class="fas fa-calculator"></i> SSS Contribution (Circular No. 2024-006)
+            </h4>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
+                <div style="background:white; padding:12px; border-radius:6px;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Monthly Salary Credit</div>
+                    <div style="font-weight:700; color:#1f2937; font-size:16px;">₱{{ number_format($sssContribution['salary_credit'], 2) }}</div>
                 </div>
-                <div style="display:flex; gap:8px;">
-                    <button type="submit" style="padding:8px 16px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600;">
-                        <i class="fas fa-save"></i> Save Changes
-                    </button>
+                <div style="background:white; padding:12px; border-radius:6px;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Share</div>
+                    <div style="font-weight:700; color:#dc2626; font-size:16px;">₱{{ number_format($sssContribution['employee_share'], 2) }}</div>
                 </div>
-            </form>
+                <div style="background:white; padding:12px; border-radius:6px;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Total Contribution</div>
+                    <div style="font-weight:700; color:#1f2937; font-size:16px;">₱{{ number_format($sssContribution['total'], 2) }}</div>
+                </div>
+            </div>
         </div>
-        @endif
+
+        {{-- PhilHealth Contribution Breakdown --}}
+        <div style="margin-top:24px; padding:20px; background:#ecfdf5; border-radius:8px; border:1px solid #a7f3d0;">
+            <h4 style="margin:0 0 16px 0; font-size:14px; color:#065f46; font-weight:600;">
+                <i class="fas fa-heartbeat"></i> PhilHealth Contribution (2025/2026)
+            </h4>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
+                <div style="background:white; padding:12px; border-radius:6px;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Salary Basis</div>
+                    <div style="font-weight:700; color:#1f2937; font-size:16px;">₱{{ number_format($philHealthContribution['salary_basis'], 2) }}</div>
+                </div>
+                <div style="background:white; padding:12px; border-radius:6px;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Rate</div>
+                    <div style="font-weight:700; color:#1f2937; font-size:16px;">{{ number_format($philHealthContribution['employee_rate'] * 100, 1) }}%</div>
+                </div>
+                <div style="background:white; padding:12px; border-radius:6px;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Share</div>
+                    <div style="font-weight:700; color:#dc2626; font-size:16px;">₱{{ number_format($philHealthContribution['employee_share'], 2) }}</div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Pag-IBIG Contribution Breakdown --}}
+        <div style="margin-top:24px; padding:20px; background:#fef3c7; border-radius:8px; border:1px solid #fcd34d;">
+            <h4 style="margin:0 0 16px 0; font-size:14px; color:#92400e; font-weight:600;">
+                <i class="fas fa-home"></i> Pag-IBIG Contribution (2026)
+            </h4>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
+                <div style="background:white; padding:12px; border-radius:6px;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Monthly Salary</div>
+                    <div style="font-weight:700; color:#1f2937; font-size:16px;">₱{{ number_format($pagIbigContribution['salary'], 2) }}</div>
+                </div>
+                @if($pagIbigContribution['employee_rate'] !== null)
+                <div style="background:white; padding:12px; border-radius:6px;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Rate</div>
+                    <div style="font-weight:700; color:#1f2937; font-size:16px;">{{ number_format($pagIbigContribution['employee_rate'] * 100, 1) }}%</div>
+                </div>
+                @endif
+                <div style="background:white; padding:12px; border-radius:6px;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Share</div>
+                    <div style="font-weight:700; color:#dc2626; font-size:16px;">₱{{ number_format($pagIbigContribution['employee_share'], 2) }}</div>
+                </div>
+            </div>
+        </div>
     </div>
 
 @endsection

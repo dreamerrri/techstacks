@@ -3,10 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Services\SssContributionService;
+use App\Services\PhilHealthContributionService;
+use App\Services\PagIbigContributionService;
 use Illuminate\Http\Request;
 
 class GovernmentContributionsController extends Controller
 {
+    protected $sssService;
+    protected $philHealthService;
+    protected $pagIbigService;
+
+    public function __construct(SssContributionService $sssService, PhilHealthContributionService $philHealthService, PagIbigContributionService $pagIbigService)
+    {
+        $this->sssService = $sssService;
+        $this->philHealthService = $philHealthService;
+        $this->pagIbigService = $pagIbigService;
+    }
+
     public function index(Request $request)
     {
         $query = Employee::active();
@@ -35,29 +49,15 @@ class GovernmentContributionsController extends Controller
 
     public function show(Employee $employee)
     {
-        return view('government-contributions.show', compact('employee'));
-    }
+        // Calculate SSS contribution based on salary bracket
+        $sssContribution = $this->sssService->calculate($employee->basic_salary);
 
-    public function update(Request $request, Employee $employee)
-    {
-        // Authorization: Only HR and Admin can update government contributions
-        if (!auth()->user()->isAdmin() && !auth()->user()->isHR()) {
-            abort(403, 'Unauthorized action.');
-        }
+        // Calculate PhilHealth contribution based on salary basis
+        $philHealthContribution = $this->philHealthService->calculate($employee->basic_salary);
 
-        $validated = $request->validate([
-            'sss_rate' => 'required|numeric|min:0|max:1',
-            'sss_cap' => 'required|numeric|min:0',
-            'philhealth_rate' => 'required|numeric|min:0|max:1',
-            'philhealth_cap' => 'required|numeric|min:0',
-            'pagibig_rate' => 'required|numeric|min:0|max:1',
-            'pagibig_cap' => 'required|numeric|min:0',
-            'withholding_tax_rate' => 'required|numeric|min:0|max:1',
-        ]);
+        // Calculate Pag-IBIG contribution based on salary range
+        $pagIbigContribution = $this->pagIbigService->calculate($employee->basic_salary);
 
-        $employee->update($validated);
-
-        return redirect()->route('government-contributions.show', $employee)
-            ->with('success', 'Government contribution rates updated successfully.');
+        return view('government-contributions.show', compact('employee', 'sssContribution', 'philHealthContribution', 'pagIbigContribution'));
     }
 }
