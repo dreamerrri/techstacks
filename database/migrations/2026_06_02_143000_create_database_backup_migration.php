@@ -41,9 +41,9 @@ return new class extends Migration
         exec($command, $output, $returnCode);
         
         if ($returnCode === 0) {
-            $this->command->info("Database backup created successfully: {$backupFile}");
+            // Backup created successfully
         } else {
-            $this->command->error("Failed to create database backup. Return code: {$returnCode}");
+            // Failed to create database backup
         }
     }
 
@@ -64,7 +64,7 @@ return new class extends Migration
         $files = glob("{$backupDir}/techstacks_backup_*.sql");
         
         if (empty($files)) {
-            $this->command->warn("No backup files found in {$backupDir}");
+            // No backup files found
             return;
         }
         
@@ -90,9 +90,9 @@ return new class extends Migration
         exec($command, $output, $returnCode);
         
         if ($returnCode === 0) {
-            $this->command->info("Database restored successfully from: {$backupFile}");
+            // Database restored successfully
         } else {
-            $this->command->error("Failed to restore database. Return code: {$returnCode}");
+            // Failed to restore database
         }
     }
 };
