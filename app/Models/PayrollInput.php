@@ -78,8 +78,8 @@ class PayrollInput extends Model
         // Use PayrollComputationEngine for consistency
         $engine = new \App\Services\Payroll\PayrollComputationEngine();
         
-        // Convert rate to monthly salary based on rate type
-        $monthlySalary = ($this->rate_type === 'monthly') ? $this->daily_rate : ($this->daily_rate * 22);
+        // Convert daily rate to monthly salary using the formula: daily_rate * 22
+        $monthlySalary = $this->daily_rate * 22;
         
         $employeeData = [
             'monthly_salary' => $monthlySalary,
