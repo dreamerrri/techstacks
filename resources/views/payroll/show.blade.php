@@ -18,6 +18,16 @@
     <a href="{{ route('payroll.index') }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
         <i class="fas fa-arrow-left"></i> Back to Payroll List
     </a>
+
+    {{-- Download Payslip — visible to all roles --}}
+    @if(($payroll['gross_pay'] ?? 0) > 0)
+        <a href="{{ route('payroll.payslip', $employee) }}"
+           style="padding:8px 18px; background:#1e40af; color:white; border-radius:6px;
+                  font-size:13px; font-weight:600; text-decoration:none; display:inline-flex;
+                  align-items:center; gap:6px;">
+            <i class="fas fa-file-download"></i> Download Payslip
+        </a>
+    @endif
 </div>
 {{-- Profile Header --}}
 <div class="card">
