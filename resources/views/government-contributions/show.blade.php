@@ -6,13 +6,13 @@
 
     {{-- Top nav --}}
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
-        <a href="{{ route('government-contributions.index') }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
+        <a href="{{ route('government-contributions.index') }}" style="color:#9ca3af; text-decoration:none; font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:6px;">
             <i class="fas fa-arrow-left"></i> Back to Government Contributions
         </a>
     </div>
 
     {{-- Profile Header --}}
-    <div class="card" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+    <div class="aurora-card" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
         <div style="width:70px; height:70px; border-radius:50%; overflow:hidden; flex-shrink:0;">
             @if($employee->user?->profile_photo)
                 <img src="{{ asset('storage/' . $employee->user->profile_photo) }}"
@@ -25,9 +25,9 @@
             @endif
         </div>
         <div>
-            <h2 style="margin:0 0 4px; font-size:22px;">{{ $employee->full_name }}</h2>
+            <h2 style="margin:0 0 4px; font-size:22px; color:#1a1a2e; font-weight:700;">{{ $employee->full_name }}</h2>
             <p style="margin:0; color:#6b7280;">{{ $employee->position }} — {{ $employee->department }}</p>
-            <p style="margin:4px 0 0; color:#1f2937; font-weight:600; font-size:14px;">Basic Salary: ₱{{ number_format($employee->basic_salary, 2) }}</p>
+            <p style="margin:4px 0 0; color:#1a1a2e; font-weight:600; font-size:14px;">Basic Salary: ₱{{ number_format($employee->basic_salary, 2) }}</p>
             <span style="display:inline-block; margin-top:6px; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;
                 {{ $employee->employment_status === 'Regular'      ? 'background:#d1fae5; color:#065f46;'  : '' }}
                 {{ $employee->employment_status === 'Probationary' ? 'background:#fef3c7; color:#92400e;'  : '' }}
@@ -38,89 +38,90 @@
     </div>
 
     {{-- Government Contributions --}}
-    <div class="card" style="margin-top:20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-            <h2 style="margin:0;"><i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions</h2>
-        </div>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
+    <div class="aurora-card">
+        <h2 class="aurora-card-title">
+            <i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions
+        </h2>
+
+        {{-- ID Numbers Grid --}}
+        <div class="aurora-stats-grid">
             @foreach([
-                ['SSS Number',  $employee->sss_number,       'fa-shield-alt'],
-                ['PhilHealth',  $employee->philhealth_number, 'fa-heart'],
-                ['Pag-IBIG',    $employee->pagibig_number,    'fa-home'],
-                ['TIN Number',  $employee->tin_number,        'fa-file-invoice'],
-            ] as [$label, $value, $icon])
-            <div style="background:#f9fafb; padding:16px; border-radius:8px; text-align:center;">
-                <div style="color:#dc2626; font-size:20px; margin-bottom:8px;"><i class="fas {{ $icon }}"></i></div>
-                <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">{{ $label }}</div>
-                <div style="font-weight:600; font-family:monospace; color:#1f2937; font-size:13px; word-break:break-all;">{{ $value ?? '—' }}</div>
+                ['SSS Number',  $employee->sss_number,       'fa-shield-alt', '#10b981', 'rgba(16,185,129,0.1)'],
+                ['PhilHealth',  $employee->philhealth_number, 'fa-heart',      '#3b82f6', 'rgba(59,130,246,0.1)'],
+                ['Pag-IBIG',    $employee->pagibig_number,    'fa-home',       '#f59e0b', 'rgba(245,158,11,0.1)'],
+                ['TIN Number',  $employee->tin_number,        'fa-file-invoice','#8b5cf6','rgba(139,92,246,0.1)'],
+            ] as [$label, $value, $icon, $color, $bg])
+            <div class="aurora-stat-card" style="text-align:center;">
+                <div class="aurora-stat-icon" style="color:{{ $color }}; background:{{ $bg }};">
+                    <i class="fas {{ $icon }}"></i>
+                </div>
+                <div style="font-size:12px; color:#9ca3af; text-transform:uppercase; letter-spacing:0.07em; font-weight:500; margin-bottom:6px;">{{ $label }}</div>
+                <div style="font-weight:700; font-family:monospace; color:#1a1a2e; font-size:13px; word-break:break-all;">{{ $value ?? '—' }}</div>
             </div>
             @endforeach
         </div>
 
         {{-- SSS Contribution Breakdown --}}
-        <div style="margin-top:24px; padding:20px; background:#eff6ff; border-radius:8px; border:1px solid #bfdbfe;">
-            <h4 style="margin:0 0 16px 0; font-size:14px; color:#1e40af; font-weight:600;">
-                <i class="fas fa-calculator"></i> SSS Contribution (Circular No. 2024-006)
+        <div style="margin-top:24px; padding:20px; background:#eff6ff; border-radius:16px; border:1px solid #bfdbfe;">
+            <h4 style="margin:0 0 16px; font-size:13px; color:#1e40af; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
+                <i class="fas fa-calculator"></i> &nbsp;SSS Contribution (Circular No. 2024-006)
             </h4>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
-                <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Monthly Salary Credit</div>
-                    <div style="font-weight:700; color:#1f2937; font-size:16px;">₱{{ number_format($sssContribution['salary_credit'], 2) }}</div>
+                @foreach([
+                    ['Monthly Salary Credit', '₱' . number_format($sssContribution['salary_credit'], 2)],
+                    ['Employee Share',        '₱' . number_format($sssContribution['employee_share'], 2)],
+                    ['Total Contribution',    '₱' . number_format($sssContribution['total'], 2)],
+                ] as [$lbl, $val])
+                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">{{ $lbl }}</div>
+                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">{{ $val }}</div>
                 </div>
-                <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Share</div>
-                    <div style="font-weight:700; color:#dc2626; font-size:16px;">₱{{ number_format($sssContribution['employee_share'], 2) }}</div>
-                </div>
-                <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Total Contribution</div>
-                    <div style="font-weight:700; color:#1f2937; font-size:16px;">₱{{ number_format($sssContribution['total'], 2) }}</div>
-                </div>
+                @endforeach
             </div>
         </div>
 
         {{-- PhilHealth Contribution Breakdown --}}
-        <div style="margin-top:24px; padding:20px; background:#ecfdf5; border-radius:8px; border:1px solid #a7f3d0;">
-            <h4 style="margin:0 0 16px 0; font-size:14px; color:#065f46; font-weight:600;">
-                <i class="fas fa-heartbeat"></i> PhilHealth Contribution (2025/2026)
+        <div style="margin-top:16px; padding:20px; background:#ecfdf5; border-radius:16px; border:1px solid #a7f3d0;">
+            <h4 style="margin:0 0 16px; font-size:13px; color:#065f46; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
+                <i class="fas fa-heartbeat"></i> &nbsp;PhilHealth Contribution (2025/2026)
             </h4>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
-                <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Salary Basis</div>
-                    <div style="font-weight:700; color:#1f2937; font-size:16px;">₱{{ number_format($philHealthContribution['salary_basis'], 2) }}</div>
+                @foreach([
+                    ['Salary Basis',   '₱' . number_format($philHealthContribution['salary_basis'], 2)],
+                    ['Employee Rate',  number_format($philHealthContribution['employee_rate'] * 100, 1) . '%'],
+                    ['Employee Share', '₱' . number_format($philHealthContribution['employee_share'], 2)],
+                ] as [$lbl, $val])
+                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">{{ $lbl }}</div>
+                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">{{ $val }}</div>
                 </div>
-                <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Rate</div>
-                    <div style="font-weight:700; color:#1f2937; font-size:16px;">{{ number_format($philHealthContribution['employee_rate'] * 100, 1) }}%</div>
-                </div>
-                <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Share</div>
-                    <div style="font-weight:700; color:#dc2626; font-size:16px;">₱{{ number_format($philHealthContribution['employee_share'], 2) }}</div>
-                </div>
+                @endforeach
             </div>
         </div>
 
         {{-- Pag-IBIG Contribution Breakdown --}}
-        <div style="margin-top:24px; padding:20px; background:#fef3c7; border-radius:8px; border:1px solid #fcd34d;">
-            <h4 style="margin:0 0 16px 0; font-size:14px; color:#92400e; font-weight:600;">
-                <i class="fas fa-home"></i> Pag-IBIG Contribution (2026)
+        <div style="margin-top:16px; padding:20px; background:#fef3c7; border-radius:16px; border:1px solid #fcd34d;">
+            <h4 style="margin:0 0 16px; font-size:13px; color:#92400e; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
+                <i class="fas fa-home"></i> &nbsp;Pag-IBIG Contribution (2026)
             </h4>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
-                <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Monthly Salary</div>
-                    <div style="font-weight:700; color:#1f2937; font-size:16px;">₱{{ number_format($pagIbigContribution['salary'], 2) }}</div>
+                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Monthly Salary</div>
+                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($pagIbigContribution['salary'], 2) }}</div>
                 </div>
                 @if($pagIbigContribution['employee_rate'] !== null)
-                <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Rate</div>
-                    <div style="font-weight:700; color:#1f2937; font-size:16px;">{{ number_format($pagIbigContribution['employee_rate'] * 100, 1) }}%</div>
+                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Rate</div>
+                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">{{ number_format($pagIbigContribution['employee_rate'] * 100, 1) }}%</div>
                 </div>
                 @endif
-                <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Share</div>
+                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Share</div>
                     <div style="font-weight:700; color:#dc2626; font-size:16px;">₱{{ number_format($pagIbigContribution['employee_share'], 2) }}</div>
                 </div>
             </div>
         </div>
+
     </div>
 
 @endsection

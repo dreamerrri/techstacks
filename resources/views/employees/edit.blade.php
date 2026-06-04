@@ -10,19 +10,19 @@
         </a>
     </div>
 
-    <div class="card">
-        <h2><i class="fas fa-user-edit" style="color:#dc2626;"></i> Edit — {{ $employee->full_name }}</h2>
+    <div class="aurora-card">
+        <h2 class="aurora-card-title">
+            <i class="fas fa-user-edit" style="color:#dc2626;"></i> Edit — {{ $employee->full_name }}
+        </h2>
 
         <form method="POST" action="{{ route('employees.update', $employee) }}">
             @csrf @method('PUT')
             @include('employees.form')
             <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap;">
-                <button type="submit"
-                        style="padding:10px 24px; background:linear-gradient(135deg,#dc2626,#991b1b); color:white; border:none; border-radius:6px; cursor:pointer; font-weight:600;">
+                <button type="submit" class="btn btn-danger">
                     <i class="fas fa-save"></i> Update Employee
                 </button>
-                <a href="{{ route('employees.show', $employee) }}"
-                   style="padding:10px 24px; background:#f3f4f6; color:#374151; border-radius:6px; text-decoration:none; font-weight:600;">
+                <a href="{{ route('employees.show', $employee) }}" class="btn btn-secondary">
                     Cancel
                 </a>
             </div>

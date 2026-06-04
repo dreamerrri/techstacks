@@ -19,7 +19,6 @@
 /* ── Sidebar base ── */
 .sidebar {
     color: white;
-    min-height: 100vh;
     padding: 20px 0;
     position: relative;
     overflow: hidden;
@@ -78,10 +77,11 @@
 
 /* Sidebar header */
 .sidebar-header {
-    padding: 24px 20px 20px;
+    padding: 14px 16px 14px;
     text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    margin-bottom: 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 4px;
     position: relative;
     z-index: 1;
 }
@@ -119,14 +119,18 @@
     display: flex;
     align-items: center;
     gap: 11px;
-    margin: 2px 10px;
+    margin: 0 10px;
     border-radius: 8px;
     text-decoration: none;
     color: rgba(255,255,255,0.72);
-    font-size: 13.5px;
+    font-size: 14.5px;
     font-weight: 500;
     position: relative;
     z-index: 1;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav-item span {
+    flex: 1;
 }
 .nav-item:hover {
     background: rgba(255,255,255,0.09);
@@ -177,6 +181,37 @@
     color: white;
     border-color: rgba(255,255,255,0.3);
 }
+
+/* Nav dropdown */
+.nav-dropdown-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+.nav-chevron {
+    font-size: 10px !important;
+    opacity: 0.6;
+    transition: transform 0.25s ease;
+    width: auto !important;
+}
+.nav-dropdown.open .nav-chevron {
+    transform: rotate(180deg);
+}
+.nav-dropdown-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+}
+.nav-dropdown.open .nav-dropdown-menu {
+    max-height: 200px;
+}
+.nav-sub-item {
+    padding-left: 38px !important;
+    font-size: 13.5px !important;
+    opacity: 0.85;
+}
 .notif-open {
     display: block !important;
 }
@@ -202,6 +237,15 @@
     display: none;
 }
 
+/* Desktop topbar — spans full grid width above sidebar + content */
+.desktop-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid rgba(255,255,255,0.12);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+
 .topbar {
     padding: 14px 28px;
     display: flex;
@@ -213,16 +257,19 @@
     top: 0;
     z-index: 10;
 }
+.topbar-admin,
 .bg-admin .topbar {
     background: linear-gradient(90deg, #1e1b2e 0%, #251c35 25%, #2d1f3d 55%, #331a38 80%, #2a1530 100%);
     border-bottom: 1px solid rgba(255,255,255,0.08);
     box-shadow: 0 2px 16px rgba(0,0,0,0.3);
 }
+.topbar-hr,
 .bg-hr .topbar {
     background: linear-gradient(90deg, #0f2044 0%, #122a55 25%, #163761 55%, #0e4060 80%, #0a3352 100%);
     border-bottom: 1px solid rgba(255,255,255,0.08);
     box-shadow: 0 2px 16px rgba(0,0,0,0.25);
 }
+.topbar-user,
 .bg-user .topbar {
     background: linear-gradient(90deg, #0d3330 0%, #0e3834 25%, #0f3d38 55%, #103d38 80%, #104038 100%);
     border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -232,17 +279,26 @@
 /* Update text colors for dark topbar */
 .bg-admin .topbar h2,
 .bg-hr    .topbar h2,
-.bg-user  .topbar h2 {
+.bg-user  .topbar h2,
+.topbar-admin h2,
+.topbar-hr    h2,
+.topbar-user  h2 {
     color: white !important;
 }
 .bg-admin .topbar .user-name,
 .bg-hr    .topbar .user-name,
-.bg-user  .topbar .user-name {
+.bg-user  .topbar .user-name,
+.topbar-admin .user-name,
+.topbar-hr    .user-name,
+.topbar-user  .user-name {
     color: rgba(255,255,255,0.9) !important;
 }
 .bg-admin .topbar .user-role,
 .bg-hr    .topbar .user-role,
-.bg-user  .topbar .user-role {
+.bg-user  .topbar .user-role,
+.topbar-admin .user-role,
+.topbar-hr    .user-role,
+.topbar-user  .user-role {
     color: rgba(255,255,255,0.55) !important;
 }
 
@@ -941,4 +997,263 @@
 .btn-sm {
     padding: 6px 10px;
     font-size: 11px;
-}   
+}
+
+
+/* ============================================================
+   AURORA GLASS — Dashboard styles
+   Add these rules at the bottom of your app.css.
+   They override only the dashboard-specific classes and do
+   NOT touch the sidebar, topbar, or any other page styles.
+   ============================================================ */
+
+/* ── Page background: role-aware aurora gradient ── */
+
+/* ── Welcome line ── */
+.aurora-welcome {
+    font-size: 17px;
+    color: #6b7280;
+    margin-bottom: 22px;
+    letter-spacing: -0.01em;
+}
+.aurora-welcome strong {
+    color: #1a1a2e;
+    font-weight: 600;
+}
+
+/* ── Role access badge ── */
+.aurora-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+.aurora-badge-admin {
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.18);
+    color: #991b1b;
+}
+.aurora-badge-hr {
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    color: #1e40af;
+}
+
+/* ── Stat cards grid ── */
+.aurora-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.aurora-stat-card {
+    background: rgb(255, 255, 255);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 18px;
+    padding: 22px 18px;
+    text-align: center;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.aurora-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+}
+
+.aurora-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin: 0 auto 14px;
+}
+
+.aurora-stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+}
+
+.aurora-stat-label {
+    font-size: 13px;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 500;
+}
+
+/* ── Frosted glass card ── */
+.aurora-card {
+    background: rgb(255, 255, 255);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 20px;
+    padding: 24px 28px;
+    margin-bottom: 18px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: box-shadow 0.2s ease;
+}
+.aurora-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+}
+
+.aurora-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9ca3af;
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.aurora-card-title i {
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+/* ── Action buttons grid ── */
+.aurora-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+}
+
+.aurora-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    padding: 20px 12px;
+    background: rgb(255, 255, 255);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+.aurora-action-btn i {
+    font-size: 24px;
+    color: #534AB7;
+    transition: transform 0.2s ease;
+}
+.aurora-action-btn:hover {
+    background: rgba(255, 255, 255, 0.92);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(83, 74, 183, 0.12);
+    color: #1a1a2e;
+}
+.aurora-action-btn:hover i {
+    transform: scale(1.1);
+}
+
+/* ── Info list ── */
+.aurora-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.aurora-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.045);
+    font-size: 15px;
+}
+.aurora-info-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.aurora-info-label {
+    color: #9ca3af;
+    font-weight: 500;
+    min-width: 160px;
+}
+
+.aurora-info-value {
+    font-weight: 600;
+    color: #1a1a2e;
+    text-align: right;
+}
+
+/* ── Status pills ── */
+.aurora-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+.aurora-status-active {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: #065f46;
+}
+.aurora-status-inactive {
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.18);
+    color: #991b1b;
+}
+
+/* ── HR role: tint action icons blue ── */
+.bg-hr .aurora-action-btn i { color: #185FA5; }
+.bg-hr .aurora-action-btn:hover { box-shadow: 0 6px 20px rgba(24, 95, 165, 0.12); }
+
+/* ── User role: tint action icons teal ── */
+.bg-user .aurora-action-btn i { color: #0F6E56; }
+.bg-user .aurora-action-btn:hover { box-shadow: 0 6px 20px rgba(15, 110, 86, 0.12); }
+
+/* ── Mobile tweaks ── */
+@media (max-width: 768px) {
+    .aurora-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .aurora-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .aurora-card {
+        border-radius: 16px;
+        padding: 18px;
+    }
+    .aurora-stat-card {
+        border-radius: 14px;
+        padding: 16px 12px;
+    }
+    .aurora-stat-value {
+        font-size: 26px;
+    }
+    .aurora-info-label {
+        min-width: 120px;
+    }
+    .aurora-info-row {
+        font-size: 14px;
+    }
+}

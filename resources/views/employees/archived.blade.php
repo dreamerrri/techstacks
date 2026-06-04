@@ -1,4 +1,3 @@
-{{-- resources/views/employees/archived.blade.php --}}
 @extends('layouts.app')
 
 @section('title', 'Archived Employees')
@@ -10,18 +9,14 @@
             <a href="{{ route('employees.index') }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
                 <i class="fas fa-arrow-left"></i> Back
             </a>
-            <h2 style="margin:0; color:#1f2937; font-size:20px;">Archived Employees</h2>
+            <h2 class="aurora-card-title" style="margin:0; font-size:18px; color:#1f2937; text-transform:none; letter-spacing:normal;">
+                <i class="fas fa-archive"></i> Archived Employees
+            </h2>
         </div>
     </div>
 
-    @if(session('success'))
-        <div style="margin-bottom:16px; padding:12px 16px; background:#d1fae5; color:#065f46; border-radius:8px;">
-            {{ session('success') }}
-        </div>
-    @endif
-
     {{-- Desktop Table --}}
-    <div class="card" style="padding:0; overflow:hidden;">
+    <div class="aurora-card" style="padding:0; overflow:hidden;">
         <div class="user-table-wrapper">
             <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:500px;">
                 <thead>
@@ -47,7 +42,7 @@
                                       data-confirm-icon="question"
                                       data-confirm-btn="Yes, restore">
                                     @csrf @method('PATCH')
-                                    <button style="padding:5px 12px; background:#d1fae5; color:#065f46; border:none; border-radius:5px; font-size:12px; cursor:pointer;">
+                                    <button class="btn btn-sm" style="background:#d1fae5; color:#065f46;">
                                         <i class="fas fa-undo"></i> Restore
                                     </button>
                                 </form>
@@ -79,7 +74,7 @@
                                 <div style="font-size:12px; color:#6b7280; font-family:monospace;">{{ $employee->employee_id }}</div>
                             </div>
                         </div>
-                        <span style="padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; background:#f3f4f6; color:#374151; white-space:nowrap;">
+                        <span class="aurora-status" style="background:#f3f4f6; color:#374151; border:1px solid #e5e7eb; white-space:nowrap;">
                             Archived
                         </span>
                     </div>
@@ -96,7 +91,7 @@
                               data-confirm-icon="question"
                               data-confirm-btn="Yes, restore">
                             @csrf @method('PATCH')
-                            <button style="padding:5px 14px; background:#d1fae5; color:#065f46; border:none; border-radius:5px; font-size:12px; cursor:pointer;">
+                            <button class="btn btn-sm" style="background:#d1fae5; color:#065f46;">
                                 <i class="fas fa-undo"></i> Restore
                             </button>
                         </form>
