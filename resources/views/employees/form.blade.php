@@ -1,15 +1,14 @@
 @php
-    $input   = "width:100%; border:1px solid #e5e7eb; border-radius:6px; padding:8px 12px; font-size:14px; transition: border-color 0.2s; box-sizing:border-box;";
+    $input   = "width:100%; border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; transition: border-color 0.2s; box-sizing:border-box;";
     $label   = "display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:4px;";
-    $section = "font-size:16px; font-weight:700; color:#1f2937; border-bottom:2px solid #fecaca; padding-bottom:8px; margin-bottom:16px;";
 @endphp
 
 {{-- Personal Information --}}
 <div style="margin-bottom:32px;">
-    <h3 style="{{ $section }}"><i class="fas fa-user" style="color:#dc2626;"></i> Personal Information</h3>
+    <h3 class="aurora-card-title" style="font-size:13px; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid #fecaca;">
+        <i class="fas fa-user" style="color:#dc2626;"></i> Personal Information
+    </h3>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
-
- 
 
         <div>
             <label style="{{ $label }}">First Name <span style="color:#dc2626;">*</span></label>
@@ -111,11 +110,12 @@
 
 {{-- Employment Details --}}
 <div style="margin-bottom:32px;">
-    <h3 style="{{ $section }}"><i class="fas fa-briefcase" style="color:#dc2626;"></i> Employment Details</h3>
+    <h3 class="aurora-card-title" style="font-size:13px; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid #fecaca;">
+        <i class="fas fa-briefcase" style="color:#dc2626;"></i> Employment Details
+    </h3>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
 
-        
-         <div>
+        <div>
             <label style="{{ $label }}">Department <span style="color:#dc2626;">*</span></label>
             <select name="department" id="Department" style="{{ $input }}" data-validate="required">
                 <option value="">Select Department</option>
@@ -127,7 +127,7 @@
             @error('department') <p style="color:#dc2626; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
         </div>
 
-         <div>
+        <div>
             <label style="{{ $label }}">Position <span style="color:#dc2626;">*</span></label>
             <select name="position" id="position" style="{{ $input }}" data-validate="required">
                 <option value="">Select Position</option>
@@ -150,7 +150,6 @@
             <p class="field-error" style="color:#dc2626; font-size:12px; margin-top:4px; display:none;"></p>
             @error('employment_status') <p style="color:#dc2626; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
         </div>
-        
 
         <div>
             <label style="{{ $label }}">Date Hired <span style="color:#dc2626;">*</span></label>
@@ -191,8 +190,10 @@
 
 {{-- Government Contributions --}}
 <div>
-    <h3 style="{{ $section }}"><i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions</h3>
-    <p style="font-size:12px; color:#6b7280; margin-bottom:16px; margin-top:-8px;">
+    <h3 class="aurora-card-title" style="font-size:13px; margin-bottom:8px; padding-bottom:10px; border-bottom:2px solid #fecaca;">
+        <i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions
+    </h3>
+    <p style="font-size:12px; color:#6b7280; margin-bottom:16px;">
         <i class="fas fa-info-circle"></i> These fields are optional but must follow the correct format if provided.
     </p>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
