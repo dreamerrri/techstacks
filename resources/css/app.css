@@ -27,11 +27,11 @@
 /* Admin — deep slate/charcoal with crimson blush */
 .sidebar-admin {
     background: linear-gradient(180deg,
-#5a2730 0%,
-#64303a 30%,
-#6f3944 55%,
-#78414d 75%,
-#6a3540 100%
+        #1a0a0a 0%,
+        #2d1010 30%,
+        #3d1515 55%,
+        #4a1010 75%,
+        #3a0d0d 100%
     );
     box-shadow: 4px 0 24px rgba(0,0,0,0.25);
 }
@@ -259,15 +259,14 @@
 }
 .topbar-admin,
 .bg-admin .topbar {
-    background: linear-gradient(
-        90deg,
-        #5a2730 0%,
-        #64303a 25%,
-        #6f3944 55%,
-        #78414d 80%,
-        #6a3540 100%
+    background: linear-gradient(90deg, 
+        #1a0a0a 0%, 
+        #2d1010 25%, 
+        #3d1515 55%, 
+        #4a1010 80%, 
+        #3a0d0d 100%
     );
-    border-bottom: 1px solid rgba(255, 180, 180, 0.2);
+    border-bottom: 1px solid rgb(251, 62, 62);
     box-shadow: 0 2px 16px rgba(0,0,0,0.3);
 }
 .topbar-hr,
