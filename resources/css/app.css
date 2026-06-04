@@ -261,14 +261,14 @@
 .bg-admin .topbar {
     background: linear-gradient(
         90deg,
-        #6b3640 0%,
-        #74404a 25%,
-        #7d4954 55%,
-        #85515d 80%,
-        #76454f 100%
+        #5a2730 0%,
+        #64303a 25%,
+        #6f3944 55%,
+        #78414d 80%,
+        #6a3540 100%
     );
-    border-bottom: 1px solid rgba(255, 200, 200, 0.25);
-    box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(255, 180, 180, 0.2);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
 }
 .topbar-hr,
 .bg-hr .topbar {
