@@ -164,23 +164,56 @@
             const btn = event.target;
             const originalText = btn.innerHTML;
             
-            // Get input values
+            // Debug: Check all elements with these IDs
+            console.log('All SSS inputs:', document.getElementsByName('custom_sss_contribution'));
+            console.log('All PhilHealth inputs:', document.getElementsByName('custom_philhealth_contribution'));
+            console.log('All PagIBIG inputs:', document.getElementsByName('custom_pagibig_contribution'));
+            
+            // Get input values by ID
             const sssInput = document.getElementById('custom_sss_contribution');
             const philhealthInput = document.getElementById('custom_philhealth_contribution');
             const pagibigInput = document.getElementById('custom_pagibig_contribution');
             
-            console.log('SSS Input:', sssInput ? sssInput.value : 'not found');
-            console.log('PhilHealth Input:', philhealthInput ? philhealthInput.value : 'not found');
-            console.log('PagIBIG Input:', pagibigInput ? pagibigInput.value : 'not found');
+            console.log('SSS Input element:', sssInput);
+            console.log('SSS Input value:', sssInput ? sssInput.value : 'not found');
+            console.log('SSS Input visible:', sssInput ? (sssInput.offsetParent !== null) : 'N/A');
+            
+            console.log('PhilHealth Input element:', philhealthInput);
+            console.log('PhilHealth Input value:', philhealthInput ? philhealthInput.value : 'not found');
+            console.log('PhilHealth Input visible:', philhealthInput ? (philhealthInput.offsetParent !== null) : 'N/A');
+            
+            console.log('PagIBIG Input element:', pagibigInput);
+            console.log('PagIBIG Input value:', pagibigInput ? pagibigInput.value : 'not found');
+            console.log('PagIBIG Input visible:', pagibigInput ? (pagibigInput.offsetParent !== null) : 'N/A');
+            
+            // Try to get values from name attributes as fallback
+            // Get the VISIBLE input (the one the user can actually interact with)
+            const sssInputs = document.getElementsByName('custom_sss_contribution');
+            const philhealthInputs = document.getElementsByName('custom_philhealth_contribution');
+            const pagibigInputs = document.getElementsByName('custom_pagibig_contribution');
+            
+            // Find the first visible input for each field
+            const getVisibleInput = (inputs) => {
+                for (let input of inputs) {
+                    if (input.offsetParent !== null) {
+                        return input;
+                    }
+                }
+                return inputs[0]; // Fallback to first if none visible
+            };
+            
+            const visibleSssInput = getVisibleInput(sssInputs);
+            const visiblePhilhealthInput = getVisibleInput(philhealthInputs);
+            const visiblePagibigInput = getVisibleInput(pagibigInputs);
             
             const data = {
-                custom_sss_contribution: sssInput ? sssInput.value : null,
-                custom_philhealth_contribution: philhealthInput ? philhealthInput.value : null,
-                custom_pagibig_contribution: pagibigInput ? pagibigInput.value : null,
+                custom_sss_contribution: visibleSssInput ? visibleSssInput.value : null,
+                custom_philhealth_contribution: visiblePhilhealthInput ? visiblePhilhealthInput.value : null,
+                custom_pagibig_contribution: visiblePagibigInput ? visiblePagibigInput.value : null,
                 _method: 'PATCH'
             };
             
-            console.log('Data being sent:', data);
+            console.log('Final data being sent:', data);
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
