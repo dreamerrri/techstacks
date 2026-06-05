@@ -23,7 +23,43 @@
     position: relative;
     overflow: hidden;
 }
+/* ── Sidebar: no-flash pre-collapsed state (applied before first paint) ── */
+.sidebar-pre-collapsed .desktop-layout {
+    grid-template-columns: 0px 1fr !important;
+    transition: none !important;
+}
+.sidebar-pre-collapsed .sidebar {
+    transition: none !important;
+    overflow: hidden;
+}
+.sidebar-pre-collapsed #sidebar-toggle {
+    left: 0px !important;
+    transition: none !important;
+}
 
+/* ── Dropdowns: no-flash pre-open state (applied before first paint) ── */
+[data-dropdown-open-users] .nav-dropdown:has(.nav-dropdown-trigger span:first-child) ,
+[data-dropdown-open-users] .nav-dropdown {
+    /* fallback — JS will sync properly after load */
+}
+
+/* Target each dropdown by matching the trigger label via data attribute */
+[data-dropdown-open-users] .nav-dropdown:nth-of-type(1) .nav-dropdown-menu,
+[data-dropdown-open-settings] .nav-dropdown:nth-of-type(2) .nav-dropdown-menu {
+    max-height: 200px !important;
+    transition: none !important;
+}
+[data-dropdown-open-users] .nav-dropdown:nth-of-type(1) .nav-chevron,
+[data-dropdown-open-settings] .nav-dropdown:nth-of-type(2) .nav-chevron {
+    transform: rotate(180deg) !important;
+    transition: none !important;
+}
+
+/* ── Dropdowns: suppress animation during pre-paint restore ── */
+.nav-dropdown.no-transition .nav-dropdown-menu,
+.nav-dropdown.no-transition .nav-chevron {
+    transition: none !important;
+}
 /* Admin — deep slate/charcoal with crimson blush */
 .sidebar-admin {
     background: linear-gradient(180deg,
