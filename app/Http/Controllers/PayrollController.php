@@ -100,18 +100,19 @@ class PayrollController extends Controller
         $salaryType = $employee->salary_type;
 
         // Calculate hourly and daily rates based on salary type
-        $hourlyRate = match ($salaryType) {
-            'Monthly' => $basicSalary / 22 / 8, // 22 days, 8 hours per day
-            'Daily' => $basicSalary / 8,
-            'Hourly' => $basicSalary,
-            default => $basicSalary / 22 / 8,
-        };
-
+        // Using same formula as ManualPayrollAttendanceController for consistency: (basic_salary * 12) / 52 / 40 * 8
         $dailyRate = match ($salaryType) {
-            'Monthly' => $basicSalary / 22,
+            'Monthly' => round(($basicSalary * 12) / 52 / 40 * 8, 2),
             'Daily' => $basicSalary,
             'Hourly' => $basicSalary * 8,
-            default => $basicSalary / 22,
+            default => round(($basicSalary * 12) / 52 / 40 * 8, 2),
+        };
+
+        $hourlyRate = match ($salaryType) {
+            'Monthly' => $dailyRate / 8,
+            'Daily' => $basicSalary / 8,
+            'Hourly' => $basicSalary,
+            default => $dailyRate / 8,
         };
 
         // Get payroll input data for current payroll period
@@ -149,8 +150,9 @@ class PayrollController extends Controller
         }
 
         // Prepare employee data for engine
+        // Use daily rate converted to monthly salary for consistency with ManualPayrollAttendanceController
         $employeeData = [
-            'monthly_salary' => $basicSalary,
+            'monthly_salary' => $dailyRate * 22,
             'working_days_per_month' => 22,
             'working_hours_per_day' => 8,
         ];
@@ -165,21 +167,21 @@ class PayrollController extends Controller
         $previewResult = $engine->compute($employeeData, $attendanceData, [], $benefits, $allowances, [], true);
         $grossPay = $previewResult['gross_pay'];
 
-        // Government contributions using official bracket tables
+        // Government contributions using official bracket tables or custom values if set
         // SSS Contribution using official bracket table (Circular No. 2024-006)
         $sssService = new SssContributionService();
         $sssCalculation = $sssService->calculate($grossPay);
-        $sssContribution = $sssCalculation['employee_share'];
+        $sssContribution = $employee->custom_sss_contribution ?? $sssCalculation['employee_share'];
 
         // PhilHealth Contribution using official 2025/2026 table
         $philHealthService = new PhilHealthContributionService();
         $philHealthCalculation = $philHealthService->calculate($grossPay);
-        $philhealthContribution = $philHealthCalculation['employee_share'];
+        $philhealthContribution = $employee->custom_philhealth_contribution ?? $philHealthCalculation['employee_share'];
 
         // Pag-IBIG Contribution using official 2026 table
         $pagIbigService = new PagIbigContributionService();
         $pagIbigCalculation = $pagIbigService->calculate($grossPay);
-        $pagibigContribution = $pagIbigCalculation['employee_share'];
+        $pagibigContribution = $employee->custom_pagibig_contribution ?? $pagIbigCalculation['employee_share'];
 
         // Calculate withholding tax
         $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
