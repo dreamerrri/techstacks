@@ -12,101 +12,107 @@
 @php
     $isAdmin = $user->role === 'admin';
     $isHR    = $user->role === 'hr';
-    $color   = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
 @endphp
 
 {{-- Role access badge --}}
 @if($isAdmin)
-    <span class="role-access-badge" style="background:#fecaca; color:#991b1b;">
+    <span class="aurora-badge aurora-badge-admin">
         <i class="fas fa-shield-alt"></i> Administrator Access
     </span>
 @elseif($isHR)
-    <span class="role-access-badge" style="background:#bfdbfe; color:#1e40af;">
+    <span class="aurora-badge aurora-badge-hr">
         <i class="fas fa-user-tie"></i> HR Department Access
     </span>
 @endif
 
-<div class="welcome-message">
-    Welcome, {{ $user->name }}!
-    @if($isAdmin) You have full administrative access.
-    @elseif($isHR) You have HR access privileges.
+<div class="aurora-welcome">
+    Welcome back, <strong>{{ $user->name }}</strong>
+    @if($isAdmin) — You have full administrative access.
+    @elseif($isHR) — You have HR access privileges.
     @endif
 </div>
 
 {{-- Stats --}}
-<div class="stats-grid">
+<div class="aurora-stats-grid">
     @foreach($stats as $stat)
-        <div class="stat-card">
-            <div class="stat-icon" style="color: {{ $stat['color'] }};">
+        <div class="aurora-stat-card">
+            <div class="aurora-stat-icon" style="color: {{ $stat['color'] }}; background: {{ $stat['color'] }}1a;">
                 <i class="fas {{ $stat['icon'] }}"></i>
             </div>
-            <div class="stat-value">{{ $stat['value'] }}</div>
-            <div class="stat-label">{{ $stat['label'] }}</div>
+            <div class="aurora-stat-value">{{ $stat['value'] }}</div>
+            <div class="aurora-stat-label">{{ $stat['label'] }}</div>
         </div>
     @endforeach
 </div>
 
-{{-- Quick Actions  the action buttons are dynamically replace by labels in the controller--}}
-<div class="card">
-    <h2>
+{{-- Quick Actions --}}
+<div class="aurora-card">
+    <h2 class="aurora-card-title">
+        <i class="fas fa-bolt"></i>
         @if($isAdmin) Administrative Actions
         @elseif($isHR) HR Actions
         @else Quick Actions
         @endif
     </h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
-       @foreach($actions as $action)
-    <a href="{{ $action['route'] }}"
-       class="action-btn"
-       style="border: 2px solid {{ $color }}; color: {{ $color }}; text-decoration: none; display:flex; align-items:center; justify-content:center; gap:8px;">
-        <i class="fas {{ $action['icon'] }}"></i> {{ $action['label'] }}
-    </a>
-@endforeach
+    <div class="aurora-actions-grid">
+        @foreach($actions as $action)
+            <a href="{{ $action['route'] }}" class="aurora-action-btn">
+                <i class="fas {{ $action['icon'] }}"></i>
+                <span>{{ $action['label'] }}</span>
+            </a>
+        @endforeach
     </div>
 </div>
 
 {{-- System Information --}}
-<div class="card">
-    <h2>System Information</h2>
-    <table style="width: 100%; border-collapse: collapse;">
-        <tr style="border-bottom: 1px solid #e5e7eb;">
-            <td style="padding: 10px 0; color: #6b7280; width: 200px;">Name</td>
-            <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">{{ $user->name }}</td>
-        </tr>
-        <tr style="border-bottom: 1px solid #e5e7eb;">
-            <td style="padding: 10px 0; color: #6b7280;">Email</td>
-            <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">{{ $user->email }}</td>
-        </tr>
-        <tr style="border-bottom: 1px solid #e5e7eb;">
-            <td style="padding: 10px 0; color: #6b7280;">Role</td>
-            <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">
+<div class="aurora-card">
+    <h2 class="aurora-card-title">
+        <i class="fas fa-id-badge"></i>
+        System Information
+    </h2>
+    <div class="aurora-info-list">
+        <div class="aurora-info-row">
+            <span class="aurora-info-label">Name</span>
+            <span class="aurora-info-value">{{ $user->name }}</span>
+        </div>
+        <div class="aurora-info-row">
+            <span class="aurora-info-label">Email</span>
+            <span class="aurora-info-value">{{ $user->email }}</span>
+        </div>
+        <div class="aurora-info-row">
+            <span class="aurora-info-label">Role</span>
+            <span class="aurora-info-value">
                 @if($isAdmin) Administrator
                 @elseif($isHR) HR Personnel
                 @else Employee
                 @endif
-            </td>
-        </tr>
-        <tr style="border-bottom: 1px solid #e5e7eb;">
-            <td style="padding: 10px 0; color: #6b7280;">Account Status</td>
-            <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">
+            </span>
+        </div>
+        <div class="aurora-info-row">
+            <span class="aurora-info-label">Account Status</span>
+            <span class="aurora-info-value">
                 @if($user->is_active)
-                    <span style="color: #10b981;"><i class="fas fa-check-circle"></i> Active</span>
+                    <span class="aurora-status aurora-status-active">
+                        <i class="fas fa-check-circle"></i> Active
+                    </span>
                 @else
-                    <span style="color: #dc2626;"><i class="fas fa-times-circle"></i> Inactive</span>
+                    <span class="aurora-status aurora-status-inactive">
+                        <i class="fas fa-times-circle"></i> Inactive
+                    </span>
                 @endif
-            </td>
-        </tr>
-        <tr>
-            <td style="padding: 10px 0; color: #6b7280;">Last Login</td>
-            <td style="padding: 10px 0; font-weight: 600; color: #1f2937;">
+            </span>
+        </div>
+        <div class="aurora-info-row">
+            <span class="aurora-info-label">Last Login</span>
+            <span class="aurora-info-value">
                 @if($user->last_login_at)
                     {{ $user->last_login_at->format('M d, Y H:i A') }}
                 @else
                     First Login
                 @endif
-            </td>
-        </tr>
-    </table>
+            </span>
+        </div>
+    </div>
 </div>
 
 @endsection
