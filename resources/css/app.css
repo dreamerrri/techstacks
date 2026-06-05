@@ -113,6 +113,8 @@
 
 /* Nav items */
 .nav-item {
+      color: rgba(255,255,255,0.72);
+    font-size: 14.5px;
     padding: 11px 16px;
     cursor: pointer;
     transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
@@ -122,34 +124,45 @@
     margin: 0 10px;
     border-radius: 8px;
     text-decoration: none;
-    color: rgba(255,255,255,0.72);
-    font-size: 14.5px;
+
+
     font-weight: 500;
     position: relative;
     z-index: 1;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.101);
 }
 .nav-item span {
     flex: 1;
 }
 .nav-item:hover {
-    background: rgba(255,255,255,0.09);
-    color: white;
+  
     transform: translateX(3px);
 }
 
-/* Active state — C: left bar + fill */
+/* Base active state */
 .nav-item.active {
-    background: rgba(255,255,255,0.10);
+    background: rgba(255, 255, 255, 0.10);
     color: white;
     font-weight: 600;
-    border-left: 3px solid rgba(255,255,255,0.45);
-    border-radius: 0 8px 8px 0;
-    padding-left: 13px;
+    border-radius: 8px;
+    /* remove the border-left and padding-left override */
 }
-.sidebar-admin .nav-item.active { border-left-color: #f87171; }
-.sidebar-hr    .nav-item.active { border-left-color: #60c8f5; }
-.sidebar-user  .nav-item.active { border-left-color: #6ee7b7; }
+
+/* Role-specific tinted pill */
+.sidebar-admin .nav-item.nav-sub-item.active {
+    background: rgba(248, 113, 113, 0.18);
+    color: #ffffff;
+}
+.sidebar-hr .nav-item.nav-sub-item.active {
+    background: rgba(96, 200, 245, 0.18);
+    color: #ffffff;
+}
+.sidebar-user .nav-item.nav-sub-item.active {
+    background: rgba(110, 231, 183, 0.18);
+    color: #ffffff;
+}
+
+
 
 .nav-item i {
     width: 18px;
@@ -184,9 +197,9 @@
 
 /* Nav dropdown */
 .nav-dropdown-trigger {
-    width: 100%;
-    background: none;
-    border: none;
+    width: 90%;
+
+   
     cursor: pointer;
     text-align: left;
 }
@@ -208,10 +221,12 @@
     max-height: 200px;
 }
 .nav-sub-item {
-    padding-left: 38px !important;
+    padding-left: 45px !important;
     font-size: 13.5px !important;
     opacity: 0.85;
 }
+
+
 .notif-open {
     display: block !important;
 }
