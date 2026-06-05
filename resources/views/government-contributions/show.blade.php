@@ -164,29 +164,6 @@
             const btn = event.target;
             const originalText = btn.innerHTML;
             
-            // Debug: Check all elements with these IDs
-            console.log('All SSS inputs:', document.getElementsByName('custom_sss_contribution'));
-            console.log('All PhilHealth inputs:', document.getElementsByName('custom_philhealth_contribution'));
-            console.log('All PagIBIG inputs:', document.getElementsByName('custom_pagibig_contribution'));
-            
-            // Get input values by ID
-            const sssInput = document.getElementById('custom_sss_contribution');
-            const philhealthInput = document.getElementById('custom_philhealth_contribution');
-            const pagibigInput = document.getElementById('custom_pagibig_contribution');
-            
-            console.log('SSS Input element:', sssInput);
-            console.log('SSS Input value:', sssInput ? sssInput.value : 'not found');
-            console.log('SSS Input visible:', sssInput ? (sssInput.offsetParent !== null) : 'N/A');
-            
-            console.log('PhilHealth Input element:', philhealthInput);
-            console.log('PhilHealth Input value:', philhealthInput ? philhealthInput.value : 'not found');
-            console.log('PhilHealth Input visible:', philhealthInput ? (philhealthInput.offsetParent !== null) : 'N/A');
-            
-            console.log('PagIBIG Input element:', pagibigInput);
-            console.log('PagIBIG Input value:', pagibigInput ? pagibigInput.value : 'not found');
-            console.log('PagIBIG Input visible:', pagibigInput ? (pagibigInput.offsetParent !== null) : 'N/A');
-            
-            // Try to get values from name attributes as fallback
             // Get the VISIBLE input (the one the user can actually interact with)
             const sssInputs = document.getElementsByName('custom_sss_contribution');
             const philhealthInputs = document.getElementsByName('custom_philhealth_contribution');
@@ -212,8 +189,6 @@
                 custom_pagibig_contribution: visiblePagibigInput ? visiblePagibigInput.value : null,
                 _method: 'PATCH'
             };
-            
-            console.log('Final data being sent:', data);
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
@@ -231,12 +206,8 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => {
-                console.log('Response status:', response.status);
-                return response.json();
-            })
+            .then(response => response.json())
             .then(result => {
-                console.log('Server response:', result);
                 if (result.success) {
                     Swal.fire({
                         icon: 'success',
@@ -257,7 +228,6 @@
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
