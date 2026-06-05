@@ -447,6 +447,30 @@
             </form>
         </div>
     </div>
+    
+
+  {{-- ← PASTE THIS right after the sidebar closing tag --}}
+    <button id="sidebar-toggle" style="
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 250px;
+        width: 20px;
+        height: 48px;
+    
+        border: none;
+        border-radius: 0 6px 6px 0;
+        color: rgb(0, 0, 0);
+        cursor: pointer;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        transition: left 0.3s ease;
+    ">
+        <i class="fas fa-chevron-left" id="sidebar-arrow"></i>
+    </button>
 
     {{-- Main Content --}}
     <div class="bg-{{ $role }}" style="grid-column: 2; grid-row: 2; overflow-y: auto;">
