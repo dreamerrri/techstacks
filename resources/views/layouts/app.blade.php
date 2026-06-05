@@ -367,10 +367,11 @@
                     $settingsOpen = request()->routeIs('roles.*') || request()->routeIs('permissions.*');
                 @endphp
                 <div class="nav-dropdown {{ $usersOpen ? 'open' : '' }}">
-                    <button class="nav-item nav-dropdown-trigger" onclick="this.closest('.nav-dropdown').classList.toggle('open')" type="button">
-                        <i class="fas fa-users"></i><span>Users</span>
-                        <i class="fas fa-chevron-down nav-chevron"></i>
-                    </button>
+{{-- After --}}
+<button class="nav-item nav-dropdown-trigger" type="button">
+    <i class="fas fa-sitemap"></i><span>Users</span>
+    <i class="fas fa-chevron-down nav-chevron"></i>
+</button>
                     <div class="nav-dropdown-menu">
                         <a href="{{ route('users.index') }}"
                            class="nav-item nav-sub-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
@@ -392,8 +393,8 @@
                 </a>
                 <a href="{{ route('audit-logs.index') }}" class="nav-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}"><i class="fas fa-file-alt"></i><span>Audit Logs</span></a>
                 <div class="nav-dropdown {{ $settingsOpen ? 'open' : '' }}">
-                    <button class="nav-item nav-dropdown-trigger" onclick="this.closest('.nav-dropdown').classList.toggle('open')" type="button">
-                        <i class="fas fa-cog"></i><span>Settings</span>
+{{-- After --}}
+<button class="nav-item nav-dropdown-trigger" type="button">                        <i class="fas fa-cog"></i><span>Settings</span>
                         <i class="fas fa-chevron-down nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
