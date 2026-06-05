@@ -39,11 +39,8 @@
 
     {{-- Government Contributions --}}
     <div class="card" style="margin-top:20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div style="margin-bottom:16px;">
             <h2 style="margin:0;"><i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions</h2>
-            <button id="editToggleBtn" onclick="window.govContributions.toggleEditMode()" style="padding:8px 16px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:13px; position:relative; z-index:1000; pointer-events:auto;">
-                <i class="fas fa-edit"></i> Edit
-            </button>
         </div>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
             @foreach([
@@ -60,7 +57,7 @@
             @endforeach
         </div>
 
-        {{-- SSS Contribution Breakdown --}}
+        {{-- SSS --}}
         <div style="margin-top:24px; padding:20px; background:#eff6ff; border-radius:8px; border:1px solid #bfdbfe;">
             <h4 style="margin:0 0 16px 0; font-size:14px; color:#1e40af; font-weight:600;">
                 <i class="fas fa-calculator"></i> SSS Contribution (Circular No. 2024-006)
@@ -70,12 +67,35 @@
                     <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Monthly Salary Credit</div>
                     <div style="font-weight:700; color:#1f2937; font-size:16px;">₱{{ number_format($sssContribution['salary_credit'], 2) }}</div>
                 </div>
+
+                {{-- Editable: SSS Employee Share --}}
                 <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Share</div>
-                    <div id="sssEmployeeShareDisplay" style="font-weight:700; color:#dc2626; font-size:16px;">₱{{ number_format($sssEmployeeShare, 2) }}</div>
-                    <input type="number" id="sssEmployeeShareInput" step="0.01" min="0" value="{{ $sssEmployeeShare }}"
-                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; display:none;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between;">
+                        Employee Share
+                        <button class="js-edit-btn" data-key="sss" style="background:none; border:none; cursor:pointer; color:#9ca3af; font-size:12px; padding:0;" title="Edit">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
+                    <div class="js-display" data-key="sss" style="font-weight:700; color:#dc2626; font-size:16px;">
+                        ₱{{ number_format($sssEmployeeShare, 2) }}
+                    </div>
+                    <div class="js-edit-form" data-key="sss" style="display:none;">
+                        <input class="js-input" data-key="sss" type="number" step="0.01" min="0"
+                               value="{{ $sssEmployeeShare }}"
+                               style="width:100%; padding:6px; border:1px solid #3b82f6; border-radius:4px; font-size:14px; box-sizing:border-box;">
+                        <div style="display:flex; gap:6px; margin-top:6px;">
+                            <button class="js-save-btn" data-key="sss" data-field="custom_sss_contribution"
+                                    style="flex:1; padding:5px; background:#10b981; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; font-weight:600;">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="js-cancel-btn" data-key="sss"
+                                    style="flex:1; padding:5px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:4px; cursor:pointer; font-size:12px;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
+
                 <div style="background:white; padding:12px; border-radius:6px;">
                     <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Total Contribution</div>
                     <div style="font-weight:700; color:#1f2937; font-size:16px;">₱{{ number_format($sssContribution['total'], 2) }}</div>
@@ -83,7 +103,7 @@
             </div>
         </div>
 
-        {{-- PhilHealth Contribution Breakdown --}}
+        {{-- PhilHealth --}}
         <div style="margin-top:24px; padding:20px; background:#ecfdf5; border-radius:8px; border:1px solid #a7f3d0;">
             <h4 style="margin:0 0 16px 0; font-size:14px; color:#065f46; font-weight:600;">
                 <i class="fas fa-heartbeat"></i> PhilHealth Contribution (2025/2026)
@@ -97,16 +117,38 @@
                     <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Rate</div>
                     <div style="font-weight:700; color:#1f2937; font-size:16px;">{{ number_format($philHealthContribution['employee_rate'] * 100, 1) }}%</div>
                 </div>
+
+                {{-- Editable: PhilHealth Employee Share --}}
                 <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Share</div>
-                    <div id="philHealthEmployeeShareDisplay" style="font-weight:700; color:#dc2626; font-size:16px;">₱{{ number_format($philHealthEmployeeShare, 2) }}</div>
-                    <input type="number" id="philHealthEmployeeShareInput" step="0.01" min="0" value="{{ $philHealthEmployeeShare }}"
-                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; display:none;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between;">
+                        Employee Share
+                        <button class="js-edit-btn" data-key="philhealth" style="background:none; border:none; cursor:pointer; color:#9ca3af; font-size:12px; padding:0;" title="Edit">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
+                    <div class="js-display" data-key="philhealth" style="font-weight:700; color:#dc2626; font-size:16px;">
+                        ₱{{ number_format($philHealthEmployeeShare, 2) }}
+                    </div>
+                    <div class="js-edit-form" data-key="philhealth" style="display:none;">
+                        <input class="js-input" data-key="philhealth" type="number" step="0.01" min="0"
+                               value="{{ $philHealthEmployeeShare }}"
+                               style="width:100%; padding:6px; border:1px solid #3b82f6; border-radius:4px; font-size:14px; box-sizing:border-box;">
+                        <div style="display:flex; gap:6px; margin-top:6px;">
+                            <button class="js-save-btn" data-key="philhealth" data-field="custom_philhealth_contribution"
+                                    style="flex:1; padding:5px; background:#10b981; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; font-weight:600;">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="js-cancel-btn" data-key="philhealth"
+                                    style="flex:1; padding:5px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:4px; cursor:pointer; font-size:12px;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        {{-- Pag-IBIG Contribution Breakdown --}}
+        {{-- Pag-IBIG --}}
         <div style="margin-top:24px; padding:20px; background:#fef3c7; border-radius:8px; border:1px solid #fcd34d;">
             <h4 style="margin:0 0 16px 0; font-size:14px; color:#92400e; font-weight:600;">
                 <i class="fas fa-home"></i> Pag-IBIG Contribution (2026)
@@ -122,141 +164,118 @@
                     <div style="font-weight:700; color:#1f2937; font-size:16px;">{{ number_format($pagIbigContribution['employee_rate'] * 100, 1) }}%</div>
                 </div>
                 @endif
+
+                {{-- Editable: Pag-IBIG Employee Share --}}
                 <div style="background:white; padding:12px; border-radius:6px;">
-                    <div style="font-size:11px; color:#6b7280; margin-bottom:4px;">Employee Share</div>
-                    <div id="pagIbigEmployeeShareDisplay" style="font-weight:700; color:#dc2626; font-size:16px;">₱{{ number_format($pagIbigEmployeeShare, 2) }}</div>
-                    <input type="number" id="pagIbigEmployeeShareInput" step="0.01" min="0" value="{{ $pagIbigEmployeeShare }}"
-                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; font-size:14px; display:none;">
+                    <div style="font-size:11px; color:#6b7280; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between;">
+                        Employee Share
+                        <button class="js-edit-btn" data-key="pagibig" style="background:none; border:none; cursor:pointer; color:#9ca3af; font-size:12px; padding:0;" title="Edit">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
+                    <div class="js-display" data-key="pagibig" style="font-weight:700; color:#dc2626; font-size:16px;">
+                        ₱{{ number_format($pagIbigEmployeeShare, 2) }}
+                    </div>
+                    <div class="js-edit-form" data-key="pagibig" style="display:none;">
+                        <input class="js-input" data-key="pagibig" type="number" step="0.01" min="0"
+                               value="{{ $pagIbigEmployeeShare }}"
+                               style="width:100%; padding:6px; border:1px solid #3b82f6; border-radius:4px; font-size:14px; box-sizing:border-box;">
+                        <div style="display:flex; gap:6px; margin-top:6px;">
+                            <button class="js-save-btn" data-key="pagibig" data-field="custom_pagibig_contribution"
+                                    style="flex:1; padding:5px; background:#10b981; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; font-weight:600;">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="js-cancel-btn" data-key="pagibig"
+                                    style="flex:1; padding:5px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:4px; cursor:pointer; font-size:12px;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Save/Cancel buttons (hidden by default) --}}
-    <div id="editActions" style="margin-top:20px; display:none; gap:12px;">
-        <button id="saveBtn" onclick="window.govContributions.saveCustomContributions()" style="padding:12px 24px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; position:relative; z-index:1000; pointer-events:auto;">
-            <i class="fas fa-save"></i> Save Changes
-        </button>
-        <button id="cancelBtn" onclick="window.govContributions.cancelEdit()" style="padding:12px 24px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; position:relative; z-index:1000; pointer-events:auto;">
-            <i class="fas fa-times"></i> Cancel
-        </button>
-    </div>
-
 @endsection
 
 @section('scripts')
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-// Prevent duplicate script execution
-if (!window.govContributions) {
-    window.govContributions = (function() {
-        let isEditMode = false;
-        let originalValues = {
-            sss: {{ $sssEmployeeShare }},
-            philhealth: {{ $philHealthEmployeeShare }},
-            pagibig: {{ $pagIbigEmployeeShare }}
-        };
 
-        function toggleEditMode() {
-            console.log('toggleEditMode called, isEditMode:', isEditMode);
-            isEditMode = !isEditMode;
-            const btn = document.getElementById('editToggleBtn');
-            const actions = document.getElementById('editActions');
+$(function () {
 
-            console.log('Button found:', !!btn, 'Actions found:', !!actions);
+    const updateUrl = '{{ route('government-contributions.update', $employee) }}';
+    const csrfToken = '{{ csrf_token() }}';
 
-            if (isEditMode) {
-                btn.innerHTML = '<i class="fas fa-times"></i> Cancel';
-                actions.style.display = 'flex';
-                actions.style.visibility = 'visible';
-                console.log('Set actions display to flex, current display:', actions.style.display);
-                showInputs();
-            } else {
-                btn.innerHTML = '<i class="fas fa-edit"></i> Edit';
-                actions.style.display = 'none';
-                actions.style.visibility = 'hidden';
-                console.log('Set actions display to none, current display:', actions.style.display);
-                hideInputs();
-                resetValues();
-            }
-        }
+    // Track original values so cancel can restore them
+    const originals = {
+        sss:        {{ $sssEmployeeShare }},
+        philhealth: {{ $philHealthEmployeeShare }},
+        pagibig:    {{ $pagIbigEmployeeShare }},
+    };
 
-        function showInputs() {
-            document.getElementById('sssEmployeeShareDisplay').style.display = 'none';
-            document.getElementById('sssEmployeeShareInput').style.display = 'block';
-            document.getElementById('philHealthEmployeeShareDisplay').style.display = 'none';
-            document.getElementById('philHealthEmployeeShareInput').style.display = 'block';
-            document.getElementById('pagIbigEmployeeShareDisplay').style.display = 'none';
-            document.getElementById('pagIbigEmployeeShareInput').style.display = 'block';
-        }
+    // Open edit mode
+    $(document).on('click', '.js-edit-btn', function () {
+        const key = $(this).data('key');
+        $(`.js-display[data-key="${key}"]`).hide();
+        $(`.js-edit-form[data-key="${key}"]`).show();
+        $(`.js-input[data-key="${key}"]`).focus();
+        $(this).hide();
+    });
 
-        function hideInputs() {
-            document.getElementById('sssEmployeeShareDisplay').style.display = 'block';
-            document.getElementById('sssEmployeeShareInput').style.display = 'none';
-            document.getElementById('philHealthEmployeeShareDisplay').style.display = 'block';
-            document.getElementById('philHealthEmployeeShareInput').style.display = 'none';
-            document.getElementById('pagIbigEmployeeShareDisplay').style.display = 'block';
-            document.getElementById('pagIbigEmployeeShareInput').style.display = 'none';
-        }
+    // Cancel — restore original value and close
+    $(document).on('click', '.js-cancel-btn', function () {
+        const key = $(this).data('key');
+        $(`.js-input[data-key="${key}"]`).val(originals[key]);
+        $(`.js-edit-form[data-key="${key}"]`).hide();
+        $(`.js-display[data-key="${key}"]`).show();
+        $(`.js-edit-btn[data-key="${key}"]`).show();
+    });
 
-        function resetValues() {
-            document.getElementById('sssEmployeeShareInput').value = originalValues.sss;
-            document.getElementById('philHealthEmployeeShareInput').value = originalValues.philhealth;
-            document.getElementById('pagIbigEmployeeShareInput').value = originalValues.pagibig;
-        }
+    // Save via PATCH
+    $(document).on('click', '.js-save-btn', function () {
+        const key   = $(this).data('key');
+        const field = $(this).data('field');
+        const value = parseFloat($(`.js-input[data-key="${key}"]`).val()) || 0;
 
-        function cancelEdit() {
-            isEditMode = false;
-            const btn = document.getElementById('editToggleBtn');
-            const actions = document.getElementById('editActions');
-            btn.innerHTML = '<i class="fas fa-edit"></i> Edit';
-            actions.style.display = 'none';
-            hideInputs();
-            resetValues();
-        }
+        const payload = {};
+        payload[field] = value;
 
-        function saveCustomContributions() {
-            const sssShare = parseFloat(document.getElementById('sssEmployeeShareInput').value) || 0;
-            const philHealthShare = parseFloat(document.getElementById('philHealthEmployeeShareInput').value) || 0;
-            const pagIbigShare = parseFloat(document.getElementById('pagIbigEmployeeShareInput').value) || 0;
-
-            fetch('{{ route('government-contributions.update', $employee) }}', {
-                method: 'PATCH',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    custom_sss_contribution: sssShare,
-                    custom_philhealth_contribution: philHealthShare,
-                    custom_pagibig_contribution: pagIbigShare
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Custom contributions saved successfully!');
-                    originalValues = { sss: sssShare, philhealth: philHealthShare, pagibig: pagIbigShare };
-                    document.getElementById('sssEmployeeShareDisplay').textContent = '₱' + sssShare.toFixed(2);
-                    document.getElementById('philHealthEmployeeShareDisplay').textContent = '₱' + philHealthShare.toFixed(2);
-                    document.getElementById('pagIbigEmployeeShareDisplay').textContent = '₱' + pagIbigShare.toFixed(2);
-                    toggleEditMode();
+        $.ajax({
+            url:         updateUrl,
+            method:      'PATCH',
+            contentType: 'application/json',
+            headers:     { 'X-CSRF-TOKEN': csrfToken },
+            data:        JSON.stringify(payload),
+            success: function (res) {
+                if (res.success) {
+                    originals[key] = value;
+                    $(`.js-display[data-key="${key}"]`).text('₱' + value.toFixed(2));
+                    // Trigger cancel to close edit UI cleanly
+                    $(`.js-cancel-btn[data-key="${key}"]`).trigger('click');
                 } else {
-                    alert('Error: ' + (data.message || 'Failed to save'));
+                    alert('Error: ' + (res.message || 'Failed to save'));
                 }
-            })
-            .catch(error => {
-                console.error('Error saving custom contributions:', error);
-                alert('Error saving custom contributions: ' + error.message);
-            });
-        }
+            },
+            error: function (xhr) {
+                alert('Request failed: ' + xhr.statusText);
+            }
+        });
+    });
 
-        return {
-            toggleEditMode: toggleEditMode,
-            cancelEdit: cancelEdit,
-            saveCustomContributions: saveCustomContributions
-        };
-    })();
-}
+    // Allow pressing Enter in input to save
+    $(document).on('keydown', '.js-input', function (e) {
+        if (e.key === 'Enter') {
+            const key = $(this).data('key');
+            $(`.js-save-btn[data-key="${key}"]`).trigger('click');
+        }
+        if (e.key === 'Escape') {
+            const key = $(this).data('key');
+            $(`.js-cancel-btn[data-key="${key}"]`).trigger('click');
+        }
+    });
+
+});
 </script>
 @endsection
