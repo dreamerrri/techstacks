@@ -125,7 +125,7 @@
 {{-- ═══════════════════════════════════════
      DESKTOP LAYOUT  (hidden on mobile)
      ═══════════════════════════════════════ --}}
-<div class="desktop-layout" style="display: grid; grid-template-columns: 250px 1fr; grid-template-rows: auto 1fr; height: 100vh; overflow: hidden;">
+<div class="desktop-layout" style="grid-template-rows: auto 1fr; height: 100vh; overflow: hidden;">
 
     {{-- Global Topbar (spans full width above sidebar + content) --}}
     <div class="topbar desktop-topbar topbar-{{ $role }}" style="grid-column: 1 / -1; grid-row: 1;">
@@ -447,6 +447,12 @@
             </form>
         </div>
     </div>
+    
+
+  {{-- ← PASTE THIS right after the sidebar closing tag --}}
+    <button id="sidebar-toggle">
+        <i class="fas fa-chevron-left" id="sidebar-arrow"></i>
+    </button>
 
     {{-- Main Content --}}
     <div class="bg-{{ $role }}" style="grid-column: 2; grid-row: 2; overflow-y: auto;">
