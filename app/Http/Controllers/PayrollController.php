@@ -176,12 +176,14 @@ class PayrollController extends Controller
 
         // Calculate withholding tax
         $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
+        $taxableIncome = $grossPay - $totalContributions;
         \Log::info('Withholding tax calculation', [
             'gross_pay' => $grossPay,
             'sss_contribution' => $sssContribution,
             'philhealth_contribution' => $philhealthContribution,
             'pagibig_contribution' => $pagibigContribution,
             'total_contributions' => $totalContributions,
+            'taxable_income' => $taxableIncome,
         ]);
         $withholdingTax = $this->calculateTax($grossPay, $totalContributions);
         \Log::info('Withholding tax result', ['withholding_tax' => $withholdingTax]);
