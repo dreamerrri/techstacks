@@ -4,6 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - HR Management System</title>
+    {{-- ⚡ Must be first: restore sidebar + dropdown states before first paint — prevents flash --}}
+    <script>
+        if (sessionStorage.getItem('sidebar_collapsed') === '1') {
+            document.documentElement.classList.add('sidebar-pre-collapsed');
+        }
+        // Dropdowns: add .open + disable transitions before paint, then re-enable after
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.nav-dropdown').forEach(function(dropdown) {
+                var label = dropdown.querySelector('.nav-dropdown-trigger span');
+                if (!label) return;
+                var key = 'dropdown_' + label.textContent.trim();
+                if (sessionStorage.getItem(key) === 'open') {
+                    dropdown.classList.add('open', 'no-transition');
+                }
+            });
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    document.querySelectorAll('.nav-dropdown.no-transition')
+                        .forEach(function(el) { el.classList.remove('no-transition'); });
+                });
+            });
+        });
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {{-- SweetAlert2 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -90,11 +113,13 @@
                 </button>
 
                 <div id="notifDropdownMobile"
-                     style="display:none; position:fixed; right:8px; top:60px; width:calc(100vw - 16px); max-width:340px; background:white; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.15); border:1px solid #e5e7eb; z-index:999;">
-                    <div style="padding:12px 16px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-weight:700; color:#1f2937; font-size:14px;"><i class="fas fa-bell" style="color:#dc2626;"></i> Notifications</span>
+                     style="display:none; position:fixed; right:8px; top:60px; width:calc(100vw - 16px); max-width:340px; background:white; border-radius:14px; box-shadow:0 12px 32px rgba(0,0,0,0.14); border:1px solid #e5e7eb; z-index:999; overflow:hidden;">
+                    <div style="padding:13px 16px; border-bottom:1px solid #f3f4f6; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:14px; font-weight:700; color:#111827; display:flex; align-items:center; gap:7px;">
+                            <i class="fas fa-bell" style="font-size:13px; color:#6b7280;"></i> Notifications
+                        </span>
                         @if($notifCount > 0)
-                            <span style="background:#fee2e2; color:#991b1b; font-size:11px; font-weight:600; padding:2px 8px; border-radius:20px;">{{ $notifCount }} pending</span>
+                            <span style="background:#f3f4f6; color:#374151; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px;">{{ $notifCount }} pending</span>
                         @endif
                     </div>
                     @include('partials.notifications-list')
@@ -223,11 +248,13 @@
 
                 {{-- Desktop Dropdown --}}
                 <div id="notifDropdown"
-                     style="display:none; position:absolute; right:0; top:calc(100% + 10px); width:300px; background:white; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.15); border:1px solid #e5e7eb; z-index:999;">
-                    <div style="padding:12px 16px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-weight:700; color:#1f2937; font-size:14px;"><i class="fas fa-bell" style="color:#dc2626;"></i> Notifications</span>
+                     style="display:none; position:absolute; right:0; top:calc(100% + 10px); width:320px; background:white; border-radius:14px; box-shadow:0 12px 32px rgba(0,0,0,0.14); border:1px solid #e5e7eb; z-index:999; overflow:hidden;">
+                    <div style="padding:13px 16px; border-bottom:1px solid #f3f4f6; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:14px; font-weight:700; color:#111827; display:flex; align-items:center; gap:7px;">
+                            <i class="fas fa-bell" style="font-size:13px; color:#6b7280;"></i> Notifications
+                        </span>
                         @if($notifCount > 0)
-                            <span style="background:#fee2e2; color:#991b1b; font-size:11px; font-weight:600; padding:2px 8px; border-radius:20px;">{{ $notifCount }} pending</span>
+                            <span style="background:#f3f4f6; color:#374151; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px;">{{ $notifCount }} pending</span>
                         @endif
                     </div>
                     @include('partials.notifications-list')
