@@ -51,13 +51,43 @@ class GovernmentContributionsController extends Controller
     {
         // Calculate SSS contribution based on salary bracket
         $sssContribution = $this->sssService->calculate($employee->basic_salary);
+        // Use custom value if set, otherwise use computed
+        $sssEmployeeShare = $employee->custom_sss_contribution ?? $sssContribution['employee_share'];
 
         // Calculate PhilHealth contribution based on salary basis
         $philHealthContribution = $this->philHealthService->calculate($employee->basic_salary);
+        // Use custom value if set, otherwise use computed
+        $philHealthEmployeeShare = $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'];
 
         // Calculate Pag-IBIG contribution based on salary range
         $pagIbigContribution = $this->pagIbigService->calculate($employee->basic_salary);
+        // Use custom value if set, otherwise use computed
+        $pagIbigEmployeeShare = $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'];
 
-        return view('government-contributions.show', compact('employee', 'sssContribution', 'philHealthContribution', 'pagIbigContribution'));
+        return view('government-contributions.show', compact(
+            'employee',
+            'sssContribution',
+            'philHealthContribution',
+            'pagIbigContribution',
+            'sssEmployeeShare',
+            'philHealthEmployeeShare',
+            'pagIbigEmployeeShare'
+        ));
+    }
+
+    public function update(Request $request, Employee $employee)
+    {
+        $validated = $request->validate([
+            'custom_sss_contribution' => 'nullable|numeric|min:0',
+            'custom_philhealth_contribution' => 'nullable|numeric|min:0',
+            'custom_pagibig_contribution' => 'nullable|numeric|min:0',
+        ]);
+
+        $employee->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Custom contributions updated successfully.'
+        ]);
     }
 }
