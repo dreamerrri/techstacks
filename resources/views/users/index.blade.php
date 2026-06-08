@@ -115,8 +115,7 @@
                                 <div style="display:flex; align-items:center; gap:10px;">
                                     <div style="width:32px; height:32px; border-radius:50%; overflow:hidden; flex-shrink:0;">
                                         @if($user->profile_photo)
-                                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url($user->profile_photo) }}"
-                                                 alt="{{ $user->name }}"
+<img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"                                                 alt="{{ $user->name }}"
                                                  style="width:100%; height:100%; object-fit:cover;">
                                         @else
                                             <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:700;">
@@ -218,8 +217,7 @@
                         <div style="display:flex; align-items:center; gap:10px;">
                             <div style="width:38px; height:38px; border-radius:50%; overflow:hidden; flex-shrink:0;">
                                 @if($user->profile_photo)
-                                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url($user->profile_photo) }}"
-                                         alt="{{ $user->name }}"
+<img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"                                         alt="{{ $user->name }}"
                                          style="width:100%; height:100%; object-fit:cover;">
                                 @else
                                     <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:700;">
