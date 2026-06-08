@@ -129,7 +129,7 @@
             <a href="{{ route('profile.show') }}" style="display:flex; align-items:center; text-decoration:none;">
                 <div class="user-avatar avatar-{{ $role }}" style="overflow:hidden; padding:0;">
                     @if($user->profile_photo)
-                        <img src="{{ asset('storage/' . $user->profile_photo) }}"
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url($user->profile_photo) }}"
                              alt="{{ $user->name }}"
                              style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
                     @else
@@ -265,7 +265,7 @@
             <a href="{{ route('profile.show') }}" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
                 <div class="user-avatar avatar-{{ $role }}" style="width:34px;height:34px;font-size:13px; overflow:hidden; padding:0;">
                     @if($user->profile_photo)
-                        <img src="{{ asset('storage/' . $user->profile_photo) }}"
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url($user->profile_photo) }}"
                              alt="{{ $user->name }}"
                              style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
                     @else

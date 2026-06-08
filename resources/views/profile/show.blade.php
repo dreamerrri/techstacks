@@ -5,6 +5,7 @@
 @section('content')
 
 @php
+use Illuminate\Support\Facades\Storage;
     $user     = auth()->user();
     $isAdmin  = $user->isAdmin();
     $isHR     = $user->isHR();
@@ -31,8 +32,9 @@
                         font-size:32px;font-weight:700;color:#6b7280;">
                 @if($user->profile_photo)
                     <img id="avatar-img"
-                         src="{{ asset('storage/' . $user->profile_photo) }}"
-                         alt="{{ $user->name }}"
+src="{{ Storage::disk('s3')->url($user->profile_photo) }}"         
+             
+   alt="{{ $user->name }}"
                          style="width:100%;height:100%;object-fit:cover;">
                 @else
                     <span id="avatar-initials">{{ strtoupper(substr($user->name,0,1)) }}</span>

@@ -115,7 +115,7 @@
                                 <div style="display:flex; align-items:center; gap:10px;">
                                     <div style="width:32px; height:32px; border-radius:50%; overflow:hidden; flex-shrink:0;">
                                         @if($user->profile_photo)
-                                            <img src="{{ asset('storage/' . $user->profile_photo) }}"
+                                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url($user->profile_photo) }}"
                                                  alt="{{ $user->name }}"
                                                  style="width:100%; height:100%; object-fit:cover;">
                                         @else
@@ -218,7 +218,7 @@
                         <div style="display:flex; align-items:center; gap:10px;">
                             <div style="width:38px; height:38px; border-radius:50%; overflow:hidden; flex-shrink:0;">
                                 @if($user->profile_photo)
-                                    <img src="{{ asset('storage/' . $user->profile_photo) }}"
+                                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url($user->profile_photo) }}"
                                          alt="{{ $user->name }}"
                                          style="width:100%; height:100%; object-fit:cover;">
                                 @else
