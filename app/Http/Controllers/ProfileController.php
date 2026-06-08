@@ -48,27 +48,27 @@ class ProfileController extends Controller
      * Handle profile photo upload.
      * Expects a multipart POST with field "photo" (image, max 2 MB).
      */
-    public function updatePhoto(Request $request)
-    {
-        $request->validate([
-            'photo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-        ]);
+   public function updatePhoto(Request $request)
+{
+    $request->validate([
+        'photo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+    ]);
 
-        $user = Auth::user();
+    $user = Auth::user();
 
-        // Delete old photo if one exists
-        if ($user->profile_photo) {
-            Storage::disk('public')->delete($user->profile_photo);
-        }
-
-        // Store new photo under storage/app/public/profile-photos/
-        $path = $request->file('photo')->store('profile-photos', 'public');
-
-        $user->profile_photo = $path;
-        $user->save();
-
-        return back()->with('success', 'Profile photo updated.');
+    // Delete old photo if one exists
+    if ($user->profile_photo) {
+        Storage::disk('s3')->delete($user->profile_photo); // changed
     }
+
+    // Store new photo in bucket
+    $path = $request->file('photo')->store('profile-photos', 's3'); // changed
+
+    $user->profile_photo = $path;
+    $user->save();
+
+    return back()->with('success', 'Profile photo updated.');
+}
 
     /**
      * Handle banner colour change.
