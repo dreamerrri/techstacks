@@ -32,8 +32,9 @@ use Illuminate\Support\Facades\Storage;
                         font-size:32px;font-weight:700;color:#6b7280;">
                 @if($user->profile_photo)
                     <img id="avatar-img"
-src="{{ Storage::disk('s3')->url($user->profile_photo) }}"         
-             
+{{-- After --}}
+src="{{ Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"     
+
    alt="{{ $user->name }}"
                          style="width:100%;height:100%;object-fit:cover;">
                 @else
