@@ -39,20 +39,19 @@ Route::middleware('auth')->group(function () {
     // All roles can reach /dashboard; the controller scopes data per role.
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
-Route::get('/profile',  [ProfileController::class, 'show'])->name('profile.show');
-Route::put('/profile',  [ProfileController::class, 'update'])->name('profile.update');
-Route::put('/profile/personal', [ProfileController::class, 'updatePersonal'])->name('profile.personal');
+
     Route::middleware('permission:view.users')->prefix('users')->name('users.')->group(function () {
         Route::get('/',                [UserController::class, 'index'])->name('index');
         Route::patch('/{user}/toggle', [UserController::class, 'toggleActive'])->name('toggle')->middleware('permission:edit.users');
         Route::patch('/{user}/role',   [UserController::class, 'updateRole'])->name('role')->middleware('permission:manage.user.roles');
     });
 
-    Route::get('/profile',              [ProfileController::class, 'show'])->name('profile.show');
+// ✅ Keep these (inside auth group)
+Route::get('/profile',              [ProfileController::class, 'show'])->name('profile.show');
 Route::put('/profile',              [ProfileController::class, 'update'])->name('profile.update');
 Route::post('/profile/photo',       [ProfileController::class, 'updatePhoto'])->name('profile.photo');
 Route::put('/profile/banner-color', [ProfileController::class, 'updateBannerColor'])->name('profile.banner-color');
-
+Route::put('/profile/personal',     [ProfileController::class, 'updatePersonal'])->name('profile.personal');
     // Employee Management — admin and HR only.
     Route::middleware('permission:view.employees')->prefix('employees')->name('employees.')->group(function () {
 

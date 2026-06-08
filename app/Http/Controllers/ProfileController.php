@@ -10,10 +10,16 @@ use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
-    public function show()
-    {
-        return view('profile.show');
-    }
+    // ProfileController@show
+public function show()
+{
+    return view('profile.show', [
+        'user'     => auth()->user(),
+        'employee' => auth()->user()->employee,
+        'isAdmin'  => auth()->user()->isAdmin(),
+        'isHR'     => auth()->user()->isHR(),
+    ]);
+}
 
     /**
      * Handle account settings update (name, email, password).

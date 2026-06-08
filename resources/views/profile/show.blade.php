@@ -4,14 +4,7 @@
 
 @section('content')
 
-@php
-use Illuminate\Support\Facades\Storage;
-    $user     = auth()->user();
-    $isAdmin  = $user->isAdmin();
-    $isHR     = $user->isHR();
 
-    $employee = $user->employee;
-@endphp
 
 {{-- ============================================================
      BANNER
@@ -33,8 +26,7 @@ use Illuminate\Support\Facades\Storage;
                 @if($user->profile_photo)
                     <img id="avatar-img"
 {{-- After --}}
-src="{{ Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"     
-
+src="{{ Storage::disk('s3')->url($user->profile_photo) }}"
    alt="{{ $user->name }}"
                          style="width:100%;height:100%;object-fit:cover;">
                 @else
