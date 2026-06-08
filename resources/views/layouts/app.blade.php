@@ -288,10 +288,9 @@
     </div>
 
     {{-- Sidebar --}}
-    <div class="sidebar sidebar-{{ $role }}"
-         style="grid-column: 1; grid-row: 2; display: flex; flex-direction: column; overflow-y: auto; height: 100%;">
+    <div class="sidebar sidebar-{{ $role }}" style="grid-column: 1; grid-row: 2;">
 
-        <nav style="flex: 1;">
+        <nav style="flex: 1; position: relative; z-index: 1;">
             <a href="{{ route('dashboard') }}"
                class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <i class="fas fa-home"></i><span>Dashboard</span>
@@ -299,40 +298,23 @@
 
             @if($isAdmin)
                 @php
-                    $usersOpen    = request()->routeIs('users.*') || request()->routeIs('employees.*') || request()->routeIs('government-contributions.*');
-                    $settingsOpen = request()->routeIs('roles.*') || request()->routeIs('permissions.*');
+                    $userMgmtOpen   = request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('permissions.*');
+                    $empMgmtOpen    = request()->routeIs('employees.*') || request()->routeIs('manual-payroll-attendance.*');
+                    $payrollMgmtOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
+                    $monitoringOpen = request()->routeIs('audit-logs.*') || request()->routeIs('reports.*');
                 @endphp
-                <div class="nav-dropdown {{ $usersOpen ? 'open' : '' }}">
+
+                {{-- ▼ User Management --}}
+                <div class="nav-dropdown {{ $userMgmtOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-sitemap"></i><span>Users</span>
+                        <i class="fas fa-users-cog"></i><span>User Management</span>
                         <i class="fas fa-chevron-down nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
                         <a href="{{ route('users.index') }}"
                            class="nav-item nav-sub-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                            <i class="fas fa-users"></i><span>All Users</span>
+                            <i class="fas fa-users"></i><span>Users</span>
                         </a>
-                        <a href="{{ route('employees.index') }}"
-                           class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                            <i class="fas fa-user-tie"></i><span>Employees</span>
-                        </a>
-                        <a href="{{ route('government-contributions.index') }}"
-                           class="nav-item nav-sub-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                            <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
-                        </a>
-                    </div>
-                </div>
-                <a href="{{ route('payroll.index') }}"
-                   class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="fas fa-money-bill"></i><span>Payroll</span>
-                </a>
-                <a href="{{ route('audit-logs.index') }}" class="nav-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}"><i class="fas fa-file-alt"></i><span>Audit Logs</span></a>
-                <div class="nav-dropdown {{ $settingsOpen ? 'open' : '' }}">
-                    <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-cog"></i><span>Settings</span>
-                        <i class="fas fa-chevron-down nav-chevron"></i>
-                    </button>
-                    <div class="nav-dropdown-menu">
                         <a href="{{ route('roles.index') }}"
                            class="nav-item nav-sub-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
                             <i class="fas fa-lock"></i><span>Roles</span>
@@ -344,23 +326,121 @@
                     </div>
                 </div>
 
+                {{-- ▼ Employee Management --}}
+                <div class="nav-dropdown {{ $empMgmtOpen ? 'open' : '' }}">
+                    <button class="nav-item nav-dropdown-trigger" type="button">
+                        <i class="fas fa-user-tie"></i><span>Employee Management</span>
+                        <i class="fas fa-chevron-down nav-chevron"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ route('employees.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
+                            <i class="fas fa-id-badge"></i><span>Employees</span>
+                        </a>
+                        <a href="{{ route('manual-payroll-attendance.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
+                            <i class="fas fa-calendar-check"></i><span>Attendance</span>
+                        </a>
+                        <a href="#" class="nav-item nav-sub-item">
+                            <i class="fas fa-suitcase"></i><span>Leave Requests</span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- ▼ Payroll Management --}}
+                <div class="nav-dropdown {{ $payrollMgmtOpen ? 'open' : '' }}">
+                    <button class="nav-item nav-dropdown-trigger" type="button">
+                        <i class="fas fa-money-bill-wave"></i><span>Payroll Management</span>
+                        <i class="fas fa-chevron-down nav-chevron"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ route('payroll.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                            <i class="fas fa-money-bill"></i><span>Payroll</span>
+                        </a>
+                        <a href="{{ route('government-contributions.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
+                            <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- ▼ Monitoring --}}
+                <div class="nav-dropdown {{ $monitoringOpen ? 'open' : '' }}">
+                    <button class="nav-item nav-dropdown-trigger" type="button">
+                        <i class="fas fa-chart-line"></i><span>Monitoring</span>
+                        <i class="fas fa-chevron-down nav-chevron"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ route('audit-logs.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
+                            <i class="fas fa-file-alt"></i><span>Audit Logs</span>
+                        </a>
+                        <a href="#" class="nav-item nav-sub-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+                            <i class="fas fa-chart-bar"></i><span>Reports</span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- ⚙ Settings --}}
+                <a href="#" class="nav-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                    <i class="fas fa-cog"></i><span>Settings</span>
+                </a>
+
             @elseif($isHR)
-                <a href="{{ route('employees.index') }}"
-                   class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                    <i class="fas fa-users"></i><span>Employees</span>
+                @php
+                    $hrEmpMgmtOpen  = request()->routeIs('employees.*') || request()->routeIs('manual-payroll-attendance.*');
+                    $hrPayrollOpen  = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
+                @endphp
+
+                {{-- ▼ Employee Management --}}
+                <div class="nav-dropdown {{ $hrEmpMgmtOpen ? 'open' : '' }}">
+                    <button class="nav-item nav-dropdown-trigger" type="button">
+                        <i class="fas fa-user-tie"></i><span>Employee Management</span>
+                        <i class="fas fa-chevron-down nav-chevron"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ route('employees.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
+                            <i class="fas fa-id-badge"></i><span>Employees</span>
+                        </a>
+                        <a href="{{ route('manual-payroll-attendance.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
+                            <i class="fas fa-calendar-check"></i><span>Attendance</span>
+                        </a>
+                        <a href="#" class="nav-item nav-sub-item">
+                            <i class="fas fa-suitcase"></i><span>Leave Requests</span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- ▼ Payroll --}}
+                <div class="nav-dropdown {{ $hrPayrollOpen ? 'open' : '' }}">
+                    <button class="nav-item nav-dropdown-trigger" type="button">
+                        <i class="fas fa-money-bill-wave"></i><span>Payroll</span>
+                        <i class="fas fa-chevron-down nav-chevron"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ route('payroll.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                            <i class="fas fa-money-bill"></i><span>Payroll</span>
+                        </a>
+                        <a href="{{ route('government-contributions.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
+                            <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- 📊 Reports --}}
+                <a href="#" class="nav-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+                    <i class="fas fa-chart-bar"></i><span>Reports</span>
                 </a>
-                <a href="{{ route('government-contributions.index') }}"
-                   class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                    <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+
+                {{-- ⚙ Settings --}}
+                <a href="#" class="nav-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                    <i class="fas fa-cog"></i><span>Settings</span>
                 </a>
-                <a href="{{ route('payroll.index') }}"
-                   class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="fas fa-money-bill"></i><span>Payroll</span>
-                </a>
-                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
 
             @else
                 <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}"><i class="fas fa-user"></i><span>My Profile</span></a>
@@ -373,7 +453,7 @@
             @endif
         </nav>
 
-        <div style="padding-bottom: 20px;">
+        <div style="padding-bottom: 20px; margin-top: auto; padding-top: 100px;">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="logout-btn">
