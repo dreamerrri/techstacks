@@ -4,6 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Support\Facades\Storage;
+
+use Illuminate\Support\Facades\Url;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -173,4 +176,10 @@ public function employee(): HasOne
 
         return $this;
     }
+    public function getProfilePhotoUrlAttribute(): string
+{
+    return $this->profile_photo
+        ? Storage::disk('s3')->url($this->profile_photo)
+        : null;
+}
 }
