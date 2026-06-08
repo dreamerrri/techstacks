@@ -35,8 +35,17 @@
     <div style="position:sticky; top:0; z-index:10; background:white; padding:20px 28px 0; border-radius:20px 20px 0 0;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
             <h2 class="aurora-card-title" style="margin:0;">
-                <i class="fas fa-list"></i> Payroll Summary
-            </h2>
+    <i class="fas fa-list"></i> Payroll Summary
+</h2>
+<button onclick="printPayrollTable()" 
+        style="padding:8px 18px; background:#1e40af; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+    <i class="fas fa-print"></i> Print
+</button>
+
+<button onclick="exportPayrollCSV()"
+        style="padding:8px 18px; background:#065f46; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+    <i class="fas fa-file-csv"></i> Export CSV
+</button>
         </div>
 
         @if($isAdmin || $isHR)
@@ -247,4 +256,170 @@
 </div>
 
     <div style="padding:16px 28px; border-top:1px solid #e5e7eb;">{{ $employees->links() }}</div>
+@endsection
+
+@section('scripts')
+<script>
+function printPayrollTable() {
+    const rows = document.querySelectorAll('table tbody tr');
+    
+    // Build header
+    const headers = [
+        'Employee', 'Dept', 'Gross Pay', 'Allowance & Benefits',
+        'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax', 'Total Deductions', 'Net Pay'
+    ];
+
+    let tableHTML = `
+        <table>
+            <thead>
+                <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
+            </thead>
+            <tbody>
+    `;
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (!cells.length) return; // skip empty state row
+
+        // Extract text cleanly per cell
+        const emp    = cells[0].querySelector('a')?.innerText.trim() ?? '';
+        const empId  = cells[0].querySelector('div[style*="monospace"]')?.innerText.trim() ?? '';
+        const dept   = cells[1].innerText.trim();
+        const gross  = cells[2].innerText.trim();
+        const allow  = cells[3].innerText.trim();
+        const sss    = cells[4].innerText.trim();
+        const phil   = cells[5].innerText.trim();
+        const pagibig= cells[6].innerText.trim();
+        const tax    = cells[7].innerText.trim();
+        const totDed = cells[8].innerText.trim();
+        const net    = cells[9].innerText.trim();
+
+        tableHTML += `
+            <tr>
+                <td><strong>${emp}</strong><br><small>${empId}</small></td>
+                <td>${dept}</td>
+                <td>${gross}</td>
+                <td>${allow}</td>
+                <td>${sss}</td>
+                <td>${phil}</td>
+                <td>${pagibig}</td>
+                <td>${tax}</td>
+                <td>${totDed}</td>
+                <td>${net}</td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `</tbody></table>`;
+
+    // Detect active filters for the report header
+    const searchVal = document.querySelector('input[name="search"]')?.value ?? '';
+    const deptVal   = document.querySelector('select[name="department"]')?.value ?? '';
+    const filterNote = [
+        searchVal ? `Search: "${searchVal}"` : '',
+        deptVal   ? `Department: ${deptVal}` : ''
+    ].filter(Boolean).join(' | ') || 'All Employees';
+
+    const win = window.open('', '_blank');
+    win.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Payroll Summary Report</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: Arial, sans-serif; font-size: 11px; color: #111; padding: 20px; }
+                .report-header { margin-bottom: 16px; }
+                .report-header h1 { font-size: 16px; color: #1a1a2e; }
+                .report-header p  { font-size: 11px; color: #6b7280; margin-top: 4px; }
+                table { width: 100%; border-collapse: collapse; }
+                th {
+                    background: #1e40af; color: white;
+                    padding: 7px 8px; text-align: left;
+                    font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em;
+                }
+                td { padding: 6px 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+                tr:nth-child(even) td { background: #f9fafb; }
+                small { color: #6b7280; font-size: 10px; font-family: monospace; }
+                td:nth-child(3), td:nth-child(4) { color: #065f46; font-weight: 600; }
+                td:nth-child(5), td:nth-child(6),
+                td:nth-child(7), td:nth-child(8),
+                td:nth-child(9) { color: #dc2626; }
+                td:nth-child(10) { color: #065f46; font-weight: 700; }
+                @media print {
+                    body { padding: 0; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="report-header">
+                <h1>Payroll Summary Report</h1>
+                <p>Filter: ${filterNote} &nbsp;|&nbsp; Printed: ${new Date().toLocaleString()}</p>
+            </div>
+            ${tableHTML}
+        </body>
+        </html>
+    `);
+    win.document.close();
+    win.focus();
+    win.print();
+}
+
+function exportPayrollCSV() {
+    const rows = document.querySelectorAll('table tbody tr');
+
+    const headers = [
+        'Employee', 'Employee ID', 'Department',
+        'Gross Pay', 'Allowance & Benefits',
+        'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax',
+        'Total Deductions', 'Net Pay'
+    ];
+
+    // Strip ₱ signs and commas so numbers are clean in spreadsheet
+    function cleanAmount(val) {
+        return val.replace(/[₱,+\-]/g, '').trim();
+    }
+
+    let csvRows = [headers.join(',')];
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (!cells.length) return;
+
+        const emp     = cells[0].querySelector('a')?.innerText.trim() ?? '';
+        const empId   = cells[0].querySelector('div[style*="monospace"]')?.innerText.trim() ?? '';
+        const dept    = cells[1].innerText.trim();
+        const gross   = cleanAmount(cells[2].innerText);
+        const allow   = cleanAmount(cells[3].innerText);
+        const sss     = cleanAmount(cells[4].innerText);
+        const phil    = cleanAmount(cells[5].innerText);
+        const pagibig = cleanAmount(cells[6].innerText);
+        const tax     = cleanAmount(cells[7].innerText);
+        const totDed  = cleanAmount(cells[8].innerText);
+        const net     = cleanAmount(cells[9].innerText);
+
+        // Wrap strings in quotes in case they have commas
+        const line = [
+            `"${emp}"`, `"${empId}"`, `"${dept}"`,
+            gross, allow, sss, phil, pagibig, tax, totDed, net
+        ].join(',');
+
+        csvRows.push(line);
+    });
+
+    // Active filter label for the filename
+    const deptVal  = document.querySelector('select[name="department"]')?.value ?? '';
+    const filename = deptVal
+        ? `payroll_${deptVal.replace(/\s+/g, '_')}.csv`
+        : 'payroll_all.csv';
+
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
 @endsection
