@@ -288,10 +288,9 @@
     </div>
 
     {{-- Sidebar --}}
-    <div class="sidebar sidebar-{{ $role }}"
-         style="grid-column: 1; grid-row: 2; display: flex; flex-direction: column; overflow-y: auto; height: 100%;">
+    <div class="sidebar sidebar-{{ $role }}" style="grid-column: 1; grid-row: 2;">
 
-        <nav style="flex: 1;">
+        <nav style="flex: 1; position: relative; z-index: 1;">
             <a href="{{ route('dashboard') }}"
                class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <i class="fas fa-home"></i><span>Dashboard</span>
@@ -454,7 +453,7 @@
             @endif
         </nav>
 
-        <div style="padding-bottom: 20px; padding-top:100px;">
+        <div style="padding-bottom: 20px; margin-top: auto; padding-top: 100px;">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="logout-btn">
