@@ -62,7 +62,7 @@ class ProfileController extends Controller
     }
 
     // Store new photo in bucket
-    $path = $request->file('photo')->store('profile-photos', 's3'); // changed
+    $path = $request->file('photo')->storePublicly('profile-photos', 's3'); // changed
 
     $user->profile_photo = $path;
     $user->save();
