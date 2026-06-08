@@ -176,10 +176,13 @@ public function employee(): HasOne
 
         return $this;
     }
-    public function getProfilePhotoUrlAttribute(): string
+public function getProfilePhotoUrlAttribute(): ?string
 {
-    return $this->profile_photo
-        ? Storage::disk('s3')->url($this->profile_photo)
-        : null;
+    if (!$this->profile_photo) return null;
+
+    /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+    $disk = Storage::disk('s3');
+
+    return $disk->url($this->profile_photo);
 }
 }
