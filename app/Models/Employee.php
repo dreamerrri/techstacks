@@ -40,6 +40,9 @@ class Employee extends Model
         'pagibig_rate',
         'pagibig_cap',
         'withholding_tax_rate',
+        'custom_sss_contribution',
+        'custom_philhealth_contribution',
+        'custom_pagibig_contribution',
         'is_archived',
     ];
 
@@ -55,6 +58,9 @@ class Employee extends Model
         'pagibig_rate'    => 'decimal:4',
         'pagibig_cap'     => 'decimal:2',
         'withholding_tax_rate' => 'decimal:4',
+        'custom_sss_contribution' => 'decimal:2',
+        'custom_philhealth_contribution' => 'decimal:2',
+        'custom_pagibig_contribution' => 'decimal:2',
     ];
 protected static function boot()
 {
