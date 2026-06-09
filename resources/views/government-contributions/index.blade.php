@@ -55,6 +55,16 @@
                 <h2 class="aurora-card-title" style="margin:0; font-size:15px;">
                     <i class="fas fa-list"></i> Employee List
                 </h2>
+                <div style="display:flex; gap:8px;">
+                    <button onclick="printContributionsTable()"
+                            style="padding:8px 16px; background:#1e40af; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <button onclick="exportContributionsCSV()"
+                            style="padding:8px 16px; background:#065f46; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </button>
+                </div>
             </div>
 
             {{-- Search & Filters --}}
@@ -84,7 +94,7 @@
 
         {{-- Desktop Table --}}
         <div class="user-table-wrapper" style="overflow-y:auto; max-height:53vh; padding:0 28px;">
-            <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:700px;">
+            <table id="contributions-table" style="width:100%; border-collapse:collapse; font-size:14px; min-width:700px;">
                 <thead style="position:sticky; top:0; z-index:5;">
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Employee ID</th>
@@ -204,7 +214,139 @@
 
     </div>
 
+    <div style="padding:16px 28px; border-top:1px solid #e5e7eb;">{{ $employees->links() }}</div>
 
-            <div style="padding:16px 28px; border-top:1px solid #e5e7eb;">{{ $employees->links() }}</div>
+@endsection
 
+@section('scripts')
+<script>
+function printContributionsTable() {
+    const rows = document.querySelectorAll('#contributions-table tbody tr');
+
+    const headers = ['Employee ID', 'Full Name', 'Department', 'Position', 'Basic Salary', 'Status'];
+
+    let tableHTML = `
+        <table>
+            <thead>
+                <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
+            </thead>
+            <tbody>
+    `;
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (!cells.length) return;
+
+        const empId  = cells[0].innerText.trim();
+        const name   = cells[1].querySelector('a')?.innerText.trim() ?? cells[1].innerText.trim();
+        const dept   = cells[2].innerText.trim();
+        const pos    = cells[3].innerText.trim();
+        const salary = cells[4].innerText.trim();
+        const status = cells[5].innerText.trim();
+
+        tableHTML += `
+            <tr>
+                <td><span class="mono">${empId}</span></td>
+                <td><strong>${name}</strong></td>
+                <td>${dept}</td>
+                <td>${pos}</td>
+                <td>${salary}</td>
+                <td>${status}</td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `</tbody></table>`;
+
+    const searchVal = document.querySelector('input[name="search"]')?.value ?? '';
+    const deptVal   = document.querySelector('select[name="department"]')?.value ?? '';
+    const filterNote = [
+        searchVal ? `Search: "${searchVal}"` : '',
+        deptVal   ? `Department: ${deptVal}` : ''
+    ].filter(Boolean).join(' | ') || 'All Employees';
+
+    const win = window.open('', '_blank');
+    win.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Government Contributions Report</title>
+            <style>
+                * { margin:0; padding:0; box-sizing:border-box; }
+                body { font-family:Arial, sans-serif; font-size:11px; color:#111; padding:20px; }
+                .report-header { margin-bottom:16px; }
+                .report-header h1 { font-size:16px; color:#1a1a2e; }
+                .report-header p  { font-size:11px; color:#6b7280; margin-top:4px; }
+                table { width:100%; border-collapse:collapse; }
+                th {
+                    background:#1e40af; color:white;
+                    padding:7px 8px; text-align:left;
+                    font-size:10px; text-transform:uppercase; letter-spacing:0.04em;
+                }
+                td { padding:6px 8px; border-bottom:1px solid #e5e7eb; vertical-align:middle; }
+                tr:nth-child(even) td { background:#f9fafb; }
+                .mono { font-family:monospace; color:#6b7280; }
+                @media print { body { padding:0; } }
+            </style>
+        </head>
+        <body>
+            <div class="report-header">
+                <h1>Government Contributions Report</h1>
+                <p>Filter: ${filterNote} &nbsp;|&nbsp; Printed: ${new Date().toLocaleString()}</p>
+            </div>
+            ${tableHTML}
+        </body>
+        </html>
+    `);
+    win.document.close();
+    win.focus();
+    win.print();
+}
+
+function exportContributionsCSV() {
+    const rows = document.querySelectorAll('#contributions-table tbody tr');
+
+    const headers = ['Employee ID', 'Full Name', 'Department', 'Position', 'Basic Salary', 'Status'];
+
+    function cleanAmount(val) {
+        return val.replace(/[₱,]/g, '').trim();
+    }
+
+    let csvRows = [headers.join(',')];
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (!cells.length) return;
+
+        const empId  = cells[0].innerText.trim();
+        const name   = cells[1].querySelector('a')?.innerText.trim() ?? cells[1].innerText.trim();
+        const dept   = cells[2].innerText.trim();
+        const pos    = cells[3].innerText.trim();
+        const salary = cleanAmount(cells[4].innerText);
+        const status = cells[5].innerText.trim();
+
+        csvRows.push([
+            `"${empId}"`,
+            `"${name}"`,
+            `"${dept}"`,
+            `"${pos}"`,
+            salary,
+            `"${status}"`
+        ].join(','));
+    });
+
+    const deptVal  = document.querySelector('select[name="department"]')?.value ?? '';
+    const filename = deptVal
+        ? `contributions_${deptVal.replace(/\s+/g, '_')}.csv`
+        : 'contributions_all.csv';
+
+    const blob = new Blob([csvRows.join('\n')], { type:'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
 @endsection
