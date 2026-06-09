@@ -12,6 +12,120 @@
     $colorDark = $isAdmin ? '#991b1b' : ($isHR ? '#1e40af' : '#764ba2');
 @endphp
 
+{{-- Breakdown Modal --}}
+<div id="payrollBreakdownModal"
+     style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.45); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:white; border-radius:16px; width:100%; max-width:540px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+
+        {{-- Modal header --}}
+        <div style="padding:20px 24px 16px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:white; z-index:1; border-radius:16px 16px 0 0;">
+            <div>
+                <div style="font-size:16px; font-weight:700; color:#1a1a2e;" id="modalEmployeeName">—</div>
+                <div style="font-size:12px; color:#6b7280; font-family:monospace;" id="modalEmployeeId">—</div>
+            </div>
+            <button onclick="closeBreakdownModal()"
+                    style="background:#f3f4f6; border:none; border-radius:8px; width:32px; height:32px; cursor:pointer; font-size:16px; color:#6b7280; display:flex; align-items:center; justify-content:center;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        {{-- Modal body --}}
+        <div style="padding:20px 24px;">
+
+            {{-- Attendance --}}
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:#9ca3af; margin-bottom:10px;">Attendance</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:20px;">
+                <div style="background:#f9fafb; border-radius:10px; padding:12px; text-align:center;">
+                    <div style="font-size:20px; font-weight:700; color:#1a1a2e;" id="modalDaysWorked">0</div>
+                    <div style="font-size:11px; color:#6b7280; margin-top:2px;">Days Worked</div>
+                </div>
+                <div style="background:#f9fafb; border-radius:10px; padding:12px; text-align:center;">
+                    <div style="font-size:20px; font-weight:700; color:#f59e0b;" id="modalOvertimeHours">0</div>
+                    <div style="font-size:11px; color:#6b7280; margin-top:2px;">Overtime Hrs</div>
+                </div>
+                <div style="background:#f9fafb; border-radius:10px; padding:12px; text-align:center;">
+                    <div style="font-size:20px; font-weight:700; color:#8b5cf6;" id="modalHolidayDays">0</div>
+                    <div style="font-size:11px; color:#6b7280; margin-top:2px;">Holiday Days</div>
+                </div>
+            </div>
+
+            {{-- Earnings --}}
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:#9ca3af; margin-bottom:10px;">Earnings</div>
+            <div style="background:#f9fafb; border-radius:10px; padding:4px 0; margin-bottom:20px;">
+                <div class="modal-row">
+                    <span>Basic Pay</span>
+                    <span id="modalBasicPay" style="color:#1a1a2e; font-weight:600;">₱0.00</span>
+                </div>
+                <div class="modal-row">
+                    <span>Overtime Pay</span>
+                    <span id="modalOvertimePay" style="color:#f59e0b;">₱0.00</span>
+                </div>
+                <div class="modal-row">
+                    <span>Holiday Pay</span>
+                    <span id="modalHolidayPay" style="color:#8b5cf6;">₱0.00</span>
+                </div>
+                <div class="modal-row">
+                    <span>Night Differential</span>
+                    <span id="modalNightDiff" style="color:#0ea5e9;">₱0.00</span>
+                </div>
+                <div class="modal-row">
+                    <span>Allowances & Benefits</span>
+                    <span id="modalAllowances" style="color:#10b981;">₱0.00</span>
+                </div>
+                <div class="modal-row" style="border-top:1px solid #e5e7eb; margin-top:4px; padding-top:4px;">
+                    <span style="font-weight:700; color:#1a1a2e;">Gross Pay</span>
+                    <span id="modalGrossPay" style="color:#1a1a2e; font-weight:700; font-size:15px;">₱0.00</span>
+                </div>
+            </div>
+
+            {{-- Deductions --}}
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:#9ca3af; margin-bottom:10px;">Deductions</div>
+            <div style="background:#fff5f5; border-radius:10px; padding:4px 0; margin-bottom:20px;">
+                <div class="modal-row">
+                    <span>SSS</span>
+                    <span id="modalSss" style="color:#dc2626;">₱0.00</span>
+                </div>
+                <div class="modal-row">
+                    <span>PhilHealth</span>
+                    <span id="modalPhilHealth" style="color:#dc2626;">₱0.00</span>
+                </div>
+                <div class="modal-row">
+                    <span>Pag-IBIG</span>
+                    <span id="modalPagIbig" style="color:#dc2626;">₱0.00</span>
+                </div>
+                <div class="modal-row">
+                    <span>Withholding Tax</span>
+                    <span id="modalTax" style="color:#dc2626;">₱0.00</span>
+                </div>
+                <div class="modal-row" style="border-top:1px solid #fecaca; margin-top:4px; padding-top:4px;">
+                    <span style="font-weight:700; color:#dc2626;">Total Deductions</span>
+                    <span id="modalTotalDeductions" style="color:#dc2626; font-weight:700; font-size:15px;">₱0.00</span>
+                </div>
+            </div>
+
+            {{-- Net Pay --}}
+            <div style="background:linear-gradient(135deg,#d1fae5,#a7f3d0); border-radius:12px; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:15px; font-weight:700; color:#065f46;">Net Pay</span>
+                <span id="modalNetPay" style="font-size:22px; font-weight:800; color:#065f46;">₱0.00</span>
+            </div>
+
+        </div>
+
+        {{-- Modal footer --}}
+        <div style="padding:16px 24px; border-top:1px solid #e5e7eb; display:flex; gap:8px; justify-content:flex-end;">
+            <a id="modalPayslipLink" href="#"
+               style="padding:8px 18px; background:#d1fae5; color:#065f46; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                <i class="fas fa-file-download"></i> Payslip
+            </a>
+            <a id="modalDetailLink" href="#"
+               style="padding:8px 18px; background:#dbeafe; color:#1e40af; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                <i class="fas fa-external-link-alt"></i> Full Details
+            </a>
+        </div>
+
+    </div>
+</div>
+
 {{-- Header --}}
 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
     <div>
@@ -54,9 +168,11 @@
 
             <input type="text" name="search" value="{{ request('search') }}"
                    placeholder="Search name, ID..."
+                   oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 500)"
                    style="flex:1; min-width:160px; border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none;">
 
             <select name="department"
+                    onchange="this.closest('form').submit()"
                     style="border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none;">
                 <option value="">All Departments</option>
                 @foreach($departments as $dept)
@@ -66,6 +182,7 @@
 
             {{-- Cutoff Period Filter --}}
             <select name="payroll_period_id"
+                    onchange="this.closest('form').submit()"
                     style="border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none; min-width:230px;">
                 <option value="">Latest Cutoff</option>
                 @foreach($payrollPeriods as $period)
@@ -77,7 +194,7 @@
                 @endforeach
             </select>
 
-            <button type="submit" class="btn btn-danger btn-sm" style="padding:8px 20px; font-size:14px;">
+            <button type="submit" class="btn btn-danger btn-sm" style="display:none;">
                 <i class="fas fa-search"></i> Search
             </button>
 
@@ -116,14 +233,7 @@
                 <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Employee</th>
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Department</th>
-                 <!--   <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Gross Pay</th>  -->
-                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Allowance & Benefits</th> -->
-                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">SSS</th> -->
-                  <!--   <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">PhilHealth</th> -->
-                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Pag-IBIG</th> -->
-                  <!--   <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Tax</th> -->
                     <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Total Deductions</th>
-                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Net Pay</th> -->
                     <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
                 </tr>
             </thead>
@@ -143,30 +253,59 @@
                                 </div>
                             </div>
                         </td>
-                       <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
-                     <!--   <td style="padding:12px; text-align:right; font-weight:600; color:#1a1a2e;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</td> -->
-                     <!--   <td style="padding:12px; text-align:right; font-weight:600; color:#10b981;">+₱{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</td> -->
-                     <!--   <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</td> -->
-                      <!--  <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</td> -->
-                      <!--  <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</td> -->
-                      <!--  <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</td> -->
-                       <td style="padding:12px; text-align:right; font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
-                     <!--   <td style="padding:12px; text-align:right; font-weight:700; color:#10b981; font-size:15px;">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td> -->
+                        <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
+                        <td style="padding:12px; text-align:right; font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
                         <td style="padding:12px; text-align:center;">
                             <div style="display:flex; gap:6px; justify-content:center;">
                                 @if(($payroll['gross_pay'] ?? 0) == 0)
                                     <a href="javascript:void(0)"
                                        onclick="alert('This employee has no payroll data for the selected cutoff period.')"
-                                       style="padding:5px 10px; background:#f3f4f6; color:#9ca3af; border-radius:8px; font-size:12px; text-decoration:none; cursor:not-allowed;">
+                                       style="padding:5px 10px; background:#f3f4f6; color:#9ca3af; border-radius:8px; font-size:12px; text-decoration:none; cursor:not-allowed;"
+                                       title="No payroll data">
+                                        <i class="fas fa-table"></i>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                       onclick="alert('This employee has no payroll data for the selected cutoff period.')"
+                                       style="padding:5px 10px; background:#f3f4f6; color:#9ca3af; border-radius:8px; font-size:12px; text-decoration:none; cursor:not-allowed;"
+                                       title="No payroll data">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 @else
+                                    <button type="button"
+                                            class="btn-breakdown"
+                                            data-payroll="{{ htmlspecialchars(json_encode([
+                                                'name'                   => $employee->full_name,
+                                                'employee_id'            => $employee->employee_id,
+                                                'days_worked'            => $payroll['attendance_data']['days_worked'] ?? 0,
+                                                'overtime_hours'         => $payroll['attendance_data']['overtime_hours'] ?? 0,
+                                                'holiday_days'           => $payroll['attendance_data']['holiday_days'] ?? 0,
+                                                'base_pay'               => $payroll['base_pay'] ?? 0,
+                                                'overtime_pay'           => $payroll['overtime_pay'] ?? 0,
+                                                'holiday_pay'            => $payroll['holiday_pay'] ?? 0,
+                                                'night_differential_pay' => $payroll['night_differential_pay'] ?? 0,
+                                                'allowance_benefits'     => $payroll['allowance_benefits'] ?? 0,
+                                                'gross_pay'              => $payroll['gross_pay'] ?? 0,
+                                                'sss_contribution'       => $payroll['sss_contribution'] ?? 0,
+                                                'philhealth_contribution' => $payroll['philhealth_contribution'] ?? 0,
+                                                'pagibig_contribution'   => $payroll['pagibig_contribution'] ?? 0,
+                                                'withholding_tax'        => $payroll['withholding_tax'] ?? 0,
+                                                'total_deductions'       => $payroll['total_deductions'] ?? 0,
+                                                'net_pay'                => $payroll['net_pay'] ?? 0,
+                                                'show_url'               => route('payroll.show', [$employee, 'payroll_period_id' => request('payroll_period_id')]),
+                                                'payslip_url'            => route('payroll.payslip', [$employee, 'payroll_period_id' => request('payroll_period_id')]),
+                                            ]), ENT_QUOTES, 'UTF-8') }}"
+                                            style="padding:5px 10px; background:#fef9c3; color:#854d0e; border-radius:8px; font-size:12px; border:none; cursor:pointer;"
+                                            title="Quick breakdown">
+                                        <i class="fas fa-table"></i>
+                                    </button>
                                     <a href="{{ route('payroll.show', [$employee, 'payroll_period_id' => request('payroll_period_id')]) }}"
-                                       style="padding:5px 10px; background:#dbeafe; color:#1e40af; border-radius:8px; font-size:12px; text-decoration:none;">
+                                       style="padding:5px 10px; background:#dbeafe; color:#1e40af; border-radius:8px; font-size:12px; text-decoration:none;"
+                                       title="Full details">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <a href="{{ route('payroll.payslip', [$employee, 'payroll_period_id' => request('payroll_period_id')]) }}"
-                                       style="padding:5px 10px; background:#d1fae5; color:#065f46; border-radius:8px; font-size:12px; text-decoration:none;">
+                                       style="padding:5px 10px; background:#d1fae5; color:#065f46; border-radius:8px; font-size:12px; text-decoration:none;"
+                                       title="Download payslip">
                                         <i class="fas fa-file-download"></i>
                                     </a>
                                 @endif
@@ -175,7 +314,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="11" style="padding:40px; text-align:center; color:#9ca3af;">
+                        <td colspan="4" style="padding:40px; text-align:center; color:#9ca3af;">
                             <i class="fas fa-money-bill-wave" style="font-size:32px; margin-bottom:10px; display:block;"></i>
                             No payroll data found.
                         </td>
@@ -224,6 +363,22 @@
                         <i class="fas fa-chevron-down" style="font-size:11px;"></i>
                     </button>
                     <div style="display:none; padding-bottom:4px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                            <span style="color:#6b7280;">Days Worked:</span>
+                            <span style="font-weight:600; color:#1a1a2e;">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                            <span style="color:#6b7280;">Overtime Hours:</span>
+                            <span style="color:#f59e0b;">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                            <span style="color:#6b7280;">Holiday Days:</span>
+                            <span style="color:#8b5cf6;">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                            <span style="color:#6b7280;">Basic Pay:</span>
+                            <span style="font-weight:600; color:#1a1a2e;">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</span>
+                        </div>
                         <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                             <span style="color:#6b7280;">Gross Pay:</span>
                             <span style="font-weight:600; color:#1a1a2e;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span>
@@ -289,10 +444,77 @@
 </div>
 
     <div style="padding:16px 28px; border-top:1px solid #e5e7eb;">{{ $employees->links() }}</div>
+
+{{-- Modal row helper style --}}
+<style>
+.modal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 14px;
+    font-size: 13px;
+    color: #374151;
+}
+.modal-row:not(:last-child) {
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+</style>
+
 @endsection
 
 @section('scripts')
 <script>
+function fmt(n) {
+    return '₱' + parseFloat(n || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function openBreakdownModal(data) {
+    document.getElementById('modalEmployeeName').textContent    = data.name;
+    document.getElementById('modalEmployeeId').textContent      = data.employee_id;
+    document.getElementById('modalDaysWorked').textContent      = data.days_worked;
+    document.getElementById('modalOvertimeHours').textContent   = data.overtime_hours;
+    document.getElementById('modalHolidayDays').textContent     = data.holiday_days;
+    document.getElementById('modalBasicPay').textContent        = fmt(data.base_pay);
+    document.getElementById('modalOvertimePay').textContent     = fmt(data.overtime_pay);
+    document.getElementById('modalHolidayPay').textContent      = fmt(data.holiday_pay);
+    document.getElementById('modalNightDiff').textContent       = fmt(data.night_differential_pay);
+    document.getElementById('modalAllowances').textContent      = fmt(data.allowance_benefits);
+    document.getElementById('modalGrossPay').textContent        = fmt(data.gross_pay);
+    document.getElementById('modalSss').textContent             = fmt(data.sss_contribution);
+    document.getElementById('modalPhilHealth').textContent      = fmt(data.philhealth_contribution);
+    document.getElementById('modalPagIbig').textContent         = fmt(data.pagibig_contribution);
+    document.getElementById('modalTax').textContent             = fmt(data.withholding_tax);
+    document.getElementById('modalTotalDeductions').textContent = fmt(data.total_deductions);
+    document.getElementById('modalNetPay').textContent          = fmt(data.net_pay);
+    document.getElementById('modalDetailLink').href             = data.show_url;
+    document.getElementById('modalPayslipLink').href            = data.payslip_url;
+
+    const modal = document.getElementById('payrollBreakdownModal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBreakdownModal() {
+    document.getElementById('payrollBreakdownModal').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+// Use delegated jQuery click — consistent with app.js pattern
+$(document).on('click', '.btn-breakdown', function () {
+    const data = JSON.parse($(this).attr('data-payroll'));
+    openBreakdownModal(data);
+});
+
+// Close on backdrop click
+$('#payrollBreakdownModal').on('click', function (e) {
+    if (e.target === this) closeBreakdownModal();
+});
+
+// Close on Escape
+$(document).on('keydown', function (e) {
+    if (e.key === 'Escape') closeBreakdownModal();
+});
+
 function printPayrollTable() {
     const rows = document.querySelectorAll('table tbody tr');
 
@@ -439,7 +661,7 @@ function exportPayrollCSV() {
         csvRows.push(line);
     });
 
-    // Include period in filename if selectedddddtest
+    // Include period in filename if selected
     const periodText = document.querySelector('select[name="payroll_period_id"] option:checked')?.innerText ?? '';
     const deptVal    = document.querySelector('select[name="department"]')?.value ?? '';
     const periodSlug = periodText && periodText !== 'Latest Cutoff'

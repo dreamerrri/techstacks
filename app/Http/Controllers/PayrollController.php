@@ -62,7 +62,13 @@ class PayrollController extends Controller
             $query->where('department', $request->department);
         }
 
-        $employees = $query->orderByRaw('CASE WHEN EXISTS (SELECT 1 FROM payroll_inputs WHERE payroll_inputs.employee_id = employees.id) THEN 0 ELSE 1 END')
+        $employees = $query
+            ->with([
+                'payrollInputs' => fn($q) => $q->where('payroll_period_id', optional($selectedPeriod)->id),
+                'allowances'    => fn($q) => $q->where('is_active', true),
+                'benefits'      => fn($q) => $q->where('is_active', true),
+            ])
+            ->orderByRaw('CASE WHEN EXISTS (SELECT 1 FROM payroll_inputs WHERE payroll_inputs.employee_id = employees.id) THEN 0 ELSE 1 END')
             ->orderBy('last_name')
             ->paginate(15)
             ->withQueryString();
@@ -105,6 +111,12 @@ class PayrollController extends Controller
             $selectedPeriod = PayrollPeriod::find($request->payroll_period_id);
         }
 
+        $employee->load([
+            'payrollInputs' => fn($q) => $q->where('payroll_period_id', optional($selectedPeriod)->id),
+            'allowances'    => fn($q) => $q->where('is_active', true),
+            'benefits'      => fn($q) => $q->where('is_active', true),
+        ]);
+
         $payrollData = $this->calculatePayroll($employee, $selectedPeriod);
 
         return view('payroll.show', compact('employee', 'payrollData', 'isAdmin', 'isHR', 'selectedPeriod'));
@@ -135,11 +147,11 @@ class PayrollController extends Controller
             default   => $basicSalary / 22,
         };
 
-        // Resolve payroll input based on selected period or fall back to current/latest
+        // Resolve payroll input — use already-loaded relation if available, else query
         if ($period) {
-            $payrollInput = $employee->payrollInputs()
-                ->where('payroll_period_id', $period->id)
-                ->first();
+            $payrollInput = $employee->relationLoaded('payrollInputs')
+                ? $employee->payrollInputs->first()
+                : $employee->payrollInputs()->where('payroll_period_id', $period->id)->first();
 
             if (!$payrollInput) {
                 \Log::info("No payroll input for employee {$employee->id} in period {$period->id}");
@@ -183,9 +195,14 @@ class PayrollController extends Controller
             'working_hours_per_day'  => 8,
         ];
 
-        // Fetch active allowances and benefits
-        $allowances = $employee->activeAllowances()->pluck('amount')->toArray();
-        $benefits   = $employee->activeBenefits()->pluck('amount')->toArray();
+        // Fetch active allowances and benefits — use loaded relations if available
+        $allowances = $employee->relationLoaded('allowances')
+            ? $employee->allowances->pluck('amount')->toArray()
+            : $employee->activeAllowances()->pluck('amount')->toArray();
+
+        $benefits = $employee->relationLoaded('benefits')
+            ? $employee->benefits->pluck('amount')->toArray()
+            : $employee->activeBenefits()->pluck('amount')->toArray();
 
         // First pass: compute gross pay without deductions
         $engine        = new PayrollComputationEngine();
@@ -295,6 +312,12 @@ class PayrollController extends Controller
         if ($request->filled('payroll_period_id')) {
             $selectedPeriod = PayrollPeriod::find($request->payroll_period_id);
         }
+
+        $employee->load([
+            'payrollInputs' => fn($q) => $q->where('payroll_period_id', optional($selectedPeriod)->id),
+            'allowances'    => fn($q) => $q->where('is_active', true),
+            'benefits'      => fn($q) => $q->where('is_active', true),
+        ]);
 
         $payrollData = $this->calculatePayroll($employee, $selectedPeriod);
 
