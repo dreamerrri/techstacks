@@ -76,17 +76,22 @@
             <h4 style="margin:0 0 16px; font-size:13px; color:#1e40af; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
                 <i class="fas fa-calculator"></i> &nbsp;SSS Contribution (Circular No. 2024-006)
             </h4>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
-                @foreach([
-                    ['Monthly Salary Credit', '₱' . number_format($sssContribution['salary_credit'], 2)],
-                    ['Employee Share',        '₱' . number_format($sssContribution['employee_share'], 2)],
-                    ['Total Contribution',    '₱' . number_format($sssContribution['total'], 2)],
-                ] as [$lbl, $val])
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
                 <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">{{ $lbl }}</div>
-                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">{{ $val }}</div>
+                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Monthly Salary Credit</div>
+                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($sssContribution['salary_credit'], 2) }}</div>
                 </div>
-                @endforeach
+                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Share</div>
+                    <input type="number" name="custom_sss_contribution" id="custom_sss_contribution"
+                           value="{{ $employee->custom_sss_contribution ?? $sssContribution['employee_share'] }}"
+                           step="0.01" min="0"
+                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-weight:700; color:#dc2626; font-size:16px; box-sizing:border-box;">
+                </div>
+                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Total Contribution</div>
+                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($sssContribution['total'], 2) }}</div>
+                </div>
             </div>
         </div>
 
@@ -95,17 +100,22 @@
             <h4 style="margin:0 0 16px; font-size:13px; color:#065f46; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
                 <i class="fas fa-heartbeat"></i> &nbsp;PhilHealth Contribution (2025/2026)
             </h4>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
-                @foreach([
-                    ['Salary Basis',   '₱' . number_format($philHealthContribution['salary_basis'], 2)],
-                    ['Employee Rate',  number_format($philHealthContribution['employee_rate'] * 100, 1) . '%'],
-                    ['Employee Share', '₱' . number_format($philHealthContribution['employee_share'], 2)],
-                ] as [$lbl, $val])
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
                 <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">{{ $lbl }}</div>
-                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">{{ $val }}</div>
+                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Salary Basis</div>
+                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($philHealthContribution['salary_basis'], 2) }}</div>
                 </div>
-                @endforeach
+                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Rate</div>
+                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">{{ number_format($philHealthContribution['employee_rate'] * 100, 1) }}%</div>
+                </div>
+                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Share</div>
+                    <input type="number" name="custom_philhealth_contribution" id="custom_philhealth_contribution"
+                           value="{{ $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'] }}"
+                           step="0.01" min="0"
+                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-weight:700; color:#dc2626; font-size:16px; box-sizing:border-box;">
+                </div>
             </div>
         </div>
 
@@ -114,7 +124,7 @@
             <h4 style="margin:0 0 16px; font-size:13px; color:#92400e; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
                 <i class="fas fa-home"></i> &nbsp;Pag-IBIG Contribution (2026)
             </h4>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
                 <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
                     <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Monthly Salary</div>
                     <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($pagIbigContribution['salary'], 2) }}</div>
@@ -127,9 +137,20 @@
                 @endif
                 <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
                     <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Share</div>
-                    <div style="font-weight:700; color:#dc2626; font-size:16px;">₱{{ number_format($pagIbigContribution['employee_share'], 2) }}</div>
+                    <input type="number" name="custom_pagibig_contribution" id="custom_pagibig_contribution"
+                           value="{{ $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'] }}"
+                           step="0.01" min="0"
+                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-weight:700; color:#dc2626; font-size:16px; box-sizing:border-box;">
                 </div>
             </div>
+        </div>
+
+        {{-- Save Button --}}
+        <div style="margin-top:24px; text-align:right;">
+            <button onclick="saveCustomContributions()"
+                    style="padding:12px 24px; background:#dc2626; color:white; border-radius:8px; font-size:14px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
+                <i class="fas fa-save"></i> Save Custom Contributions
+            </button>
         </div>
 
     </div>
@@ -138,6 +159,66 @@
 
 @section('scripts')
 <script>
+    // Helper function to get visible input (handles duplicate elements issue)
+    const getVisibleInput = (inputs) => {
+        for (let input of inputs) {
+            if (input.offsetParent !== null) {
+                return input;
+            }
+        }
+        return inputs[0]; // Fallback to first if none visible
+    };
+
+    // Save custom contributions
+    function saveCustomContributions() {
+        const employeeId = '{{ $employee->employee_id }}';
+        
+        // Get all inputs by name attribute (handles duplicates)
+        const sssInputs = document.getElementsByName('custom_sss_contribution');
+        const philInputs = document.getElementsByName('custom_philhealth_contribution');
+        const pagInputs = document.getElementsByName('custom_pagibig_contribution');
+        
+        // Get visible inputs
+        const sssInput = getVisibleInput(sssInputs);
+        const philInput = getVisibleInput(philInputs);
+        const pagInput = getVisibleInput(pagInputs);
+        
+        const data = {
+            custom_sss_contribution: sssInput.value || null,
+            custom_philhealth_contribution: philInput.value || null,
+            custom_pagibig_contribution: pagInput.value || null,
+        };
+        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        if (!csrfToken) {
+            console.error('CSRF token not found');
+            alert('Error: Security token not found. Please refresh the page.');
+            return;
+        }
+        
+        fetch(`/government-contributions/${employeeId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Custom contributions updated successfully!');
+                location.reload();
+            } else {
+                alert('Error updating contributions. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error updating contributions. Please try again.');
+        });
+    }
+
     // Data passed from Blade to JS for export
     const employeeData = {
         id:         '{{ $employee->employee_id }}',

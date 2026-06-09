@@ -87,15 +87,25 @@ class GovernmentContributionsController extends Controller
         ));
     }
 
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request, $employeeId)
     {
-        $validated = $request->validate([
+        $employee = Employee::where('employee_id', $employeeId)->firstOrFail();
+
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'custom_sss_contribution' => 'nullable|numeric|min:0',
             'custom_philhealth_contribution' => 'nullable|numeric|min:0',
             'custom_pagibig_contribution' => 'nullable|numeric|min:0',
         ]);
 
-        $employee->update($validated);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $employee->update($validator->validated());
 
         return response()->json([
             'success' => true,

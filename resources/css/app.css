@@ -496,7 +496,7 @@
 }
 .burger-btn:hover { background: rgba(255,255,255,0.2); }
 
-.mobile-layout  { display: none; visibility: hidden; }
+.mobile-layout  { display: none; }
 .desktop-layout {
     display: grid;
     position: relative;
@@ -559,7 +559,11 @@
 .burger-dropdown.open { max-height: 600px; overflow-y: auto; }
 .burger-dropdown .nav-item { margin: 2px 8px; border-radius: 5px; }
 
-.mobile-content { overflow-y: auto; }
+.mobile-content { 
+    overflow-y: auto; 
+    min-height: 100vh;
+    height: 100vh;
+}
 
 /* ── Responsive table / user cards ── */
 .user-table-wrapper { overflow-x: auto; }
