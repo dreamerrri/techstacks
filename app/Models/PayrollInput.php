@@ -82,17 +82,18 @@ class PayrollInput extends Model
         // Use PayrollComputationEngine for consistency
         $engine = new \App\Services\Payroll\PayrollComputationEngine();
         
-        // Convert daily rate to monthly salary using the formula: daily_rate * 22
-        // Note: This will be recalculated based on actual working days if cutoff dates are provided
-        $monthlySalary = $this->daily_rate * 22;
-        
         // Get cutoff dates from payroll period if available
         $cutoffStart = null;
         $cutoffEnd = null;
+        $workingDaysPerMonth = 22; // Default fallback
         if ($this->payrollPeriod) {
             $cutoffStart = $this->payrollPeriod->cutoff_start->toDateString();
             $cutoffEnd = $this->payrollPeriod->cutoff_end->toDateString();
+            $workingDaysPerMonth = \App\Models\PayrollPeriod::calculateWorkingDays($cutoffStart, $cutoffEnd);
         }
+        
+        // Convert daily rate to monthly salary using the formula: daily_rate * working_days_per_month
+        $monthlySalary = $this->daily_rate * $workingDaysPerMonth;
         
         $employeeData = [
             'monthly_salary' => $monthlySalary,
