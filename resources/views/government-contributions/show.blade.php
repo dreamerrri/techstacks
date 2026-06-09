@@ -9,6 +9,16 @@
         <a href="{{ route('government-contributions.index') }}" style="color:#9ca3af; text-decoration:none; font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:6px;">
             <i class="fas fa-arrow-left"></i> Back to Government Contributions
         </a>
+        <div style="display:flex; gap:8px;">
+            <button onclick="printContributionDetail()"
+                    style="padding:8px 16px; background:#1e40af; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                <i class="fas fa-print"></i> Print
+            </button>
+            <button onclick="exportContributionDetailCSV()"
+                    style="padding:8px 16px; background:#065f46; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                <i class="fas fa-file-csv"></i> Export CSV
+            </button>
+        </div>
     </div>
 
     {{-- Profile Header --}}
