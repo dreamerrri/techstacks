@@ -439,7 +439,7 @@ function exportPayrollCSV() {
         csvRows.push(line);
     });
 
-    // Include period in filename if selected
+    // Include period in filename if selectedddddtest
     const periodText = document.querySelector('select[name="payroll_period_id"] option:checked')?.innerText ?? '';
     const deptVal    = document.querySelector('select[name="department"]')?.value ?? '';
     const periodSlug = periodText && periodText !== 'Latest Cutoff'
