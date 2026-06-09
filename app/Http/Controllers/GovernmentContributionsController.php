@@ -52,17 +52,29 @@ class GovernmentContributionsController extends Controller
         // Calculate SSS contribution based on salary bracket
         $sssContribution = $this->sssService->calculate($employee->basic_salary);
         // Use custom value if set, otherwise use computed
-        $sssEmployeeShare = $employee->custom_sss_contribution ?? $sssContribution['employee_share'];
+        $sssEmployeeShare = $employee->custom_sss_contribution;
+        // Recalculate total if custom employee share is set
+        if ($employee->custom_sss_contribution) {
+            $sssContribution['total'] = $sssEmployeeShare;
+        }
 
         // Calculate PhilHealth contribution based on salary basis
         $philHealthContribution = $this->philHealthService->calculate($employee->basic_salary);
         // Use custom value if set, otherwise use computed
-        $philHealthEmployeeShare = $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'];
+        $philHealthEmployeeShare = $employee->custom_philhealth_contribution ;
+        // Recalculate total if custom employee share is set
+        if ($employee->custom_philhealth_contribution) {
+            $philHealthContribution['total'] = $philHealthEmployeeShare;
+        }
 
         // Calculate Pag-IBIG contribution based on salary range
         $pagIbigContribution = $this->pagIbigService->calculate($employee->basic_salary);
         // Use custom value if set, otherwise use computed
         $pagIbigEmployeeShare = $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'];
+        // Recalculate total if custom employee share is set
+        if ($employee->custom_pagibig_contribution) {
+            $pagIbigContribution['total'] = $pagIbigEmployeeShare;
+        }
 
         return view('government-contributions.show', compact(
             'employee',
