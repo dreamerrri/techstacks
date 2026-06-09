@@ -132,19 +132,24 @@ class PayrollController extends Controller
         $basicSalary = $employee->basic_salary;
         $salaryType = $employee->salary_type;
 
-        // Calculate hourly and daily rates based on salary type
+        // Calculate working days from payroll period if available, otherwise use default 22
+        $workingDaysPerMonth = $period 
+            ? PayrollPeriod::calculateWorkingDays($period->cutoff_start, $period->cutoff_end) 
+            : 22;
+
+        // Calculate hourly and daily rates based on salary type and working days
         $hourlyRate = match ($salaryType) {
-            'Monthly' => $basicSalary / 22 / 8,
+            'Monthly' => $basicSalary / $workingDaysPerMonth / 8,
             'Daily'   => $basicSalary / 8,
             'Hourly'  => $basicSalary,
-            default   => $basicSalary / 22 / 8,
+            default   => $basicSalary / $workingDaysPerMonth / 8,
         };
 
         $dailyRate = match ($salaryType) {
-            'Monthly' => $basicSalary / 22,
+            'Monthly' => $basicSalary / $workingDaysPerMonth,
             'Daily'   => $basicSalary,
             'Hourly'  => $basicSalary * 8,
-            default   => $basicSalary / 22,
+            default   => $basicSalary / $workingDaysPerMonth,
         };
 
         // Resolve payroll input — use already-loaded relation if available, else query
@@ -173,6 +178,7 @@ class PayrollController extends Controller
                 'overtime_hours'           => $payrollInput->overtime_hours ?? 0,
                 'late_hours'               => $payrollInput->late_hours ?? 0,
                 'night_differential_hours' => $payrollInput->night_differential_hours ?? 0,
+                'night_diff_hours'        => $payrollInput->night_differential_hours ?? 0,
                 'holiday_days'             => $payrollInput->holiday_days ?? 0,
             ];
             \Log::info('Payroll input data found for employee ' . $employee->id, $attendanceData);
@@ -183,6 +189,7 @@ class PayrollController extends Controller
                 'overtime_hours'           => 0,
                 'late_hours'               => 0,
                 'night_differential_hours' => 0,
+                'night_diff_hours'        => 0,
                 'holiday_days'             => 0,
             ];
             \Log::warning('No payroll input data found for employee ' . $employee->id);
@@ -252,8 +259,8 @@ class PayrollController extends Controller
         return [
             'basic_salary'            => $basicSalary,
             'salary_type'             => $salaryType,
-            'hourly_rate'             => $hourlyRate,
-            'daily_rate'              => $dailyRate,
+            'hourly_rate'             => $result['hourly_rate'],
+            'daily_rate'              => $result['daily_rate'],
             'base_pay'                => $result['basic_salary'],
             'overtime_pay'            => $result['overtime_pay'],
             'night_differential_pay'  => $result['night_differential'],

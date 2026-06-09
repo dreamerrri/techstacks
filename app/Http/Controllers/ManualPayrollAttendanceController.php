@@ -123,20 +123,21 @@ class ManualPayrollAttendanceController extends Controller
         // Get payroll period if provided to calculate working days
         $cutoffStart = null;
         $cutoffEnd = null;
+        $workingDaysPerMonth = 22; // Default fallback
         if (!empty($validated['payroll_period_id'])) {
             $period = PayrollPeriod::find($validated['payroll_period_id']);
             if ($period) {
                 $cutoffStart = $period->cutoff_start->toDateString();
                 $cutoffEnd = $period->cutoff_end->toDateString();
+                $workingDaysPerMonth = PayrollPeriod::calculateWorkingDays($cutoffStart, $cutoffEnd);
             }
         }
 
         // Use PayrollComputationEngine for consistency with PayrollInput::computePay()
         $engine = new PayrollComputationEngine();
         
-        // Convert daily rate to monthly salary using the formula: daily_rate * 22
-        // Note: This will be recalculated based on actual working days if cutoff dates are provided
-        $monthlySalary = $validated['daily_rate'] * 22;
+        // Convert daily rate to monthly salary using the formula: daily_rate * working_days_per_month
+        $monthlySalary = $validated['daily_rate'] * $workingDaysPerMonth;
         
         $employeeData = [
             'monthly_salary' => $monthlySalary,
