@@ -37,7 +37,7 @@
             <h2 class="aurora-card-title" style="margin:0;">
     <i class="fas fa-list"></i> Payroll Summary
 </h2>
-<button onclick="printPayrollTable()" 
+<button onclick="printPayrollTable()"
         style="padding:8px 18px; background:#1e40af; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
     <i class="fas fa-print"></i> Print
 </button>
@@ -51,9 +51,11 @@
         @if($isAdmin || $isHR)
         <form method="GET" action="{{ route('payroll.index') }}"
               style="display:flex; flex-wrap:wrap; gap:10px; padding-bottom:16px; border-bottom:1px solid #e5e7eb;">
+
             <input type="text" name="search" value="{{ request('search') }}"
                    placeholder="Search name, ID..."
                    style="flex:1; min-width:160px; border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none;">
+
             <select name="department"
                     style="border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none;">
                 <option value="">All Departments</option>
@@ -61,10 +63,25 @@
                     <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
                 @endforeach
             </select>
+
+            {{-- Cutoff Period Filter --}}
+            <select name="payroll_period_id"
+                    style="border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none; min-width:230px;">
+                <option value="">Latest Cutoff</option>
+                @foreach($payrollPeriods as $period)
+                    <option value="{{ $period->id }}"
+                        {{ (string) request('payroll_period_id') === (string) $period->id ? 'selected' : '' }}>
+                        {{ $period->cutoff_start->format('M d') }} – {{ $period->cutoff_end->format('M d, Y') }}
+                        ({{ ucfirst($period->status) }})
+                    </option>
+                @endforeach
+            </select>
+
             <button type="submit" class="btn btn-danger btn-sm" style="padding:8px 20px; font-size:14px;">
                 <i class="fas fa-search"></i> Search
             </button>
-            @if(request()->hasAny(['search','department']))
+
+            @if(request()->hasAny(['search', 'department', 'payroll_period_id']))
                 <a href="{{ route('payroll.index') }}"
                    style="padding:8px 16px; background:#f3f4f6; color:#6b7280; border-radius:8px; text-decoration:none; font-size:14px;">
                     Clear
@@ -76,21 +93,37 @@
         @endif
     </div>
 
+    {{-- Active cutoff banner --}}
+    @if($selectedPeriod ?? null)
+    <div style="padding:10px 28px; background:#eff6ff; border-bottom:1px solid #dbeafe; font-size:13px; color:#1e40af; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Showing payroll for cutoff:</span>
+        <strong>{{ $selectedPeriod->cutoff_start->format('M d, Y') }} – {{ $selectedPeriod->cutoff_end->format('M d, Y') }}</strong>
+        <span style="padding:2px 10px; border-radius:10px; font-size:11px; font-weight:600;
+            {{ $selectedPeriod->status === 'finalized' ? 'background:#d1fae5; color:#065f46;' : 'background:#fef3c7; color:#92400e;' }}">
+            {{ ucfirst($selectedPeriod->status) }}
+        </span>
+        <span style="color:#6b7280; font-size:12px; margin-left:4px;">
+            Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}
+        </span>
+    </div>
+    @endif
+
     {{-- Desktop Table --}}
-    <div class="user-table-wrapper" style="overflow-y:auto; max-height:55vh; padding:0 28px;">
+    <div class="user-table-wrapper" style="overflow-y:auto; max-height:53vh; padding:0 28px;">
         <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:900px;">
             <thead style="position:sticky; top:0; z-index:5;">
                 <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Employee</th>
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Department</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Gross Pay</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Allowance & Benefits</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">SSS</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">PhilHealth</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Pag-IBIG</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Tax</th>
+                 <!--   <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Gross Pay</th>  -->
+                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Allowance & Benefits</th> -->
+                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">SSS</th> -->
+                  <!--   <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">PhilHealth</th> -->
+                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Pag-IBIG</th> -->
+                  <!--   <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Tax</th> -->
                     <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Total Deductions</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Net Pay</th>
+                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Net Pay</th> -->
                     <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
                 </tr>
             </thead>
@@ -110,29 +143,29 @@
                                 </div>
                             </div>
                         </td>
-                        <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
-                        <td style="padding:12px; text-align:right; font-weight:600; color:#1a1a2e;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; font-weight:600; color:#10b981;">+₱{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; font-weight:700; color:#10b981; font-size:15px;">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
+                       <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
+                     <!--   <td style="padding:12px; text-align:right; font-weight:600; color:#1a1a2e;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</td> -->
+                     <!--   <td style="padding:12px; text-align:right; font-weight:600; color:#10b981;">+₱{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</td> -->
+                     <!--   <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</td> -->
+                      <!--  <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</td> -->
+                      <!--  <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</td> -->
+                      <!--  <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</td> -->
+                       <td style="padding:12px; text-align:right; font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
+                     <!--   <td style="padding:12px; text-align:right; font-weight:700; color:#10b981; font-size:15px;">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td> -->
                         <td style="padding:12px; text-align:center;">
                             <div style="display:flex; gap:6px; justify-content:center;">
                                 @if(($payroll['gross_pay'] ?? 0) == 0)
                                     <a href="javascript:void(0)"
-                                       onclick="alert('This employee has no payroll data yet.')"
+                                       onclick="alert('This employee has no payroll data for the selected cutoff period.')"
                                        style="padding:5px 10px; background:#f3f4f6; color:#9ca3af; border-radius:8px; font-size:12px; text-decoration:none; cursor:not-allowed;">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 @else
-                                    <a href="{{ route('payroll.show', $employee) }}"
+                                    <a href="{{ route('payroll.show', [$employee, 'payroll_period_id' => request('payroll_period_id')]) }}"
                                        style="padding:5px 10px; background:#dbeafe; color:#1e40af; border-radius:8px; font-size:12px; text-decoration:none;">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('payroll.payslip', $employee) }}"
+                                    <a href="{{ route('payroll.payslip', [$employee, 'payroll_period_id' => request('payroll_period_id')]) }}"
                                        style="padding:5px 10px; background:#d1fae5; color:#065f46; border-radius:8px; font-size:12px; text-decoration:none;">
                                         <i class="fas fa-file-download"></i>
                                     </a>
@@ -229,16 +262,16 @@
                 <div class="user-card-meta">
                     @if(($payroll['gross_pay'] ?? 0) == 0)
                         <a href="javascript:void(0)"
-                           onclick="alert('This employee has no payroll data yet.')"
+                           onclick="alert('This employee has no payroll data for the selected cutoff period.')"
                            style="padding:5px 12px; background:#f3f4f6; color:#9ca3af; border-radius:8px; font-size:12px; text-decoration:none; cursor:not-allowed;">
                             <i class="fas fa-eye"></i> View Details
                         </a>
                     @else
-                        <a href="{{ route('payroll.show', $employee) }}"
+                        <a href="{{ route('payroll.show', [$employee, 'payroll_period_id' => request('payroll_period_id')]) }}"
                            style="padding:5px 12px; background:#dbeafe; color:#1e40af; border-radius:8px; font-size:12px; text-decoration:none;">
                             <i class="fas fa-eye"></i> View Details
                         </a>
-                        <a href="{{ route('payroll.payslip', $employee) }}"
+                        <a href="{{ route('payroll.payslip', [$employee, 'payroll_period_id' => request('payroll_period_id')]) }}"
                            style="padding:5px 12px; background:#d1fae5; color:#065f46; border-radius:8px; font-size:12px; text-decoration:none;">
                             <i class="fas fa-file-download"></i> Payslip
                         </a>
@@ -262,7 +295,7 @@
 <script>
 function printPayrollTable() {
     const rows = document.querySelectorAll('table tbody tr');
-    
+
     // Build header
     const headers = [
         'Employee', 'Dept', 'Gross Pay', 'Allowance & Benefits',
@@ -281,7 +314,6 @@ function printPayrollTable() {
         const cells = row.querySelectorAll('td');
         if (!cells.length) return; // skip empty state row
 
-        // Extract text cleanly per cell
         const emp    = cells[0].querySelector('a')?.innerText.trim() ?? '';
         const empId  = cells[0].querySelector('div[style*="monospace"]')?.innerText.trim() ?? '';
         const dept   = cells[1].innerText.trim();
@@ -313,11 +345,13 @@ function printPayrollTable() {
     tableHTML += `</tbody></table>`;
 
     // Detect active filters for the report header
-    const searchVal = document.querySelector('input[name="search"]')?.value ?? '';
-    const deptVal   = document.querySelector('select[name="department"]')?.value ?? '';
+    const searchVal  = document.querySelector('input[name="search"]')?.value ?? '';
+    const deptVal    = document.querySelector('select[name="department"]')?.value ?? '';
+    const periodText = document.querySelector('select[name="payroll_period_id"] option:checked')?.innerText ?? '';
     const filterNote = [
-        searchVal ? `Search: "${searchVal}"` : '',
-        deptVal   ? `Department: ${deptVal}` : ''
+        searchVal  ? `Search: "${searchVal}"` : '',
+        deptVal    ? `Department: ${deptVal}` : '',
+        periodText ? `Cutoff: ${periodText}` : ''
     ].filter(Boolean).join(' | ') || 'All Employees';
 
     const win = window.open('', '_blank');
@@ -375,7 +409,6 @@ function exportPayrollCSV() {
         'Total Deductions', 'Net Pay'
     ];
 
-    // Strip ₱ signs and commas so numbers are clean in spreadsheet
     function cleanAmount(val) {
         return val.replace(/[₱,+\-]/g, '').trim();
     }
@@ -398,7 +431,6 @@ function exportPayrollCSV() {
         const totDed  = cleanAmount(cells[8].innerText);
         const net     = cleanAmount(cells[9].innerText);
 
-        // Wrap strings in quotes in case they have commas
         const line = [
             `"${emp}"`, `"${empId}"`, `"${dept}"`,
             gross, allow, sss, phil, pagibig, tax, totDed, net
@@ -407,11 +439,15 @@ function exportPayrollCSV() {
         csvRows.push(line);
     });
 
-    // Active filter label for the filename
-    const deptVal  = document.querySelector('select[name="department"]')?.value ?? '';
+    // Include period in filename if selected
+    const periodText = document.querySelector('select[name="payroll_period_id"] option:checked')?.innerText ?? '';
+    const deptVal    = document.querySelector('select[name="department"]')?.value ?? '';
+    const periodSlug = periodText && periodText !== 'Latest Cutoff'
+        ? `_${periodText.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}`
+        : '';
     const filename = deptVal
-        ? `payroll_${deptVal.replace(/\s+/g, '_')}.csv`
-        : 'payroll_all.csv';
+        ? `payroll_${deptVal.replace(/\s+/g, '_')}${periodSlug}.csv`
+        : `payroll_all${periodSlug}.csv`;
 
     const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
     const url  = URL.createObjectURL(blob);
