@@ -21,7 +21,17 @@
     color: white;
     padding: 20px 0;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;           /* scrollable when content overflows */
+    -ms-overflow-style: none;   /* IE / Edge */
+    scrollbar-width: none;      /* Firefox */
+    display: flex;              /* flex column so logout stays at bottom */
+    flex-direction: column;
+    height: 100%;
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;             /* Chrome / Safari / Opera */
+
 }
 /* ── Sidebar: no-flash pre-collapsed state (applied before first paint) ── */
 .sidebar-pre-collapsed .desktop-layout {
@@ -96,19 +106,23 @@
     box-shadow: 4px 0 24px rgba(0,0,0,0.2);
 }
 
-/* Wave pattern overlay — bottom only, fades into gradient above */
+/* Wave pattern overlay — fixed to viewport bottom of the sidebar so it never scrolls away */
 .sidebar::before {
     content: '';
-    position: absolute;
-    inset: 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 250px;              /* matches sidebar grid column width */
+    height: 45%;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 250 200' preserveAspectRatio='none'%3E%3Cpath d='M0,130 C40,105 80,155 125,128 C170,101 210,145 250,122 L250,200 L0,200 Z' fill='rgba(255,255,255,0.04)'/%3E%3Cpath d='M0,130 C40,105 80,155 125,128 C170,101 210,145 250,122' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'/%3E%3Cpath d='M0,134 C40,109 80,159 125,132 C170,105 210,149 250,126' fill='none' stroke='rgba(255,255,255,0.045)' stroke-width='0.8'/%3E%3Cpath d='M0,138 C40,113 80,163 125,136 C170,109 210,153 250,130' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='0.8'/%3E%3Cpath d='M0,152 C35,130 70,168 120,148 C165,130 210,160 250,142 L250,200 L0,200 Z' fill='rgba(255,255,255,0.07)'/%3E%3Cpath d='M0,152 C35,130 70,168 120,148 C165,130 210,160 250,142' fill='none' stroke='rgba(255,255,255,0.09)' stroke-width='1'/%3E%3Cpath d='M0,156 C35,134 70,172 120,152 C165,134 210,164 250,146' fill='none' stroke='rgba(255,255,255,0.065)' stroke-width='0.8'/%3E%3Cpath d='M0,160 C35,138 70,176 120,156 C165,138 210,168 250,150' fill='none' stroke='rgba(255,255,255,0.045)' stroke-width='0.8'/%3E%3Cpath d='M0,172 C40,155 75,185 115,168 C155,152 210,178 250,162 L250,200 L0,200 Z' fill='rgba(255,255,255,0.09)'/%3E%3Cpath d='M0,172 C40,155 75,185 115,168 C155,152 210,178 250,162' fill='none' stroke='rgba(255,255,255,0.11)' stroke-width='1'/%3E%3Cpath d='M0,176 C40,159 75,189 115,172 C155,156 210,182 250,166' fill='none' stroke='rgba(255,255,255,0.08)' stroke-width='0.8'/%3E%3Cpath d='M0,180 C40,163 75,193 115,176 C155,160 210,186 250,170' fill='none' stroke='rgba(255,255,255,0.055)' stroke-width='0.8'/%3E%3C/svg%3E");
-    background-size: 100% 45%;
+    background-size: 100% 100%;
     background-position: bottom center;
     background-repeat: no-repeat;
     -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 15%, rgba(0,0,0,0.5) 25%, transparent 40%);
     mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 15%, rgba(0,0,0,0.5) 25%, transparent 40%);
     pointer-events: auto;
     z-index: 0;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
 }
 
 /* Sidebar header */
@@ -211,6 +225,7 @@
     display: block;
     width: calc(100% - 40px);
     margin: 0 20px;
+
     padding: 10px;
     background: rgba(255,255,255,0.07);
     border: 1px solid rgba(255,255,255,0.15);
@@ -242,19 +257,25 @@
 .nav-chevron {
     font-size: 10px !important;
     opacity: 0.6;
-    transition: transform 0.25s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     width: auto !important;
 }
 .nav-dropdown.open .nav-chevron {
-    transform: rotate(180deg);
+    transform: rotate(-180deg);
 }
 .nav-dropdown-menu {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.25s ease;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease,
+                transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-6px);
 }
 .nav-dropdown.open .nav-dropdown-menu {
-    max-height: 200px;
+    max-height: 300px;
+    opacity: 1;
+    transform: translateY(0);
 }
 .nav-sub-item {
     padding-left: 45px !important;
@@ -270,7 +291,7 @@
     position: relative;
     overflow: visible;
 }
-/* replace */
+
 .topbar::after {
     content: '';
     position: absolute;
@@ -543,6 +564,12 @@
 }
 .desktop-layout.sidebar-collapsed #sidebar-toggle {
     left: 0px;
+}
+
+/* Hide the wave overlay when sidebar is collapsed */
+.desktop-layout.sidebar-collapsed .sidebar::before {
+    width: 0;
+    opacity: 0;
 }
 
 .mobile-topbar {
