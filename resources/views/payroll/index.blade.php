@@ -17,18 +17,19 @@
         $p = $payrollData[$emp->id] ?? [];
         if (($p['gross_pay'] ?? 0) == 0) continue;
         $deptBreakdownData[] = [
-            'name'                   => $emp->full_name,
-            'employee_id'            => $emp->employee_id,
-            'department'             => $emp->department,
-            'gross_pay'              => $p['gross_pay'] ?? 0,
-            'sss_contribution'       => $p['sss_contribution'] ?? 0,
-            'philhealth_contribution'=> $p['philhealth_contribution'] ?? 0,
-            'pagibig_contribution'   => $p['pagibig_contribution'] ?? 0,
-            'withholding_tax'        => $p['withholding_tax'] ?? 0,
-            'total_deductions'       => $p['total_deductions'] ?? 0,
-            'net_pay'                => $p['net_pay'] ?? 0,
-            'show_url'               => route('payroll.show', [$emp, 'payroll_period_id' => request('payroll_period_id')]),
-            'payslip_url'            => route('payroll.payslip', [$emp, 'payroll_period_id' => request('payroll_period_id')]),
+            'name'                    => $emp->full_name,
+            'employee_id'             => $emp->employee_id,
+            'department'              => $emp->department,
+            'basic_pay'               => $p['base_pay'] ?? 0,
+            'gross_pay'               => $p['gross_pay'] ?? 0,
+            'sss_contribution'        => $p['sss_contribution'] ?? 0,
+            'philhealth_contribution' => $p['philhealth_contribution'] ?? 0,
+            'pagibig_contribution'    => $p['pagibig_contribution'] ?? 0,
+            'withholding_tax'         => $p['withholding_tax'] ?? 0,
+            'total_deductions'        => $p['total_deductions'] ?? 0,
+            'net_pay'                 => $p['net_pay'] ?? 0,
+            'show_url'                => route('payroll.show', [$emp, 'payroll_period_id' => request('payroll_period_id')]),
+            'payslip_url'             => route('payroll.payslip', [$emp, 'payroll_period_id' => request('payroll_period_id')]),
         ];
     }
     $deptLabel = request('department') ?: 'All Departments';
@@ -63,7 +64,7 @@
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                         <th style="padding:11px 16px; text-align:left; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Employee</th>
                         <th style="padding:11px 16px; text-align:left; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Dept</th>
-                        <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Gross Pay</th>
+                        <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Basic Pay</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">SSS</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">PhilHealth</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Pag-IBIG</th>
@@ -76,7 +77,7 @@
                     {{-- filled by JS --}}
                 </tbody>
                 <tfoot id="deptBreakdownFoot">
-                    {{-- totals row filled by JS --}}
+                    {{-- per-column totals row, filled by JS --}}
                 </tfoot>
             </table>
             <div id="deptBreakdownEmpty" style="display:none; padding:40px; text-align:center; color:#9ca3af;">
@@ -85,8 +86,28 @@
             </div>
         </div>
 
-        {{-- Modal footer --}}
-        <div style="padding:14px 24px; border-top:1px solid #e5e7eb; display:flex; justify-content:flex-end;">
+        {{-- Total Net Pay → Gross Pay summary bar --}}
+        <div id="deptGrossPayBar" style="display:none; margin:0 24px 0; padding:14px 20px; background:linear-gradient(135deg,#d1fae5,#a7f3d0); border-radius:0 0 12px 12px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div style="font-size:13px; color:#065f46;">
+                <i class="fas fa-money-bill-wave" style="margin-right:6px;"></i>
+                <strong>Total Gross Pay</strong>
+                <span style="font-size:11px; color:#047857; margin-left:6px;">(sum of all net pays)</span>
+            </div>
+            <span id="deptTotalGrossPay" style="font-size:20px; font-weight:800; color:#065f46; letter-spacing:-0.5px;">₱0.00</span>
+        </div>
+
+        {{-- Modal footer: Print, Export CSV, Close --}}
+        <div style="padding:14px 24px; border-top:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button onclick="printPayrollTable()"
+                        style="padding:8px 18px; background:#1e40af; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                    <i class="fas fa-print"></i> Print PDF
+                </button>
+                <button onclick="exportPayrollCSV()"
+                        style="padding:8px 18px; background:#065f46; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                    <i class="fas fa-file-csv"></i> Export CSV
+                </button>
+            </div>
             <button onclick="closeDeptModal()"
                     style="padding:8px 20px; background:#f3f4f6; color:#374151; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer;">
                 Close
@@ -121,21 +142,12 @@
                 <i class="fas fa-list"></i> Payroll Summary
             </h2>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                {{-- Department Breakdown modal button --}}
                 @if($isAdmin || $isHR)
                 <button onclick="openDeptModal()"
                         style="padding:8px 18px; background:#4f46e5; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
                     <i class="fas fa-layer-group"></i> Dept Breakdown
                 </button>
                 @endif
-                <button onclick="printPayrollTable()"
-                        style="padding:8px 18px; background:#1e40af; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
-                    <i class="fas fa-print"></i> Print
-                </button>
-                <button onclick="exportPayrollCSV()"
-                        style="padding:8px 18px; background:#065f46; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
-                    <i class="fas fa-file-csv"></i> Export CSV
-                </button>
             </div>
         </div>
 
@@ -157,7 +169,6 @@
                 @endforeach
             </select>
 
-            {{-- Cutoff Period Filter --}}
             <select name="payroll_period_id"
                     onchange="this.closest('form').submit()"
                     style="border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none; min-width:230px;">
@@ -171,9 +182,7 @@
                 @endforeach
             </select>
 
-            <button type="submit" class="btn btn-danger btn-sm" style="display:none;">
-                <i class="fas fa-search"></i> Search
-            </button>
+            <button type="submit" style="display:none;"></button>
 
             @if(request()->hasAny(['search', 'department', 'payroll_period_id']))
                 <a href="{{ route('payroll.index') }}"
@@ -298,7 +307,6 @@
                     <span><i class="fas fa-briefcase" style="width:14px;"></i> {{ $employee->position }}</span>
                 </div>
 
-                {{-- Collapsible breakdown --}}
                 <div style="margin-top:12px; border-top:1px solid #f3f4f6;">
                     <button type="button"
                             onclick="var d=this.nextElementSibling; var i=this.querySelector('i'); d.style.display=d.style.display==='none'?'block':'none'; i.classList.toggle('fa-chevron-down'); i.classList.toggle('fa-chevron-up');"
@@ -387,7 +395,7 @@
 
 </div>
 
-    <div style="padding:16px 28px; border-top:1px solid #e5e7eb;">{{ $employees->links() }}</div>
+<div style="padding:16px 28px; border-top:1px solid #e5e7eb;">{{ $employees->links() }}</div>
 
 @endsection
 
@@ -409,6 +417,7 @@ function openDeptModal() {
     const foot  = document.getElementById('deptBreakdownFoot');
     const empty = document.getElementById('deptBreakdownEmpty');
     const table = document.getElementById('deptBreakdownTable');
+    const bar   = document.getElementById('deptGrossPayBar');
 
     document.getElementById('deptModalTitle').textContent =
         DEPT_LABEL !== 'All Departments'
@@ -420,8 +429,9 @@ function openDeptModal() {
         data.length + ' employee' + (data.length !== 1 ? 's' : '') + ' · Cutoff: ' + periodText;
 
     if (!data.length) {
-        table.style.display  = 'none';
-        empty.style.display  = 'block';
+        table.style.display = 'none';
+        bar.style.display   = 'none';
+        empty.style.display = 'block';
         document.getElementById('deptBreakdownModal').style.display = 'flex';
         document.body.style.overflow = 'hidden';
         return;
@@ -430,11 +440,11 @@ function openDeptModal() {
     table.style.display = '';
     empty.style.display = 'none';
 
-    // Totals accumulators
-    let totGross = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
+    // Accumulate totals
+    let totBasic = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
 
     body.innerHTML = data.map((emp, idx) => {
-        totGross   += parseFloat(emp.gross_pay);
+        totBasic   += parseFloat(emp.basic_pay);
         totSss     += parseFloat(emp.sss_contribution);
         totPhil    += parseFloat(emp.philhealth_contribution);
         totPagibig += parseFloat(emp.pagibig_contribution);
@@ -450,7 +460,7 @@ function openDeptModal() {
                     <div style="font-size:11px; color:#9ca3af; font-family:monospace;">${emp.employee_id}</div>
                 </td>
                 <td style="padding:10px 16px; color:#6b7280; font-size:13px;">${emp.department}</td>
-                <td style="padding:10px 16px; text-align:right; font-weight:600; color:#065f46;">${fmt(emp.gross_pay)}</td>
+                <td style="padding:10px 16px; text-align:right; font-weight:600; color:#1a1a2e;">${fmt(emp.basic_pay)}</td>
                 <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.sss_contribution)}</td>
                 <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.philhealth_contribution)}</td>
                 <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.pagibig_contribution)}</td>
@@ -460,13 +470,13 @@ function openDeptModal() {
             </tr>`;
     }).join('');
 
-    // Totals row
+    // Per-column totals row
     foot.innerHTML = `
         <tr style="background:linear-gradient(135deg,#eff6ff,#dbeafe); border-top:2px solid #bfdbfe;">
             <td colspan="2" style="padding:12px 16px; font-weight:700; color:#1e40af; font-size:13px;">
                 <i class="fas fa-sigma" style="margin-right:6px;"></i>Totals (${data.length} employees)
             </td>
-            <td style="padding:12px 16px; text-align:right; font-weight:700; color:#065f46; font-size:14px;">${fmt(totGross)}</td>
+            <td style="padding:12px 16px; text-align:right; font-weight:700; color:#1a1a2e;">${fmt(totBasic)}</td>
             <td style="padding:12px 16px; text-align:right; font-weight:700; color:#dc2626;">${fmt(totSss)}</td>
             <td style="padding:12px 16px; text-align:right; font-weight:700; color:#dc2626;">${fmt(totPhil)}</td>
             <td style="padding:12px 16px; text-align:right; font-weight:700; color:#dc2626;">${fmt(totPagibig)}</td>
@@ -474,6 +484,10 @@ function openDeptModal() {
             <td style="padding:12px 16px; text-align:right; font-weight:700; color:#dc2626; font-size:14px;">${fmt(totDed)}</td>
             <td style="padding:12px 16px; text-align:right; font-weight:800; color:#065f46; font-size:15px;">${fmt(totNet)}</td>
         </tr>`;
+
+    // Total Gross Pay bar = sum of net pays
+    document.getElementById('deptTotalGrossPay').textContent = fmt(totNet);
+    bar.style.display = 'flex';
 
     document.getElementById('deptBreakdownModal').style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -484,28 +498,22 @@ function closeDeptModal() {
     document.body.style.overflow = '';
 }
 
-// Move modal to body immediately on load — escapes any overflow container
+// Move modal to body on load — escapes overflow containers
 document.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(document.getElementById('deptBreakdownModal'));
-    // Backdrop click
     document.getElementById('deptBreakdownModal').addEventListener('click', function(e) {
         if (e.target === this) closeDeptModal();
     });
 });
 
-// Escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeDeptModal();
 });
 
-// ─── Print ────────────────────────────────────────────────────────────────────
+// ─── Print PDF ────────────────────────────────────────────────────────────────
 function printPayrollTable() {
-    const rows = document.querySelectorAll('table tbody tr');
-
-    const headers = [
-        'Employee', 'Dept', 'Gross Pay',
-        'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax', 'Total Deductions', 'Net Pay'
-    ];
+    const data = DEPT_BREAKDOWN_DATA;
+    if (!data.length) { alert('No payroll data to print.'); return; }
 
     const searchVal  = document.querySelector('input[name="search"]')?.value ?? '';
     const deptVal    = document.querySelector('select[name="department"]')?.value ?? '';
@@ -516,91 +524,83 @@ function printPayrollTable() {
         periodText ? `Cutoff: ${periodText}` : ''
     ].filter(Boolean).join(' | ') || 'All Employees';
 
-    let totGross = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
+    let totBasic = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
 
-    let tableHTML = `
-        <table>
-            <thead>
-                <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
-            </thead>
-            <tbody>
-    `;
+    const headers = ['Employee', 'Dept', 'Basic Pay', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax', 'Total Deductions', 'Net Pay'];
 
-    DEPT_BREAKDOWN_DATA.forEach(d => {
-        totGross   += parseFloat(d.gross_pay);
+    let rows = '';
+    data.forEach(d => {
+        totBasic   += parseFloat(d.basic_pay);
         totSss     += parseFloat(d.sss_contribution);
         totPhil    += parseFloat(d.philhealth_contribution);
         totPagibig += parseFloat(d.pagibig_contribution);
         totTax     += parseFloat(d.withholding_tax);
         totDed     += parseFloat(d.total_deductions);
         totNet     += parseFloat(d.net_pay);
-
-        tableHTML += `
+        rows += `
             <tr>
                 <td><strong>${d.name}</strong><br><small>${d.employee_id}</small></td>
                 <td>${d.department}</td>
-                <td class="money">${fmt(d.gross_pay)}</td>
-                <td class="red">${fmt(d.sss_contribution)}</td>
-                <td class="red">${fmt(d.philhealth_contribution)}</td>
-                <td class="red">${fmt(d.pagibig_contribution)}</td>
-                <td class="red">${fmt(d.withholding_tax)}</td>
-                <td class="red bold">${fmt(d.total_deductions)}</td>
-                <td class="money bold">${fmt(d.net_pay)}</td>
-            </tr>
-        `;
+                <td class="num">${fmt(d.basic_pay)}</td>
+                <td class="num red">${fmt(d.sss_contribution)}</td>
+                <td class="num red">${fmt(d.philhealth_contribution)}</td>
+                <td class="num red">${fmt(d.pagibig_contribution)}</td>
+                <td class="num red">${fmt(d.withholding_tax)}</td>
+                <td class="num red bold">${fmt(d.total_deductions)}</td>
+                <td class="num green bold">${fmt(d.net_pay)}</td>
+            </tr>`;
     });
-
-    tableHTML += `
-            </tbody>
-            <tfoot>
-                <tr class="totals-row">
-                    <td colspan="2"><strong>Totals (${DEPT_BREAKDOWN_DATA.length} employees)</strong></td>
-                    <td class="money bold">${fmt(totGross)}</td>
-                    <td class="red bold">${fmt(totSss)}</td>
-                    <td class="red bold">${fmt(totPhil)}</td>
-                    <td class="red bold">${fmt(totPagibig)}</td>
-                    <td class="red bold">${fmt(totTax)}</td>
-                    <td class="red bold">${fmt(totDed)}</td>
-                    <td class="money bold">${fmt(totNet)}</td>
-                </tr>
-            </tfoot>
-        </table>`;
 
     const win = window.open('', '_blank');
     win.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Payroll Summary Report</title>
-            <style>
-                * { margin: 0; padding: 0; box-sizing: border-box; }
-                body { font-family: Arial, sans-serif; font-size: 11px; color: #111; padding: 20px; }
-                .report-header { margin-bottom: 16px; }
-                .report-header h1 { font-size: 16px; color: #1a1a2e; }
-                .report-header p  { font-size: 11px; color: #6b7280; margin-top: 4px; }
-                table { width: 100%; border-collapse: collapse; }
-                thead th { background: #1e40af; color: white; padding: 7px 8px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
-                thead th:nth-child(n+3) { text-align: right; }
-                td { padding: 6px 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
-                td:nth-child(n+3) { text-align: right; }
-                tr:nth-child(even) td { background: #f9fafb; }
-                small { color: #6b7280; font-size: 10px; font-family: monospace; }
-                .money { color: #065f46; }
-                .red   { color: #dc2626; }
-                .bold  { font-weight: 700; }
-                tfoot .totals-row td { background: #dbeafe; font-weight: 700; border-top: 2px solid #93c5fd; padding: 8px; }
-                @media print { body { padding: 0; } }
-            </style>
-        </head>
-        <body>
-            <div class="report-header">
-                <h1>Payroll Summary Report</h1>
-                <p>Filter: ${filterNote} &nbsp;|&nbsp; Printed: ${new Date().toLocaleString()}</p>
-            </div>
-            ${tableHTML}
-        </body>
-        </html>
-    `);
+        <!DOCTYPE html><html><head>
+        <title>Payroll Summary Report</title>
+        <style>
+            * { margin:0; padding:0; box-sizing:border-box; }
+            body { font-family:Arial,sans-serif; font-size:11px; color:#111; padding:20px; }
+            h1 { font-size:16px; color:#1a1a2e; margin-bottom:4px; }
+            .meta { font-size:11px; color:#6b7280; margin-bottom:16px; }
+            table { width:100%; border-collapse:collapse; }
+            thead th { background:#1e40af; color:white; padding:7px 8px; font-size:10px; text-transform:uppercase; letter-spacing:0.04em; text-align:left; }
+            thead th.num { text-align:right; }
+            td { padding:6px 8px; border-bottom:1px solid #e5e7eb; vertical-align:top; }
+            td.num { text-align:right; }
+            tr:nth-child(even) td { background:#f9fafb; }
+            small { color:#6b7280; font-size:10px; font-family:monospace; }
+            .red { color:#dc2626; }
+            .green { color:#065f46; }
+            .bold { font-weight:700; }
+            tfoot tr td { background:#dbeafe; font-weight:700; border-top:2px solid #93c5fd; padding:8px; }
+            tfoot tr td.num { text-align:right; }
+            .gross-bar { margin-top:12px; background:#d1fae5; border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; }
+            .gross-bar span { font-size:11px; color:#065f46; }
+            .gross-bar strong { font-size:15px; color:#065f46; }
+            @media print { body { padding:0; } }
+        </style>
+        </head><body>
+        <h1>Payroll Summary Report</h1>
+        <div class="meta">Filter: ${filterNote} &nbsp;|&nbsp; Printed: ${new Date().toLocaleString()}</div>
+        <table>
+            <thead><tr>${headers.map((h,i) => `<th${i>=2?' class="num"':''}>${h}</th>`).join('')}</tr></thead>
+            <tbody>${rows}</tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">Totals (${data.length} employees)</td>
+                    <td class="num">${fmt(totBasic)}</td>
+                    <td class="num red">${fmt(totSss)}</td>
+                    <td class="num red">${fmt(totPhil)}</td>
+                    <td class="num red">${fmt(totPagibig)}</td>
+                    <td class="num red">${fmt(totTax)}</td>
+                    <td class="num red bold">${fmt(totDed)}</td>
+                    <td class="num green bold">${fmt(totNet)}</td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="gross-bar">
+            <span><strong>Total Gross Pay</strong> (sum of all net pays)</span>
+            <strong>${fmt(totNet)}</strong>
+        </div>
+        </body></html>`);
     win.document.close();
     win.focus();
     win.print();
@@ -608,29 +608,37 @@ function printPayrollTable() {
 
 // ─── Export CSV ───────────────────────────────────────────────────────────────
 function exportPayrollCSV() {
+    const data = DEPT_BREAKDOWN_DATA;
+    if (!data.length) { alert('No payroll data to export.'); return; }
+
     const headers = [
         'Employee', 'Employee ID', 'Department',
-        'Gross Pay', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax',
+        'Basic Pay', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax',
         'Total Deductions', 'Net Pay'
     ];
 
     let csvRows = [headers.join(',')];
+    let totNet = 0;
 
-    DEPT_BREAKDOWN_DATA.forEach(d => {
-        const line = [
+    data.forEach(d => {
+        totNet += parseFloat(d.net_pay);
+        csvRows.push([
             `"${d.name}"`,
             `"${d.employee_id}"`,
             `"${d.department}"`,
-            d.gross_pay,
+            d.basic_pay,
             d.sss_contribution,
             d.philhealth_contribution,
             d.pagibig_contribution,
             d.withholding_tax,
             d.total_deductions,
             d.net_pay
-        ].join(',');
-        csvRows.push(line);
+        ].join(','));
     });
+
+    // Totals row
+    csvRows.push(['', '', '"TOTALS"', '', '', '', '', '', '', totNet.toFixed(2)].join(','));
+    csvRows.push(['', '', '"Total Gross Pay (sum of net pays)"', '', '', '', '', '', '', totNet.toFixed(2)].join(','));
 
     const periodText = document.querySelector('select[name="payroll_period_id"] option:checked')?.innerText ?? '';
     const deptVal    = document.querySelector('select[name="department"]')?.value ?? '';
@@ -644,9 +652,7 @@ function exportPayrollCSV() {
     const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
-    a.href     = url;
-    a.download = filename;
-    a.click();
+    a.href = url; a.download = filename; a.click();
     URL.revokeObjectURL(url);
 }
 </script>
