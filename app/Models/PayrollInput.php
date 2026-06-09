@@ -21,6 +21,9 @@ class PayrollInput extends Model
         'night_differential_hours',
         'allowances',
         'deductions',
+        'deductions_remarks',
+        'reimbursements',
+        'reimbursements_remarks',
         'gross_pay',
         'net_pay',
     ];
@@ -35,6 +38,7 @@ class PayrollInput extends Model
         'night_differential_hours' => 'float',
         'allowances'              => 'float',
         'deductions'              => 'float',
+        'reimbursements'          => 'float',
         'gross_pay'               => 'float',
         'net_pay'                 => 'float',
     ];
