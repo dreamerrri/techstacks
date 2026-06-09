@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>@yield('title') - HR Management System</title>
+
     {{-- ⚡ Must be first: restore sidebar + dropdown states before first paint — prevents flash --}}
     <script>
         if (sessionStorage.getItem('sidebar_collapsed') === '1') {
@@ -27,10 +28,16 @@
             });
         });
     </script>
+
+    {{-- CSS only in head --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {{-- SweetAlert2 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- Page-specific styles --}}
+    @yield('styles')
 </head>
 <body>
 
@@ -129,7 +136,8 @@
             <a href="{{ route('profile.show') }}" style="display:flex; align-items:center; text-decoration:none;">
                 <div class="user-avatar avatar-{{ $role }}" style="overflow:hidden; padding:0;">
                     @if($user->profile_photo)
-<img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"                             alt="{{ $user->name }}"
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"
+                             alt="{{ $user->name }}"
                              style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
                     @else
                         {{ strtoupper(substr($user->name, 0, 1)) }}
@@ -140,80 +148,79 @@
         </div>
     </div>
 
-        {{-- Burger dropdown --}}
-        <div class="burger-dropdown sidebar-{{ $role }}" id="burgerDropdown">
-            <a href="{{ route('dashboard') }}"
-            class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                <i class="fas fa-home"></i><span>Dashboard</span>
+    {{-- Burger dropdown --}}
+    <div class="burger-dropdown sidebar-{{ $role }}" id="burgerDropdown">
+        <a href="{{ route('dashboard') }}"
+           class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <i class="fas fa-home"></i><span>Dashboard</span>
+        </a>
+
+        @if($isAdmin)
+            <a href="{{ route('users.index') }}"
+               class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                <i class="fas fa-users"></i><span>All Users</span>
             </a>
+            <a href="{{ route('employees.index') }}"
+               class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
+                <i class="fas fa-user-tie"></i><span>Employees</span>
+            </a>
+            <a href="{{ route('government-contributions.index') }}"
+               class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
+                <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+            </a>
+            <a href="{{ route('payroll.index') }}"
+               class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                <i class="fas fa-money-bill"></i><span>Payroll</span>
+            </a>
+            <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
+            <a href="{{ route('roles.index') }}" class="nav-item {{ request()->routeIs('roles.*') ? 'active' : '' }}"><i class="fas fa-lock"></i><span>Roles</span></a>
+            <a href="{{ route('permissions.index') }}" class="nav-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}"><i class="fas fa-shield-alt"></i><span>Permissions</span></a>
+            <a href="{{ route('audit-logs.index') }}" class="nav-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}"><i class="fas fa-file-alt"></i><span>Audit Logs</span></a>
+        @elseif($isHR)
+            <a href="{{ route('employees.index') }}"
+               class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
+                <i class="fas fa-users"></i><span>Employees</span>
+            </a>
+            <a href="{{ route('government-contributions.index') }}"
+               class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
+                <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+            </a>
+            <a href="{{ route('payroll.index') }}"
+               class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                <i class="fas fa-money-bill"></i><span>Payroll</span>
+            </a>
+            <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+        @else
+            <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}"><i class="fas fa-user"></i><span>My Profile</span></a>
+            <a href="{{ route('payroll.index') }}"
+               class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
+            </a>
+            <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
+            <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
+        @endif
 
-            @if($isAdmin)
-                <a href="{{ route('users.index') }}"
-                class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                    <i class="fas fa-users"></i><span>All Users</span>
-                </a>
-                <a href="{{ route('employees.index') }}"
-                class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                    <i class="fas fa-user-tie"></i><span>Employees</span>
-                </a>
-                <a href="{{ route('government-contributions.index') }}"
-                class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                    <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
-                </a>
-                <a href="{{ route('payroll.index') }}"
-                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="fas fa-money-bill"></i><span>Payroll</span>
-                </a>
-                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
-                <a href="{{ route('roles.index') }}" class="nav-item {{ request()->routeIs('roles.*') ? 'active' : '' }}"><i class="fas fa-lock"></i><span>Roles</span></a>
-                <a href="{{ route('permissions.index') }}" class="nav-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}"><i class="fas fa-shield-alt"></i><span>Permissions</span></a>
-                <a href="{{ route('audit-logs.index') }}" class="nav-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}"><i class="fas fa-file-alt"></i><span>Audit Logs</span></a>
-            @elseif($isHR)
-                <a href="{{ route('employees.index') }}"
-                class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                    <i class="fas fa-users"></i><span>Employees</span>
-                </a>
-                <a href="{{ route('government-contributions.index') }}"
-                class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                    <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
-                </a>
-                <a href="{{ route('payroll.index') }}"
-                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="fas fa-money-bill"></i><span>Payroll</span>
-                </a>
-                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
-            @else
-                <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}"><i class="fas fa-user"></i><span>My Profile</span></a>
-                <a href="{{ route('payroll.index') }}"
-                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
-                </a>
-                <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
-            @endif
-
-            <div style="padding: 10px 20px 15px;">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </form>
-            </div>
+        <div style="padding: 10px 20px 15px;">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
         </div>
-
-        {{-- Mobile page content --}}
-        <div class="mobile-content bg-{{ $role }}">
-            <div class="content">
-                @yield('content')
-            </div>
-            @yield('scripts')
-        </div>
-
     </div>
+
+    {{-- Mobile page content --}}
+    <div class="mobile-content bg-{{ $role }}">
+        <div class="content">
+            @yield('content')
+        </div>
+    </div>
+
+    </div>{{-- end .mobile-layout --}}
 
 {{-- ═══════════════════════════════════════
      DESKTOP LAYOUT  (hidden on mobile)
@@ -234,9 +241,9 @@
         <div style="display: flex; align-items: center; gap: 15px;">
 
             {{-- Notification Bell (desktop) --}}
-            <div style="position:relative;">
-                <button id="notifBtn" onclick="document.getElementById('notifDropdown').classList.toggle('notif-open')"
-                        style="background:none; border:none; cursor:pointer; color:white; font-size:18px; position:relative; padding:4px;">
+            <div style="position:relative; z-index: 1000; pointer-events: auto;">
+                <button id="notifBtn"
+                        style="background:none; border:none; cursor:pointer; color:white; font-size:18px; position:relative; padding:4px; z-index: 1001; pointer-events: auto;">
                     <i class="fas fa-bell"></i>
                     @if($notifCount > 0)
                         <span style="position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">
@@ -264,7 +271,8 @@
             <a href="{{ route('profile.show') }}" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
                 <div class="user-avatar avatar-{{ $role }}" style="width:34px;height:34px;font-size:13px; overflow:hidden; padding:0;">
                     @if($user->profile_photo)
-<img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"                             alt="{{ $user->name }}"
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"
+                             alt="{{ $user->name }}"
                              style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
                     @else
                         {{ strtoupper(substr($user->name, 0, 1)) }}
@@ -288,18 +296,18 @@
     {{-- Sidebar --}}
     <div class="sidebar sidebar-{{ $role }}" style="grid-column: 1; grid-row: 2;">
 
-            <nav style="flex: 1;">
-                <a href="{{ route('dashboard') }}"
-                class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <i class="fas fa-home"></i><span>Dashboard</span>
-                </a>
+        <nav style="flex: 1;">
+            <a href="{{ route('dashboard') }}"
+               class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <i class="fas fa-home"></i><span>Dashboard</span>
+            </a>
 
             @if($isAdmin)
                 @php
-                    $userMgmtOpen   = request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('permissions.*');
-                    $empMgmtOpen    = request()->routeIs('employees.*') || request()->routeIs('manual-payroll-attendance.*');
+                    $userMgmtOpen    = request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('permissions.*');
+                    $empMgmtOpen     = request()->routeIs('employees.*') || request()->routeIs('manual-payroll-attendance.*');
                     $payrollMgmtOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
-                    $monitoringOpen = request()->routeIs('audit-logs.*') || request()->routeIs('reports.*');
+                    $monitoringOpen  = request()->routeIs('audit-logs.*') || request()->routeIs('reports.*');
                 @endphp
 
                 {{-- ▼ User Management --}}
@@ -380,34 +388,34 @@
                     </div>
                 </div>
 
-                @elseif($isHR)
-                    <a href="{{ route('employees.index') }}"
-                    class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                        <i class="fas fa-users"></i><span>Employees</span>
-                    </a>
-                    <a href="{{ route('government-contributions.index') }}"
-                    class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                        <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
-                    </a>
-                    <a href="{{ route('payroll.index') }}"
-                    class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                        <i class="fas fa-money-bill"></i><span>Payroll</span>
-                    </a>
-                    <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
-                    <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
-                    <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
-                    <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+            @elseif($isHR)
+                <a href="{{ route('employees.index') }}"
+                   class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
+                    <i class="fas fa-users"></i><span>Employees</span>
+                </a>
+                <a href="{{ route('government-contributions.index') }}"
+                   class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
+                    <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+                </a>
+                <a href="{{ route('payroll.index') }}"
+                   class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                    <i class="fas fa-money-bill"></i><span>Payroll</span>
+                </a>
+                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
 
-                @else
-                    <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}"><i class="fas fa-user"></i><span>My Profile</span></a>
-                    <a href="{{ route('payroll.index') }}"
-                    class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                        <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
-                    </a>
-                    <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
-                    <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
-                @endif
-            </nav>
+            @else
+                <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}"><i class="fas fa-user"></i><span>My Profile</span></a>
+                <a href="{{ route('payroll.index') }}"
+                   class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                    <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
+                </a>
+                <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
+            @endif
+        </nav>
 
         <div style="padding-bottom: 20px; margin-top: auto; padding-top: 100px;">
             <form action="{{ route('logout') }}" method="POST">
@@ -429,10 +437,9 @@
         <div class="content">
             @yield('content')
         </div>
-        @yield('scripts')
     </div>
 
-</div>
+</div>{{-- end .desktop-layout --}}
 
     {{-- ── Flash toasts ── --}}
     @if(session('success') || session('error') || session('warning') || session('info'))
@@ -463,18 +470,30 @@ document.addEventListener('click', function(e) {
         dropdown.classList.remove('notif-open');
     }
 });
-</script>
 
-{{-- Close mobile notif dropdown on outside click --}}
-<script>
-document.addEventListener('click', function(e) {
-    const btnM  = document.getElementById('notifBtnMobile');
-    const dropM = document.getElementById('notifDropdownMobile');
-    if (btnM && dropM && !btnM.contains(e.target) && !dropM.contains(e.target)) {
-        dropM.classList.remove('notif-open');
-    }
+// Ensure desktop notif button click works
+document.getElementById('notifBtn')?.addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('notifDropdown')?.classList.toggle('notif-open');
 });
 </script>
 
-    </body>
-    </html>
+    {{-- Close mobile notif dropdown on outside click --}}
+    <script>
+    document.addEventListener('click', function(e) {
+        const btnM  = document.getElementById('notifBtnMobile');
+        const dropM = document.getElementById('notifDropdownMobile');
+        if (btnM && dropM && !btnM.contains(e.target) && !dropM.contains(e.target)) {
+            dropM.classList.remove('notif-open');
+        }
+    });
+    </script>
+
+    {{-- Third-party JS — loaded here so page scripts can use Swal/Toast --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {{-- Page-specific scripts LAST — after all JS dependencies --}}
+    @yield('scripts')
+
+</body>
+</html>

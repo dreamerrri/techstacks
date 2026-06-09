@@ -102,6 +102,7 @@ class ManualPayrollAttendanceController extends Controller
     {
         $validated = $request->validate([
             'employee_id' => 'required|exists:employees,id',
+            'payroll_period_id' => 'nullable|exists:payroll_periods,id',
             'daily_rate' => 'required|numeric|min:0',
             'rate_type' => 'required|in:daily',
             'days_worked' => 'required|numeric|min:0|max:31',
@@ -112,19 +113,33 @@ class ManualPayrollAttendanceController extends Controller
             'night_differential_hours' => 'nullable|numeric|min:0',
             'allowances' => 'nullable|numeric|min:0',
             'deductions' => 'nullable|numeric|min:0',
+            'deductions_remarks' => 'nullable|string|max:255',
+            'reimbursements' => 'nullable|numeric|min:0',
+            'reimbursements_remarks' => 'nullable|string|max:255',
         ]);
 
         $employee = Employee::findOrFail($validated['employee_id']);
+
+        // Get payroll period if provided to calculate working days
+        $cutoffStart = null;
+        $cutoffEnd = null;
+        if (!empty($validated['payroll_period_id'])) {
+            $period = PayrollPeriod::find($validated['payroll_period_id']);
+            if ($period) {
+                $cutoffStart = $period->cutoff_start->toDateString();
+                $cutoffEnd = $period->cutoff_end->toDateString();
+            }
+        }
 
         // Use PayrollComputationEngine for consistency with PayrollInput::computePay()
         $engine = new PayrollComputationEngine();
         
         // Convert daily rate to monthly salary using the formula: daily_rate * 22
+        // Note: This will be recalculated based on actual working days if cutoff dates are provided
         $monthlySalary = $validated['daily_rate'] * 22;
         
         $employeeData = [
             'monthly_salary' => $monthlySalary,
-            'working_days_per_month' => 22,
             'working_hours_per_day' => 8,
         ];
 
@@ -139,8 +154,11 @@ class ManualPayrollAttendanceController extends Controller
 
         $allowances = [$validated['allowances'] ?? 0];
 
+        // Fetch active benefits from employee (for consistency with PayrollController::calculatePayroll())
+        $benefits = $employee->activeBenefits()->pluck('amount')->toArray();
+
         // First, calculate gross pay without deductions to get contribution bases
-        $previewResult = $engine->compute($employeeData, $attendance, [], [], $allowances, [], true);
+        $previewResult = $engine->compute($employeeData, $attendance, [], $benefits, $allowances, [], true, $cutoffStart, $cutoffEnd);
         $grossPay = $previewResult['gross_pay'];
 
         // Government contributions are based on gross pay for payroll preview
@@ -186,10 +204,12 @@ class ManualPayrollAttendanceController extends Controller
             $employeeData,
             $attendance,
             [$totalDeductions],
-            [],
+            $benefits,
             $allowances,
             [],
-            false // not preview mode for final calculation
+            false, // not preview mode for final calculation
+            $cutoffStart,
+            $cutoffEnd
         );
 
         // Add government contribution breakdown to result
@@ -199,6 +219,7 @@ class ManualPayrollAttendanceController extends Controller
         $result['withholding_tax'] = $withholdingTax;
         $result['government_deductions'] = $governmentDeductions;
         $result['manual_deductions'] = $manualDeductions;
+        $result['reimbursements'] = $validated['reimbursements'] ?? 0;
 
         return response()->json([
             'success' => true,
@@ -257,6 +278,9 @@ class ManualPayrollAttendanceController extends Controller
                 'night_differential_hours' => 'nullable|numeric|min:0',
                 'allowances' => 'nullable|numeric|min:0',
                 'deductions' => 'nullable|numeric|min:0',
+                'deductions_remarks' => 'nullable|string|max:255',
+                'reimbursements' => 'nullable|numeric|min:0',
+                'reimbursements_remarks' => 'nullable|string|max:255',
             ]);
 
             \Log::info('Validation passed', $validated);
@@ -290,6 +314,9 @@ class ManualPayrollAttendanceController extends Controller
                     'night_differential_hours' => $validated['night_differential_hours'] ?? 0,
                     'allowances' => $validated['allowances'] ?? 0,
                     'deductions' => $validated['deductions'] ?? 0,
+                    'deductions_remarks' => $validated['deductions_remarks'] ?? '',
+                    'reimbursements' => $validated['reimbursements'] ?? 0,
+                    'reimbursements_remarks' => $validated['reimbursements_remarks'] ?? '',
                 ]);
                 $payrollInput->computePay()->save();
                 \Log::info('Payroll input updated successfully', ['payroll_input_id' => $payrollInput->id]);
@@ -309,6 +336,9 @@ class ManualPayrollAttendanceController extends Controller
                     'night_differential_hours' => $validated['night_differential_hours'] ?? 0,
                     'allowances' => $validated['allowances'] ?? 0,
                     'deductions' => $validated['deductions'] ?? 0,
+                    'deductions_remarks' => $validated['deductions_remarks'] ?? '',
+                    'reimbursements' => $validated['reimbursements'] ?? 0,
+                    'reimbursements_remarks' => $validated['reimbursements_remarks'] ?? '',
                 ]);
                 $payrollInput->computePay()->save();
                 \Log::info('Payroll input created successfully', ['payroll_input_id' => $payrollInput->id]);

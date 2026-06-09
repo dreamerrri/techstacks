@@ -76,20 +76,17 @@
             <h4 style="margin:0 0 16px; font-size:13px; color:#1e40af; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
                 <i class="fas fa-calculator"></i> &nbsp;SSS Contribution (Circular No. 2024-006)
             </h4>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
                 <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
                     <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Monthly Salary Credit</div>
                     <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($sssContribution['salary_credit'], 2) }}</div>
                 </div>
                 <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
                     <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Share</div>
-                    <input type="number" 
-                           name="custom_sss_contribution" 
-                           id="custom_sss_contribution"
+                    <input type="number" name="custom_sss_contribution" id="custom_sss_contribution"
                            value="{{ $employee->custom_sss_contribution ?? $sssContribution['employee_share'] }}"
-                           step="0.01"
-                           min="0"
-                           style="width:100%; font-weight:700; color:#dc2626; font-size:16px; border:1px solid #e5e7eb; border-radius:6px; padding:4px 8px; background:#fef2f2;">
+                           step="0.01" min="0"
+                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-weight:700; color:#dc2626; font-size:16px; box-sizing:border-box;">
                 </div>
                 <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
                     <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Total Contribution</div>
@@ -103,7 +100,7 @@
             <h4 style="margin:0 0 16px; font-size:13px; color:#065f46; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
                 <i class="fas fa-heartbeat"></i> &nbsp;PhilHealth Contribution (2025/2026)
             </h4>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
                 <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
                     <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Salary Basis</div>
                     <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($philHealthContribution['salary_basis'], 2) }}</div>
@@ -114,13 +111,10 @@
                 </div>
                 <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
                     <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Share</div>
-                    <input type="number" 
-                           name="custom_philhealth_contribution" 
-                           id="custom_philhealth_contribution"
+                    <input type="number" name="custom_philhealth_contribution" id="custom_philhealth_contribution"
                            value="{{ $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'] }}"
-                           step="0.01"
-                           min="0"
-                           style="width:100%; font-weight:700; color:#dc2626; font-size:16px; border:1px solid #e5e7eb; border-radius:6px; padding:4px 8px; background:#fef2f2;">
+                           step="0.01" min="0"
+                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-weight:700; color:#dc2626; font-size:16px; box-sizing:border-box;">
                 </div>
             </div>
         </div>
@@ -130,7 +124,7 @@
             <h4 style="margin:0 0 16px; font-size:13px; color:#92400e; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
                 <i class="fas fa-home"></i> &nbsp;Pag-IBIG Contribution (2026)
             </h4>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
                 <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
                     <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Monthly Salary</div>
                     <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($pagIbigContribution['salary'], 2) }}</div>
@@ -143,113 +137,266 @@
                 @endif
                 <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
                     <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Share</div>
-                    <input type="number" 
-                           name="custom_pagibig_contribution" 
-                           id="custom_pagibig_contribution"
+                    <input type="number" name="custom_pagibig_contribution" id="custom_pagibig_contribution"
                            value="{{ $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'] }}"
-                           step="0.01"
-                           min="0"
-                           style="width:100%; font-weight:700; color:#dc2626; font-size:16px; border:1px solid #e5e7eb; border-radius:6px; padding:4px 8px; background:#fef2f2;">
+                           step="0.01" min="0"
+                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-weight:700; color:#dc2626; font-size:16px; box-sizing:border-box;">
                 </div>
             </div>
         </div>
 
-        {{-- Save Button - Inside card for consistency across layouts --}}
-        <div style="margin-top:24px; display:flex; justify-content:flex-end; padding-top:16px; border-top:1px solid #e5e7eb;">
-            <button type="button" 
-                    id="save-contributions-btn"
-                    onclick="saveCustomContributions(event)"
-                    style="background:linear-gradient(135deg,#dc2626,#991b1b); color:white; border:none; padding:12px 24px; border-radius:8px; font-weight:600; font-size:14px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s ease; box-shadow:0 4px 12px rgba(220,38,38,0.3); pointer-events:auto !important;"
-                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(220,38,38,0.4)';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(220,38,38,0.3)';">
+        {{-- Save Button --}}
+        <div style="margin-top:24px; text-align:right;">
+            <button onclick="saveCustomContributions()"
+                    style="padding:12px 24px; background:#dc2626; color:white; border-radius:8px; font-size:14px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
                 <i class="fas fa-save"></i> Save Custom Contributions
             </button>
         </div>
 
     </div>
 
-    <script>
-        function saveCustomContributions(event) {
-            event.preventDefault();
-            const btn = event.target;
-            const originalText = btn.innerHTML;
-            
-            // Get the VISIBLE input (the one the user can actually interact with)
-            const sssInputs = document.getElementsByName('custom_sss_contribution');
-            const philhealthInputs = document.getElementsByName('custom_philhealth_contribution');
-            const pagibigInputs = document.getElementsByName('custom_pagibig_contribution');
-            
-            // Find the first visible input for each field
-            const getVisibleInput = (inputs) => {
-                for (let input of inputs) {
-                    if (input.offsetParent !== null) {
-                        return input;
-                    }
-                }
-                return inputs[0]; // Fallback to first if none visible
-            };
-            
-            const visibleSssInput = getVisibleInput(sssInputs);
-            const visiblePhilhealthInput = getVisibleInput(philhealthInputs);
-            const visiblePagibigInput = getVisibleInput(pagibigInputs);
-            
-            const data = {
-                custom_sss_contribution: visibleSssInput ? visibleSssInput.value : null,
-                custom_philhealth_contribution: visiblePhilhealthInput ? visiblePhilhealthInput.value : null,
-                custom_pagibig_contribution: visiblePagibigInput ? visiblePagibigInput.value : null,
-                _method: 'PATCH'
-            };
+@endsection
 
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
-            // Get CSRF token from meta tag or fallback
-            const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-            const csrfToken = csrfMeta ? csrfMeta.content : '{{ csrf_token() }}';
-
-            fetch('{{ route("government-contributions.update", $employee) }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Custom contributions updated successfully!',
-                        confirmButtonColor: '#dc2626'
-                    }).then(() => {
-                        // Refresh the page to show updated values
-                        window.location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to update contributions. Please try again.',
-                        confirmButtonColor: '#dc2626'
-                    });
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'An error occurred. Please try again.',
-                    confirmButtonColor: '#dc2626'
-                });
-            })
-            .finally(() => {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            });
+@section('scripts')
+<script>
+    // Helper function to get visible input (handles duplicate elements issue)
+    const getVisibleInput = (inputs) => {
+        for (let input of inputs) {
+            if (input.offsetParent !== null) {
+                return input;
+            }
         }
-    </script>
+        return inputs[0]; // Fallback to first if none visible
+    };
 
+    // Save custom contributions
+    function saveCustomContributions() {
+        const employeeId = '{{ $employee->employee_id }}';
+        
+        // Get all inputs by name attribute (handles duplicates)
+        const sssInputs = document.getElementsByName('custom_sss_contribution');
+        const philInputs = document.getElementsByName('custom_philhealth_contribution');
+        const pagInputs = document.getElementsByName('custom_pagibig_contribution');
+        
+        // Get visible inputs
+        const sssInput = getVisibleInput(sssInputs);
+        const philInput = getVisibleInput(philInputs);
+        const pagInput = getVisibleInput(pagInputs);
+        
+        const data = {
+            custom_sss_contribution: sssInput.value || null,
+            custom_philhealth_contribution: philInput.value || null,
+            custom_pagibig_contribution: pagInput.value || null,
+        };
+        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        if (!csrfToken) {
+            console.error('CSRF token not found');
+            alert('Error: Security token not found. Please refresh the page.');
+            return;
+        }
+        
+        fetch(`/government-contributions/${employeeId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Custom contributions updated successfully!');
+                location.reload();
+            } else {
+                alert('Error updating contributions. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error updating contributions. Please try again.');
+        });
+    }
+
+    // Data passed from Blade to JS for export
+    const employeeData = {
+        id:         '{{ $employee->employee_id }}',
+        name:       '{{ addslashes($employee->full_name) }}',
+        department: '{{ addslashes($employee->department) }}',
+        position:   '{{ addslashes($employee->position) }}',
+        status:     '{{ $employee->employment_status }}',
+        salary:     '{{ number_format($employee->basic_salary, 2) }}',
+        sssNumber:  '{{ $employee->sss_number ?? "—" }}',
+        philNumber: '{{ $employee->philhealth_number ?? "—" }}',
+        pagNumber:  '{{ $employee->pagibig_number ?? "—" }}',
+        tinNumber:  '{{ $employee->tin_number ?? "—" }}',
+        // SSS
+        sssSalaryCredit:  '{{ number_format($sssContribution["salary_credit"], 2) }}',
+        sssEmployeeShare: '{{ number_format($sssContribution["employee_share"], 2) }}',
+        sssTotal:         '{{ number_format($sssContribution["total"], 2) }}',
+        // PhilHealth
+        philSalaryBasis:   '{{ number_format($philHealthContribution["salary_basis"], 2) }}',
+        philEmployeeRate:  '{{ number_format($philHealthContribution["employee_rate"] * 100, 1) }}',
+        philEmployeeShare: '{{ number_format($philHealthContribution["employee_share"], 2) }}',
+        // Pag-IBIG
+        pagSalary:       '{{ number_format($pagIbigContribution["salary"], 2) }}',
+        pagEmployeeRate: '{{ $pagIbigContribution["employee_rate"] !== null ? number_format($pagIbigContribution["employee_rate"] * 100, 1) : "—" }}',
+        pagEmployeeShare:'{{ number_format($pagIbigContribution["employee_share"], 2) }}',
+    };
+
+function printContributionDetail() {
+    const d = employeeData;
+    const win = window.open('', '_blank');
+    win.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Government Contributions — ${d.name}</title>
+            <style>
+                * { margin:0; padding:0; box-sizing:border-box; }
+                body { font-family:Arial, sans-serif; font-size:11px; color:#111; padding:20px; }
+                .report-header { margin-bottom:20px; }
+                .report-header h1 { font-size:16px; color:#1a1a2e; }
+                .report-header p  { font-size:11px; color:#6b7280; margin-top:4px; }
+                .profile-block { background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:14px; margin-bottom:16px; display:flex; gap:24px; flex-wrap:wrap; }
+                .profile-block .field { min-width:140px; }
+                .profile-block .label { font-size:9px; color:#9ca3af; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
+                .profile-block .value { font-weight:600; color:#1a1a2e; font-size:12px; }
+                .section { margin-bottom:16px; }
+                .section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:6px 10px; margin-bottom:8px; border-radius:4px; }
+                .sss-title   { background:#dbeafe; color:#1e40af; }
+                .phil-title  { background:#d1fae5; color:#065f46; }
+                .pagibig-title { background:#fef3c7; color:#92400e; }
+                .ids-title   { background:#f3f4f6; color:#374151; }
+                table { width:100%; border-collapse:collapse; }
+                th { background:#1e40af; color:white; padding:6px 10px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:0.04em; }
+                td { padding:6px 10px; border-bottom:1px solid #e5e7eb; font-size:11px; }
+                td.amount { font-weight:600; }
+                @media print { body { padding:0; } }
+            </style>
+        </head>
+        <body>
+            <div class="report-header">
+                <h1>Government Contributions Report</h1>
+                <p>Generated: ${new Date().toLocaleString()}</p>
+            </div>
+
+            <div class="profile-block">
+                <div class="field"><div class="label">Employee ID</div><div class="value" style="font-family:monospace;">${d.id}</div></div>
+                <div class="field"><div class="label">Full Name</div><div class="value">${d.name}</div></div>
+                <div class="field"><div class="label">Department</div><div class="value">${d.department}</div></div>
+                <div class="field"><div class="label">Position</div><div class="value">${d.position}</div></div>
+                <div class="field"><div class="label">Basic Salary</div><div class="value">₱${d.salary}</div></div>
+                <div class="field"><div class="label">Status</div><div class="value">${d.status}</div></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title ids-title">Government ID Numbers</div>
+                <table>
+                    <thead><tr><th>SSS Number</th><th>PhilHealth Number</th><th>Pag-IBIG Number</th><th>TIN Number</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-family:monospace;">${d.sssNumber}</td>
+                            <td style="font-family:monospace;">${d.philNumber}</td>
+                            <td style="font-family:monospace;">${d.pagNumber}</td>
+                            <td style="font-family:monospace;">${d.tinNumber}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <div class="section-title sss-title">SSS Contribution (Circular No. 2024-006)</div>
+                <table>
+                    <thead><tr><th>Monthly Salary Credit</th><th>Employee Share</th><th>Total Contribution</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td class="amount">₱${d.sssSalaryCredit}</td>
+                            <td class="amount">₱${d.sssEmployeeShare}</td>
+                            <td class="amount">₱${d.sssTotal}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <div class="section-title phil-title">PhilHealth Contribution (2025/2026)</div>
+                <table>
+                    <thead><tr><th>Salary Basis</th><th>Employee Rate</th><th>Employee Share</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td class="amount">₱${d.philSalaryBasis}</td>
+                            <td class="amount">${d.philEmployeeRate}%</td>
+                            <td class="amount">₱${d.philEmployeeShare}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <div class="section-title pagibig-title">Pag-IBIG Contribution (2026)</div>
+                <table>
+                    <thead><tr><th>Monthly Salary</th><th>Employee Rate</th><th>Employee Share</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td class="amount">₱${d.pagSalary}</td>
+                            <td class="amount">${d.pagEmployeeRate !== '—' ? d.pagEmployeeRate + '%' : '—'}</td>
+                            <td class="amount">₱${d.pagEmployeeShare}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </body>
+        </html>
+    `);
+    win.document.close();
+    win.focus();
+    win.print();
+}
+
+function exportContributionDetailCSV() {
+    const d = employeeData;
+
+    const rows = [
+        // Employee info header block
+        ['Field', 'Value'],
+        ['Employee ID', d.id],
+        ['Full Name',   d.name],
+        ['Department',  d.department],
+        ['Position',    d.position],
+        ['Basic Salary',d.salary],
+        ['Status',      d.status],
+        [],
+        // ID numbers
+        ['SSS Number', 'PhilHealth Number', 'Pag-IBIG Number', 'TIN Number'],
+        [d.sssNumber, d.philNumber, d.pagNumber, d.tinNumber],
+        [],
+        // SSS
+        ['SSS — Monthly Salary Credit', 'SSS — Employee Share', 'SSS — Total Contribution'],
+        [d.sssSalaryCredit, d.sssEmployeeShare, d.sssTotal],
+        [],
+        // PhilHealth
+        ['PhilHealth — Salary Basis', 'PhilHealth — Employee Rate', 'PhilHealth — Employee Share'],
+        [d.philSalaryBasis, d.philEmployeeRate + '%', d.philEmployeeShare],
+        [],
+        // Pag-IBIG
+        ['Pag-IBIG — Monthly Salary', 'Pag-IBIG — Employee Rate', 'Pag-IBIG — Employee Share'],
+        [d.pagSalary, d.pagEmployeeRate !== '—' ? d.pagEmployeeRate + '%' : '—', d.pagEmployeeShare],
+    ];
+
+    const csv = rows.map(row =>
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+    ).join('\n');
+
+    const filename = `contributions_${d.id}.csv`;
+    const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
 @endsection

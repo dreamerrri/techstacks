@@ -21,6 +21,9 @@ class PayrollInput extends Model
         'night_differential_hours',
         'allowances',
         'deductions',
+        'deductions_remarks',
+        'reimbursements',
+        'reimbursements_remarks',
         'gross_pay',
         'net_pay',
     ];
@@ -35,6 +38,7 @@ class PayrollInput extends Model
         'night_differential_hours' => 'float',
         'allowances'              => 'float',
         'deductions'              => 'float',
+        'reimbursements'          => 'float',
         'gross_pay'               => 'float',
         'net_pay'                 => 'float',
     ];
@@ -79,11 +83,19 @@ class PayrollInput extends Model
         $engine = new \App\Services\Payroll\PayrollComputationEngine();
         
         // Convert daily rate to monthly salary using the formula: daily_rate * 22
+        // Note: This will be recalculated based on actual working days if cutoff dates are provided
         $monthlySalary = $this->daily_rate * 22;
+        
+        // Get cutoff dates from payroll period if available
+        $cutoffStart = null;
+        $cutoffEnd = null;
+        if ($this->payrollPeriod) {
+            $cutoffStart = $this->payrollPeriod->cutoff_start->toDateString();
+            $cutoffEnd = $this->payrollPeriod->cutoff_end->toDateString();
+        }
         
         $employeeData = [
             'monthly_salary' => $monthlySalary,
-            'working_days_per_month' => 22,
             'working_hours_per_day' => 8,
         ];
 
@@ -98,12 +110,15 @@ class PayrollInput extends Model
 
         $allowances = [$this->allowances];
 
-        // First, calculate gross pay without deductions to get contribution bases
-        $previewResult = $engine->compute($employeeData, $attendance, [], [], $allowances, [], true);
-        $grossPay = $previewResult['gross_pay'];
-
-        // Get employee for government contribution rates
+        // Get employee for government contribution rates and benefits
         $employee = $this->employee;
+
+        // Fetch active benefits from employee (for consistency with PayrollController::calculatePayroll())
+        $benefits = $employee ? $employee->activeBenefits()->pluck('amount')->toArray() : [];
+
+        // First, calculate gross pay without deductions to get contribution bases
+        $previewResult = $engine->compute($employeeData, $attendance, [], $benefits, $allowances, [], true, $cutoffStart, $cutoffEnd);
+        $grossPay = $previewResult['gross_pay'];
 
         // Government contributions are based on gross pay
         // (same as in ManualPayrollAttendanceController::preview() and PayrollController::calculatePayroll() for consistency)
@@ -151,10 +166,12 @@ class PayrollInput extends Model
             $employeeData,
             $attendance,
             [$totalDeductions],
-            [],
+            $benefits,
             $allowances,
             [],
-            false // not preview mode for final calculation
+            false, // not preview mode for final calculation
+            $cutoffStart,
+            $cutoffEnd
         );
 
         $this->gross_pay = $result['gross_pay'];

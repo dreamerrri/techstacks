@@ -168,6 +168,25 @@
                        value="{{ $isEdit ? $payrollInput->deductions : '0' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
                        oninput="window.deductionsValue = this.value; console.log('Deductions changed:', this.value)">
+                <input type="text" name="deductions_remarks"
+                       value="{{ $isEdit ? ($payrollInput->deductions_remarks ?? '') : '' }}"
+                       placeholder="Remarks (optional)"
+                       style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; margin-top:8px;"
+                       oninput="window.deductionsRemarksValue = this.value">
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Reimbursements</label>
+                <input type="number" name="reimbursements" step="0.01" min="0"
+                       value="{{ $isEdit ? ($payrollInput->reimbursements ?? '0') : '0' }}"
+                       style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
+                       oninput="window.reimbursementsValue = this.value; console.log('Reimbursements changed:', this.value)">
+                <input type="text" name="reimbursements_remarks"
+                       value="{{ $isEdit ? ($payrollInput->reimbursements_remarks ?? '') : '' }}"
+                       placeholder="Remarks (optional)"
+                       style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; margin-top:8px;"
+                       oninput="window.reimbursementsRemarksValue = this.value">
+                <p style="color:#6b7280; font-size:12px; margin-top:4px;">Expense reimbursements to be added to net pay</p>
             </div>
 
             <div style="display:flex; gap:12px;">
@@ -200,63 +219,6 @@
     </div>
 </div>
 
- {{-- Adjustments Section --}}
-@if($isEdit)
-<div class="card" style="padding:0; overflow:hidden; margin-top:24px;">
-    <div style="padding:20px 25px; border-bottom:1px solid #e5e7eb;">
-        <h3 style="margin:0; display:flex; justify-content:space-between; align-items:center;">
-            Payroll Adjustments
-            <button type="button" onclick="showAddAdjustmentModal()"
-                    style="padding:8px 16px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:13px;">
-                <i class="fas fa-plus"></i> Add Adjustment
-            </button>
-        </h3>
-    </div>
-
-    @if($payrollInput->adjustments && $payrollInput->adjustments->count() > 0)
-    <div style="padding:0;">
-        <table style="width:100%; border-collapse:collapse; font-size:14px;">
-            <thead style="background:#f9fafb;">
-                <tr>
-                    <th style="padding:12px 25px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Type</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase;">Amount</th>
-                    <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Remarks</th>
-                    <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($payrollInput->adjustments as $adjustment)
-                <tr style="border-bottom:1px solid #e5e7eb;">
-                    <td style="padding:12px 25px;">
-                        <span style="padding:4px 10px; background:#dbeafe; color:#1e40af; border-radius:4px; font-size:12px; font-weight:600;">
-                            {{ ucfirst($adjustment->adjustment_type) }}
-                        </span>
-                    </td>
-                    <td style="padding:12px; text-align:right; font-weight:600; color:#1f2937;">
-                        ₱{{ number_format($adjustment->amount, 2) }}
-                    </td>
-                    <td style="padding:12px; color:#6b7280;">{{ $adjustment->remarks ?? '-' }}</td>
-                    <td style="padding:12px; text-align:center;">
-                        @if($payrollPeriod->isDraft())
-                        <button type="button" onclick="deleteAdjustment({{ $adjustment->id }})"
-                                style="padding:6px 10px; background:#fee2e2; color:#dc2626; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                        @endif
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    @else
-    <div style="padding:40px 25px; text-align:center; color:#9ca3af;">
-        <i class="fas fa-sliders-h" style="font-size:32px; margin-bottom:10px; display:block;"></i>
-        No adjustments added.
-    </div>
-    @endif
-</div>
-@endif
 
 @endsection
 
@@ -274,6 +236,9 @@ window.holidayDaysValue = '{{ $isEdit ? ($payrollInput->holiday_days ?? '0') : '
 window.nightDifferentialHoursValue = '{{ $isEdit ? ($payrollInput->night_differential_hours ?? '0') : '0' }}';
 window.allowancesValue = '{{ $totalAllowancesAndBenefits ?? '0' }}';
 window.deductionsValue = '{{ $isEdit ? $payrollInput->deductions : '0' }}';
+window.deductionsRemarksValue = '{{ $isEdit ? ($payrollInput->deductions_remarks ?? '') : '' }}';
+window.reimbursementsValue = '{{ $isEdit ? ($payrollInput->reimbursements ?? '0') : '0' }}';
+window.reimbursementsRemarksValue = '{{ $isEdit ? ($payrollInput->reimbursements_remarks ?? '') : '' }}';
 
 
 function handleSaveAttendance(event) {
@@ -300,6 +265,9 @@ function handleSaveAttendance(event) {
     formData.append('night_differential_hours', window.nightDifferentialHoursValue);
     formData.append('allowances', window.allowancesValue);
     formData.append('deductions', window.deductionsValue);
+    formData.append('deductions_remarks', window.deductionsRemarksValue);
+    formData.append('reimbursements', window.reimbursementsValue);
+    formData.append('reimbursements_remarks', window.reimbursementsRemarksValue);
     formData.append('_token', '{{ csrf_token() }}');
     
     console.log('FormData created in handleSaveAttendance');
@@ -312,7 +280,10 @@ function handleSaveAttendance(event) {
         holiday_days: window.holidayDaysValue,
         night_differential_hours: window.nightDifferentialHoursValue,
         allowances: window.allowancesValue,
-        deductions: window.deductionsValue
+        deductions: window.deductionsValue,
+        deductions_remarks: window.deductionsRemarksValue,
+        reimbursements: window.reimbursementsValue,
+        reimbursements_remarks: window.reimbursementsRemarksValue
     });
     
     // Log form data for debugging
@@ -369,6 +340,9 @@ function previewPayroll() {
     formData.append('night_differential_hours', window.nightDifferentialHoursValue);
     formData.append('allowances', window.allowancesValue);
     formData.append('deductions', window.deductionsValue);
+    formData.append('deductions_remarks', window.deductionsRemarksValue);
+    formData.append('reimbursements', window.reimbursementsValue);
+    formData.append('reimbursements_remarks', window.reimbursementsRemarksValue);
     formData.append('_token', '{{ csrf_token() }}');
 
     console.log('Previewing payroll with values:', {
@@ -380,7 +354,10 @@ function previewPayroll() {
         holiday_days: window.holidayDaysValue,
         night_differential_hours: window.nightDifferentialHoursValue,
         allowances: window.allowancesValue,
-        deductions: window.deductionsValue
+        deductions: window.deductionsValue,
+        deductions_remarks: window.deductionsRemarksValue,
+        reimbursements: window.reimbursementsValue,
+        reimbursements_remarks: window.reimbursementsRemarksValue
     });
 
     fetch('{{ route('manual-payroll-attendance.preview') }}', {
@@ -470,10 +447,16 @@ function previewPayroll() {
                                 <span style="color:#dc2626;">-₱${previewData.deductions ? parseFloat(previewData.deductions).toFixed(2) : '0.00'}</span>
                             </div>
                         </div>
+                        <div style="margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                                <span style="color:#6b7280;">Reimbursements:</span>
+                                <span style="color:#10b981;">+₱${window.reimbursementsValue ? parseFloat(window.reimbursementsValue).toFixed(2) : '0.00'}</span>
+                            </div>
+                        </div>
                         <div style="padding:16px; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); border-radius:6px;">
                             <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:700; color:white;">
                                 <span>Net Pay:</span>
-                                <span>₱${previewData.net_pay.toFixed(2)}</span>
+                                <span>₱${(parseFloat(previewData.net_pay) + parseFloat(window.reimbursementsValue || 0)).toFixed(2)}</span>
                             </div>
                         </div>
                     `;
