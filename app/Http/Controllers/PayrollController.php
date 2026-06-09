@@ -210,17 +210,18 @@ class PayrollController extends Controller
         $grossPay      = $previewResult['gross_pay'];
 
         // Government contributions
+        // Use custom values if set, otherwise use official bracket tables (for consistency with PayrollInput::computePay())
         $sssService      = new SssContributionService();
         $sssCalculation  = $sssService->calculate($grossPay);
-        $sssContribution = $sssCalculation['employee_share'];
+        $sssContribution = $employee->custom_sss_contribution ?? $sssCalculation['employee_share'];
 
         $philHealthService      = new PhilHealthContributionService();
         $philHealthCalculation  = $philHealthService->calculate($grossPay);
-        $philhealthContribution = $philHealthCalculation['employee_share'];
+        $philhealthContribution = $employee->custom_philhealth_contribution ?? $philHealthCalculation['employee_share'];
 
         $pagIbigService      = new PagIbigContributionService();
         $pagIbigCalculation  = $pagIbigService->calculate($grossPay);
-        $pagibigContribution = $pagIbigCalculation['employee_share'];
+        $pagibigContribution = $employee->custom_pagibig_contribution ?? $pagIbigCalculation['employee_share'];
 
         // Withholding tax
         $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;

@@ -523,7 +523,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 999;
+    z-index: 998;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
         2px 0 4px rgba(0,0,0,0.10),
@@ -559,7 +559,11 @@
 .burger-dropdown.open { max-height: 600px; overflow-y: auto; }
 .burger-dropdown .nav-item { margin: 2px 8px; border-radius: 5px; }
 
-.mobile-content { overflow-y: auto; }
+.mobile-content { 
+    overflow-y: auto; 
+    min-height: 100vh;
+    height: 100vh;
+}
 
 /* ── Responsive table / user cards ── */
 .user-table-wrapper { overflow-x: auto; }
