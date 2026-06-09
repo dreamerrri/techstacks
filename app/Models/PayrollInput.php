@@ -102,15 +102,15 @@ class PayrollInput extends Model
 
         $allowances = [$this->allowances];
 
+        // Get employee for government contribution rates and benefits
+        $employee = $this->employee;
+
         // Fetch active benefits from employee (for consistency with PayrollController::calculatePayroll())
         $benefits = $employee ? $employee->activeBenefits()->pluck('amount')->toArray() : [];
 
         // First, calculate gross pay without deductions to get contribution bases
         $previewResult = $engine->compute($employeeData, $attendance, [], $benefits, $allowances, [], true);
         $grossPay = $previewResult['gross_pay'];
-
-        // Get employee for government contribution rates
-        $employee = $this->employee;
 
         // Government contributions are based on gross pay
         // (same as in ManualPayrollAttendanceController::preview() and PayrollController::calculatePayroll() for consistency)
