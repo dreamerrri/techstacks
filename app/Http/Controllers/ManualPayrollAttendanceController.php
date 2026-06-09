@@ -112,6 +112,9 @@ class ManualPayrollAttendanceController extends Controller
             'night_differential_hours' => 'nullable|numeric|min:0',
             'allowances' => 'nullable|numeric|min:0',
             'deductions' => 'nullable|numeric|min:0',
+            'deductions_remarks' => 'nullable|string|max:255',
+            'reimbursements' => 'nullable|numeric|min:0',
+            'reimbursements_remarks' => 'nullable|string|max:255',
         ]);
 
         $employee = Employee::findOrFail($validated['employee_id']);
@@ -139,8 +142,11 @@ class ManualPayrollAttendanceController extends Controller
 
         $allowances = [$validated['allowances'] ?? 0];
 
+        // Fetch active benefits from employee (for consistency with PayrollController::calculatePayroll())
+        $benefits = $employee->activeBenefits()->pluck('amount')->toArray();
+
         // First, calculate gross pay without deductions to get contribution bases
-        $previewResult = $engine->compute($employeeData, $attendance, [], [], $allowances, [], true);
+        $previewResult = $engine->compute($employeeData, $attendance, [], $benefits, $allowances, [], true);
         $grossPay = $previewResult['gross_pay'];
 
         // Government contributions are based on gross pay for payroll preview
@@ -186,7 +192,7 @@ class ManualPayrollAttendanceController extends Controller
             $employeeData,
             $attendance,
             [$totalDeductions],
-            [],
+            $benefits,
             $allowances,
             [],
             false // not preview mode for final calculation
@@ -199,6 +205,7 @@ class ManualPayrollAttendanceController extends Controller
         $result['withholding_tax'] = $withholdingTax;
         $result['government_deductions'] = $governmentDeductions;
         $result['manual_deductions'] = $manualDeductions;
+        $result['reimbursements'] = $validated['reimbursements'] ?? 0;
 
         return response()->json([
             'success' => true,
@@ -257,6 +264,9 @@ class ManualPayrollAttendanceController extends Controller
                 'night_differential_hours' => 'nullable|numeric|min:0',
                 'allowances' => 'nullable|numeric|min:0',
                 'deductions' => 'nullable|numeric|min:0',
+                'deductions_remarks' => 'nullable|string|max:255',
+                'reimbursements' => 'nullable|numeric|min:0',
+                'reimbursements_remarks' => 'nullable|string|max:255',
             ]);
 
             \Log::info('Validation passed', $validated);
@@ -290,6 +300,9 @@ class ManualPayrollAttendanceController extends Controller
                     'night_differential_hours' => $validated['night_differential_hours'] ?? 0,
                     'allowances' => $validated['allowances'] ?? 0,
                     'deductions' => $validated['deductions'] ?? 0,
+                    'deductions_remarks' => $validated['deductions_remarks'] ?? '',
+                    'reimbursements' => $validated['reimbursements'] ?? 0,
+                    'reimbursements_remarks' => $validated['reimbursements_remarks'] ?? '',
                 ]);
                 $payrollInput->computePay()->save();
                 \Log::info('Payroll input updated successfully', ['payroll_input_id' => $payrollInput->id]);
@@ -309,6 +322,9 @@ class ManualPayrollAttendanceController extends Controller
                     'night_differential_hours' => $validated['night_differential_hours'] ?? 0,
                     'allowances' => $validated['allowances'] ?? 0,
                     'deductions' => $validated['deductions'] ?? 0,
+                    'deductions_remarks' => $validated['deductions_remarks'] ?? '',
+                    'reimbursements' => $validated['reimbursements'] ?? 0,
+                    'reimbursements_remarks' => $validated['reimbursements_remarks'] ?? '',
                 ]);
                 $payrollInput->computePay()->save();
                 \Log::info('Payroll input created successfully', ['payroll_input_id' => $payrollInput->id]);
