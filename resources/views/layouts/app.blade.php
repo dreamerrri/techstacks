@@ -234,9 +234,9 @@
         <div style="display: flex; align-items: center; gap: 15px;">
 
             {{-- Notification Bell (desktop) --}}
-            <div style="position:relative;">
-                <button id="notifBtn" onclick="document.getElementById('notifDropdown').classList.toggle('notif-open')"
-                        style="background:none; border:none; cursor:pointer; color:white; font-size:18px; position:relative; padding:4px;">
+            <div style="position:relative; z-index: 1000; pointer-events: auto;">
+                <button id="notifBtn"
+                        style="background:none; border:none; cursor:pointer; color:white; font-size:18px; position:relative; padding:4px; z-index: 1001; pointer-events: auto;">
                     <i class="fas fa-bell"></i>
                     @if($notifCount > 0)
                         <span style="position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">
@@ -462,6 +462,12 @@ document.addEventListener('click', function(e) {
     if (btn && dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
         dropdown.classList.remove('notif-open');
     }
+});
+
+// Ensure desktop notif button click works
+document.getElementById('notifBtn')?.addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('notifDropdown')?.classList.toggle('notif-open');
 });
 </script>
 
