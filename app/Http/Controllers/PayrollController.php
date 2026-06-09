@@ -191,7 +191,6 @@ class PayrollController extends Controller
         // Prepare employee data for engine
         $employeeData = [
             'monthly_salary'         => $basicSalary,
-            'working_days_per_month' => 22,
             'working_hours_per_day'  => 8,
         ];
 
@@ -204,9 +203,13 @@ class PayrollController extends Controller
             ? $employee->benefits->pluck('amount')->toArray()
             : $employee->activeBenefits()->pluck('amount')->toArray();
 
+        // Get cutoff dates from payroll period if available
+        $cutoffStart = $period ? $period->cutoff_start->toDateString() : null;
+        $cutoffEnd = $period ? $period->cutoff_end->toDateString() : null;
+
         // First pass: compute gross pay without deductions
         $engine        = new PayrollComputationEngine();
-        $previewResult = $engine->compute($employeeData, $attendanceData, [], $benefits, $allowances, [], true);
+        $previewResult = $engine->compute($employeeData, $attendanceData, [], $benefits, $allowances, [], true, $cutoffStart, $cutoffEnd);
         $grossPay      = $previewResult['gross_pay'];
 
         // Government contributions
@@ -244,7 +247,7 @@ class PayrollController extends Controller
 
         // Second pass: compute net pay with all deductions
         $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax, $manualDeductions];
-        $result     = $engine->compute($employeeData, $attendanceData, $deductions, $benefits, $allowances, [], false);
+        $result     = $engine->compute($employeeData, $attendanceData, $deductions, $benefits, $allowances, [], false, $cutoffStart, $cutoffEnd);
 
         return [
             'basic_salary'            => $basicSalary,

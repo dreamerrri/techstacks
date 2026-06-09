@@ -68,4 +68,34 @@ class PayrollPeriod extends Model
     {
         return $this->payrollInputs ? $this->payrollInputs->sum('deductions') : 0;
     }
+
+    /**
+     * Calculate working days between cutoff_start and cutoff_end (excluding weekends)
+     */
+    public function getWorkingDaysAttribute(): int
+    {
+        return $this->calculateWorkingDays($this->cutoff_start, $this->cutoff_end);
+    }
+
+    /**
+     * Calculate working days between two dates (excluding weekends: Saturday and Sunday)
+     */
+    public static function calculateWorkingDays($startDate, $endDate): int
+    {
+        $start = $startDate instanceof \DateTime ? $startDate : new \DateTime($startDate);
+        $end = $endDate instanceof \DateTime ? $endDate : new \DateTime($endDate);
+        
+        $workingDays = 0;
+        $interval = new \DateInterval('P1D');
+        $period = new \DatePeriod($start, $interval, $end->modify('+1 day'));
+        
+        foreach ($period as $day) {
+            // Exclude Saturday (6) and Sunday (0)
+            if ($day->format('N') != 6 && $day->format('N') != 0) {
+                $workingDays++;
+            }
+        }
+        
+        return $workingDays;
+    }
 }
