@@ -20,6 +20,9 @@
             'name'                    => $emp->full_name,
             'employee_id'             => $emp->employee_id,
             'department'              => $emp->department,
+            'days_worked'             => $p['attendance_data']['days_worked'] ?? 0,
+            'overtime_hours'          => $p['attendance_data']['overtime_hours'] ?? 0,
+            'holiday_days'            => $p['attendance_data']['holiday_days'] ?? 0,
             'basic_pay'               => $p['base_pay'] ?? 0,
             'gross_pay'               => $p['gross_pay'] ?? 0,
             'sss_contribution'        => $p['sss_contribution'] ?? 0,
@@ -59,11 +62,14 @@
 
         {{-- Modal table --}}
         <div style="overflow-x:auto; padding:0 0 4px;">
-            <table id="deptBreakdownTable" style="width:100%; border-collapse:collapse; font-size:13px; min-width:820px;">
+            <table id="deptBreakdownTable" style="width:100%; border-collapse:collapse; font-size:13px; min-width:1060px;">
                 <thead>
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                         <th style="padding:11px 16px; text-align:left; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Employee</th>
                         <th style="padding:11px 16px; text-align:left; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Dept</th>
+                        <th style="padding:11px 16px; text-align:center; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Days</th>
+                        <th style="padding:11px 16px; text-align:center; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">OT Hrs</th>
+                        <th style="padding:11px 16px; text-align:center; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Holiday</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Basic Pay</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">SSS</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">PhilHealth</th>
@@ -460,6 +466,9 @@ function openDeptModal() {
                     <div style="font-size:11px; color:#9ca3af; font-family:monospace;">${emp.employee_id}</div>
                 </td>
                 <td style="padding:10px 16px; color:#6b7280; font-size:13px;">${emp.department}</td>
+                <td style="padding:10px 16px; text-align:center; color:#1a1a2e; font-weight:600;">${emp.days_worked}</td>
+                <td style="padding:10px 16px; text-align:center; color:#f59e0b; font-weight:600;">${emp.overtime_hours}</td>
+                <td style="padding:10px 16px; text-align:center; color:#8b5cf6; font-weight:600;">${emp.holiday_days}</td>
                 <td style="padding:10px 16px; text-align:right; font-weight:600; color:#1a1a2e;">${fmt(emp.basic_pay)}</td>
                 <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.sss_contribution)}</td>
                 <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.philhealth_contribution)}</td>
@@ -476,6 +485,9 @@ function openDeptModal() {
             <td colspan="2" style="padding:12px 16px; font-weight:700; color:#1e40af; font-size:13px;">
                 <i class="fas fa-sigma" style="margin-right:6px;"></i>Totals (${data.length} employees)
             </td>
+            <td style="padding:12px 16px; text-align:center; color:#6b7280;">—</td>
+            <td style="padding:12px 16px; text-align:center; color:#6b7280;">—</td>
+            <td style="padding:12px 16px; text-align:center; color:#6b7280;">—</td>
             <td style="padding:12px 16px; text-align:right; font-weight:700; color:#1a1a2e;">${fmt(totBasic)}</td>
             <td style="padding:12px 16px; text-align:right; font-weight:700; color:#dc2626;">${fmt(totSss)}</td>
             <td style="padding:12px 16px; text-align:right; font-weight:700; color:#dc2626;">${fmt(totPhil)}</td>
@@ -526,7 +538,7 @@ function printPayrollTable() {
 
     let totBasic = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
 
-    const headers = ['Employee', 'Dept', 'Basic Pay', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax', 'Total Deductions', 'Net Pay'];
+    const headers = ['Employee', 'Dept', 'Days', 'OT Hrs', 'Holiday', 'Basic Pay', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax', 'Total Deductions', 'Net Pay'];
 
     let rows = '';
     data.forEach(d => {
@@ -541,6 +553,9 @@ function printPayrollTable() {
             <tr>
                 <td><strong>${d.name}</strong><br><small>${d.employee_id}</small></td>
                 <td>${d.department}</td>
+                <td class="ctr">${d.days_worked}</td>
+                <td class="ctr" style="color:#d97706;">${d.overtime_hours}</td>
+                <td class="ctr" style="color:#7c3aed;">${d.holiday_days}</td>
                 <td class="num">${fmt(d.basic_pay)}</td>
                 <td class="num red">${fmt(d.sss_contribution)}</td>
                 <td class="num red">${fmt(d.philhealth_contribution)}</td>
@@ -563,8 +578,10 @@ function printPayrollTable() {
             table { width:100%; border-collapse:collapse; }
             thead th { background:#1e40af; color:white; padding:7px 8px; font-size:10px; text-transform:uppercase; letter-spacing:0.04em; text-align:left; }
             thead th.num { text-align:right; }
+            thead th.ctr { text-align:center; }
             td { padding:6px 8px; border-bottom:1px solid #e5e7eb; vertical-align:top; }
             td.num { text-align:right; }
+            td.ctr { text-align:center; }
             tr:nth-child(even) td { background:#f9fafb; }
             small { color:#6b7280; font-size:10px; font-family:monospace; }
             .red { color:#dc2626; }
@@ -581,11 +598,14 @@ function printPayrollTable() {
         <h1>Payroll Summary Report</h1>
         <div class="meta">Filter: ${filterNote} &nbsp;|&nbsp; Printed: ${new Date().toLocaleString()}</div>
         <table>
-            <thead><tr>${headers.map((h,i) => `<th${i>=2?' class="num"':''}>${h}</th>`).join('')}</tr></thead>
+            <thead><tr>${headers.map((h,i) => i>=2&&i<=4 ? `<th class="ctr">${h}</th>` : i>=5 ? `<th class="num">${h}</th>` : `<th>${h}</th>`).join('')}</tr></thead>
             <tbody>${rows}</tbody>
             <tfoot>
                 <tr>
                     <td colspan="2">Totals (${data.length} employees)</td>
+                    <td class="ctr">—</td>
+                    <td class="ctr">—</td>
+                    <td class="ctr">—</td>
                     <td class="num">${fmt(totBasic)}</td>
                     <td class="num red">${fmt(totSss)}</td>
                     <td class="num red">${fmt(totPhil)}</td>
@@ -613,6 +633,7 @@ function exportPayrollCSV() {
 
     const headers = [
         'Employee', 'Employee ID', 'Department',
+        'Days Worked', 'OT Hours', 'Holiday Days',
         'Basic Pay', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax',
         'Total Deductions', 'Net Pay'
     ];
@@ -626,6 +647,9 @@ function exportPayrollCSV() {
             `"${d.name}"`,
             `"${d.employee_id}"`,
             `"${d.department}"`,
+            d.days_worked,
+            d.overtime_hours,
+            d.holiday_days,
             d.basic_pay,
             d.sss_contribution,
             d.philhealth_contribution,
