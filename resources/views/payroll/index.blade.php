@@ -140,18 +140,13 @@
             <h2 class="aurora-card-title" style="margin:0;">
                 <i class="fas fa-list"></i> Payroll Summary
             </h2>
-           <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+           <div style="display:flex; gap:8px; flex-wrap:wrap;">
     @if($isAdmin || $isHR)
     <button onclick="openDeptModal()"
             style="padding:8px 18px; background:#4f46e5; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
         <i class="fas fa-layer-group"></i> Dept Breakdown
     </button>
     @endif
-    <button id="tableExpandBtn" onclick="toggleTableHeight()"
-            title="Expand / Collapse table"
-            style="padding:5px 8px; background:transparent; border:1px solid #e5e7eb; border-radius:6px; cursor:pointer; color:#9ca3af; font-size:12px; display:inline-flex; align-items:center; gap:4px;">
-        <i id="tableExpandIcon" class="fas fa-expand-alt"></i>
-    </button>
 </div>
         </div>
 
