@@ -102,6 +102,7 @@ class ManualPayrollAttendanceController extends Controller
     {
         $validated = $request->validate([
             'employee_id' => 'required|exists:employees,id',
+            'payroll_period_id' => 'nullable|exists:payroll_periods,id',
             'daily_rate' => 'required|numeric|min:0',
             'rate_type' => 'required|in:daily',
             'days_worked' => 'required|numeric|min:0|max:31',
@@ -119,15 +120,26 @@ class ManualPayrollAttendanceController extends Controller
 
         $employee = Employee::findOrFail($validated['employee_id']);
 
+        // Get payroll period if provided to calculate working days
+        $cutoffStart = null;
+        $cutoffEnd = null;
+        if (!empty($validated['payroll_period_id'])) {
+            $period = PayrollPeriod::find($validated['payroll_period_id']);
+            if ($period) {
+                $cutoffStart = $period->cutoff_start->toDateString();
+                $cutoffEnd = $period->cutoff_end->toDateString();
+            }
+        }
+
         // Use PayrollComputationEngine for consistency with PayrollInput::computePay()
         $engine = new PayrollComputationEngine();
         
         // Convert daily rate to monthly salary using the formula: daily_rate * 22
+        // Note: This will be recalculated based on actual working days if cutoff dates are provided
         $monthlySalary = $validated['daily_rate'] * 22;
         
         $employeeData = [
             'monthly_salary' => $monthlySalary,
-            'working_days_per_month' => 22,
             'working_hours_per_day' => 8,
         ];
 
@@ -146,7 +158,7 @@ class ManualPayrollAttendanceController extends Controller
         $benefits = $employee->activeBenefits()->pluck('amount')->toArray();
 
         // First, calculate gross pay without deductions to get contribution bases
-        $previewResult = $engine->compute($employeeData, $attendance, [], $benefits, $allowances, [], true);
+        $previewResult = $engine->compute($employeeData, $attendance, [], $benefits, $allowances, [], true, $cutoffStart, $cutoffEnd);
         $grossPay = $previewResult['gross_pay'];
 
         // Government contributions are based on gross pay for payroll preview
@@ -195,7 +207,9 @@ class ManualPayrollAttendanceController extends Controller
             $benefits,
             $allowances,
             [],
-            false // not preview mode for final calculation
+            false, // not preview mode for final calculation
+            $cutoffStart,
+            $cutoffEnd
         );
 
         // Add government contribution breakdown to result

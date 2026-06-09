@@ -83,11 +83,19 @@ class PayrollInput extends Model
         $engine = new \App\Services\Payroll\PayrollComputationEngine();
         
         // Convert daily rate to monthly salary using the formula: daily_rate * 22
+        // Note: This will be recalculated based on actual working days if cutoff dates are provided
         $monthlySalary = $this->daily_rate * 22;
+        
+        // Get cutoff dates from payroll period if available
+        $cutoffStart = null;
+        $cutoffEnd = null;
+        if ($this->payrollPeriod) {
+            $cutoffStart = $this->payrollPeriod->cutoff_start->toDateString();
+            $cutoffEnd = $this->payrollPeriod->cutoff_end->toDateString();
+        }
         
         $employeeData = [
             'monthly_salary' => $monthlySalary,
-            'working_days_per_month' => 22,
             'working_hours_per_day' => 8,
         ];
 
@@ -106,7 +114,7 @@ class PayrollInput extends Model
         $benefits = $employee ? $employee->activeBenefits()->pluck('amount')->toArray() : [];
 
         // First, calculate gross pay without deductions to get contribution bases
-        $previewResult = $engine->compute($employeeData, $attendance, [], $benefits, $allowances, [], true);
+        $previewResult = $engine->compute($employeeData, $attendance, [], $benefits, $allowances, [], true, $cutoffStart, $cutoffEnd);
         $grossPay = $previewResult['gross_pay'];
 
         // Get employee for government contribution rates
@@ -161,7 +169,9 @@ class PayrollInput extends Model
             $benefits,
             $allowances,
             [],
-            false // not preview mode for final calculation
+            false, // not preview mode for final calculation
+            $cutoffStart,
+            $cutoffEnd
         );
 
         $this->gross_pay = $result['gross_pay'];

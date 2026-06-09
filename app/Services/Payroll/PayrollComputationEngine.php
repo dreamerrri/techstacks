@@ -16,6 +16,8 @@ class PayrollComputationEngine
      * @param array $allowances
      * @param array $manualAdjustments (optional, e.g. ['add' => 100, 'subtract' => 50])
      * @param bool $preview (optional, if true, returns breakdown without applying deductions)
+     * @param string|null $cutoffStart (optional, cutoff start date for calculating working days)
+     * @param string|null $cutoffEnd (optional, cutoff end date for calculating working days)
      * @return array
      */
     public function compute(
@@ -25,11 +27,20 @@ class PayrollComputationEngine
         array $benefits = [],
         array $allowances = [],
         array $manualAdjustments = [],
-        bool $preview = false
+        bool $preview = false,
+        ?string $cutoffStart = null,
+        ?string $cutoffEnd = null
     ) {
         // Monthly salary and divisor
         $monthlySalary = $employeeData['monthly_salary'] ?? 0;
-        $workingDaysPerMonth = $employeeData['working_days_per_month'] ?? 22;
+        
+        // Calculate working days based on cutoff dates if provided, otherwise use employee data or default to 22
+        if ($cutoffStart && $cutoffEnd) {
+            $workingDaysPerMonth = $this->calculateWorkingDays($cutoffStart, $cutoffEnd);
+        } else {
+            $workingDaysPerMonth = $employeeData['working_days_per_month'] ?? 22;
+        }
+        
         $workingHoursPerDay = $employeeData['working_hours_per_day'] ?? 8;
 
         // Use rounded daily rate for all calculations
@@ -95,5 +106,27 @@ class PayrollComputationEngine
             'net_pay' => $netPay,
             'preview' => $preview,
         ];
+    }
+
+    /**
+     * Calculate working days between two dates (excluding weekends: Saturday and Sunday)
+     */
+    private function calculateWorkingDays($startDate, $endDate): int
+    {
+        $start = $startDate instanceof \DateTime ? $startDate : new \DateTime($startDate);
+        $end = $endDate instanceof \DateTime ? $endDate : new \DateTime($endDate);
+        
+        $workingDays = 0;
+        $interval = new \DateInterval('P1D');
+        $period = new \DatePeriod($start, $interval, $end->modify('+1 day'));
+        
+        foreach ($period as $day) {
+            // Exclude Saturday (6) and Sunday (0)
+            if ($day->format('N') != 6 && $day->format('N') != 0) {
+                $workingDays++;
+            }
+        }
+        
+        return $workingDays;
     }
 }
