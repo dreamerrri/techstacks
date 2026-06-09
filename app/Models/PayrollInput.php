@@ -102,8 +102,11 @@ class PayrollInput extends Model
 
         $allowances = [$this->allowances];
 
+        // Fetch active benefits from employee (for consistency with PayrollController::calculatePayroll())
+        $benefits = $employee ? $employee->activeBenefits()->pluck('amount')->toArray() : [];
+
         // First, calculate gross pay without deductions to get contribution bases
-        $previewResult = $engine->compute($employeeData, $attendance, [], [], $allowances, [], true);
+        $previewResult = $engine->compute($employeeData, $attendance, [], $benefits, $allowances, [], true);
         $grossPay = $previewResult['gross_pay'];
 
         // Get employee for government contribution rates
@@ -155,7 +158,7 @@ class PayrollInput extends Model
             $employeeData,
             $attendance,
             [$totalDeductions],
-            [],
+            $benefits,
             $allowances,
             [],
             false // not preview mode for final calculation

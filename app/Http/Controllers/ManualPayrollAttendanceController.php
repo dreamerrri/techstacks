@@ -142,8 +142,11 @@ class ManualPayrollAttendanceController extends Controller
 
         $allowances = [$validated['allowances'] ?? 0];
 
+        // Fetch active benefits from employee (for consistency with PayrollController::calculatePayroll())
+        $benefits = $employee->activeBenefits()->pluck('amount')->toArray();
+
         // First, calculate gross pay without deductions to get contribution bases
-        $previewResult = $engine->compute($employeeData, $attendance, [], [], $allowances, [], true);
+        $previewResult = $engine->compute($employeeData, $attendance, [], $benefits, $allowances, [], true);
         $grossPay = $previewResult['gross_pay'];
 
         // Government contributions are based on gross pay for payroll preview
@@ -189,7 +192,7 @@ class ManualPayrollAttendanceController extends Controller
             $employeeData,
             $attendance,
             [$totalDeductions],
-            [],
+            $benefits,
             $allowances,
             [],
             false // not preview mode for final calculation
