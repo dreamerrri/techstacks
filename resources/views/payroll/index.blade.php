@@ -83,14 +83,14 @@
                 <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Employee</th>
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Department</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Gross Pay</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Allowance & Benefits</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">SSS</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">PhilHealth</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Pag-IBIG</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Tax</th>
+                 <!--   <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Gross Pay</th>  -->
+                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Allowance & Benefits</th> -->
+                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">SSS</th> -->
+                  <!--   <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">PhilHealth</th> -->
+                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Pag-IBIG</th> -->
+                  <!--   <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Tax</th> -->
                     <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Total Deductions</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Net Pay</th>
+                 <!--    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Net Pay</th> -->
                     <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
                 </tr>
             </thead>
@@ -110,15 +110,15 @@
                                 </div>
                             </div>
                         </td>
-                        <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
-                        <td style="padding:12px; text-align:right; font-weight:600; color:#1a1a2e;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; font-weight:600; color:#10b981;">+₱{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
-                        <td style="padding:12px; text-align:right; font-weight:700; color:#10b981; font-size:15px;">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
+                       <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
+                     <!--   <td style="padding:12px; text-align:right; font-weight:600; color:#1a1a2e;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</td> -->
+                     <!--   <td style="padding:12px; text-align:right; font-weight:600; color:#10b981;">+₱{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</td> -->
+                     <!--   <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</td> -->
+                      <!--  <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</td> --> 
+                      <!--  <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</td> -->
+                      <!--  <td style="padding:12px; text-align:right; color:#dc2626;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</td> -->
+                       <td style="padding:12px; text-align:right; font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
+                     <!--   <td style="padding:12px; text-align:right; font-weight:700; color:#10b981; font-size:15px;">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td> -->
                         <td style="padding:12px; text-align:center;">
                             <div style="display:flex; gap:6px; justify-content:center;">
                                 @if(($payroll['gross_pay'] ?? 0) == 0)
