@@ -166,14 +166,15 @@ class PayrollInputController extends Controller
 
     /**
      * Convert employees.basic_salary to a daily rate based on salary_type.
-     * Monthly: divide by 22 working days
+     * Using same formula as ManualPayrollAttendanceController for consistency: (basic_salary * 12) / 52 / 40 * 8
+     * Monthly: use formula (basic_salary * 12) / 52 / 40 * 8
      * Daily:   use as-is
      * Hourly:  multiply by 8
      */
     private function computeDailyRate(Employee $employee): float
     {
         return round(match($employee->salary_type) {
-            'Monthly' => $employee->basic_salary / 22,
+            'Monthly' => ($employee->basic_salary * 12) / 52 / 40 * 8,
             'Hourly'  => $employee->basic_salary * 8,
             default   => $employee->basic_salary,   // Daily
         }, 2);

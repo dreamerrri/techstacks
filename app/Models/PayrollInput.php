@@ -104,25 +104,26 @@ class PayrollInput extends Model
 
         // Get employee for government contribution rates
         $employee = $this->employee;
-        
-        // Government contributions are based on basic salary, not gross pay
-        // (gross pay includes overtime, allowances, etc. which should not affect contribution calculations)
-        $basicSalary = $employee->basic_salary;
-        
+
+        // Government contributions are based on gross pay
+        // (same as in ManualPayrollAttendanceController::preview() and PayrollController::calculatePayroll() for consistency)
         // SSS Contribution using official bracket table (Circular No. 2024-006)
+        // Use custom value if set, otherwise use computed value
         $sssService = new \App\Services\SssContributionService();
-        $sssCalculation = $sssService->calculate($basicSalary);
-        $sssContribution = $sssCalculation['employee_share'];
-        
+        $sssCalculation = $sssService->calculate($grossPay);
+        $sssContribution = $employee->custom_sss_contribution ?? $sssCalculation['employee_share'];
+
         // PhilHealth Contribution using official 2025/2026 table
+        // Use custom value if set, otherwise use computed value
         $philHealthService = new \App\Services\PhilHealthContributionService();
-        $philHealthCalculation = $philHealthService->calculate($basicSalary);
-        $philhealthContribution = $philHealthCalculation['employee_share'];
-        
+        $philHealthCalculation = $philHealthService->calculate($grossPay);
+        $philhealthContribution = $employee->custom_philhealth_contribution ?? $philHealthCalculation['employee_share'];
+
         // Pag-IBIG Contribution using official 2026 table
+        // Use custom value if set, otherwise use computed value
         $pagIbigService = new \App\Services\PagIbigContributionService();
-        $pagIbigCalculation = $pagIbigService->calculate($basicSalary);
-        $pagibigContribution = $pagIbigCalculation['employee_share'];
+        $pagIbigCalculation = $pagIbigService->calculate($grossPay);
+        $pagibigContribution = $employee->custom_pagibig_contribution ?? $pagIbigCalculation['employee_share'];
 
         // Calculate withholding tax
         $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
