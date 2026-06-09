@@ -20,9 +20,6 @@
             'name'                    => $emp->full_name,
             'employee_id'             => $emp->employee_id,
             'department'              => $emp->department,
-            'days_worked'             => $p['attendance_data']['days_worked'] ?? 0,
-            'overtime_hours'          => $p['attendance_data']['overtime_hours'] ?? 0,
-            'holiday_days'            => $p['attendance_data']['holiday_days'] ?? 0,
             'basic_pay'               => $p['base_pay'] ?? 0,
             'gross_pay'               => $p['gross_pay'] ?? 0,
             'sss_contribution'        => $p['sss_contribution'] ?? 0,
@@ -43,7 +40,7 @@
      ═══════════════════════════════════════════════ --}}
 <div id="deptBreakdownModal"
      style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.5); align-items:flex-start; justify-content:center; padding:20px; overflow-y:auto;">
-    <div style="background:white; border-radius:16px; width:100%; max-width:1100px; margin:auto; box-shadow:0 24px 64px rgba(0,0,0,0.2); overflow:hidden;">
+    <div style="background:white; border-radius:16px; width:100%; max-width:90vw; margin:auto; box-shadow:0 24px 64px rgba(0,0,0,0.2); overflow:hidden;">
 
         {{-- Modal header --}}
         <div style="padding:20px 28px 16px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; background:white; border-radius:16px 16px 0 0;">
@@ -61,15 +58,12 @@
         </div>
 
         {{-- Modal table --}}
-        <div style="overflow-x:auto; padding:0 0 4px;">
-            <table id="deptBreakdownTable" style="width:100%; border-collapse:collapse; font-size:13px; min-width:1060px;">
+<div style="overflow-x:auto; overflow-y:auto; max-height:50vh; padding:0 0 4px;">
+                <table id="deptBreakdownTable" style="width:100%; border-collapse:collapse; font-size:13px; min-width:800px;">
                 <thead>
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                         <th style="padding:11px 16px; text-align:left; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Employee</th>
                         <th style="padding:11px 16px; text-align:left; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Dept</th>
-                        <th style="padding:11px 16px; text-align:center; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Days</th>
-                        <th style="padding:11px 16px; text-align:center; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">OT Hrs</th>
-                        <th style="padding:11px 16px; text-align:center; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Holiday</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Basic Pay</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">SSS</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">PhilHealth</th>
@@ -94,10 +88,9 @@
 
         {{-- Total Net Pay → Gross Pay summary bar --}}
         <div id="deptGrossPayBar" style="display:none; margin:0 24px 0; padding:14px 20px; background:linear-gradient(135deg,#d1fae5,#a7f3d0); border-radius:0 0 12px 12px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-            <div style="font-size:13px; color:#065f46;">
+            <div style="font-size:14px; font-weight:700; color:#065f46;">
                 <i class="fas fa-money-bill-wave" style="margin-right:6px;"></i>
-                <strong>Total Gross Pay</strong>
-                <span style="font-size:11px; color:#047857; margin-left:6px;">(sum of all net pays)</span>
+                Total Gross Pay:
             </div>
             <span id="deptTotalGrossPay" style="font-size:20px; font-weight:800; color:#065f46; letter-spacing:-0.5px;">₱0.00</span>
         </div>
@@ -147,14 +140,19 @@
             <h2 class="aurora-card-title" style="margin:0;">
                 <i class="fas fa-list"></i> Payroll Summary
             </h2>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                @if($isAdmin || $isHR)
-                <button onclick="openDeptModal()"
-                        style="padding:8px 18px; background:#4f46e5; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
-                    <i class="fas fa-layer-group"></i> Dept Breakdown
-                </button>
-                @endif
-            </div>
+           <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+    @if($isAdmin || $isHR)
+    <button onclick="openDeptModal()"
+            style="padding:8px 18px; background:#4f46e5; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+        <i class="fas fa-layer-group"></i> Dept Breakdown
+    </button>
+    @endif
+    <button id="tableExpandBtn" onclick="toggleTableHeight()"
+            title="Expand / Collapse table"
+            style="padding:5px 8px; background:transparent; border:1px solid #e5e7eb; border-radius:6px; cursor:pointer; color:#9ca3af; font-size:12px; display:inline-flex; align-items:center; gap:4px;">
+        <i id="tableExpandIcon" class="fas fa-expand-alt"></i>
+    </button>
+</div>
         </div>
 
         @if($isAdmin || $isHR)
@@ -219,12 +217,15 @@
     @endif
 
     {{-- Desktop Table --}}
-    <div class="user-table-wrapper" style="overflow-y:auto; max-height:53vh; padding:0 28px;">
+    <div class="user-table-wrapper" style="overflow-y:auto; max-height:47vh; padding:0 28px;">
         <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:900px;">
             <thead style="position:sticky; top:0; z-index:5;">
                 <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Employee</th>
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Department</th>
+                    <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Days Worked</th>
+                    <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">OT Hrs</th>
+                    <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Holiday</th>
                     <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Total Deductions</th>
                     <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
                 </tr>
@@ -246,6 +247,9 @@
                             </div>
                         </td>
                         <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
+                        <td style="padding:12px; text-align:center; font-weight:600; color:#1a1a2e;">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</td>
+                        <td style="padding:12px; text-align:center; font-weight:600; color:#f59e0b;">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</td>
+                        <td style="padding:12px; text-align:center; font-weight:600; color:#8b5cf6;">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</td>
                         <td style="padding:12px; text-align:right; font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
                         <td style="padding:12px; text-align:center;">
                             <div style="display:flex; gap:6px; justify-content:center;">
@@ -273,7 +277,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" style="padding:40px; text-align:center; color:#9ca3af;">
+                        <td colspan="7" style="padding:40px; text-align:center; color:#9ca3af;">
                             <i class="fas fa-money-bill-wave" style="font-size:32px; margin-bottom:10px; display:block;"></i>
                             No payroll data found.
                         </td>
@@ -466,9 +470,6 @@ function openDeptModal() {
                     <div style="font-size:11px; color:#9ca3af; font-family:monospace;">${emp.employee_id}</div>
                 </td>
                 <td style="padding:10px 16px; color:#6b7280; font-size:13px;">${emp.department}</td>
-                <td style="padding:10px 16px; text-align:center; color:#1a1a2e; font-weight:600;">${emp.days_worked}</td>
-                <td style="padding:10px 16px; text-align:center; color:#f59e0b; font-weight:600;">${emp.overtime_hours}</td>
-                <td style="padding:10px 16px; text-align:center; color:#8b5cf6; font-weight:600;">${emp.holiday_days}</td>
                 <td style="padding:10px 16px; text-align:right; font-weight:600; color:#1a1a2e;">${fmt(emp.basic_pay)}</td>
                 <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.sss_contribution)}</td>
                 <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.philhealth_contribution)}</td>
@@ -479,23 +480,8 @@ function openDeptModal() {
             </tr>`;
     }).join('');
 
-    // Per-column totals row
-    foot.innerHTML = `
-        <tr style="background:linear-gradient(135deg,#eff6ff,#dbeafe); border-top:2px solid #bfdbfe;">
-            <td colspan="2" style="padding:12px 16px; font-weight:700; color:#1e40af; font-size:13px;">
-                <i class="fas fa-sigma" style="margin-right:6px;"></i>Totals (${data.length} employees)
-            </td>
-            <td style="padding:12px 16px; text-align:center; color:#6b7280;">—</td>
-            <td style="padding:12px 16px; text-align:center; color:#6b7280;">—</td>
-            <td style="padding:12px 16px; text-align:center; color:#6b7280;">—</td>
-            <td style="padding:12px 16px; text-align:right; font-weight:700; color:#1a1a2e;">${fmt(totBasic)}</td>
-            <td style="padding:12px 16px; text-align:right; font-weight:700; color:#dc2626;">${fmt(totSss)}</td>
-            <td style="padding:12px 16px; text-align:right; font-weight:700; color:#dc2626;">${fmt(totPhil)}</td>
-            <td style="padding:12px 16px; text-align:right; font-weight:700; color:#dc2626;">${fmt(totPagibig)}</td>
-            <td style="padding:12px 16px; text-align:right; font-weight:700; color:#dc2626;">${fmt(totTax)}</td>
-            <td style="padding:12px 16px; text-align:right; font-weight:700; color:#dc2626; font-size:14px;">${fmt(totDed)}</td>
-            <td style="padding:12px 16px; text-align:right; font-weight:800; color:#065f46; font-size:15px;">${fmt(totNet)}</td>
-        </tr>`;
+    // Clear tfoot — no totals row
+    foot.innerHTML = '';
 
     // Total Gross Pay bar = sum of net pays
     document.getElementById('deptTotalGrossPay').textContent = fmt(totNet);
@@ -538,7 +524,7 @@ function printPayrollTable() {
 
     let totBasic = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
 
-    const headers = ['Employee', 'Dept', 'Days', 'OT Hrs', 'Holiday', 'Basic Pay', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax', 'Total Deductions', 'Net Pay'];
+    const headers = ['Employee', 'Dept', 'Basic Pay', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax', 'Total Deductions', 'Net Pay'];
 
     let rows = '';
     data.forEach(d => {
@@ -553,9 +539,6 @@ function printPayrollTable() {
             <tr>
                 <td><strong>${d.name}</strong><br><small>${d.employee_id}</small></td>
                 <td>${d.department}</td>
-                <td class="ctr">${d.days_worked}</td>
-                <td class="ctr" style="color:#d97706;">${d.overtime_hours}</td>
-                <td class="ctr" style="color:#7c3aed;">${d.holiday_days}</td>
                 <td class="num">${fmt(d.basic_pay)}</td>
                 <td class="num red">${fmt(d.sss_contribution)}</td>
                 <td class="num red">${fmt(d.philhealth_contribution)}</td>
@@ -578,10 +561,8 @@ function printPayrollTable() {
             table { width:100%; border-collapse:collapse; }
             thead th { background:#1e40af; color:white; padding:7px 8px; font-size:10px; text-transform:uppercase; letter-spacing:0.04em; text-align:left; }
             thead th.num { text-align:right; }
-            thead th.ctr { text-align:center; }
             td { padding:6px 8px; border-bottom:1px solid #e5e7eb; vertical-align:top; }
             td.num { text-align:right; }
-            td.ctr { text-align:center; }
             tr:nth-child(even) td { background:#f9fafb; }
             small { color:#6b7280; font-size:10px; font-family:monospace; }
             .red { color:#dc2626; }
@@ -598,14 +579,11 @@ function printPayrollTable() {
         <h1>Payroll Summary Report</h1>
         <div class="meta">Filter: ${filterNote} &nbsp;|&nbsp; Printed: ${new Date().toLocaleString()}</div>
         <table>
-            <thead><tr>${headers.map((h,i) => i>=2&&i<=4 ? `<th class="ctr">${h}</th>` : i>=5 ? `<th class="num">${h}</th>` : `<th>${h}</th>`).join('')}</tr></thead>
+            <thead><tr>${headers.map((h, i) => i >= 2 ? `<th class="num">${h}</th>` : `<th>${h}</th>`).join('')}</tr></thead>
             <tbody>${rows}</tbody>
             <tfoot>
                 <tr>
                     <td colspan="2">Totals (${data.length} employees)</td>
-                    <td class="ctr">—</td>
-                    <td class="ctr">—</td>
-                    <td class="ctr">—</td>
                     <td class="num">${fmt(totBasic)}</td>
                     <td class="num red">${fmt(totSss)}</td>
                     <td class="num red">${fmt(totPhil)}</td>
@@ -633,7 +611,6 @@ function exportPayrollCSV() {
 
     const headers = [
         'Employee', 'Employee ID', 'Department',
-        'Days Worked', 'OT Hours', 'Holiday Days',
         'Basic Pay', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax',
         'Total Deductions', 'Net Pay'
     ];
@@ -647,9 +624,6 @@ function exportPayrollCSV() {
             `"${d.name}"`,
             `"${d.employee_id}"`,
             `"${d.department}"`,
-            d.days_worked,
-            d.overtime_hours,
-            d.holiday_days,
             d.basic_pay,
             d.sss_contribution,
             d.philhealth_contribution,
@@ -661,8 +635,8 @@ function exportPayrollCSV() {
     });
 
     // Totals row
-    csvRows.push(['', '', '"TOTALS"', '', '', '', '', '', '', totNet.toFixed(2)].join(','));
-    csvRows.push(['', '', '"Total Gross Pay (sum of net pays)"', '', '', '', '', '', '', totNet.toFixed(2)].join(','));
+    csvRows.push(['', '', '"TOTALS"', '', '', '', '', '', totNet.toFixed(2)].join(','));
+    csvRows.push(['', '', '"Total Gross Pay (sum of net pays)"', '', '', '', '', '', totNet.toFixed(2)].join(','));
 
     const periodText = document.querySelector('select[name="payroll_period_id"] option:checked')?.innerText ?? '';
     const deptVal    = document.querySelector('select[name="department"]')?.value ?? '';
