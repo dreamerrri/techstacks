@@ -45,7 +45,7 @@ class AuthController extends Controller
                 return back()->with('error', 'Your account has been deactivated. Please contact administrator.');
             }
 
-            $user->update(['last_login_at' => now()]);
+        $user->updateQuietly(['last_login_at' => now()]);
             LogsAudit::logAction('login', 'auth', "User {$user->name} logged in");
             $request->session()->regenerate();
 
@@ -273,7 +273,7 @@ $actions = [
 
         $token        = JWTTokenService::generateToken($user);
         $refreshToken = JWTTokenService::createRefreshToken($user);
-        $user->update(['last_login_at' => now()]);
+       $user->updateQuietly(['last_login_at' => now()]);
 
         return response()->json([
             'success'       => true,
