@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
 @section('title', 'Payroll Details - ' . $employee->full_name)
-
+@section('breadcrumb')
+    <a href="{{ route('payroll.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Payroll</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <a href="{{ route('payroll.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Payroll</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:600;">{{ $employee->full_name }}</span>
+@endsection
 @section('content')
 
 @php

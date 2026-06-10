@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('title', 'Manage Employees')
-
+@section('breadcrumb')
+    <span>Manage Employees</span>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:500;">Employees</span>
+@endsection
 @section('content')
 
     {{-- Header --}}

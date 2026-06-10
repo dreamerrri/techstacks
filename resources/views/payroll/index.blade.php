@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('title', 'Payroll Preview')
-
+@section('breadcrumb')
+    <span>Manage Payroll</span>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:500;">Payroll</span>
+@endsection
 @section('content')
 
 @php
