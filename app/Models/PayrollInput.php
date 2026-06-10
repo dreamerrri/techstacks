@@ -26,6 +26,7 @@ class PayrollInput extends Model
         'reimbursements_remarks',
         'gross_pay',
         'net_pay',
+     
     ];
 
     protected $casts = [

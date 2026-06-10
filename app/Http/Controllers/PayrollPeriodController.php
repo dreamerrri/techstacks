@@ -45,24 +45,51 @@ class PayrollPeriodController extends Controller
      * POST /payroll-periods
      * Create a new payroll period (draft).
      */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'cutoff_start' => 'required|date',
-            'cutoff_end'   => 'required|date|after_or_equal:cutoff_start',
-            'payroll_date' => 'required|date|after_or_equal:cutoff_end',
-        ]);
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'cutoff_start' => 'required|date',
+        'cutoff_end'   => 'required|date|after_or_equal:cutoff_start',
+        'payroll_date' => 'required|date|after_or_equal:cutoff_end',
+    ]);
 
-        $period = PayrollPeriod::create([
-            ...$validated,
-            'status'     => 'draft',
-            'created_by' => Auth::id(),
-        ]);
+    $start = \Carbon\Carbon::parse($validated['cutoff_start']);
+    $end   = \Carbon\Carbon::parse($validated['cutoff_end']);
 
-        return redirect()->route('manual-payroll-attendance.index')
-            ->with('success', "Payroll period created successfully. Cutoff: {$period->cutoff_start->toDateString()} to {$period->cutoff_end->toDateString()}, Payroll date: {$period->payroll_date->toDateString()}");
+    // 1. Enforce semi-monthly phase boundaries
+    $phase = $start->day <= 15 ? 1 : 2;
+
+    if ($phase === 1 && ($start->day !== 1 || $end->day !== 15)) {
+        return back()->withErrors(['cutoff_start' => 'Phase 1 must be the 1st to 15th of the month.']);
     }
 
+    if ($phase === 2 && ($start->day !== 16 || $end->day !== $end->daysInMonth)) {
+        return back()->withErrors(['cutoff_start' => 'Phase 2 must be the 16th to last day of the month.']);
+    }
+
+    // 2. Block duplicate phase for same month
+    if (PayrollPeriod::existsForMonthAndPhase($start->year, $start->month, $phase)) {
+        $label = $phase === 1 ? '1st half' : '2nd half';
+        return back()->withErrors([
+            'cutoff_start' => "A {$label} payroll period for {$start->format('F Y')} already exists.",
+        ]);
+    }
+
+    // 3. Enforce 15-period cap
+    if (PayrollPeriod::isAtCapacity()) {
+        return back()->withErrors([
+            'cutoff_start' => 'Maximum of 15 payroll periods reached. Archive or delete old periods first.',
+        ]);
+    }
+
+    $period = PayrollPeriod::create(array_merge($validated, [
+        'status'     => 'draft',
+        'created_by' => Auth::id(),
+    ]));
+
+    return redirect()->route('manual-payroll-attendance.index')
+        ->with('success', "Payroll period created: {$period->period_label}");
+}   
     /**
      * GET /payroll-periods/{id}
      * Return a single period with its inputs and employee details.
