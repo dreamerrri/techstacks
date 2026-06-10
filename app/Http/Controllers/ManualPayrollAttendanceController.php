@@ -136,11 +136,8 @@ class ManualPayrollAttendanceController extends Controller
         // Use PayrollComputationEngine for consistency with PayrollInput::computePay()
         $engine = new PayrollComputationEngine();
         
-        // Convert daily rate to monthly salary using the formula: daily_rate * working_days_per_month
-        $monthlySalary = $validated['daily_rate'] * $workingDaysPerMonth;
-        
         $employeeData = [
-            'monthly_salary' => $monthlySalary,
+            'daily_rate' => $validated['daily_rate'],
             'working_hours_per_day' => 8,
         ];
 
@@ -179,17 +176,20 @@ class ManualPayrollAttendanceController extends Controller
         $pagIbigCalculation = $pagIbigService->calculate($grossPay);
         $pagibigContribution = $employee->custom_pagibig_contribution ?? $pagIbigCalculation['employee_share'];
 
-        // Calculate withholding tax
-        $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
-        \Log::info('Withholding tax calculation in ManualPayrollAttendanceController', [
-            'gross_pay' => $grossPay,
-            'sss_contribution' => $sssContribution,
-            'philhealth_contribution' => $philhealthContribution,
-            'pagibig_contribution' => $pagibigContribution,
-            'total_contributions' => $totalContributions,
-        ]);
-        $withholdingTax = $this->calculateTax($grossPay, $totalContributions);
-        \Log::info('Withholding tax result in ManualPayrollAttendanceController', ['withholding_tax' => $withholdingTax]);
+        // Calculate withholding tax only if period is in second half of month (16-30,31)
+        $withholdingTax = 0;
+        if ($period && $period->isSecondHalfOfMonth()) {
+            $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
+            \Log::info('Withholding tax calculation in ManualPayrollAttendanceController', [
+                'gross_pay' => $grossPay,
+                'sss_contribution' => $sssContribution,
+                'philhealth_contribution' => $philhealthContribution,
+                'pagibig_contribution' => $pagibigContribution,
+                'total_contributions' => $totalContributions,
+            ]);
+            $withholdingTax = $this->calculateTax($grossPay, $totalContributions);
+            \Log::info('Withholding tax result in ManualPayrollAttendanceController', ['withholding_tax' => $withholdingTax]);
+        }
 
         // Total government contributions
         $governmentDeductions = $sssContribution + $philhealthContribution + $pagibigContribution + $withholdingTax;

@@ -98,4 +98,12 @@ class PayrollPeriod extends Model
         
         return $workingDays;
     }
+
+    /**
+     * Check if the payroll period falls in the second half of the month (16-30,31)
+     */
+    public function isSecondHalfOfMonth(): bool
+    {
+        return $this->cutoff_start->format('d') >= 16;
+    }
 }

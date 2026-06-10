@@ -31,20 +31,11 @@ class PayrollComputationEngine
         ?string $cutoffStart = null,
         ?string $cutoffEnd = null
     ) {
-        // Monthly salary and divisor
-        $monthlySalary = $employeeData['monthly_salary'] ?? 0;
-        
-        // Calculate working days based on cutoff dates if provided, otherwise use employee data or default to 22
-        if ($cutoffStart && $cutoffEnd) {
-            $workingDaysPerMonth = $this->calculateWorkingDays($cutoffStart, $cutoffEnd);
-        } else {
-            $workingDaysPerMonth = $employeeData['working_days_per_month'] ?? 22;
-        }
-        
+        // Daily rate and working hours
+        $dailyRate = $employeeData['daily_rate'] ?? 0;
         $workingHoursPerDay = $employeeData['working_hours_per_day'] ?? 8;
-
-        // Use rounded daily rate for all calculations
-        $dailyRate = round($monthlySalary / $workingDaysPerMonth, 2);
+        
+        // Calculate hourly rate
         $hourlyRate = round($dailyRate / $workingHoursPerDay, 2);
 
         // 1. Basic Salary - calculate based on days worked (cutoff period)
@@ -89,7 +80,6 @@ class PayrollComputationEngine
         $netPay = $preview ? $grossPay : round($grossPay - $totalDeductions, 2);
 
         return [
-            'monthly_salary' => round($monthlySalary, 2),
             'daily_rate' => $dailyRate,
             'hourly_rate' => $hourlyRate,
             'basic_salary' => $basicSalary,

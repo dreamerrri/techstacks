@@ -11,6 +11,7 @@
     $color = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
     $colorDark = $isAdmin ? '#991b1b' : ($isHR ? '#1e40af' : '#764ba2');
     $isEdit = $payrollInput !== null;
+    $isSecondHalfOfMonth = $payrollPeriod->isSecondHalfOfMonth();
 @endphp
 
 {{-- Header --}}
@@ -239,6 +240,7 @@ window.deductionsValue = '{{ $isEdit ? $payrollInput->deductions : '0' }}';
 window.deductionsRemarksValue = '{{ $isEdit ? ($payrollInput->deductions_remarks ?? '') : '' }}';
 window.reimbursementsValue = '{{ $isEdit ? ($payrollInput->reimbursements ?? '0') : '0' }}';
 window.reimbursementsRemarksValue = '{{ $isEdit ? ($payrollInput->reimbursements_remarks ?? '') : '' }}';
+window.isSecondHalfOfMonth = {{ $isSecondHalfOfMonth ? 'true' : 'false' }};
 
 
 function handleSaveAttendance(event) {
@@ -432,10 +434,12 @@ function previewPayroll() {
                                 <span style="color:#6b7280;">Pag-IBIG Contribution:</span>
                                 <span style="color:#dc2626;">-₱${previewData.pagibig_contribution ? parseFloat(previewData.pagibig_contribution).toFixed(2) : '0.00'}</span>
                             </div>
+                            ${window.isSecondHalfOfMonth ? `
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                                 <span style="color:#6b7280;">Withholding Tax:</span>
                                 <span style="color:#dc2626;">-₱${previewData.withholding_tax ? parseFloat(previewData.withholding_tax).toFixed(2) : '0.00'}</span>
                             </div>
+                            ` : ''}
                             @if($isEdit)
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                                 <span style="color:#6b7280;">Manual Deductions:</span>
