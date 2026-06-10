@@ -42,6 +42,69 @@ class PayrollPeriod extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    // ── Phase Detection ────────────────────────────────────────
+
+    /**
+     * Detect phase from cutoff_start day.
+     * Phase 1 = 1st–15th, Phase 2 = 16th–end of month.
+     */
+    public function getPhaseAttribute(): int
+    {
+        return $this->cutoff_start->day <= 15 ? 1 : 2;
+    }
+
+    /**
+     * Human-readable phase label: "1st Half" or "2nd Half"
+     */
+    public function getPhaseLabelAttribute(): string
+    {
+        return $this->phase === 1 ? '1st Half' : '2nd Half';
+    }
+
+    /**
+     * Full period label, e.g. "June 2025 – 1st Half"
+     */
+    public function getPeriodLabelAttribute(): string
+    {
+        return $this->cutoff_start->format('F Y') . ' – ' . $this->phase_label;
+    }
+
+    /**
+     * Short period label, e.g. "Jun 2025 · P1"
+     */
+    public function getShortLabelAttribute(): string
+    {
+        return $this->cutoff_start->format('M Y') . ' · P' . $this->phase;
+    }
+
+    // ── Guards ─────────────────────────────────────────────────
+
+    /**
+     * Check if a payroll period already exists for the given month/year and phase.
+     * Used to prevent duplicate phase entries per month.
+     */
+    public static function existsForMonthAndPhase(int $year, int $month, int $phase): bool
+    {
+        return self::whereYear('cutoff_start', $year)
+            ->whereMonth('cutoff_start', $month)
+            ->where(function ($q) use ($phase) {
+                if ($phase === 1) {
+                    $q->whereDay('cutoff_start', '<=', 15);
+                } else {
+                    $q->whereDay('cutoff_start', '>', 15);
+                }
+            })
+            ->exists();
+    }
+
+    /**
+     * Check if the 15-period cap has been reached.
+     */
+    public static function isAtCapacity(int $cap = 15): bool
+    {
+        return self::count() >= $cap;
+    }
+
     // ── Helpers ────────────────────────────────────────────────
 
     public function isFinalized(): bool
@@ -70,7 +133,7 @@ class PayrollPeriod extends Model
     }
 
     /**
-     * Calculate working days between cutoff_start and cutoff_end (excluding weekends)
+     * Calculate working days between cutoff_start and cutoff_end (excluding weekends).
      */
     public function getWorkingDaysAttribute(): int
     {
@@ -78,24 +141,24 @@ class PayrollPeriod extends Model
     }
 
     /**
-     * Calculate working days between two dates (excluding weekends: Saturday and Sunday)
+     * Calculate working days between two dates (excluding weekends: Saturday and Sunday).
      */
     public static function calculateWorkingDays($startDate, $endDate): int
     {
         $start = $startDate instanceof \DateTime ? $startDate : new \DateTime($startDate);
-        $end = $endDate instanceof \DateTime ? $endDate : new \DateTime($endDate);
-        
+        $end   = $endDate instanceof \DateTime ? $endDate : new \DateTime($endDate);
+
         $workingDays = 0;
-        $interval = new \DateInterval('P1D');
-        $period = new \DatePeriod($start, $interval, $end->modify('+1 day'));
-        
+        $interval    = new \DateInterval('P1D');
+        $period      = new \DatePeriod($start, $interval, $end->modify('+1 day'));
+
         foreach ($period as $day) {
-            // Exclude Saturday (6) and Sunday (0)
-            if ($day->format('N') != 6 && $day->format('N') != 0) {
+            // Exclude Saturday (6) and Sunday (7 in ISO-8601, not 0)
+            if ($day->format('N') != 6 && $day->format('N') != 7) {
                 $workingDays++;
             }
         }
-        
+
         return $workingDays;
     }
 

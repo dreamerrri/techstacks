@@ -313,7 +313,7 @@
                 {{-- ▼ User Management --}}
                 <div class="nav-dropdown {{ $userMgmtOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-users-cog"></i><span>User Management</span>
+                        <i class="fas fa-users-cog"></i><span>Manage Users  </span>
                         <i class="fas fa-chevron-down nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
@@ -335,7 +335,7 @@
                 {{-- ▼ Employee Management --}}
                 <div class="nav-dropdown {{ $empMgmtOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-user-tie"></i><span>Employee Management</span>
+                        <i class="fas fa-user-tie"></i><span>Manage Employees</span>
                         <i class="fas fa-chevron-down nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
@@ -356,7 +356,7 @@
                 {{-- ▼ Payroll Management --}}
                 <div class="nav-dropdown {{ $payrollMgmtOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-money-bill-wave"></i><span>Payroll Management</span>
+                        <i class="fas fa-money-bill-wave"></i><span>Manage Payroll</span>
                         <i class="fas fa-chevron-down nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
