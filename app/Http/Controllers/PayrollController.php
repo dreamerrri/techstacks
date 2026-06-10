@@ -143,21 +143,6 @@ class PayrollController extends Controller
             ? PayrollPeriod::calculateWorkingDays($period->cutoff_start, $period->cutoff_end) 
             : 22;
 
-        // Calculate hourly and daily rates based on salary type and working days
-        $hourlyRate = match ($salaryType) {
-            'Monthly' => $basicSalary / $workingDaysPerMonth / 8,
-            'Daily'   => $basicSalary / 8,
-            'Hourly'  => $basicSalary,
-            default   => $basicSalary / $workingDaysPerMonth / 8,
-        };
-
-        $dailyRate = match ($salaryType) {
-            'Monthly' => $basicSalary / $workingDaysPerMonth,
-            'Daily'   => $basicSalary,
-            'Hourly'  => $basicSalary * 8,
-            default   => $basicSalary / $workingDaysPerMonth,
-        };
-
         // Resolve payroll input — use already-loaded relation if available, else query
         if ($period) {
             $payrollInput = $employee->relationLoaded('payrollInputs')
@@ -174,6 +159,27 @@ class PayrollController extends Controller
                 $payrollInput = $employee->latestPayrollInput();
                 \Log::info('No current payroll period input, using latest payroll input for employee ' . $employee->id);
             }
+        }
+
+        // Use daily_rate from payroll input if available, otherwise calculate from basic salary
+        if ($payrollInput && $payrollInput->daily_rate) {
+            $dailyRate = $payrollInput->daily_rate;
+            $hourlyRate = $dailyRate / 8;
+        } else {
+            // Calculate hourly and daily rates based on salary type and working days
+            $hourlyRate = match ($salaryType) {
+                'Monthly' => $basicSalary / $workingDaysPerMonth / 8,
+                'Daily'   => $basicSalary / 8,
+                'Hourly'  => $basicSalary,
+                default   => $basicSalary / $workingDaysPerMonth / 8,
+            };
+
+            $dailyRate = match ($salaryType) {
+                'Monthly' => $basicSalary / $workingDaysPerMonth,
+                'Daily'   => $basicSalary,
+                'Hourly'  => $basicSalary * 8,
+                default   => $basicSalary / $workingDaysPerMonth,
+            };
         }
 
         // Prepare attendance array for engine (handle null payroll input)
