@@ -47,19 +47,28 @@
                  onmouseover="this.style.borderColor='{{ $color }}'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)';"
                  onmouseout="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none';">
                 <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:12px;">
-                    <div>
-                        <div style="font-weight:600; color:#1f2937; font-size:16px;">
-                            {{ $period->cutoff_start ? $period->cutoff_start->format('M d') : 'N/A' }} - {{ $period->cutoff_end ? $period->cutoff_end->format('M d, Y') : 'N/A' }}
-                        </div>
-                        <div style="color:#6b7280; font-size:13px; margin-top:4px;">
-                            Payroll Date: {{ $period->payroll_date ? $period->payroll_date->format('M d, Y') : 'N/A' }}
-                        </div>
-                    </div>
-                    <span style="padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; 
-                        {{ $period->status === 'finalized' ? 'background:#dcfce7; color:#166534;' : 'background:#fef3c7; color:#92400e;' }}">
-                        {{ ucfirst($period->status) }}
-                    </span>
-                </div>
+    <div>
+        <div style="font-weight:600; color:#1f2937; font-size:16px;">
+            {{ $period->cutoff_start ? $period->cutoff_start->format('M d') : 'N/A' }} - {{ $period->cutoff_end ? $period->cutoff_end->format('M d, Y') : 'N/A' }}
+        </div>
+        <div style="color:#6b7280; font-size:13px; margin-top:4px;">
+            Payroll Date: {{ $period->payroll_date ? $period->payroll_date->format('M d, Y') : 'N/A' }}
+        </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+        <span style="padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; 
+            {{ $period->status === 'finalized' ? 'background:#dcfce7; color:#166534;' : 'background:#fef3c7; color:#92400e;' }}">
+            {{ ucfirst($period->status) }}
+        </span>
+        @if($isAdmin)
+        <button
+            onclick="event.stopPropagation(); confirmDelete({{ $period->id }}, '{{ $period->period_label }}')"
+            style="padding:4px 8px; background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; border-radius:5px; font-size:12px; cursor:pointer; line-height:1;">
+            <i class="fas fa-trash"></i>
+        </button>
+        @endif
+    </div>
+</div>
                 
                 <div style="display:flex; gap:16px; margin-top:12px; padding-top:12px; border-top:1px solid #f3f4f6; font-size:13px;">
                     <div>
@@ -92,3 +101,46 @@
 </div>
 
 @endsection
+
+@section('scripts')
+
+<script>
+function confirmDelete(periodId, label) {
+    @if($isAdmin)
+    Swal.fire({
+        title: 'Delete Payroll Period?',
+        html: `<span style="color:#6b7280; font-size:14px;"><strong>${label}</strong> and all its encoded attendance data will be permanently deleted.</span>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel',
+    }).then(result => {
+        if (!result.isConfirmed) return;
+
+        fetch(`/payroll-periods/${periodId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            Toast.fire({ icon: 'success', title: data.message });
+            document.getElementById(`period-row-${periodId}`)?.remove();
+        })
+        .catch(() => {
+            Toast.fire({ icon: 'error', title: 'Something went wrong.' });
+        });
+    });
+    @else
+    return;
+    @endif
+}
+</script>
+
+@endsection
+
+

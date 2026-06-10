@@ -157,4 +157,19 @@ public function store(Request $request)
             'payroll_period' => $payrollPeriod,
         ]);
     }
+
+    /**
+ * DELETE /payroll-periods/{id}
+ * Super admin only — hard deletes the period and cascades to inputs.
+ */
+public function destroy(PayrollPeriod $payrollPeriod): JsonResponse
+{
+    if (!Auth::user()->isAdmin()) {
+        return response()->json(['message' => 'Unauthorized.'], 403);
+    }
+
+    $payrollPeriod->delete();
+
+    return response()->json(['message' => 'Payroll period deleted.']);
+}
 }
