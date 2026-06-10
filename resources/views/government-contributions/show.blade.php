@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
 @section('title', $employee->full_name . ' - Government Contributions')
-
+@section('breadcrumb')
+    <a href="{{ route('payroll.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Payroll</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <a href="{{ route('government-contributions.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Gov. Contributions</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:600;">{{ $employee->full_name }}</span>
+@endsection
 @section('content')
 
     {{-- Top nav --}}
