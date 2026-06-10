@@ -7,7 +7,7 @@ use App\Models\PayrollPeriod;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Traits\LogsAudit;
 class PayrollPeriodController extends Controller
 {
     /**
@@ -150,6 +150,7 @@ public function store(Request $request)
         }
 
         $payrollPeriod->update(['status' => 'finalized']);
+        LogsAudit::logAction('finalize', 'payroll_period', "Finalized payroll period ID {$payrollPeriod->id}");
 
         return response()->json([
             'success' => true,
@@ -169,6 +170,7 @@ public function destroy(PayrollPeriod $payrollPeriod): JsonResponse
     }
 
     $payrollPeriod->delete();
+    LogsAudit::logAction('delete', 'payroll_period', "Deleted payroll period ID {$payrollPeriod->id}");
 
     return response()->json(['message' => 'Payroll period deleted.']);
 }

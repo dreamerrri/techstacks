@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Traits\LogsAudit;
 class UserController extends Controller
 {
     public function index(Request $request)
@@ -43,6 +43,7 @@ class UserController extends Controller
         $user->update(['is_active' => !$user->is_active]);
 
         $status = $user->is_active ? 'activated' : 'deactivated';
+        LogsAudit::logAction($status, 'user', "User {$user->name} {$status}");
         return back()->with('success', "User account {$status} successfully.");
     }
 
@@ -57,6 +58,7 @@ class UserController extends Controller
         ]);
 
         $user->update(['role' => $request->role]);
+        LogsAudit::logAction('update', 'user', "Changed {$user->name}'s role to {$request->role}");
 
         return back()->with('success', "User role updated to {$request->role} successfully.");
     }

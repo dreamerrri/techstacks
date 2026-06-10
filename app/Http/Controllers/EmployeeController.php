@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Traits\LogsAudit;
 
 class EmployeeController extends Controller
 {
@@ -111,12 +112,13 @@ class EmployeeController extends Controller
     }
 
     public function archive(Employee $employee)
-    {
-        $employee->update(['is_archived' => true]);
+{
+    $employee->update(['is_archived' => true]);
+    LogsAudit::logAction('archive', 'employee', "Archived employee {$employee->employee_id}"); // ADD
 
-        return redirect()->route('employees.index')
-            ->with('success', 'Employee archived successfully.');
-    }
+    return redirect()->route('employees.index')
+        ->with('success', 'Employee archived successfully.');
+}
 
     public function archived()
     {
@@ -125,12 +127,13 @@ class EmployeeController extends Controller
     }
 
     public function restore(Employee $employee)
-    {
-        $employee->update(['is_archived' => false]);
+{
+    $employee->update(['is_archived' => false]);
+    LogsAudit::logAction('restore', 'employee', "Restored employee {$employee->employee_id}"); // ADD
 
-        return redirect()->route('employees.archived')
-            ->with('success', 'Employee restored successfully.');
-    }
+    return redirect()->route('employees.archived')
+        ->with('success', 'Employee restored successfully.');
+}
 
     public function updateGovContributions(Request $request, Employee $employee)
     {

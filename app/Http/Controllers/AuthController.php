@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Traits\LogsAudit;
+
 
 class AuthController extends Controller
 {
@@ -44,6 +46,7 @@ class AuthController extends Controller
             }
 
             $user->update(['last_login_at' => now()]);
+            LogsAudit::logAction('login', 'auth', "User {$user->name} logged in");
             $request->session()->regenerate();
 
             \Illuminate\Support\Facades\Log::info('User login', [
@@ -85,6 +88,7 @@ class AuthController extends Controller
             'role'      => 'employee',
             'is_active' => true,
         ]);
+        LogsAudit::logAction('create', 'user', "New user registered: {$user->name}"); 
 
         // --- FIX: Auto-create a linked Employee record for every new registered user ---
         if (!Employee::where('email', $validated['email'])->exists()) {
@@ -323,6 +327,7 @@ $actions = [
                 'user_id' => $user->id,
                 'email'   => $user->email,
             ]);
+             LogsAudit::logAction('logout', 'auth', "User {$user->name} logged out"); 
         }
 
         Auth::logout();

@@ -7,7 +7,7 @@ use App\Services\SssContributionService;
 use App\Services\PhilHealthContributionService;
 use App\Services\PagIbigContributionService;
 use Illuminate\Http\Request;
-
+use App\Traits\LogsAudit;
 class GovernmentContributionsController extends Controller
 {
     protected $sssService;
@@ -106,7 +106,7 @@ class GovernmentContributionsController extends Controller
         }
 
         $employee->update($validator->validated());
-
+LogsAudit::logAction('update', 'government_contributions', "Updated contributions for employee {$employee->employee_id}"); 
         return response()->json([
             'success' => true,
             'message' => 'Custom contributions updated successfully.'
