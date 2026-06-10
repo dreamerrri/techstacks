@@ -482,6 +482,23 @@ function previewPayroll() {
                                 <span style="color:#10b981;">+₱${window.reimbursementsValue ? parseFloat(window.reimbursementsValue).toFixed(2) : '0.00'}</span>
                             </div>
                         </div>
+                        ${window.isSecondHalfOfMonth && (previewData.first_cutoff_net_pay > 0 || previewData.second_cutoff_net_pay > 0) ? `
+                        <div style="padding:12px; background:#f0fdf4; border-radius:6px; margin-bottom:16px; border:1px solid #bbf7d0;">
+                            <div style="font-size:12px; font-weight:600; color:#166534; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Net Pay Breakdown</div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                                <span style="color:#6b7280;">1st Cutoff Net:</span>
+                                <span style="font-weight:600; color:#1f2937;">₱${previewData.first_cutoff_net_pay ? parseFloat(previewData.first_cutoff_net_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                                <span style="color:#6b7280;">2nd Cutoff Net:</span>
+                                <span style="font-weight:600; color:#1f2937;">₱${previewData.second_cutoff_net_pay ? parseFloat(previewData.second_cutoff_net_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding-top:6px; border-top:1px solid #bbf7d0; font-size:14px; font-weight:700; color:#166534;">
+                                <span>Total Monthly Net:</span>
+                                <span>₱${previewData.total_monthly_net_pay ? parseFloat(previewData.total_monthly_net_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                        </div>
+                        ` : ''}
                         <div style="padding:16px; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); border-radius:6px;">
                             <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:700; color:white;">
                                 <span>Net Pay:</span>

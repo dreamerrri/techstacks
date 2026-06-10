@@ -159,27 +159,31 @@ class ManualPayrollAttendanceController extends Controller
         $previewResult = $engine->compute($employeeData, $attendance, [], $benefits, $allowances, [], true, $cutoffStart, $cutoffEnd);
         $grossPay = $previewResult['gross_pay'];
 
-        // Government contributions are based on gross pay for payroll preview
-        // Use custom values if set, otherwise use official bracket tables
+        // Government contributions are fixed based on monthly basic salary and divided per cutoff (semi-monthly)
         // SSS Contribution using official bracket table (Circular No. 2024-006)
         $sssService = new SssContributionService();
-        $sssCalculation = $sssService->calculate($grossPay);
-        $sssContribution = $employee->custom_sss_contribution ?? $sssCalculation['employee_share'];
+        $sssCalculation = $sssService->calculate($employee->basic_salary);
+        $sssMonthly = $employee->custom_sss_contribution ?? $sssCalculation['employee_share'];
+        $sssContribution = round($sssMonthly / 2, 2);
 
         // PhilHealth Contribution using official 2025/2026 table
         $philHealthService = new PhilHealthContributionService();
-        $philHealthCalculation = $philHealthService->calculate($grossPay);
-        $philhealthContribution = $employee->custom_philhealth_contribution ?? $philHealthCalculation['employee_share'];
+        $philHealthCalculation = $philHealthService->calculate($employee->basic_salary);
+        $philHealthMonthly = $employee->custom_philhealth_contribution ?? $philHealthCalculation['employee_share'];
+        $philhealthContribution = round($philHealthMonthly / 2, 2);
 
         // Pag-IBIG Contribution using official 2026 table
         $pagIbigService = new PagIbigContributionService();
-        $pagIbigCalculation = $pagIbigService->calculate($grossPay);
-        $pagibigContribution = $employee->custom_pagibig_contribution ?? $pagIbigCalculation['employee_share'];
+        $pagIbigCalculation = $pagIbigService->calculate($employee->basic_salary);
+        $pagIbigMonthly = $employee->custom_pagibig_contribution ?? $pagIbigCalculation['employee_share'];
+        $pagibigContribution = round($pagIbigMonthly / 2, 2);
 
         // Calculate withholding tax only if period is in second half of month (16-30,31)
         $withholdingTax = 0;
         $firstCutoffGrossPay = 0;
         $secondCutoffGrossPay = 0;
+        $firstCutoffNetPay = 0;
+        $secondCutoffNetPay = 0;
         
         if ($period && $period->isSecondHalfOfMonth()) {
             $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
@@ -193,7 +197,7 @@ class ManualPayrollAttendanceController extends Controller
             $withholdingTax = $this->calculateTax($grossPay, $totalContributions);
             \Log::info('Withholding tax result in ManualPayrollAttendanceController', ['withholding_tax' => $withholdingTax]);
             
-            // Fetch 1st cutoff gross pay for the same month
+            // Fetch 1st cutoff pay for the same month
             $firstCutoffPeriod = PayrollPeriod::whereYear('cutoff_start', $period->cutoff_start->year)
                 ->whereMonth('cutoff_start', $period->cutoff_start->month)
                 ->whereDay('cutoff_start', '<=', 15)
@@ -205,6 +209,7 @@ class ManualPayrollAttendanceController extends Controller
                     ->first();
                 if ($firstCutoffPayrollInput) {
                     $firstCutoffGrossPay = $firstCutoffPayrollInput->gross_pay;
+                    $firstCutoffNetPay = $firstCutoffPayrollInput->net_pay;
                 }
             }
             
@@ -246,6 +251,10 @@ class ManualPayrollAttendanceController extends Controller
         $result['first_cutoff_gross_pay'] = $firstCutoffGrossPay;
         $result['second_cutoff_gross_pay'] = $secondCutoffGrossPay;
         $result['total_monthly_gross_pay'] = $firstCutoffGrossPay + $secondCutoffGrossPay;
+
+        $result['first_cutoff_net_pay'] = $firstCutoffNetPay;
+        $result['second_cutoff_net_pay'] = $result['net_pay'] + ($validated['reimbursements'] ?? 0);
+        $result['total_monthly_net_pay'] = $firstCutoffNetPay + $result['second_cutoff_net_pay'];
 
         return response()->json([
             'success' => true,
