@@ -166,8 +166,29 @@
     flex: 1;
 }
 .nav-item:hover {
-  
+ 
     transform: translateX(3px);
+}
+.nav-item:hover span{
+    font-size: 15px;
+    color: rgb(73, 255, 188);
+    transform: translateX(3px);
+}
+.nav-item.active span{
+    font-size: 15px;
+    color: rgb(73, 255, 188);
+  
+}
+
+.nav-item:hover i{
+    color: rgb(73, 255, 188);
+    transform: translateX(3px);
+    font-size: 15px;
+}
+.nav-item.active i{
+    color: rgb(73, 255, 188);
+    font-size: 15px;
+  
 }
 
 /* Base active state */
@@ -216,9 +237,9 @@
     z-index: 1;
 }
 .logout-btn:hover {
-    background: rgba(255,255,255,0.14);
-    color: white;
-    border-color: rgba(255,255,255,0.3);
+    background: rgba(163, 27, 27, 0.393);
+    color: rgb(246, 12, 12);
+    border-color: rgba(110, 9, 9, 0.127);
 }
 
 /* Nav dropdown */

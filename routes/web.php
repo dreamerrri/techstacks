@@ -120,11 +120,12 @@ Route::prefix('payroll')->name('payroll.')->group(function () {
     });
 
     // Payroll Period Routes — admin and HR only
-    Route::middleware('permission:manage.payroll.periods')->prefix('payroll-periods')->name('payroll-periods.')->group(function () {
-        Route::get('/create', [PayrollPeriodController::class, 'create'])->name('create');
-        Route::post('/', [PayrollPeriodController::class, 'store'])->name('store');
-        Route::post('/{payrollPeriod}/finalize', [PayrollPeriodController::class, 'finalize'])->name('finalize');
-    });
+   Route::middleware('permission:manage.payroll.periods')->prefix('payroll-periods')->name('payroll-periods.')->group(function () {
+    Route::get('/create',                    [PayrollPeriodController::class, 'create'])->name('create');
+    Route::post('/',                         [PayrollPeriodController::class, 'store'])->name('store');
+    Route::post('/{payrollPeriod}/finalize', [PayrollPeriodController::class, 'finalize'])->name('finalize');
+    Route::delete('/{payrollPeriod}',        [PayrollPeriodController::class, 'destroy'])->name('destroy');
+});
 
     // Government Contributions Routes — all authenticated users can view, admin and HR can edit
     Route::prefix('government-contributions')->name('government-contributions.')->group(function () {
