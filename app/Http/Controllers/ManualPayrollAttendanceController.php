@@ -178,6 +178,9 @@ class ManualPayrollAttendanceController extends Controller
 
         // Calculate withholding tax only if period is in second half of month (16-30,31)
         $withholdingTax = 0;
+        $firstCutoffGrossPay = 0;
+        $secondCutoffGrossPay = 0;
+        
         if ($period && $period->isSecondHalfOfMonth()) {
             $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
             \Log::info('Withholding tax calculation in ManualPayrollAttendanceController', [
@@ -189,6 +192,23 @@ class ManualPayrollAttendanceController extends Controller
             ]);
             $withholdingTax = $this->calculateTax($grossPay, $totalContributions);
             \Log::info('Withholding tax result in ManualPayrollAttendanceController', ['withholding_tax' => $withholdingTax]);
+            
+            // Fetch 1st cutoff gross pay for the same month
+            $firstCutoffPeriod = PayrollPeriod::whereYear('cutoff_start', $period->cutoff_start->year)
+                ->whereMonth('cutoff_start', $period->cutoff_start->month)
+                ->whereDay('cutoff_start', '<=', 15)
+                ->first();
+            
+            if ($firstCutoffPeriod) {
+                $firstCutoffPayrollInput = PayrollInput::where('payroll_period_id', $firstCutoffPeriod->id)
+                    ->where('employee_id', $employee->id)
+                    ->first();
+                if ($firstCutoffPayrollInput) {
+                    $firstCutoffGrossPay = $firstCutoffPayrollInput->gross_pay;
+                }
+            }
+            
+            $secondCutoffGrossPay = $grossPay;
         }
 
         // Total government contributions
@@ -221,6 +241,11 @@ class ManualPayrollAttendanceController extends Controller
         $result['government_deductions'] = $governmentDeductions;
         $result['manual_deductions'] = $manualDeductions;
         $result['reimbursements'] = $validated['reimbursements'] ?? 0;
+        
+        // Add cutoff pay breakdown
+        $result['first_cutoff_gross_pay'] = $firstCutoffGrossPay;
+        $result['second_cutoff_gross_pay'] = $secondCutoffGrossPay;
+        $result['total_monthly_gross_pay'] = $firstCutoffGrossPay + $secondCutoffGrossPay;
 
         return response()->json([
             'success' => true,

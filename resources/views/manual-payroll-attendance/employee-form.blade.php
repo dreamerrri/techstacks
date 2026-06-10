@@ -421,6 +421,23 @@ function previewPayroll() {
                                 <span>₱${previewData.gross_pay.toFixed(2)}</span>
                             </div>
                         </div>
+                        ${window.isSecondHalfOfMonth && (previewData.first_cutoff_gross_pay > 0 || previewData.second_cutoff_gross_pay > 0) ? `
+                        <div style="padding:12px; background:#eff6ff; border-radius:6px; margin-bottom:16px; border:1px solid #bfdbfe;">
+                            <div style="font-size:12px; font-weight:600; color:#1e40af; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Cutoff Breakdown</div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                                <span style="color:#6b7280;">1st Cutoff Pay:</span>
+                                <span style="font-weight:600; color:#1f2937;">₱${previewData.first_cutoff_gross_pay ? parseFloat(previewData.first_cutoff_gross_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                                <span style="color:#6b7280;">2nd Cutoff Pay:</span>
+                                <span style="font-weight:600; color:#1f2937;">₱${previewData.second_cutoff_gross_pay ? parseFloat(previewData.second_cutoff_gross_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding-top:6px; border-top:1px solid #bfdbfe; font-size:14px; font-weight:700; color:#1e40af;">
+                                <span>Total Monthly Gross:</span>
+                                <span>₱${previewData.total_monthly_gross_pay ? parseFloat(previewData.total_monthly_gross_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                        </div>
+                        ` : ''}
                         <div style="margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                                 <span style="color:#6b7280;">SSS Contribution:</span>

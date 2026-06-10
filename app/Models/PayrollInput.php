@@ -93,11 +93,8 @@ class PayrollInput extends Model
             $workingDaysPerMonth = \App\Models\PayrollPeriod::calculateWorkingDays($cutoffStart, $cutoffEnd);
         }
         
-        // Convert daily rate to monthly salary using the formula: daily_rate * working_days_per_month
-        $monthlySalary = $this->daily_rate * $workingDaysPerMonth;
-        
         $employeeData = [
-            'monthly_salary' => $monthlySalary,
+            'daily_rate' => $this->daily_rate,
             'working_hours_per_day' => 8,
         ];
 
