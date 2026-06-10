@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('title', 'Permissions Management')
-
+@section('breadcrumb')
+    <span>Manage Users</span>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:500;">Permissions</span>
+@endsection
 @section('content')
 
     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:24px;">

@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('title', 'Manual Payroll Attendance Encoding')
-
+@section('breadcrumb')
+    <span>Manage Employees</span>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:500;">Attendance</span>
+@endsection
 @section('content')
 
 @php
