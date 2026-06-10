@@ -97,12 +97,21 @@
 
     {{-- Mobile topbar --}}
     <div class="mobile-topbar sidebar-{{ $role }}">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <button class="burger-btn" id="burgerBtn" aria-label="Toggle navigation" aria-expanded="false" aria-controls="burgerDropdown">
-                <i class="fas fa-bars" id="burgerIcon"></i>
-            </button>
-            <span style="font-size:18px; font-weight:700; color:white;">HR System</span>
-        </div>
+        <a href="{{ route('dashboard') }}" style="display:flex; align-items:center; gap:8px; text-decoration:none; color:white;">
+    <svg fill="currentColor" height="1.4em" viewBox="0 0 1813 1441" width="1.4em" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0; opacity:0.95;">
+        <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fill-rule="evenodd"></path>
+        <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fill-rule="evenodd"></path>
+    </svg>
+    <div style="display:flex; flex-direction:column; justify-content:center;">
+        <span style="font-size:16px; font-weight:700; line-height:1.2;">Techstacks</span>
+        <span style="font-size:10px; opacity:0.55; letter-spacing:1.5px; text-transform:uppercase; line-height:1.2;">
+            @if($isAdmin) Admin Portal
+            @elseif($isHR) HR Portal
+            @else Employee Portal
+            @endif
+        </span>
+    </div>
+</a>
 
         <div style="display:flex; align-items:center; gap:10px;">
 
@@ -229,69 +238,85 @@
 
     {{-- Global Topbar (spans full width above sidebar + content) --}}
     <div class="topbar desktop-topbar topbar-{{ $role }}" style="grid-column: 1 / -1; grid-row: 1;">
+
+    {{-- Logo --}}
+    <a href="{{ route('dashboard') }}" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:white;">
+        <svg fill="currentColor" height="1.6em" viewBox="0 0 1813 1441" width="1.6em" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0; opacity:0.95;">
+            <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fill-rule="evenodd"></path>
+            <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fill-rule="evenodd"></path>
+        </svg>
         <div style="display:flex; flex-direction:column; justify-content:center;">
-            <h1 style="margin:0; font-size:20px; font-weight:700; letter-spacing:0.5px; color:white;">HR System</h1>
-            <p style="margin:0; font-size:11px; color:white; opacity:0.55; letter-spacing:1.5px; text-transform:uppercase;">
+            <span style="margin:0; font-size:18px; font-weight:700; letter-spacing:0.3px; line-height:1.2;">Techstacks</span>
+            <span style="margin:0; font-size:10px; opacity:0.55; letter-spacing:1.5px; text-transform:uppercase; line-height:1.2;">
                 @if($isAdmin) Admin Portal
                 @elseif($isHR) HR Portal
                 @else Employee Portal
                 @endif
-            </p>
+            </span>
         </div>
-        <div style="display: flex; align-items: center; gap: 15px;">
+    </a>
 
-            {{-- Notification Bell (desktop) --}}
-            <div style="position:relative; z-index: 1000; pointer-events: auto;">
-                <button id="notifBtn"
-                        style="background:none; border:none; cursor:pointer; color:white; font-size:18px; position:relative; padding:4px; z-index: 1001; pointer-events: auto;">
-                    <i class="fas fa-bell"></i>
+    {{-- Breadcrumb context trail --}}
+    <div style="display:flex; align-items:center; gap:6px; color:rgba(255,255,255,0.55); font-size:13px;">
+        <span style="width:1px; height:28px; background:rgba(255,255,255,0.35); margin-right:10px; margin-left:15px;"></span>
+        @yield('breadcrumb')
+    </div>
+
+    {{-- Right cluster --}}
+    <div style="display:flex; align-items:center; gap:15px; margin-left:auto;">
+
+        {{-- Notification Bell (desktop) --}}
+        <div style="position:relative; z-index:1000; pointer-events:auto;">
+            <button id="notifBtn"
+                    style="background:none; border:none; cursor:pointer; color:white; font-size:18px; position:relative; padding:4px; z-index:1001; pointer-events:auto;">
+                <i class="fas fa-bell"></i>
+                @if($notifCount > 0)
+                    <span style="position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">
+                        {{ $notifCount > 9 ? '9+' : $notifCount }}
+                    </span>
+                @endif
+            </button>
+            <div id="notifDropdown"
+                 style="display:none; position:absolute; right:0; top:calc(100% + 10px); width:320px; background:white; border-radius:14px; box-shadow:0 12px 32px rgba(0,0,0,0.14); border:1px solid #e5e7eb; z-index:999; overflow:hidden;">
+                <div style="padding:13px 16px; border-bottom:1px solid #f3f4f6; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:14px; font-weight:700; color:#111827; display:flex; align-items:center; gap:7px;">
+                        <i class="fas fa-bell" style="font-size:13px; color:#6b7280;"></i> Notifications
+                    </span>
                     @if($notifCount > 0)
-                        <span style="position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">
-                            {{ $notifCount > 9 ? '9+' : $notifCount }}
-                        </span>
+                        <span style="background:#f3f4f6; color:#374151; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px;">{{ $notifCount }} pending</span>
                     @endif
-                </button>
+                </div>
+                @include('partials.notifications-list')
+            </div>
+        </div>
 
-                {{-- Desktop Dropdown --}}
-                <div id="notifDropdown"
-                     style="display:none; position:absolute; right:0; top:calc(100% + 10px); width:320px; background:white; border-radius:14px; box-shadow:0 12px 32px rgba(0,0,0,0.14); border:1px solid #e5e7eb; z-index:999; overflow:hidden;">
-                    <div style="padding:13px 16px; border-bottom:1px solid #f3f4f6; display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:14px; font-weight:700; color:#111827; display:flex; align-items:center; gap:7px;">
-                            <i class="fas fa-bell" style="font-size:13px; color:#6b7280;"></i> Notifications
-                        </span>
-                        @if($notifCount > 0)
-                            <span style="background:#f3f4f6; color:#374151; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px;">{{ $notifCount }} pending</span>
-                        @endif
-                    </div>
-                    @include('partials.notifications-list')
+        {{-- Clickable Profile --}}
+        <a href="{{ route('profile.show') }}" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+            <div class="user-avatar avatar-{{ $role }}" style="width:34px;height:34px;font-size:13px; overflow:hidden; padding:0;">
+                @if($user->profile_photo)
+                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"
+                         alt="{{ $user->name }}"
+                         style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                @else
+                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                @endif
+            </div>
+            <div>
+                <div class="user-name" style="font-size:14px; font-weight:600;">{{ $user->name }}</div>
+                <div class="user-role" style="font-size:12px;">
+                    @if($isAdmin) Administrator
+                    @elseif($isHR) HR Personnel
+                    @else Employee
+                    @endif
                 </div>
             </div>
+        </a>
 
-            {{-- Clickable Profile --}}
-            <a href="{{ route('profile.show') }}" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
-                <div class="user-avatar avatar-{{ $role }}" style="width:34px;height:34px;font-size:13px; overflow:hidden; padding:0;">
-                    @if($user->profile_photo)
-                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"
-                             alt="{{ $user->name }}"
-                             style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
-                    @else
-                        {{ strtoupper(substr($user->name, 0, 1)) }}
-                    @endif
-                </div>
-                <div>
-                    <div class="user-name" style="font-size:14px; font-weight:600;">{{ $user->name }}</div>
-                    <div class="user-role" style="font-size:12px;">
-                        @if($isAdmin) Administrator
-                        @elseif($isHR) HR Personnel
-                        @else Employee
-                        @endif
-                    </div>
-                </div>
-            </a>
+        <span class="role-badge badge-{{ $role }}">{{ ucfirst($user->role) }}</span>
 
-            <span class="role-badge badge-{{ $role }}">{{ ucfirst($user->role) }}</span>
-        </div>
-    </div>
+    </div>{{-- end right cluster --}}
+
+</div>{{-- end topbar --}}
 
     {{-- Sidebar --}}
     <div class="sidebar sidebar-{{ $role }}" style="grid-column: 1; grid-row: 2;">
@@ -313,7 +338,7 @@
                 {{-- ▼ User Management --}}
                 <div class="nav-dropdown {{ $userMgmtOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-users-cog"></i><span>User Management</span>
+                        <i class="fas fa-users-cog"></i><span>Manage Users  </span>
                         <i class="fas fa-chevron-down nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
@@ -335,7 +360,7 @@
                 {{-- ▼ Employee Management --}}
                 <div class="nav-dropdown {{ $empMgmtOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-user-tie"></i><span>Employee Management</span>
+                        <i class="fas fa-user-tie"></i><span>Manage Employees</span>
                         <i class="fas fa-chevron-down nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
@@ -356,7 +381,7 @@
                 {{-- ▼ Payroll Management --}}
                 <div class="nav-dropdown {{ $payrollMgmtOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-money-bill-wave"></i><span>Payroll Management</span>
+                        <i class="fas fa-money-bill-wave"></i><span>Manage Payroll</span>
                         <i class="fas fa-chevron-down nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">

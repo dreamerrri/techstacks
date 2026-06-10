@@ -1,7 +1,15 @@
 @extends('layouts.app')
 
 @section('title', 'Encode Attendance - ' . ($employee->first_name ?? 'Employee') . ' ' . ($employee->last_name ?? ''))
-
+@section('breadcrumb')
+    <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Employees</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <a href="{{ route('manual-payroll-attendance.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Attendance</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <a href="{{ route('manual-payroll-attendance.period', $payrollPeriod) }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Attendance Encoding</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:600;">{{ $employee->full_name }}</span>
+@endsection
 @section('content')
 
 @php
@@ -11,6 +19,7 @@
     $color = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
     $colorDark = $isAdmin ? '#991b1b' : ($isHR ? '#1e40af' : '#764ba2');
     $isEdit = $payrollInput !== null;
+    $isSecondHalfOfMonth = $payrollPeriod->isSecondHalfOfMonth();
 @endphp
 
 {{-- Header --}}
@@ -239,6 +248,7 @@ window.deductionsValue = '{{ $isEdit ? $payrollInput->deductions : '0' }}';
 window.deductionsRemarksValue = '{{ $isEdit ? ($payrollInput->deductions_remarks ?? '') : '' }}';
 window.reimbursementsValue = '{{ $isEdit ? ($payrollInput->reimbursements ?? '0') : '0' }}';
 window.reimbursementsRemarksValue = '{{ $isEdit ? ($payrollInput->reimbursements_remarks ?? '') : '' }}';
+window.isSecondHalfOfMonth = {{ $isSecondHalfOfMonth ? 'true' : 'false' }};
 
 
 function handleSaveAttendance(event) {
@@ -419,6 +429,23 @@ function previewPayroll() {
                                 <span>₱${previewData.gross_pay.toFixed(2)}</span>
                             </div>
                         </div>
+                        ${window.isSecondHalfOfMonth && (previewData.first_cutoff_gross_pay > 0 || previewData.second_cutoff_gross_pay > 0) ? `
+                        <div style="padding:12px; background:#eff6ff; border-radius:6px; margin-bottom:16px; border:1px solid #bfdbfe;">
+                            <div style="font-size:12px; font-weight:600; color:#1e40af; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Cutoff Breakdown</div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                                <span style="color:#6b7280;">1st Cutoff Pay:</span>
+                                <span style="font-weight:600; color:#1f2937;">₱${previewData.first_cutoff_gross_pay ? parseFloat(previewData.first_cutoff_gross_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                                <span style="color:#6b7280;">2nd Cutoff Pay:</span>
+                                <span style="font-weight:600; color:#1f2937;">₱${previewData.second_cutoff_gross_pay ? parseFloat(previewData.second_cutoff_gross_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding-top:6px; border-top:1px solid #bfdbfe; font-size:14px; font-weight:700; color:#1e40af;">
+                                <span>Total Monthly Gross:</span>
+                                <span>₱${previewData.total_monthly_gross_pay ? parseFloat(previewData.total_monthly_gross_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                        </div>
+                        ` : ''}
                         <div style="margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                                 <span style="color:#6b7280;">SSS Contribution:</span>
@@ -432,10 +459,12 @@ function previewPayroll() {
                                 <span style="color:#6b7280;">Pag-IBIG Contribution:</span>
                                 <span style="color:#dc2626;">-₱${previewData.pagibig_contribution ? parseFloat(previewData.pagibig_contribution).toFixed(2) : '0.00'}</span>
                             </div>
+                            ${window.isSecondHalfOfMonth ? `
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                                 <span style="color:#6b7280;">Withholding Tax:</span>
                                 <span style="color:#dc2626;">-₱${previewData.withholding_tax ? parseFloat(previewData.withholding_tax).toFixed(2) : '0.00'}</span>
                             </div>
+                            ` : ''}
                             @if($isEdit)
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                                 <span style="color:#6b7280;">Manual Deductions:</span>
@@ -453,6 +482,23 @@ function previewPayroll() {
                                 <span style="color:#10b981;">+₱${window.reimbursementsValue ? parseFloat(window.reimbursementsValue).toFixed(2) : '0.00'}</span>
                             </div>
                         </div>
+                        ${window.isSecondHalfOfMonth && (previewData.first_cutoff_net_pay > 0 || previewData.second_cutoff_net_pay > 0) ? `
+                        <div style="padding:12px; background:#f0fdf4; border-radius:6px; margin-bottom:16px; border:1px solid #bbf7d0;">
+                            <div style="font-size:12px; font-weight:600; color:#166534; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Net Pay Breakdown</div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                                <span style="color:#6b7280;">1st Cutoff Net:</span>
+                                <span style="font-weight:600; color:#1f2937;">₱${previewData.first_cutoff_net_pay ? parseFloat(previewData.first_cutoff_net_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                                <span style="color:#6b7280;">2nd Cutoff Net:</span>
+                                <span style="font-weight:600; color:#1f2937;">₱${previewData.second_cutoff_net_pay ? parseFloat(previewData.second_cutoff_net_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding-top:6px; border-top:1px solid #bbf7d0; font-size:14px; font-weight:700; color:#166534;">
+                                <span>Total Monthly Net:</span>
+                                <span>₱${previewData.total_monthly_net_pay ? parseFloat(previewData.total_monthly_net_pay).toFixed(2) : '0.00'}</span>
+                            </div>
+                        </div>
+                        ` : ''}
                         <div style="padding:16px; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); border-radius:6px;">
                             <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:700; color:white;">
                                 <span>Net Pay:</span>

@@ -1,7 +1,15 @@
 @extends('layouts.app')
 
 @section('title', 'Edit Employee')
-
+@section('breadcrumb')
+    <span>Manage Employees</span>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Employees</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <a href="{{ route('employees.show', $employee) }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">{{ $employee->full_name }}</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:600;">Edit {{ $employee->full_name }}</span>
+@endsection
 @section('content')
 
     <div style="margin-bottom:20px;">

@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
 @section('title', 'Encode Attendance - ' . ($payrollPeriod->cutoff_start ? $payrollPeriod->cutoff_start->format('M d') : 'N/A') . ' to ' . ($payrollPeriod->cutoff_end ? $payrollPeriod->cutoff_end->format('M d, Y') : 'N/A'))
-
+@section('breadcrumb')
+    <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Employees</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <a href="{{ route('manual-payroll-attendance.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Attendance</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:600;">Attendance Encoding</span>
+@endsection
 @section('content')
 
 @php

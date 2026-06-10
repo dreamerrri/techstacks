@@ -60,7 +60,7 @@
         </form>
     </div>
 
-    {{-- Table + Mobile Cards --}}
+    {{-- Table Mobile Cards --}}
     <div class="aurora-card" style="padding:0; overflow:hidden;">
 
         {{-- Desktop Table --}}

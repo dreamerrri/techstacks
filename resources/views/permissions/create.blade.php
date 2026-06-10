@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
 @section('title', 'Create Permission')
-
+@section('breadcrumb')
+    <a href="{{ route('users.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Users</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <a href="{{ route('permissions.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Permissions</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:600;">Create Permission</span>
+@endsection
 @section('content')
 
     <div style="margin-bottom:20px;">

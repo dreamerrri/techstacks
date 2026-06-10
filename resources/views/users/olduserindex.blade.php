@@ -7,7 +7,6 @@
     <span style="color:white; font-weight:500;">Users</span>
 @endsection
 @section('content')
-@section('content')
 
     {{-- Header --}}
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
@@ -118,15 +117,8 @@
                             {{-- Name --}}
                             <td style="padding:12px; font-weight:600; color:#1a1a2e;">
                                 <div style="display:flex; align-items:center; gap:10px;">
-                                    <div style="width:32px; height:32px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-                                        @if($user->profile_photo)
-<img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"                                                 alt="{{ $user->name }}"
-                                                 style="width:100%; height:100%; object-fit:cover;">
-                                        @else
-                                            <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:700;">
-                                                {{ strtoupper(substr($user->name, 0, 1)) }}
-                                            </div>
-                                        @endif
+                                    <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:700; flex-shrink:0;">
+                                        {{ strtoupper(substr($user->name, 0, 1)) }}
                                     </div>
                                     @if($user->employee)
                                         <a href="{{ route('employees.show', $user->employee) }}"
@@ -220,15 +212,8 @@
                 <div class="user-card">
                     <div class="user-card-header">
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <div style="width:38px; height:38px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-                                @if($user->profile_photo)
-<img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"                                         alt="{{ $user->name }}"
-                                         style="width:100%; height:100%; object-fit:cover;">
-                                @else
-                                    <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:700;">
-                                        {{ strtoupper(substr($user->name, 0, 1)) }}
-                                    </div>
-                                @endif
+                            <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:700; flex-shrink:0;">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
                             </div>
                             <div>
                                 <div style="font-weight:600; color:#1a1a2e; font-size:14px;">
@@ -300,7 +285,6 @@
             @endforelse
         </div>
 
-        
     </div>
-<div style="padding:16px 28px; border-top:1px solid #e5e7eb;">{{ $users->links() }}</div>
+    <div style="padding:16px 28px; border-top:1px solid #e5e7eb;">{{ $users->links() }}</div>
 @endsection

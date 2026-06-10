@@ -1,7 +1,13 @@
 @extends('layouts.app')
 
 @section('title', 'Payroll Details - ' . $employee->full_name)
-
+@section('breadcrumb')
+    <a href="{{ route('payroll.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Payroll</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <a href="{{ route('payroll.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Payroll</a>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:600;">{{ $employee->full_name }}</span>
+@endsection
 @section('content')
 
 @php
@@ -79,21 +85,77 @@
         <div class="stat-icon-wrap"><i class="fas fa-coins"></i></div>
         <div class="stat-label">Gross Pay</div>
         <div class="stat-value">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</div>
-        <div class="stat-sub">Based on attendance data</div>
+        <div class="stat-sub">For this cutoff</div>
     </div>
     <div class="card card-stat card-stat-red" style="margin-bottom:0;">
         <div class="stat-icon-wrap"><i class="fas fa-minus-circle"></i></div>
         <div class="stat-label">Total Deductions</div>
         <div class="stat-value">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</div>
-        <div class="stat-sub">{{ number_format(($payroll['total_deductions'] ?? 0) / max($payroll['gross_pay'] ?? 1, 1) * 100, 1) }}% of gross</div>
+        <div class="stat-sub">Gov't & Manual Deductions</div>
     </div>
     <div class="card card-stat card-stat-net" style="margin-bottom:0;">
         <div class="stat-icon-wrap"><i class="fas fa-wallet"></i></div>
         <div class="stat-label">Net Pay</div>
         <div class="stat-value">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</div>
-        <div class="stat-sub">Take-home amount</div>
+        <div class="stat-sub">Take-home for this cutoff</div>
     </div>
 </div>
+
+@if($selectedPeriod && $selectedPeriod->isSecondHalfOfMonth())
+{{-- Monthly Breakdown (Only for 2nd Cutoff) --}}
+<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; margin-bottom:20px;">
+    {{-- Monthly Gross Breakdown --}}
+    <div class="aurora-card" style="margin-bottom:0; border-left:4px solid #1e40af; background:#eff6ff;">
+        <div style="font-size:12px; font-weight:600; color:#1e40af; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Gross Breakdown</div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+            <span style="color:#6b7280;">1st Cutoff Gross:</span>
+            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['first_cutoff_gross_pay'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+            <span style="color:#6b7280;">2nd Cutoff Gross:</span>
+            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding-top:8px; border-top:1px solid #bfdbfe; font-size:15px; font-weight:700; color:#1e40af;">
+            <span>Total Monthly Gross:</span>
+            <span>₱{{ number_format($payroll['total_monthly_gross_pay'] ?? 0, 2) }}</span>
+        </div>
+    </div>
+
+    {{-- Monthly Contributions Breakdown --}}
+    <div class="aurora-card" style="margin-bottom:0; border-left:4px solid #991b1b; background:#fef2f2;">
+        <div style="font-size:12px; font-weight:600; color:#991b1b; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Contributions</div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+            <span style="color:#6b7280;">1st Cutoff Gov't:</span>
+            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['first_cutoff_contributions'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+            <span style="color:#6b7280;">2nd Cutoff Gov't:</span>
+            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['current_cutoff_contributions'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding-top:8px; border-top:1px solid #fecaca; font-size:15px; font-weight:700; color:#991b1b;">
+            <span>Total Monthly Gov't:</span>
+            <span>₱{{ number_format(($payroll['first_cutoff_contributions'] ?? 0) + ($payroll['current_cutoff_contributions'] ?? 0), 2) }}</span>
+        </div>
+    </div>
+
+    {{-- Monthly Net Pay Breakdown --}}
+    <div class="aurora-card" style="margin-bottom:0; border-left:4px solid #166534; background:#f0fdf4;">
+        <div style="font-size:12px; font-weight:600; color:#166534; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Net Pay Breakdown</div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+            <span style="color:#6b7280;">1st Cutoff Net:</span>
+            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['first_cutoff_net_pay'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+            <span style="color:#6b7280;">2nd Cutoff Net:</span>
+            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding-top:8px; border-top:1px solid #bbf7d0; font-size:15px; font-weight:700; color:#166534;">
+            <span>Total Monthly Net:</span>
+            <span>₱{{ number_format($payroll['total_monthly_net_pay'] ?? 0, 2) }}</span>
+        </div>
+    </div>
+</div>
+@endif
 
 {{-- Detail Cards Grid --}}
 <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;">

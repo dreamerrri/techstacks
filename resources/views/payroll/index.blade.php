@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('title', 'Payroll Preview')
-
+@section('breadcrumb')
+    <span>Manage Payroll</span>
+    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <span style="color:white; font-weight:500;">Payroll</span>
+@endsection
 @section('content')
 
 @php
@@ -248,7 +252,7 @@
                         <td style="padding:12px; text-align:right; font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
                         <td style="padding:12px; text-align:center;">
                             <div style="display:flex; gap:6px; justify-content:center;">
-                                @if(($payroll['gross_pay'] ?? 0) == 0)
+                                @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
                                     <a href="javascript:void(0)"
                                        onclick="alert('This employee has no payroll data for the selected cutoff period.')"
                                        style="padding:5px 10px; background:#f3f4f6; color:#9ca3af; border-radius:8px; font-size:12px; text-decoration:none; cursor:not-allowed;"
@@ -256,12 +260,12 @@
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 @else
-                                    <a href="{{ route('payroll.show', [$employee, 'payroll_period_id' => request('payroll_period_id')]) }}"
+                                    <a href="{{ route('payroll.show', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
                                        style="padding:5px 10px; background:#dbeafe; color:#1e40af; border-radius:8px; font-size:12px; text-decoration:none;"
                                        title="Full details">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('payroll.payslip', [$employee, 'payroll_period_id' => request('payroll_period_id')]) }}"
+                                    <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
                                        style="padding:5px 10px; background:#d1fae5; color:#065f46; border-radius:8px; font-size:12px; text-decoration:none;"
                                        title="Download payslip">
                                         <i class="fas fa-file-download"></i>
@@ -372,18 +376,18 @@
                 </div>
 
                 <div class="user-card-meta">
-                    @if(($payroll['gross_pay'] ?? 0) == 0)
+                    @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
                         <a href="javascript:void(0)"
                            onclick="alert('This employee has no payroll data for the selected cutoff period.')"
                            style="padding:5px 12px; background:#f3f4f6; color:#9ca3af; border-radius:8px; font-size:12px; text-decoration:none; cursor:not-allowed;">
                             <i class="fas fa-eye"></i> View Details
                         </a>
                     @else
-                        <a href="{{ route('payroll.show', [$employee, 'payroll_period_id' => request('payroll_period_id')]) }}"
+                        <a href="{{ route('payroll.show', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
                            style="padding:5px 12px; background:#dbeafe; color:#1e40af; border-radius:8px; font-size:12px; text-decoration:none;">
                             <i class="fas fa-eye"></i> View Details
                         </a>
-                        <a href="{{ route('payroll.payslip', [$employee, 'payroll_period_id' => request('payroll_period_id')]) }}"
+                        <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
                            style="padding:5px 12px; background:#d1fae5; color:#065f46; border-radius:8px; font-size:12px; text-decoration:none;">
                             <i class="fas fa-file-download"></i> Payslip
                         </a>
