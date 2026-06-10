@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Permission;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Traits\LogsAudit;
 
 class PermissionController extends Controller
 {
@@ -37,10 +37,7 @@ class PermissionController extends Controller
             'is_active' => $validated['is_active'] ?? true,
         ]);
 
-        Log::info('Permission created', [
-            'permission_id' => $permission->id,
-            'user_id' => auth()->id(),
-        ]);
+        LogsAudit::logAction('create', 'permission', "Created permission: {$permission->name}");
 
         return redirect()->route('permissions.index')
             ->with('success', 'Permission created successfully.');
@@ -67,7 +64,6 @@ class PermissionController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $oldValues = $permission->toArray();
         $permission->update([
             'name' => $validated['name'],
             'slug' => $validated['slug'],
@@ -76,12 +72,7 @@ class PermissionController extends Controller
             'is_active' => $validated['is_active'] ?? true,
         ]);
 
-        Log::info('Permission updated', [
-            'permission_id' => $permission->id,
-            'user_id' => auth()->id(),
-            'old_values' => $oldValues,
-            'new_values' => $permission->toArray(),
-        ]);
+        LogsAudit::logAction('update', 'permission', "Updated permission: {$permission->name}");
 
         return redirect()->route('permissions.index')
             ->with('success', 'Permission updated successfully.');
@@ -90,17 +81,14 @@ class PermissionController extends Controller
     public function destroy(Permission $permission)
     {
         $roleCount = $permission->roles()->count();
-        
+
         if ($roleCount > 0) {
             return back()->with('error', 'Cannot delete permission assigned to roles.');
         }
 
-        $permission->delete();
+        LogsAudit::logAction('delete', 'permission', "Deleted permission: {$permission->name}");
 
-        Log::info('Permission deleted', [
-            'permission_id' => $permission->id,
-            'user_id' => auth()->id(),
-        ]);
+        $permission->delete();
 
         return redirect()->route('permissions.index')
             ->with('success', 'Permission deleted successfully.');
