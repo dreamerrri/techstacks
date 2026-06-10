@@ -219,19 +219,22 @@ class PayrollController extends Controller
         $previewResult = $engine->compute($employeeData, $attendanceData, [], $benefits, $allowances, [], true, $cutoffStart, $cutoffEnd);
         $grossPay      = $previewResult['gross_pay'];
 
-        // Government contributions
-        // Use custom values if set, otherwise use official bracket tables (for consistency with PayrollInput::computePay())
+        // Government contributions are fixed based on monthly basic salary and divided per cutoff (semi-monthly)
+        // SSS Contribution using official bracket table (Circular No. 2024-006)
         $sssService      = new SssContributionService();
-        $sssCalculation  = $sssService->calculate($grossPay);
-        $sssContribution = $employee->custom_sss_contribution ?? $sssCalculation['employee_share'];
+        $sssCalculation  = $sssService->calculate($employee->basic_salary);
+        $sssMonthly      = $employee->custom_sss_contribution ?? $sssCalculation['employee_share'];
+        $sssContribution = round($sssMonthly / 2, 2);
 
         $philHealthService      = new PhilHealthContributionService();
-        $philHealthCalculation  = $philHealthService->calculate($grossPay);
-        $philhealthContribution = $employee->custom_philhealth_contribution ?? $philHealthCalculation['employee_share'];
+        $philHealthCalculation  = $philHealthService->calculate($employee->basic_salary);
+        $philHealthMonthly      = $employee->custom_philhealth_contribution ?? $philHealthCalculation['employee_share'];
+        $philhealthContribution = round($philHealthMonthly / 2, 2);
 
         $pagIbigService      = new PagIbigContributionService();
-        $pagIbigCalculation  = $pagIbigService->calculate($grossPay);
-        $pagibigContribution = $employee->custom_pagibig_contribution ?? $pagIbigCalculation['employee_share'];
+        $pagIbigCalculation  = $pagIbigService->calculate($employee->basic_salary);
+        $pagIbigMonthly      = $employee->custom_pagibig_contribution ?? $pagIbigCalculation['employee_share'];
+        $pagibigContribution = round($pagIbigMonthly / 2, 2);
 
         // Withholding tax
         $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
@@ -249,8 +252,9 @@ class PayrollController extends Controller
         $withholdingTax = $this->calculateTax($grossPay, $totalContributions);
         \Log::info('Withholding tax result', ['withholding_tax' => $withholdingTax]);
 
-        // Manual deductions from payroll input
+        // Manual deductions and reimbursements from payroll input
         $manualDeductions = $payrollInput ? ($payrollInput->deductions ?? 0) : 0;
+        $reimbursements = $payrollInput ? ($payrollInput->reimbursements ?? 0) : 0;
 
         // Second pass: compute net pay with all deductions
         $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax, $manualDeductions];
@@ -275,8 +279,9 @@ class PayrollController extends Controller
             'pagibig_contribution'    => $pagibigContribution,
             'withholding_tax'         => $withholdingTax,
             'manual_deductions'       => $manualDeductions,
+            'reimbursements'          => $reimbursements,
             'total_deductions'        => $result['deductions'],
-            'net_pay'                 => $result['net_pay'],
+            'net_pay'                 => $result['net_pay'] + $reimbursements,
             'taxable_income'          => $taxableIncome,
             'attendance_data'         => $attendanceData,
         ];
