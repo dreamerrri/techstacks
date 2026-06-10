@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PayrollInput;
 use App\Models\Employee;
 use App\Models\PayrollPeriod;
 use App\Services\Payroll\PayrollComputationEngine;
@@ -33,6 +34,11 @@ class PayrollController extends Controller
         $selectedPeriod = $selectedPeriodId
             ? $payrollPeriods->firstWhere('id', $selectedPeriodId)
             : $payrollPeriods->first();
+
+        // If no period is selected and none exist, handle gracefully
+        if (!$selectedPeriod && $payrollPeriods->isNotEmpty()) {
+            $selectedPeriod = $payrollPeriods->first();
+        }
 
         // Filter employees based on role
         if ($isAdmin || $isHR) {
@@ -68,7 +74,7 @@ class PayrollController extends Controller
                 'allowances'    => fn($q) => $q->where('is_active', true),
                 'benefits'      => fn($q) => $q->where('is_active', true),
             ])
-            ->orderByRaw('CASE WHEN EXISTS (SELECT 1 FROM payroll_inputs WHERE payroll_inputs.employee_id = employees.id) THEN 0 ELSE 1 END')
+            ->orderByRaw('CASE WHEN EXISTS (SELECT 1 FROM payroll_inputs WHERE payroll_inputs.employee_id = employees.id AND payroll_inputs.payroll_period_id = ' . (optional($selectedPeriod)->id ?? 0) . ') THEN 0 ELSE 1 END')
             ->orderBy('last_name')
             ->paginate(15)
             ->withQueryString();
@@ -198,6 +204,7 @@ class PayrollController extends Controller
         // Prepare employee data for engine
         $employeeData = [
             'monthly_salary'         => $basicSalary,
+            'daily_rate'             => $dailyRate,
             'working_hours_per_day'  => 8,
         ];
 
@@ -236,21 +243,49 @@ class PayrollController extends Controller
         $pagIbigMonthly      = $employee->custom_pagibig_contribution ?? $pagIbigCalculation['employee_share'];
         $pagibigContribution = round($pagIbigMonthly / 2, 2);
 
-        // Withholding tax
-        $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
-        $taxableIncome      = $grossPay - $totalContributions;
+        // Current cutoff contributions
+        $currentCutoffContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
 
-        \Log::info('Withholding tax calculation', [
-            'gross_pay'               => $grossPay,
-            'sss_contribution'        => $sssContribution,
-            'philhealth_contribution' => $philhealthContribution,
-            'pagibig_contribution'    => $pagibigContribution,
-            'total_contributions'     => $totalContributions,
-            'taxable_income'          => $taxableIncome,
-        ]);
+        // Withholding tax calculation only if period is in second half of month (16-30,31)
+        $withholdingTax = 0;
+        $firstCutoffGrossPay = 0;
+        $firstCutoffNetPay = 0;
+        $firstCutoffContributions = 0;
 
-        $withholdingTax = $this->calculateTax($grossPay, $totalContributions);
-        \Log::info('Withholding tax result', ['withholding_tax' => $withholdingTax]);
+        if ($period) {
+            // Fetch 1st cutoff data for the same month
+            $firstCutoffPeriod = PayrollPeriod::whereYear('cutoff_start', $period->cutoff_start->year)
+                ->whereMonth('cutoff_start', $period->cutoff_start->month)
+                ->whereDay('cutoff_start', '<=', 15)
+                ->first();
+            
+            if ($firstCutoffPeriod) {
+                $firstCutoffPayrollInput = PayrollInput::where('payroll_period_id', $firstCutoffPeriod->id)
+                    ->where('employee_id', $employee->id)
+                    ->first();
+                if ($firstCutoffPayrollInput) {
+                    $firstCutoffGrossPay = $firstCutoffPayrollInput->gross_pay;
+                    $firstCutoffNetPay = $firstCutoffPayrollInput->net_pay;
+                    // For 1st cutoff, contributions are also fixed
+                    $firstCutoffContributions = $currentCutoffContributions;
+                }
+            }
+        }
+
+        $totalMonthlyGross = $firstCutoffGrossPay + $grossPay;
+        $totalMonthlyContributions = $currentCutoffContributions * 2; // Total monthly fixed contributions
+
+        if ($period && $period->isSecondHalfOfMonth()) {
+            \Log::info('Withholding tax calculation in PayrollController', [
+                'total_monthly_gross'         => $totalMonthlyGross,
+                'total_monthly_contributions' => $totalMonthlyContributions,
+            ]);
+
+            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions);
+            \Log::info('Withholding tax result', ['withholding_tax' => $withholdingTax]);
+        }
+
+        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions;
 
         // Manual deductions and reimbursements from payroll input
         $manualDeductions = $payrollInput ? ($payrollInput->deductions ?? 0) : 0;
@@ -259,6 +294,8 @@ class PayrollController extends Controller
         // Second pass: compute net pay with all deductions
         $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax, $manualDeductions];
         $result     = $engine->compute($employeeData, $attendanceData, $deductions, $benefits, $allowances, [], false, $cutoffStart, $cutoffEnd);
+
+        $currentCutoffNetPay = $result['net_pay'] + $reimbursements;
 
         return [
             'basic_salary'            => $basicSalary,
@@ -281,29 +318,45 @@ class PayrollController extends Controller
             'manual_deductions'       => $manualDeductions,
             'reimbursements'          => $reimbursements,
             'total_deductions'        => $result['deductions'],
-            'net_pay'                 => $result['net_pay'] + $reimbursements,
+            'net_pay'                 => $currentCutoffNetPay,
             'taxable_income'          => $taxableIncome,
             'attendance_data'         => $attendanceData,
+            
+            // Cutoff-based breakdown
+            'first_cutoff_gross_pay'   => $firstCutoffGrossPay,
+            'second_cutoff_gross_pay'  => $period && $period->isSecondHalfOfMonth() ? $grossPay : 0,
+            'first_cutoff_net_pay'     => $firstCutoffNetPay,
+            'second_cutoff_net_pay'    => $period && $period->isSecondHalfOfMonth() ? $currentCutoffNetPay : 0,
+            'first_cutoff_contributions' => $firstCutoffContributions,
+            'second_cutoff_contributions' => $period && $period->isSecondHalfOfMonth() ? $currentCutoffContributions : ($period && !$period->isSecondHalfOfMonth() ? 0 : 0),
+            'current_cutoff_contributions' => $currentCutoffContributions,
+            'total_monthly_gross_pay'  => $totalMonthlyGross,
+            'total_monthly_net_pay'    => $firstCutoffNetPay + ($period && $period->isSecondHalfOfMonth() ? $currentCutoffNetPay : 0),
         ];
     }
 
     /**
-     * Calculate withholding tax based on annual computation.
-     * Formula: (gross_pay - contributions) * 12 → subtract 250k exemption → 15% → ÷ 12
+     * Calculate withholding tax based on monthly computation
+     * Formula: (Total Monthly Gross - Total Monthly Contributions) - 33,333 = taxablePay
+     * taxablePay * 20% + 1875 = Withholding Tax
      */
-    private function calculateTax(float $grossPay, float $totalContributions): float
+    private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions): float
     {
-        $annualTotal        = ($grossPay - $totalContributions) * 12;
-        $taxableAnnualTotal = $annualTotal - 250000;
-
-        if ($taxableAnnualTotal <= 0) {
+        // Calculate taxable income: Total Gross - Total Monthly Contributions
+        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions;
+        
+        // Subtract lower limit of bracket (33,333) to get taxablePay (excess)
+        $taxablePay = $taxableIncome - 33333;
+        
+        // If taxable income is below 33,333, no tax for this bracket
+        if ($taxablePay <= 0) {
             return 0;
         }
-
-        $taxRate     = $taxableAnnualTotal * 0.15;
-        $grossPayTax = $taxRate / 12;
-
-        return round($grossPayTax, 2);
+        
+        // Apply formula: taxablePay * 20% + 1875
+        $withholdingTax = ($taxablePay * 0.20) + 1875;
+        
+        return round($withholdingTax, 2);
     }
 
     /**

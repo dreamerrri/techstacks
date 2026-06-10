@@ -194,8 +194,6 @@ class ManualPayrollAttendanceController extends Controller
                 'pagibig_contribution' => $pagibigContribution,
                 'total_contributions' => $totalContributions,
             ]);
-            $withholdingTax = $this->calculateTax($grossPay, $totalContributions);
-            \Log::info('Withholding tax result in ManualPayrollAttendanceController', ['withholding_tax' => $withholdingTax]);
             
             // Fetch 1st cutoff pay for the same month
             $firstCutoffPeriod = PayrollPeriod::whereYear('cutoff_start', $period->cutoff_start->year)
@@ -214,6 +212,15 @@ class ManualPayrollAttendanceController extends Controller
             }
             
             $secondCutoffGrossPay = $grossPay;
+            $totalMonthlyGross = $firstCutoffGrossPay + $secondCutoffGrossPay;
+            $totalMonthlyContributions = $totalContributions * 2; // Since contributions are halved per cutoff
+
+            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions);
+            \Log::info('Withholding tax result in ManualPayrollAttendanceController', [
+                'total_monthly_gross' => $totalMonthlyGross,
+                'total_monthly_contributions' => $totalMonthlyContributions,
+                'withholding_tax' => $withholdingTax
+            ]);
         }
 
         // Total government contributions
@@ -263,32 +270,27 @@ class ManualPayrollAttendanceController extends Controller
     }
 
     /**
-     * Calculate withholding tax based on annual computation
-     * Formula: (Salary - Contributions) * 12 = Annual Total
-     * Annual Total - 250,000 = Taxable Annual Total
-     * Taxable Annual Total * 15% = Tax Rate
-     * Tax Rate / 12 = Gross Pay Tax
+     * Calculate withholding tax based on monthly computation
+     * Formula: (Total Monthly Gross - Total Monthly Contributions) - 33,333 = taxablePay
+     * taxablePay * 20% + 1875 = Withholding Tax
      */
-    private function calculateTax(float $grossPay, float $totalContributions): float
+    private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions): float
     {
-        // Calculate annual total: (Salary - Contributions) * 12
-        $annualTotal = ($grossPay - $totalContributions) * 12;
+        // Calculate taxable income: Total Gross - Total Monthly Contributions
+        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions;
         
-        // Subtract tax exemption (250,000 from income tax table)
-        $taxableAnnualTotal = $annualTotal - 250000;
+        // Subtract lower limit of bracket (33,333) to get taxablePay (excess)
+        $taxablePay = $taxableIncome - 33333;
         
-        // If taxable annual total is zero or negative, no tax
-        if ($taxableAnnualTotal <= 0) {
+        // If taxable income is below 33,333, no tax for this bracket
+        if ($taxablePay <= 0) {
             return 0;
         }
         
-        // Apply 15% tax rate (graduated tax rates from tax table)
-        $taxRate = $taxableAnnualTotal * 0.15;
+        // Apply formula: taxablePay * 20% + 1875
+        $withholdingTax = ($taxablePay * 0.20) + 1875;
         
-        // Convert back to monthly tax
-        $grossPayTax = $taxRate / 12;
-        
-        return round($grossPayTax, 2);
+        return round($withholdingTax, 2);
     }
 
     /**

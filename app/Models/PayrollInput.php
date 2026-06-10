@@ -138,17 +138,37 @@ class PayrollInput extends Model
         $pagIbigMonthly = $employee->custom_pagibig_contribution ?? $pagIbigCalculation['employee_share'];
         $pagibigContribution = round($pagIbigMonthly / 2, 2);
 
-        // Calculate withholding tax
-        $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
-        \Log::info('Withholding tax calculation in PayrollInput', [
-            'gross_pay' => $grossPay,
-            'sss_contribution' => $sssContribution,
-            'philhealth_contribution' => $philhealthContribution,
-            'pagibig_contribution' => $pagibigContribution,
-            'total_contributions' => $totalContributions,
-        ]);
-        $withholdingTax = $this->calculateTax($grossPay, $totalContributions);
-        \Log::info('Withholding tax result in PayrollInput', ['withholding_tax' => $withholdingTax]);
+        // Calculate withholding tax only if period is in second half of month (16-30,31)
+        $withholdingTax = 0;
+        if ($this->payrollPeriod && $this->payrollPeriod->isSecondHalfOfMonth()) {
+            $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
+            
+            // Fetch 1st cutoff pay for the same month
+            $firstCutoffGrossPay = 0;
+            $firstCutoffPeriod = \App\Models\PayrollPeriod::whereYear('cutoff_start', $this->payrollPeriod->cutoff_start->year)
+                ->whereMonth('cutoff_start', $this->payrollPeriod->cutoff_start->month)
+                ->whereDay('cutoff_start', '<=', 15)
+                ->first();
+            
+            if ($firstCutoffPeriod) {
+                $firstCutoffPayrollInput = \App\Models\PayrollInput::where('payroll_period_id', $firstCutoffPeriod->id)
+                    ->where('employee_id', $this->employee_id)
+                    ->first();
+                if ($firstCutoffPayrollInput) {
+                    $firstCutoffGrossPay = $firstCutoffPayrollInput->gross_pay;
+                }
+            }
+            
+            $totalMonthlyGross = $firstCutoffGrossPay + $grossPay;
+            $totalMonthlyContributions = $totalContributions * 2; // Since contributions are halved per cutoff
+
+            \Log::info('Withholding tax calculation in PayrollInput', [
+                'total_monthly_gross' => $totalMonthlyGross,
+                'total_monthly_contributions' => $totalMonthlyContributions,
+            ]);
+            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions);
+            \Log::info('Withholding tax result in PayrollInput', ['withholding_tax' => $withholdingTax]);
+        }
 
         // Total government contributions
         $governmentDeductions = $sssContribution + $philhealthContribution + $pagibigContribution + $withholdingTax;
@@ -186,31 +206,26 @@ class PayrollInput extends Model
     }
 
     /**
-     * Calculate withholding tax based on annual computation
-     * Formula: (Salary - Contributions) * 12 = Annual Total
-     * Annual Total - 250,000 = Taxable Annual Total
-     * Taxable Annual Total * 15% = Tax Rate
-     * Tax Rate / 12 = Gross Pay Tax
+     * Calculate withholding tax based on monthly computation
+     * Formula: (Total Monthly Gross - Total Monthly Contributions) - 33,333 = taxablePay
+     * taxablePay * 20% + 1875 = Withholding Tax
      */
-    private function calculateTax(float $grossPay, float $totalContributions): float
+    private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions): float
     {
-        // Calculate annual total: (Salary - Contributions) * 12
-        $annualTotal = ($grossPay - $totalContributions) * 12;
+        // Calculate taxable income: Total Gross - Total Monthly Contributions
+        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions;
         
-        // Subtract tax exemption (250,000 from income tax table)
-        $taxableAnnualTotal = $annualTotal - 250000;
+        // Subtract lower limit of bracket (33,333) to get taxablePay (excess)
+        $taxablePay = $taxableIncome - 33333;
         
-        // If taxable annual total is zero or negative, no tax
-        if ($taxableAnnualTotal <= 0) {
+        // If taxable income is below 33,333, no tax for this bracket
+        if ($taxablePay <= 0) {
             return 0;
         }
         
-        // Apply 15% tax rate (graduated tax rates from tax table)
-        $taxRate = $taxableAnnualTotal * 0.15;
+        // Apply formula: taxablePay * 20% + 1875
+        $withholdingTax = ($taxablePay * 0.20) + 1875;
         
-        // Convert back to monthly tax
-        $grossPayTax = $taxRate / 12;
-        
-        return round($grossPayTax, 2);
+        return round($withholdingTax, 2);
     }
 }
