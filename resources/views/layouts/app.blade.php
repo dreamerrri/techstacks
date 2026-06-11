@@ -47,6 +47,15 @@
     $isHR    = $user->role === 'hr';
     $role    = $isAdmin ? 'admin' : ($isHR ? 'hr' : 'user');
 
+    // Helper: resolve profile photo URL based on environment
+    // Production → S3 temporary URL | Local → placeholder
+    function profilePhotoUrl($path) {
+        if (app()->environment('production')) {
+            return \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($path, now()->addHours(24));
+        }
+        return asset('images/placeholder-avatar.png');
+    }
+
     // 1. Unassigned department/position
     $unassigned = \App\Models\Employee::active()
         ->where(function($q) {
@@ -140,11 +149,11 @@
                 </div>
             </div>
 
-            {{-- Avatar --}}
+            {{-- Avatar (mobile) --}}
             <a href="{{ route('profile.show') }}" style="display:flex; align-items:center; text-decoration:none;">
                 <div class="user-avatar avatar-{{ $role }}" style="overflow:hidden; padding:0;">
                     @if($user->profile_photo)
-                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"
+                        <img src="{{ profilePhotoUrl($user->profile_photo) }}"
                              alt="{{ $user->name }}"
                              style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
                     @else
@@ -195,18 +204,21 @@
         @elseif($isHR)
             <a href="{{ route('employees.index') }}"
                class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                <i class="fas fa-users"></i><span>Employees</span>
+                <i class="fas fa-id-badge"></i><span>Employees</span>
+            </a>
+            <a href="{{ route('manual-payroll-attendance.index') }}"
+               class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
+                <i class="fas fa-calendar-check"></i><span>Attendance</span>
+            </a>
+            <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
+            <a href="{{ route('payroll.index') }}"
+               class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                <i class="fas fa-money-bill"></i><span>Payroll</span>
             </a>
             <a href="{{ route('government-contributions.index') }}"
                class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
                 <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
             </a>
-            <a href="{{ route('payroll.index') }}"
-               class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                <i class="fas fa-money-bill"></i><span>Payroll</span>
-            </a>
-            <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
-            <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
             <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
             <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
         @else
@@ -297,11 +309,11 @@
                 </div>
             </div>
 
-            {{-- Clickable Profile --}}
+            {{-- Clickable Profile (desktop) --}}
             <a href="{{ route('profile.show') }}" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
                 <div class="user-avatar avatar-{{ $role }}" style="width:34px;height:34px;font-size:13px; overflow:hidden; padding:0;">
                     @if($user->profile_photo)
-                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) }}"
+                        <img src="{{ profilePhotoUrl($user->profile_photo) }}"
                              alt="{{ $user->name }}"
                              style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
                     @else
@@ -345,7 +357,7 @@
                 {{-- ▼ User Management --}}
                 <div class="nav-dropdown {{ $userMgmtOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-users-cog"></i><span>Manage Users  </span>
+                        <i class="fas fa-users-cog"></i><span>Manage Users</span>
                         <i class="fas fa-chevron-down nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
@@ -421,25 +433,71 @@
                 </div>
 
             @elseif($isHR)
-                <a href="{{ route('employees.index') }}"
-                   class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                    <i class="fas fa-users"></i><span>Employees</span>
-                </a>
-                <a href="{{ route('government-contributions.index') }}"
-                   class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                    <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
-                </a>
-                <a href="{{ route('payroll.index') }}"
-                   class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="fas fa-money-bill"></i><span>Payroll</span>
-                </a>
-                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+                @php
+                    $hrEmpOpen     = request()->routeIs('employees.*') || request()->routeIs('manual-payroll-attendance.*');
+                    $hrPayrollOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
+                    $hrOtherOpen   = request()->routeIs('reports.*');
+                @endphp
+
+                {{-- ▼ Employee Management --}}
+                <div class="nav-dropdown {{ $hrEmpOpen ? 'open' : '' }}">
+                    <button class="nav-item nav-dropdown-trigger" type="button">
+                        <i class="fas fa-user-tie"></i><span>Employee Management</span>
+                        <i class="fas fa-chevron-down nav-chevron"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ route('employees.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
+                            <i class="fas fa-id-badge"></i><span>Employees</span>
+                        </a>
+                        <a href="{{ route('manual-payroll-attendance.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
+                            <i class="fas fa-calendar-check"></i><span>Attendance</span>
+                        </a>
+                        <a href="#" class="nav-item nav-sub-item">
+                            <i class="fas fa-suitcase"></i><span>Leave Requests</span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- ▼ Payroll --}}
+                <div class="nav-dropdown {{ $hrPayrollOpen ? 'open' : '' }}">
+                    <button class="nav-item nav-dropdown-trigger" type="button">
+                        <i class="fas fa-money-bill-wave"></i><span>Payroll</span>
+                        <i class="fas fa-chevron-down nav-chevron"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ route('payroll.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                            <i class="fas fa-money-bill"></i><span>Payroll</span>
+                        </a>
+                        <a href="{{ route('government-contributions.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
+                            <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- ▼ Reports & Settings --}}
+                <div class="nav-dropdown {{ $hrOtherOpen ? 'open' : '' }}">
+                    <button class="nav-item nav-dropdown-trigger" type="button">
+                        <i class="fas fa-chart-line"></i><span>Reports & Settings</span>
+                        <i class="fas fa-chevron-down nav-chevron"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="#" class="nav-item nav-sub-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+                            <i class="fas fa-chart-bar"></i><span>Reports</span>
+                        </a>
+                        <a href="#" class="nav-item nav-sub-item">
+                            <i class="fas fa-cog"></i><span>Settings</span>
+                        </a>
+                    </div>
+                </div>
 
             @else
-                <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}"><i class="fas fa-user"></i><span>My Profile</span></a>
+                <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
+                    <i class="fas fa-user"></i><span>My Profile</span>
+                </a>
                 <a href="{{ route('payroll.index') }}"
                    class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                     <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
@@ -518,8 +576,6 @@ document.getElementById('notifBtn')?.addEventListener('click', function(e) {
         }
     });
     </script>
-
-
 
     {{-- Third-party JS — loaded here so page scripts can use Swal/Toast --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
