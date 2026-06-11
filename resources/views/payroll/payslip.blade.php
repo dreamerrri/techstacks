@@ -92,11 +92,11 @@
     </div>
     <div class="meta-grid">
         <span class="mk">Employee ID:</span>  <span class="mv">{{ $employee->employee_id }}</span>
-        <span class="mk">Pay Period:</span>   <span class="mv">{{ now()->format('F Y') }}</span>
-        <span class="mk">Worked Days:</span>  <span class="mv">{{ $payroll['attendance_data']['worked_days'] ?? 0 }}</span>
-        <span class="mk">Rate Per Day:</span> <span class="mv">&#8369;{{ number_format($payroll['daily_rate'] ?? 0, 2) }}</span>
-        <span class="mk">Unpaid Absence:</span><span class="mv">{{ $payroll['attendance_data']['unpaid_absences'] ?? 0 }}</span>
-        <span class="mk">Paid Leave:</span>   <span class="mv">{{ $payroll['attendance_data']['paid_leaves'] ?? 0 }}</span>
+        <span class="mk">Pay Period:</span>   <span class="mv">{{ $selectedPeriod ? $selectedPeriod->cutoff_start->format('F d') . ' – ' . $selectedPeriod->cutoff_end->format('F d, Y') : now()->format('F Y') }}</span>
+        <span class="mk">Worked Days:</span>  <span class="mv">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</span>
+        <span class="mk">Rate Per Day:</span> <span class="mv">PHP{{ number_format($payroll['daily_rate'] ?? 0, 2) }}</span>
+        <span class="mk">Overtime Hrs:</span> <span class="mv">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</span>
+        <span class="mk">Late Hrs:</span>    <span class="mv">{{ $payroll['attendance_data']['late_hours'] ?? 0 }}</span>
         <span class="mk">Holiday/s:</span>    <span class="mv">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</span>
     </div>
 </div>
@@ -113,31 +113,31 @@
         <table class="items">
             <tr>
                 <td class="iname">Basic Salary</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
             </tr>
             <tr>
                 <td class="iname">Allowance per cut</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</td>
             </tr>
             <tr>
                 <td class="iname">Overtime Pay</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['overtime_pay'] ?? 0, 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['overtime_pay'] ?? 0, 2) }}</td>
             </tr>
             @if(($payroll['night_differential_pay'] ?? 0) > 0)
             <tr>
                 <td class="iname">Night Differential</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['night_differential_pay'], 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['night_differential_pay'], 2) }}</td>
             </tr>
             @endif
             @if(($payroll['holiday_pay'] ?? 0) > 0)
             <tr>
                 <td class="iname">Holiday Pay</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['holiday_pay'], 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['holiday_pay'], 2) }}</td>
             </tr>
             @endif
             <tr class="subtotal">
                 <td class="iname" style="text-align:right; padding-right:12px;">Total Earnings</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</td>
             </tr>
         </table>
     </div>
@@ -151,41 +151,41 @@
         <table class="items">
             <tr>
                 <td class="iname">PhilHealth</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</td>
             </tr>
             <tr>
                 <td class="iname">SSS</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</td>
             </tr>
             <tr>
                 <td class="iname">Pag-IBIG</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</td>
             </tr>
             @if(($payroll['late_deduction'] ?? 0) > 0)
             <tr>
                 <td class="iname">Late Deduction</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['late_deduction'], 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['late_deduction'], 2) }}</td>
             </tr>
             @endif
             @if(($payroll['manual_deductions'] ?? 0) > 0)
             <tr>
                 <td class="iname">Manual Deductions</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['manual_deductions'], 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['manual_deductions'], 2) }}</td>
             </tr>
             @endif
             @if(($payroll['withholding_tax'] ?? 0) > 0)
             <tr>
                 <td class="iname">Withholding Tax</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['withholding_tax'], 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['withholding_tax'], 2) }}</td>
             </tr>
             @endif
             <tr class="subtotal">
                 <td class="iname" style="text-align:right; padding-right:12px;">Total Deductions</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
             </tr>
             <tr class="subtotal" style="font-size:12px;">
                 <td class="iname" style="text-align:right; padding-right:12px;">Net Pay</td>
-                <td class="iamt">&#8369;{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
+                <td class="iamt">PHP{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
             </tr>
         </table>
     </div>
@@ -194,7 +194,7 @@
 
 {{-- ── NET PAY BANNER ── --}}
 <div class="net-pay">
-    <div class="np-amount">&#8369;{{ number_format($payroll['net_pay'] ?? 0, 2) }}</div>
+    <div class="np-amount">PHP{{ number_format($payroll['net_pay'] ?? 0, 2) }}</div>
     <div class="np-label">Net Pay</div>
 </div>
 

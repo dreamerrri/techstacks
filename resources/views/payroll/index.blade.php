@@ -154,10 +154,10 @@
 </div>
         </div>
 
-        @if($isAdmin || $isHR)
         <form method="GET" action="{{ route('payroll.index') }}"
               style="display:flex; flex-wrap:wrap; gap:10px; padding-bottom:16px; border-bottom:1px solid #e5e7eb;">
 
+            @if($isAdmin || $isHR)
             <input type="text" name="search" value="{{ request('search') }}"
                    placeholder="Search name, ID..."
                    oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 500)"
@@ -171,6 +171,7 @@
                     <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
                 @endforeach
             </select>
+            @endif
 
             <select name="payroll_period_id"
                     onchange="this.closest('form').submit()"
@@ -194,9 +195,6 @@
                 </a>
             @endif
         </form>
-        @else
-        <div style="border-bottom:1px solid #e5e7eb; margin-bottom:0;"></div>
-        @endif
     </div>
 
     {{-- Active cutoff banner --}}
