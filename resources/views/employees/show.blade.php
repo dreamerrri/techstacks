@@ -259,9 +259,9 @@
             {{-- Benefits Section --}}
             <div>
                 <h3 style="margin:0 0 12px 0; font-size:16px; color:#1f2937;">Benefits</h3>
-                @if($employee->activeBenefits()->count() > 0)
+                @if($employee->activeBenefits->count() > 0)
                     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                        @foreach($employee->activeBenefits() as $benefit)
+                        @foreach($employee->activeBenefits as $benefit)
                             <div style="background:#f9fafb; padding:12px; border-radius:6px; border-left:3px solid #3b82f6;">
                                 <div style="display:flex; justify-content:space-between; align-items:start;">
                                     <div>
