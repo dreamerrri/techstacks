@@ -148,7 +148,7 @@
     @if($isAdmin || $isHR)
     <button onclick="openDeptModal()"
             style="padding:8px 18px; background:#4f46e5; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
-        <i class="fas fa-layer-group"></i> Dept Breakdown
+        <i class="fas fa-layer-group"></i> Breakdown
     </button>
     @endif
 </div>
