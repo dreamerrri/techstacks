@@ -106,6 +106,9 @@
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Department</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Position</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Basic Salary</th>
+                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">SSS Share</th>
+                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">PhilHealth Share</th>
+                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Pag-IBIG Share</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Status</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
                     </tr>
@@ -131,6 +134,9 @@
                             <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
                             <td style="padding:12px; color:#6b7280;">{{ $employee->position }}</td>
                             <td style="padding:12px; font-weight:600; color:#1a1a2e;">₱{{ number_format($employee->basic_salary, 2) }}</td>
+                            <td style="padding:12px; font-weight:600; color:#dc2626;">₱{{ number_format($employee->sss_employee_share, 2) }}</td>
+                            <td style="padding:12px; font-weight:600; color:#3b82f6;">₱{{ number_format($employee->philhealth_employee_share, 2) }}</td>
+                            <td style="padding:12px; font-weight:600; color:#f59e0b;">₱{{ number_format($employee->pagibig_employee_share, 2) }}</td>
                             <td style="padding:12px;">
                                 <span style="padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600; {{ $statusStyles[$employee->employment_status] ?? '' }}">
                                     {{ $employee->employment_status }}
@@ -145,7 +151,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" style="padding:40px; text-align:center; color:#9ca3af;">
+                            <td colspan="10" style="padding:40px; text-align:center; color:#9ca3af;">
                                 <i class="fas fa-users" style="font-size:32px; margin-bottom:10px; display:block;"></i>
                                 No employees found.
                             </td>
@@ -308,49 +314,56 @@ function printContributionsTable() {
 }
 
 function exportContributionsCSV() {
-    const rows = document.querySelectorAll('#contributions-table tbody tr');
+    const searchVal = document.querySelector('input[name="search"]')?.value ?? '';
+    const deptVal   = document.querySelector('select[name="department"]')?.value ?? '';
 
-    const headers = ['Employee ID', 'Full Name', 'Department', 'Position', 'Basic Salary', 'Status'];
+    const params = new URLSearchParams();
+    if (searchVal) params.append('search', searchVal);
+    if (deptVal) params.append('department', deptVal);
 
-    function cleanAmount(val) {
-        return val.replace(/[₱,]/g, '').trim();
-    }
+    const url = `{{ route('government-contributions.api.all-with-contributions') }}?${params.toString()}`;
 
-    let csvRows = [headers.join(',')];
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const headers = ['Employee ID', 'Full Name', 'Department', 'Position', 'Basic Salary', 'SSS Share', 'PhilHealth Share', 'Pag-IBIG Share', 'Status'];
 
-    rows.forEach(row => {
-        const cells = row.querySelectorAll('td');
-        if (!cells.length) return;
+            function cleanAmount(val) {
+                return val.replace(/[₱,]/g, '').trim();
+            }
 
-        const empId  = cells[0].innerText.trim();
-        const name   = cells[1].querySelector('a')?.innerText.trim() ?? cells[1].innerText.trim();
-        const dept   = cells[2].innerText.trim();
-        const pos    = cells[3].innerText.trim();
-        const salary = cleanAmount(cells[4].innerText);
-        const status = cells[5].innerText.trim();
+            let csvRows = [headers.join(',')];
 
-        csvRows.push([
-            `"${empId}"`,
-            `"${name}"`,
-            `"${dept}"`,
-            `"${pos}"`,
-            salary,
-            `"${status}"`
-        ].join(','));
-    });
+            data.forEach(employee => {
+                csvRows.push([
+                    `"${employee.employee_id}"`,
+                    `"${employee.full_name}"`,
+                    `"${employee.department}"`,
+                    `"${employee.position}"`,
+                    cleanAmount(employee.basic_salary),
+                    cleanAmount(employee.sss_employee_share),
+                    cleanAmount(employee.philhealth_employee_share),
+                    cleanAmount(employee.pagibig_employee_share),
+                    `"${employee.employment_status}"`
+                ].join(','));
+            });
 
-    const deptVal  = document.querySelector('select[name="department"]')?.value ?? '';
-    const filename = deptVal
-        ? `contributions_${deptVal.replace(/\s+/g, '_')}.csv`
-        : 'contributions_all.csv';
+            const filename = deptVal
+                ? `contributions_${deptVal.replace(/\s+/g, '_')}.csv`
+                : 'contributions_all.csv';
 
-    const blob = new Blob([csvRows.join('\n')], { type:'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+            const blob = new Blob([csvRows.join('\n')], { type:'text/csv;charset=utf-8;' });
+            const blobUrl  = URL.createObjectURL(blob);
+            const a    = document.createElement('a');
+            a.href     = blobUrl;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(blobUrl);
+        })
+        .catch(error => {
+            console.error('Error exporting CSV:', error);
+            alert('Error exporting CSV. Please try again.');
+        });
 }
 </script>
 @endsection
