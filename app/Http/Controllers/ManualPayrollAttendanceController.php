@@ -215,19 +215,15 @@ class ManualPayrollAttendanceController extends Controller
             $totalMonthlyGross = $firstCutoffGrossPay + $secondCutoffGrossPay;
             $totalMonthlyContributions = $totalContributions * 2; // Since contributions are halved per cutoff
             
-            // Calculate total monthly allowances (current cutoff + first cutoff)
+            // Only use current cutoff allowances for withholding tax calculation
+            // Allowances are advance paychecks and should not be doubled across cutoffs
             $currentCutoffAllowances = $validated['allowances'] ?? 0;
-            $firstCutoffAllowances = 0;
-            if ($firstCutoffPayrollInput) {
-                $firstCutoffAllowances = $firstCutoffPayrollInput->allowances;
-            }
-            $totalMonthlyAllowances = $firstCutoffAllowances + $currentCutoffAllowances;
 
-            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
+            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);
             \Log::info('Withholding tax result in ManualPayrollAttendanceController', [
                 'total_monthly_gross' => $totalMonthlyGross,
                 'total_monthly_contributions' => $totalMonthlyContributions,
-                'total_monthly_allowances' => $totalMonthlyAllowances,
+                'current_cutoff_allowances' => $currentCutoffAllowances,
                 'withholding_tax' => $withholdingTax
             ]);
         }

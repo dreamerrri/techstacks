@@ -8,17 +8,19 @@ class WithholdingTaxCalculationTest extends TestCase
 {
     /**
      * Test the withholding tax calculation logic.
-     * Formula: (Total Monthly Gross - Total Monthly Contributions - Total Monthly Allowances) - 33,333 = taxablePay
+     * Formula: (Total Monthly Gross - Total Monthly Contributions - Current Cutoff Allowances) - 33,333 = taxablePay
      * taxablePay * 20% + 1875 = Withholding Tax
+     * Note: Only current cutoff allowances are used, not total monthly allowances (to avoid doubling)
      */
     public function test_calculate_tax_logic()
     {
         // Mocking the calculation logic since it's private in the controller/model
         // We'll use a local function that mirrors the implementation
         
-        $calculateTax = function(float $totalMonthlyGross, float $totalMonthlyContributions, float $totalMonthlyAllowances = 0): float {
+        $calculateTax = function(float $totalMonthlyGross, float $totalMonthlyContributions, float $currentCutoffAllowances = 0): float {
             // Allowances are considered as advance paychecks and should be deducted from taxable income
-            $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $totalMonthlyAllowances;
+            // Only current cutoff allowances are used (not total monthly to avoid doubling)
+            $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $currentCutoffAllowances;
             $taxablePay = $taxableIncome - 33333;
             
             if ($taxablePay <= 0) {

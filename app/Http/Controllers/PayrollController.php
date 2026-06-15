@@ -281,22 +281,18 @@ class PayrollController extends Controller
         $totalMonthlyGross = $firstCutoffGrossPay + $grossPay;
         $totalMonthlyContributions = $currentCutoffContributions * 2; // Total monthly fixed contributions
         
-        // Calculate total monthly allowances (current cutoff + first cutoff)
+        // Only use current cutoff allowances for withholding tax calculation
+        // Allowances are advance paychecks and should not be doubled across cutoffs
         $currentCutoffAllowances = array_sum($allowances);
-        $firstCutoffAllowances = 0;
-        if ($firstCutoffPayrollInput) {
-            $firstCutoffAllowances = $firstCutoffPayrollInput->allowances;
-        }
-        $totalMonthlyAllowances = $firstCutoffAllowances + $currentCutoffAllowances;
 
         if ($period && $period->isSecondHalfOfMonth()) {
             \Log::info('Withholding tax calculation in PayrollController', [
                 'total_monthly_gross'         => $totalMonthlyGross,
                 'total_monthly_contributions' => $totalMonthlyContributions,
-                'total_monthly_allowances'    => $totalMonthlyAllowances,
+                'current_cutoff_allowances'   => $currentCutoffAllowances,
             ]);
 
-            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
+            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);
             \Log::info('Withholding tax result', ['withholding_tax' => $withholdingTax]);
         }
 
