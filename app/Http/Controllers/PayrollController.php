@@ -280,14 +280,23 @@ class PayrollController extends Controller
 
         $totalMonthlyGross = $firstCutoffGrossPay + $grossPay;
         $totalMonthlyContributions = $currentCutoffContributions * 2; // Total monthly fixed contributions
+        
+        // Calculate total monthly allowances (current cutoff + first cutoff)
+        $currentCutoffAllowances = array_sum($allowances);
+        $firstCutoffAllowances = 0;
+        if ($firstCutoffPayrollInput) {
+            $firstCutoffAllowances = $firstCutoffPayrollInput->allowances;
+        }
+        $totalMonthlyAllowances = $firstCutoffAllowances + $currentCutoffAllowances;
 
         if ($period && $period->isSecondHalfOfMonth()) {
             \Log::info('Withholding tax calculation in PayrollController', [
                 'total_monthly_gross'         => $totalMonthlyGross,
                 'total_monthly_contributions' => $totalMonthlyContributions,
+                'total_monthly_allowances'    => $totalMonthlyAllowances,
             ]);
 
-            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions);
+            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
             \Log::info('Withholding tax result', ['withholding_tax' => $withholdingTax]);
         }
 
@@ -343,13 +352,14 @@ class PayrollController extends Controller
 
     /**
      * Calculate withholding tax based on monthly computation
-     * Formula: (Total Monthly Gross - Total Monthly Contributions) - 33,333 = taxablePay
+     * Formula: (Total Monthly Gross - Total Monthly Contributions - Total Monthly Allowances) - 33,333 = taxablePay
      * taxablePay * 20% + 1875 = Withholding Tax
      */
-    private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions): float
+    private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions, float $totalMonthlyAllowances = 0): float
     {
-        // Calculate taxable income: Total Gross - Total Monthly Contributions
-        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions;
+        // Calculate taxable income: Total Gross - Total Monthly Contributions - Total Monthly Allowances
+        // Allowances are considered as advance paychecks and should be deducted from taxable income
+        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $totalMonthlyAllowances;
         
         // Subtract lower limit of bracket (33,333) to get taxablePay (excess)
         $taxablePay = $taxableIncome - 33333;

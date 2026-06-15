@@ -34,8 +34,8 @@ class PayrollComputationEngineTest extends TestCase
         $this->assertEquals(1500, $result['allowances']);
         $this->assertEquals(300, $result['benefits']);
         $this->assertEquals(700, $result['deductions']);
-        $this->assertEquals(41512.5, $result['gross_pay']);
-        $this->assertEquals(40812.5, $result['net_pay']);
+        $this->assertEquals(40012.5, $result['gross_pay']);
+        $this->assertEquals(39312.5, $result['net_pay']);
     }
 
     public function testPayrollComputationWithCutoffDates()
@@ -78,7 +78,7 @@ class PayrollComputationEngineTest extends TestCase
         $this->assertEquals(1500, $result['allowances']);
         $this->assertEquals(300, $result['benefits']);
         $this->assertEquals(700, $result['deductions']);
-        $this->assertEquals(29412.5, $result['gross_pay']);
-        $this->assertEquals(28712.5, $result['net_pay']);
+        $this->assertEquals(27912.5, $result['gross_pay']);
+        $this->assertEquals(27212.5, $result['net_pay']);
     }
 }
