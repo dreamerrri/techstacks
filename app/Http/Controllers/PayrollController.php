@@ -410,11 +410,12 @@ class PayrollController extends Controller
         $payrollData = $this->calculatePayroll($employee, $selectedPeriod);
 
         $pdf = Pdf::loadView('payroll.payslip', [
-            'employee'       => $employee,
-            'payroll'        => $payrollData,
-            'selectedPeriod' => $selectedPeriod,
-            'generatedAt'    => now()->format('F d, Y h:i A'),
-        ])->setPaper('a4', 'portrait');
+    'employee'            => $employee,
+    'payroll'             => $payrollData,
+    'selectedPeriod' => $selectedPeriod,
+    'generatedAt'         => now()->format('F d, Y h:i A'),
+    'authorizedSignatory' => strtoupper($user->name),  // already have $user above
+])->setPaper('a4', 'portrait');
 
         return $pdf->download("payslip-{$employee->employee_id}.pdf");
     }

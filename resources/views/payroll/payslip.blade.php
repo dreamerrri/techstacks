@@ -202,7 +202,7 @@
 <div class="sigs">
     <div class="sig-block">
         <div class="sig-line"></div>
-        <div class="sig-name">{{ $authorizedSignatory ?? 'JAYCERINE RICO' }}</div>
+        <div class="sig-name">{{ $authorizedSignatory ?? 'RENZ ANDREW S. GWAPO' }}</div>
         <div class="sig-role">Admin/HR</div>
     </div>
     <div class="sig-block">
