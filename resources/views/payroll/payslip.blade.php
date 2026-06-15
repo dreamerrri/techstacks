@@ -92,11 +92,11 @@
     </div>
     <div class="meta-grid">
         <span class="mk">Employee ID:</span>  <span class="mv">{{ $employee->employee_id }}</span>
-        <span class="mk">Pay Period:</span>   <span class="mv">{{ now()->format('F Y') }}</span>
-        <span class="mk">Worked Days:</span>  <span class="mv">{{ $payroll['attendance_data']['worked_days'] ?? 0 }}</span>
+        <span class="mk">Pay Period:</span>   <span class="mv">{{ $selectedPeriod ? $selectedPeriod->cutoff_start->format('F d') . ' – ' . $selectedPeriod->cutoff_end->format('F d, Y') : now()->format('F Y') }}</span>
+        <span class="mk">Worked Days:</span>  <span class="mv">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</span>
         <span class="mk">Rate Per Day:</span> <span class="mv">PHP{{ number_format($payroll['daily_rate'] ?? 0, 2) }}</span>
-        <span class="mk">Unpaid Absence:</span><span class="mv">{{ $payroll['attendance_data']['unpaid_absences'] ?? 0 }}</span>
-        <span class="mk">Paid Leave:</span>   <span class="mv">{{ $payroll['attendance_data']['paid_leaves'] ?? 0 }}</span>
+        <span class="mk">Overtime Hrs:</span> <span class="mv">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</span>
+        <span class="mk">Late Hrs:</span>    <span class="mv">{{ $payroll['attendance_data']['late_hours'] ?? 0 }}</span>
         <span class="mk">Holiday/s:</span>    <span class="mv">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</span>
     </div>
 </div>
