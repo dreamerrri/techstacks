@@ -25,6 +25,8 @@
             'employee_id'             => $emp->employee_id,
             'department'              => $emp->department,
             'basic_pay'               => $p['base_pay'] ?? 0,
+            'allowance_benefits' => $p['allowance_benefits'] ?? 0,
+'overtime_pay'       => $p['overtime_pay'] ?? 0,
             'gross_pay'               => $p['gross_pay'] ?? 0,
             'sss_contribution'        => $p['sss_contribution'] ?? 0,
             'philhealth_contribution' => $p['philhealth_contribution'] ?? 0,
@@ -69,6 +71,11 @@
                         <th style="padding:11px 16px; text-align:left; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Employee</th>
                         <th style="padding:11px 16px; text-align:left; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Dept</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Basic Pay</th>
+                                                <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Allowance</th>
+                        <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">OT Pay</th>
+                                                <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Earnings</th>
+
+
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">SSS</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">PhilHealth</th>
                         <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Pag-IBIG</th>
@@ -222,10 +229,12 @@
                 <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Employee</th>
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Department</th>
+                    <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em;">Basic Pay</th>
                     <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Days Worked</th>
                     <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">OT Hrs</th>
                     <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Holiday</th>
                     <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Total Deductions</th>
+                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Net Pay</th>
                     <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
                 </tr>
             </thead>
@@ -246,10 +255,15 @@
                             </div>
                         </td>
                         <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
+                        
+                        <td style="padding:12px 16px; text-align:center; font-weight:600; color:#1a1a2e;">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
+
                         <td style="padding:12px; text-align:center; font-weight:600; color:#1a1a2e;">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</td>
                         <td style="padding:12px; text-align:center; font-weight:600; color:#f59e0b;">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</td>
                         <td style="padding:12px; text-align:center; font-weight:600; color:#8b5cf6;">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</td>
                         <td style="padding:12px; text-align:right; font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
+                        <td style="padding:12px 16px; text-align:center; font-weight:600; color:#10b981;">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
+
                         <td style="padding:12px; text-align:center;">
                             <div style="display:flex; gap:6px; justify-content:center;">
                                 @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
@@ -470,6 +484,12 @@ function openDeptModal() {
                 </td>
                 <td style="padding:10px 16px; color:#6b7280; font-size:13px;">${emp.department}</td>
                 <td style="padding:10px 16px; text-align:right; font-weight:600; color:#1a1a2e;">${fmt(emp.basic_pay)}</td>
+
+                <td style="padding:10px 16px; text-align:right; font-weight:600; color:#1a1a2e;">${fmt(emp.allowance_benefits)}</td>
+                <td style="padding:10px 16px; text-align:right; font-weight:600; color:#1a1a2e;">${fmt(emp.overtime_pay)}</td>
+                                <td style="padding:10px 16px; text-align:right; font-weight:600; color:#1a1a2e;">${fmt(emp.gross_pay)}</td>
+
+
                 <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.sss_contribution)}</td>
                 <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.philhealth_contribution)}</td>
                 <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.pagibig_contribution)}</td>
@@ -521,24 +541,28 @@ function printPayrollTable() {
         periodText ? `Cutoff: ${periodText}` : ''
     ].filter(Boolean).join(' | ') || 'All Employees';
 
-    let totBasic = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
-
-    const headers = ['Employee', 'Dept', 'Basic Pay', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax', 'Total Deductions', 'Net Pay'];
-
+let totBasic = 0, totAllowance = 0, totOt = 0, totGross = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
+const headers = ['Employee', 'Dept', 'Basic Pay', 'Allowance', 'OT Pay', 'Earnings', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax', 'Total Deductions', 'Net Pay'];
     let rows = '';
     data.forEach(d => {
-        totBasic   += parseFloat(d.basic_pay);
-        totSss     += parseFloat(d.sss_contribution);
-        totPhil    += parseFloat(d.philhealth_contribution);
-        totPagibig += parseFloat(d.pagibig_contribution);
-        totTax     += parseFloat(d.withholding_tax);
-        totDed     += parseFloat(d.total_deductions);
-        totNet     += parseFloat(d.net_pay);
+        totBasic     += parseFloat(d.basic_pay);
+        totAllowance += parseFloat(d.allowance_benefits);
+        totOt        += parseFloat(d.overtime_pay);
+        totGross     += parseFloat(d.gross_pay);
+        totSss       += parseFloat(d.sss_contribution);
+        totPhil      += parseFloat(d.philhealth_contribution);
+        totPagibig   += parseFloat(d.pagibig_contribution);
+        totTax       += parseFloat(d.withholding_tax);
+        totDed       += parseFloat(d.total_deductions);
+        totNet       += parseFloat(d.net_pay);
         rows += `
             <tr>
                 <td><strong>${d.name}</strong><br><small>${d.employee_id}</small></td>
                 <td>${d.department}</td>
                 <td class="num">${fmt(d.basic_pay)}</td>
+                <td class="num">${fmt(d.allowance_benefits)}</td>
+                <td class="num">${fmt(d.overtime_pay)}</td>
+                <td class="num">${fmt(d.gross_pay)}</td>
                 <td class="num red">${fmt(d.sss_contribution)}</td>
                 <td class="num red">${fmt(d.philhealth_contribution)}</td>
                 <td class="num red">${fmt(d.pagibig_contribution)}</td>
@@ -546,8 +570,7 @@ function printPayrollTable() {
                 <td class="num red bold">${fmt(d.total_deductions)}</td>
                 <td class="num green bold">${fmt(d.net_pay)}</td>
             </tr>`;
-    });
-
+    }); 
     const win = window.open('', '_blank');
     win.document.write(`
         <!DOCTYPE html><html><head>
@@ -584,6 +607,9 @@ function printPayrollTable() {
                 <tr>
                     <td colspan="2">Totals (${data.length} employees)</td>
                     <td class="num">${fmt(totBasic)}</td>
+                    <td class="num">${fmt(totAllowance)}</td>
+                    <td class="num">${fmt(totOt)}</td>
+                    <td class="num">${fmt(totGross)}</td>
                     <td class="num red">${fmt(totSss)}</td>
                     <td class="num red">${fmt(totPhil)}</td>
                     <td class="num red">${fmt(totPagibig)}</td>
@@ -608,9 +634,10 @@ function exportPayrollCSV() {
     const data = DEPT_BREAKDOWN_DATA;
     if (!data.length) { alert('No payroll data to export.'); return; }
 
-    const headers = [
+   const headers = [
         'Employee', 'Employee ID', 'Department',
-        'Basic Pay', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax',
+        'Basic Pay', 'Allowance', 'OT Pay', 'Earnings',
+        'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax',
         'Total Deductions', 'Net Pay'
     ];
 
@@ -624,6 +651,9 @@ function exportPayrollCSV() {
             `"${d.employee_id}"`,
             `"${d.department}"`,
             d.basic_pay,
+            d.allowance_benefits,
+            d.overtime_pay,
+            d.gross_pay,
             d.sss_contribution,
             d.philhealth_contribution,
             d.pagibig_contribution,
