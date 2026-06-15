@@ -52,6 +52,10 @@ class PayrollComputationEngine
         $holidayDays = $attendance['holiday_days'] ?? ($attendance['regular_holiday_worked'] ?? 0);
         $holidayPay = round($dailyRate * 2 * $holidayDays, 2);
 
+        // 4. Weekend Pay (daily rate × 30% × weekend days worked)
+        $weekendsWorked = $attendance['weekends_worked'] ?? 0;
+        $weekendPay = round($dailyRate * 0.30 * $weekendsWorked, 2);
+
         // 4. Night Differential
         // Support both 'night_hours' and 'night_differential_hours' for compatibility
         $nightHours = $attendance['night_hours'] ?? ($attendance['night_differential_hours'] ?? 0);
@@ -70,7 +74,7 @@ class PayrollComputationEngine
         $manualSubtract = isset($manualAdjustments['subtract']) ? (float)$manualAdjustments['subtract'] : 0.0;
 
         // 8. Gross Pay
-        $grossPay = $basicSalary + $overtimePay + $holidayPay + $nightDiff + $totalAllowances + $totalBenefits + $manualAdd - $manualSubtract - $lateDeduction;
+        $grossPay = $basicSalary + $weekendPay + $overtimePay + $holidayPay + $nightDiff + $totalAllowances + $totalBenefits + $manualAdd - $manualSubtract - $lateDeduction;
         $grossPay = round($grossPay, 2);
 
         // 9. Deductions
@@ -83,6 +87,7 @@ class PayrollComputationEngine
             'daily_rate' => $dailyRate,
             'hourly_rate' => $hourlyRate,
             'basic_salary' => $basicSalary,
+            'weekend_pay' => $weekendPay,
             'overtime_pay' => $overtimePay,
             'holiday_pay' => $holidayPay,
             'night_differential' => $nightDiff,

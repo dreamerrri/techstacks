@@ -83,12 +83,12 @@
             </div>
 
             <div style="margin-bottom:20px;">
-                <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Regular Hours</label>
-                <input type="number" name="regular_hours" step="0.5" min="0"
-                       value="{{ $isEdit ? ($payrollInput->regular_hours ?? '0') : '0' }}"
+                <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Weekends Worked</label>
+                <input type="number" name="weekends_worked" step="0.5" min="0"
+                       value="{{ $isEdit ? ($payrollInput->weekends_worked ?? '0') : '0' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                       oninput="window.regularHoursValue = this.value; console.log('Regular hours changed:', this.value)">
-                <p style="color:#6b7280; font-size:12px; margin-top:4px;">Total regular hours worked (excluding overtime)</p>
+                       oninput="window.weekendsWorkedValue = this.value; console.log('Weekends worked changed:', this.value)">
+                <p style="color:#6b7280; font-size:12px; margin-top:4px;">Number of weekend days worked (paid at 30% premium of daily rate)</p>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
@@ -238,7 +238,7 @@ console.log('JavaScript loaded successfully');
 // Initialize global variables with default values
 window.dailyRateValue = '{{ $isEdit ? $payrollInput->daily_rate : $dailyRate }}';
 window.daysWorkedValue = '{{ $isEdit ? $payrollInput->days_worked : '0' }}';
-window.regularHoursValue = '{{ $isEdit ? ($payrollInput->regular_hours ?? '0') : '0' }}';
+window.weekendsWorkedValue = '{{ $isEdit ? ($payrollInput->weekends_worked ?? '0') : '0' }}';
 window.overtimeHoursValue = '{{ $isEdit ? $payrollInput->overtime_hours : '0' }}';
 window.lateHoursValue = '{{ $isEdit ? $payrollInput->late_hours : '0' }}';
 window.holidayDaysValue = '{{ $isEdit ? ($payrollInput->holiday_days ?? '0') : '0' }}';
@@ -268,7 +268,7 @@ function handleSaveAttendance(event) {
     formData.append('daily_rate', window.dailyRateValue);
     formData.append('rate_type', form.querySelector('[name="rate_type"]').value);
     formData.append('days_worked', window.daysWorkedValue);
-    formData.append('regular_hours', window.regularHoursValue);
+    formData.append('weekends_worked', window.weekendsWorkedValue);
     formData.append('overtime_hours', window.overtimeHoursValue);
     formData.append('late_hours', window.lateHoursValue);
     formData.append('holiday_days', window.holidayDaysValue);
@@ -284,7 +284,7 @@ function handleSaveAttendance(event) {
     console.log('Using stored values:', {
         daily_rate: window.dailyRateValue,
         days_worked: window.daysWorkedValue,
-        regular_hours: window.regularHoursValue,
+        weekends_worked: window.weekendsWorkedValue,
         overtime_hours: window.overtimeHoursValue,
         late_hours: window.lateHoursValue,
         holiday_days: window.holidayDaysValue,
@@ -343,7 +343,7 @@ function previewPayroll() {
     formData.append('daily_rate', window.dailyRateValue);
     formData.append('rate_type', form.querySelector('[name="rate_type"]').value);
     formData.append('days_worked', window.daysWorkedValue);
-    formData.append('regular_hours', window.regularHoursValue);
+    formData.append('weekends_worked', window.weekendsWorkedValue);
     formData.append('overtime_hours', window.overtimeHoursValue);
     formData.append('late_hours', window.lateHoursValue);
     formData.append('holiday_days', window.holidayDaysValue);
@@ -358,7 +358,7 @@ function previewPayroll() {
     console.log('Previewing payroll with values:', {
         daily_rate: window.dailyRateValue,
         days_worked: window.daysWorkedValue,
-        regular_hours: window.regularHoursValue,
+        weekends_worked: window.weekendsWorkedValue,
         overtime_hours: window.overtimeHoursValue,
         late_hours: window.lateHoursValue,
         holiday_days: window.holidayDaysValue,
@@ -399,8 +399,8 @@ function previewPayroll() {
                                 <span style="font-weight:600; color:#1f2937;">₱${previewData.basic_salary ? previewData.basic_salary.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                <span style="color:#6b7280;">Regular Hours:</span>
-                                <span style="font-weight:600; color:#1f2937;">${window.regularHoursValue || '0.00'} hrs</span>
+                                <span style="color:#6b7280;">Weekend Pay:</span>
+                                <span style="color:#10b981;">+₱${previewData.weekend_pay ? previewData.weekend_pay.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                                 <span style="color:#6b7280;">Overtime Pay:</span>

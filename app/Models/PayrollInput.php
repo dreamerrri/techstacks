@@ -14,7 +14,7 @@ class PayrollInput extends Model
         'daily_rate',
         'rate_type',
         'days_worked',
-        'regular_hours',
+        'weekends_worked',
         'overtime_hours',
         'late_hours',
         'holiday_days',
@@ -32,7 +32,7 @@ class PayrollInput extends Model
     protected $casts = [
         'daily_rate'              => 'float',
         'days_worked'             => 'float',
-        'regular_hours'          => 'float',
+        'weekends_worked'          => 'float',
         'overtime_hours'          => 'float',
         'late_hours'              => 'float',
         'holiday_days'            => 'float',
@@ -100,7 +100,7 @@ class PayrollInput extends Model
 
         $attendance = [
             'days_worked' => $this->days_worked,
-            'regular_hours' => $this->regular_hours ?? 0,
+            'weekends_worked' => $this->weekends_worked ?? 0,
             'overtime_hours' => $this->overtime_hours,
             'late_hours' => $this->late_hours,
             'holiday_days' => $this->holiday_days ?? 0,
