@@ -44,6 +44,20 @@ class GovernmentContributionsController extends Controller
         $employees = $query->orderBy('last_name')->paginate(15)->withQueryString();
         $departments = Employee::active()->distinct()->pluck('department');
 
+        // Calculate contributions for each employee
+        $employees->getCollection()->transform(function ($employee) {
+            $sssContribution = $this->sssService->calculate($employee->basic_salary);
+            $employee->sss_employee_share = $employee->custom_sss_contribution ?? $sssContribution['employee_share'];
+
+            $philHealthContribution = $this->philHealthService->calculate($employee->basic_salary);
+            $employee->philhealth_employee_share = $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'];
+
+            $pagIbigContribution = $this->pagIbigService->calculate($employee->basic_salary);
+            $employee->pagibig_employee_share = $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'];
+
+            return $employee;
+        });
+
         return view('government-contributions.index', compact('employees', 'departments'));
     }
 
@@ -111,5 +125,54 @@ LogsAudit::logAction('update', 'government_contributions', "Updated contribution
             'success' => true,
             'message' => 'Custom contributions updated successfully.'
         ]);
+    }
+
+    public function getAllEmployeesWithContributions(Request $request)
+    {
+        $query = Employee::active();
+
+        // Apply same filters as index
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('employee_id', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('department')) {
+            $query->where('department', $request->department);
+        }
+
+        // Get all employees (no pagination)
+        $employees = $query->orderBy('last_name')->get();
+
+        // Calculate contributions for each employee
+        $data = $employees->map(function ($employee) {
+            $sssContribution = $this->sssService->calculate($employee->basic_salary);
+            $sssEmployeeShare = $employee->custom_sss_contribution ?? $sssContribution['employee_share'];
+
+            $philHealthContribution = $this->philHealthService->calculate($employee->basic_salary);
+            $philHealthEmployeeShare = $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'];
+
+            $pagIbigContribution = $this->pagIbigService->calculate($employee->basic_salary);
+            $pagIbigEmployeeShare = $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'];
+
+            return [
+                'employee_id' => $employee->employee_id,
+                'full_name' => $employee->full_name,
+                'department' => $employee->department,
+                'position' => $employee->position,
+                'basic_salary' => number_format($employee->basic_salary, 2),
+                'sss_employee_share' => number_format($sssEmployeeShare, 2),
+                'philhealth_employee_share' => number_format($philHealthEmployeeShare, 2),
+                'pagibig_employee_share' => number_format($pagIbigEmployeeShare, 2),
+                'employment_status' => $employee->employment_status,
+            ];
+        });
+
+        return response()->json($data);
     }
 }

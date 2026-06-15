@@ -25,7 +25,7 @@
         <i class="fas fa-arrow-left"></i> Back to Payroll List
     </a>
     @if(($payroll['gross_pay'] ?? 0) > 0)
-        <a href="{{ route('payroll.payslip', $employee) }}"
+        <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
            style="padding:8px 18px; background:#1e40af; color:white; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
             <i class="fas fa-file-download"></i> Download Payslip
         </a>

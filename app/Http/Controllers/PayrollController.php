@@ -386,6 +386,10 @@ class PayrollController extends Controller
         $selectedPeriod = null;
         if ($request->filled('payroll_period_id')) {
             $selectedPeriod = PayrollPeriod::find($request->payroll_period_id);
+            if (!$selectedPeriod) {
+                return redirect()->route('payroll.index')
+                    ->with('error', 'Payroll period not found.');
+            }
         }
 
         $employee->load([
@@ -394,13 +398,24 @@ class PayrollController extends Controller
             'benefits'      => fn($q) => $q->where('is_active', true),
         ]);
 
+        // Check if payroll input exists for the selected period
+        if ($selectedPeriod) {
+            $payrollInput = $employee->payrollInputs->first();
+            if (!$payrollInput) {
+                return redirect()->route('payroll.index', ['payroll_period_id' => $selectedPeriod->id])
+                    ->with('error', 'No payroll data found for this employee in the selected period.');
+            }
+        }
+
         $payrollData = $this->calculatePayroll($employee, $selectedPeriod);
 
         $pdf = Pdf::loadView('payroll.payslip', [
-            'employee'    => $employee,
-            'payroll'     => $payrollData,
-            'generatedAt' => now()->format('F d, Y h:i A'),
-        ])->setPaper('a4', 'portrait');
+    'employee'            => $employee,
+    'payroll'             => $payrollData,
+    'selectedPeriod' => $selectedPeriod,
+    'generatedAt'         => now()->format('F d, Y h:i A'),
+    'authorizedSignatory' => strtoupper($user->name),  // already have $user above
+])->setPaper('a4', 'portrait');
 
         return $pdf->download("payslip-{$employee->employee_id}.pdf");
     }

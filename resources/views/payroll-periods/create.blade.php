@@ -130,15 +130,26 @@
         var day     = parseInt(parts[2]);
 
         var start   = new Date(year, month - 1, day);
-        var end     = new Date(year, month - 1, day + 14);
-        var payroll = new Date(year, month - 1, day + 15);
+        var isP1    = day <= 15;
+        var end, payroll;
+
+        if (isP1) {
+            // Phase 1: 1st to 15th
+            end     = new Date(year, month - 1, 15);
+            payroll = new Date(year, month - 1, 16);
+        } else {
+            // Phase 2: 16th to last day of month
+            // Get the last day of the month by going to next month and back one day
+            var lastDay = new Date(year, month, 0);
+            end     = lastDay;
+            payroll = new Date(year, month, 1);
+        }
 
         document.querySelectorAll('#preview_end').forEach(function(el)   { el.value = fmt(end); });
         document.querySelectorAll('#preview_payroll').forEach(function(el){ el.value = fmt(payroll); });
         document.querySelectorAll('#cutoff_end').forEach(function(el)    { el.value = toInputDate(end); });
         document.querySelectorAll('#payroll_date').forEach(function(el)  { el.value = toInputDate(payroll); });
 
-        var isP1 = day <= 15;
         document.querySelectorAll('#phase_badge').forEach(function(badge) {
             badge.textContent      = isP1 ? '1st Half' : '2nd Half';
             badge.style.display    = 'inline-block';

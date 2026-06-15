@@ -131,6 +131,7 @@ Route::prefix('payroll')->name('payroll.')->group(function () {
     Route::prefix('government-contributions')->name('government-contributions.')->group(function () {
         Route::get('/', [GovernmentContributionsController::class, 'index'])->name('index')->middleware('permission:view.gov.contributions');
         Route::get('/{employee}', [GovernmentContributionsController::class, 'show'])->name('show')->middleware('permission:view.gov.contributions');
+        Route::get('/api/all-with-contributions', [GovernmentContributionsController::class, 'getAllEmployeesWithContributions'])->name('api.all-with-contributions')->middleware('permission:view.gov.contributions');
         Route::middleware('permission:edit.gov.contributions')->group(function () {
             Route::patch('/{employee}', [GovernmentContributionsController::class, 'update'])->name('update');
         });
