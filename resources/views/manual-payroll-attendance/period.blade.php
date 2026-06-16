@@ -149,11 +149,62 @@
         <p style="color:#6b7280; margin:8px 0 0 0; font-size:14px;">Employees without attendance data for this period</p>
     </div>
 
+    {{-- Filters --}}
+    <div style="padding:20px 25px; background:#f9fafb; border-bottom:1px solid #e5e7eb;">
+        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+            <div style="flex:1; min-width:250px;">
+                <input type="text" id="searchEmployee" name="searchEmployee" placeholder="Search by name or employee ID..."
+                       style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
+                       oninput="filterEmployees()">
+            </div>
+            <div style="min-width:180px;">
+                <select id="filterDepartment" name="filterDepartment"
+                        style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
+                        onchange="filterEmployees()">
+                    <option value="">All Departments</option>
+                    <option value="Human Resources">Human Resources</option>
+                    <option value="Sales">Sales</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="IT">IT</option>
+                    <option value="Operations">Operations</option>
+                    @foreach($unencodedEmployees->pluck('department')->unique()->sort() as $dept)
+                        @if($dept && !in_array($dept, ['Human Resources', 'Sales', 'Finance', 'Marketing', 'IT', 'Operations']))
+                        <option value="{{ $dept }}">{{ $dept }}</option>
+                        @endif
+                    @endforeach
+                </select>
+            </div>
+            <div style="min-width:160px;">
+                <select id="filterStatus" name="filterStatus"
+                        style="width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
+                        onchange="filterEmployees()">
+                    <option value="">All Status</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Probationary">Probationary</option>
+                    <option value="Contractual">Contractual</option>
+                    <option value="Part-time">Part-time</option>
+                </select>
+            </div>
+            <button onclick="clearFilters()"
+                    style="padding:10px 16px; background:#6b7280; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px;">
+                <i class="fas fa-times"></i> Clear
+            </button>
+        </div>
+        <div style="margin-top:8px; font-size:13px; color:#6b7280;">
+            Showing <span id="filteredCount">{{ $unencodedEmployees->count() }}</span> of {{ $unencodedEmployees->count() }} employees
+        </div>
+    </div>
+
     <div style="padding:25px;">
-        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
+        <div id="employeeGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
             @foreach($unencodedEmployees as $employee)
             @if($employee)
-            <div style="border:1px solid #e5e7eb; border-radius:6px; padding:16px; display:flex; justify-content:space-between; align-items:center;">
+            <div class="employee-card" data-name="{{ strtolower($employee->first_name ?? '') }} {{ strtolower($employee->last_name ?? '') }}"
+                 data-employee-id="{{ strtolower($employee->employee_id ?? '') }}"
+                 data-department="{{ $employee->department ?? '' }}"
+                 data-status="{{ $employee->employment_status ?? '' }}"
+                 style="border:1px solid #e5e7eb; border-radius:6px; padding:16px; display:flex; justify-content:space-between; align-items:center;">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div style="width:32px; height:32px; border-radius:50%; background:#f3f4f6; display:flex; align-items:center; justify-content:center; color:#6b7280; font-size:13px; font-weight:700;">
                         {{ strtoupper(substr($employee->first_name ?? '?', 0, 1)) }}
@@ -161,6 +212,7 @@
                     <div>
                         <div style="font-weight:600; color:#1f2937; font-size:14px;">{{ $employee->first_name ?? 'Unknown' }} {{ $employee->last_name ?? '' }}</div>
                         <div style="font-size:12px; color:#6b7280; font-family:monospace;">{{ $employee->employee_id ?? 'N/A' }}</div>
+                        <div style="font-size:11px; color:#9ca3af; margin-top:2px;">{{ $employee->department ?? 'N/A' }} • {{ $employee->employment_status ?? 'N/A' }}</div>
                     </div>
                 </div>
                 <a href="{{ route('manual-payroll-attendance.employee-form', [$payrollPeriod, $employee]) }}"
@@ -171,6 +223,10 @@
             @endif
             @endforeach
         </div>
+        <div id="noResults" style="display:none; padding:40px; text-align:center; color:#9ca3af;">
+            <i class="fas fa-search" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+            No employees match your filters.
+        </div>
     </div>
 </div>
 @endif
@@ -179,6 +235,78 @@
 
 @section('scripts')
 <script>
+// Helper function to get the visible input from duplicate elements
+const getVisibleInput = (inputs) => {
+    for (let input of inputs) {
+        if (input.offsetParent !== null) {
+            return input;
+        }
+    }
+    return inputs[0]; // Fallback to first if none visible
+};
+
+function filterEmployees() {
+    // Get all inputs by name to handle duplicates (mobile vs desktop)
+    const searchInputs = document.getElementsByName('searchEmployee');
+    const departmentInputs = document.getElementsByName('filterDepartment');
+    const statusInputs = document.getElementsByName('filterStatus');
+    
+    // Get the visible input for each field
+    const searchInput = getVisibleInput(searchInputs);
+    const departmentInput = getVisibleInput(departmentInputs);
+    const statusInput = getVisibleInput(statusInputs);
+    
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    const departmentFilter = departmentInput ? departmentInput.value : '';
+    const statusFilter = statusInput ? statusInput.value : '';
+    
+    const employeeCards = document.querySelectorAll('.employee-card');
+    let visibleCount = 0;
+    
+    employeeCards.forEach(card => {
+        const name = card.dataset.name || '';
+        const employeeId = card.dataset.employeeId || '';
+        const department = card.dataset.department || '';
+        const status = card.dataset.status || '';
+        
+        const matchesSearch = name.includes(searchTerm) || employeeId.includes(searchTerm);
+        const matchesDepartment = !departmentFilter || department === departmentFilter;
+        const matchesStatus = !statusFilter || status === statusFilter;
+        
+        if (matchesSearch && matchesDepartment && matchesStatus) {
+            card.style.display = 'flex';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    document.getElementById('filteredCount').textContent = visibleCount;
+    
+    const noResults = document.getElementById('noResults');
+    if (visibleCount === 0) {
+        noResults.style.display = 'block';
+    } else {
+        noResults.style.display = 'none';
+    }
+}
+
+function clearFilters() {
+    const searchInputs = document.getElementsByName('searchEmployee');
+    const departmentInputs = document.getElementsByName('filterDepartment');
+    const statusInputs = document.getElementsByName('filterStatus');
+    
+    const searchInput = getVisibleInput(searchInputs);
+    const departmentInput = getVisibleInput(departmentInputs);
+    const statusInput = getVisibleInput(statusInputs);
+    
+    if (searchInput) searchInput.value = '';
+    if (departmentInput) departmentInput.value = '';
+    if (statusInput) statusInput.value = '';
+    
+    filterEmployees();
+}
+
 function loadPeriodSummary() {
     fetch(`{{ route('manual-payroll-attendance.summary', $payrollPeriod) }}`)
         .then(response => response.json())
