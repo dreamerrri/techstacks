@@ -196,15 +196,15 @@
             </tr>
             <tr>
                 <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Allowance & Benefits
-                    <div style="font-size:12px; color:#9ca3af;">Total active allowances and benefits</div>
+                    Benefits
+                    <div style="font-size:12px; color:#9ca3af;">Total active benefits</div>
                 </td>
-                <td style="padding:10px 0; font-weight:600; color:#10b981; text-align:right;">+₱{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</td>
+                <td style="padding:10px 0; font-weight:600; color:#10b981; text-align:right;">+₱{{ number_format($payroll['benefits'] ?? 0, 2) }}</td>
             </tr>
         </table>
         <div style="margin-top:10px; padding-top:10px; border-top:2px solid #e5e7eb; display:flex; justify-content:space-between; font-weight:700; font-size:15px;">
             <span style="color:#1a1a2e;">Total Earnings</span>
-            <span style="color:#10b981;">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['allowance_benefits'] ?? 0), 2) }}</span>
+            <span style="color:#10b981;">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['benefits'] ?? 0), 2) }}</span>
         </div>
     </div>
 
@@ -242,6 +242,13 @@
                 </td>
                 <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['late_deduction'] ?? 0, 2) }}</td>
             </tr>
+            <tr style="border-bottom:1px solid #f3f4f6;">
+                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
+                    Allowances
+                    <div style="font-size:12px; color:#9ca3af;">Total active allowances</div>
+                </td>
+                <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['allowances'] ?? 0, 2) }}</td>
+            </tr>
             <tr>
                 <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
                     Manual Deductions
@@ -251,8 +258,8 @@
             </tr>
         </table>
         <div style="margin-top:10px; padding-top:10px; border-top:2px solid #e5e7eb; display:flex; justify-content:space-between; font-weight:700; font-size:15px;">
-            <span style="color:#1a1a2e;">Total Contributions & Deductions</span>
-            <span style="color:#dc2626;">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['late_deduction'] ?? 0) + ($payroll['manual_deductions'] ?? 0), 2) }}</span>
+            <span style="color:#1a1a2e;">Net Contributions & Deductions</span>
+            <span style="color:#dc2626;">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['late_deduction'] ?? 0) + ($payroll['manual_deductions'] ?? 0) + ($payroll['allowances'] ?? 0), 2) }}</span>
         </div>
     </div>
 

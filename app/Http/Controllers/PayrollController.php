@@ -296,7 +296,7 @@ class PayrollController extends Controller
             \Log::info('Withholding tax result', ['withholding_tax' => $withholdingTax]);
         }
 
-        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions;
+        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $currentCutoffAllowances;
 
         // Manual deductions and reimbursements from payroll input
         $manualDeductions = $payrollInput ? ($payrollInput->deductions ?? 0) : 0;
