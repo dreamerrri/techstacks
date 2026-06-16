@@ -1,61 +1,61 @@
 import './bootstrap';
-import $ from 'jquery';
 import { initBurger }                    from './burger.js';
 import { initToast, initConfirmDialogs } from './alerts.js';
+import $ from 'jquery';
+import DataTable from 'datatables.net';
 
 document.addEventListener('DOMContentLoaded', () => {
     initBurger();
     initToast();
     initConfirmDialogs();
 
-    // ── Dropdown state: already restored + animated correctly by inline
-    //    <head> script. Here we just handle saving state on toggle. ─────
-    $('.nav-dropdown-trigger').on('click', function () {
-        const dropdown = $(this).closest('.nav-dropdown');
-        const id       = $(this).find('span').text().trim();
+    // ── Dropdown state ─────────────────────────────────────────
+    document.querySelectorAll('.nav-dropdown-trigger').forEach(trigger => {
+        trigger.addEventListener('click', function () {
+            const dropdown = this.closest('.nav-dropdown');
+            const id       = this.querySelector('span')?.textContent.trim();
 
-        dropdown.toggleClass('open');
+            dropdown.classList.toggle('open');
 
-        if (dropdown.hasClass('open')) {
-            sessionStorage.setItem('dropdown_' + id, 'open');
-        } else {
-            sessionStorage.removeItem('dropdown_' + id);
-        }
+            if (dropdown.classList.contains('open')) {
+                sessionStorage.setItem('dropdown_' + id, 'open');
+            } else {
+                sessionStorage.removeItem('dropdown_' + id);
+            }
+        });
     });
 
     // ── Desktop sidebar toggle ────────────────────────────────
     const SIDEBAR_KEY = 'sidebar_collapsed';
-    const $layout     = $('.desktop-layout');
-    const $arrow      = $('#sidebar-arrow');
+    const layout      = document.querySelector('.desktop-layout');
+    const arrow       = document.getElementById('sidebar-arrow');
 
     function setSidebar(collapsed) {
         if (collapsed) {
-            $layout.addClass('sidebar-collapsed');
-            $arrow.removeClass('fa-chevron-left').addClass('fa-chevron-right');
+            layout.classList.add('sidebar-collapsed');
+            arrow.classList.remove('fa-chevron-left');
+            arrow.classList.add('fa-chevron-right');
             sessionStorage.setItem(SIDEBAR_KEY, '1');
         } else {
-            $layout.removeClass('sidebar-collapsed');
-            $arrow.removeClass('fa-chevron-right').addClass('fa-chevron-left');
+            layout.classList.remove('sidebar-collapsed');
+            arrow.classList.remove('fa-chevron-right');
+            arrow.classList.add('fa-chevron-left');
             sessionStorage.removeItem(SIDEBAR_KEY);
         }
     }
 
-    // Restore state (class already applied in <head> to prevent flash,
-    // this just syncs the arrow icon)
     if (sessionStorage.getItem(SIDEBAR_KEY) === '1') {
         setSidebar(true);
     }
 
-    // Remove pre-collapsed class so transitions work normally after load
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             document.documentElement.classList.remove('sidebar-pre-collapsed');
         });
     });
 
-    // Toggle on click
-    $('#sidebar-toggle').on('click', function () {
-        const isCollapsed = $layout.hasClass('sidebar-collapsed');
+    document.getElementById('sidebar-toggle').addEventListener('click', function () {
+        const isCollapsed = layout.classList.contains('sidebar-collapsed');
         setSidebar(!isCollapsed);
     });
 });
