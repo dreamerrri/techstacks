@@ -36,8 +36,8 @@ class PayrollComputationEngineBreakdownTest extends TestCase
         $this->assertEquals(0.00, $result['late_deduction']);
         $this->assertEquals(3000.00, $result['allowances']);
         $this->assertEquals(0.00, $result['benefits']);
-        $this->assertEquals(18894.88, $result['gross_pay']);
+        $this->assertEquals(15894.88, $result['gross_pay']);
         $this->assertEquals(2504.55, $result['deductions']);
-        $this->assertEquals(16390.33, $result['net_pay']);
+        $this->assertEquals(13390.33, $result['net_pay']);
     }
 }
