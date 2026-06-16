@@ -15,7 +15,7 @@ class WithholdingTaxTest extends TestCase
 
     /**
      * Test the new withholding tax calculation formula.
-     * Formula: (Total Monthly Gross - Total Monthly Contributions) - 33,333 = taxablePay
+     * Formula: (Total Monthly Gross - Total Monthly Contributions - Total Monthly Allowances) - 33,333 = taxablePay
      * taxablePay * 20% + 1875 = Withholding Tax
      */
     public function test_withholding_tax_calculation_formula()
@@ -69,7 +69,8 @@ class WithholdingTaxTest extends TestCase
         // PH Monthly (40,000 * 2.5%) = 1,000
         // PI Monthly (Fixed) = 200
         // Total Monthly Contributions = 2,950
-        // Taxable Income = 40,000 - 2,950 = 37,050
+        // Total Monthly Allowances = 0 (no allowances in this test)
+        // Taxable Income = 40,000 - 2,950 - 0 = 37,050
         // taxablePay (excess over 33,333) = 37,050 - 33,333 = 3,717
         // Expected Tax = (3,717 * 0.20) + 1,875 = 743.40 + 1,875 = 2,618.40
 
@@ -96,7 +97,8 @@ class WithholdingTaxTest extends TestCase
         
         $totalMonthlyGross = 40000;
         $totalMonthlyContributions = 2950;
-        $calculatedTax = $method->invoke($input2, $totalMonthlyGross, $totalMonthlyContributions);
+        $totalMonthlyAllowances = 0;
+        $calculatedTax = $method->invoke($input2, $totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
         
         $this->assertEquals(2618.40, $calculatedTax);
     }

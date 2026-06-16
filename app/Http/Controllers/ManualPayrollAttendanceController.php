@@ -106,7 +106,7 @@ class ManualPayrollAttendanceController extends Controller
             'daily_rate' => 'required|numeric|min:0',
             'rate_type' => 'required|in:daily',
             'days_worked' => 'required|numeric|min:0|max:31',
-            'regular_hours' => 'nullable|numeric|min:0',
+            'weekends_worked' => 'nullable|numeric|min:0',
             'overtime_hours' => 'nullable|numeric|min:0',
             'late_hours' => 'nullable|numeric|min:0',
             'holiday_days' => 'nullable|numeric|min:0',
@@ -143,7 +143,7 @@ class ManualPayrollAttendanceController extends Controller
 
         $attendance = [
             'days_worked' => $validated['days_worked'],
-            'regular_hours' => $validated['regular_hours'] ?? 0,
+            'weekends_worked' => $validated['weekends_worked'] ?? 0,
             'overtime_hours' => $validated['overtime_hours'] ?? 0,
             'late_hours' => $validated['late_hours'] ?? 0,
             'holiday_days' => $validated['holiday_days'] ?? 0,
@@ -214,11 +214,20 @@ class ManualPayrollAttendanceController extends Controller
             $secondCutoffGrossPay = $grossPay;
             $totalMonthlyGross = $firstCutoffGrossPay + $secondCutoffGrossPay;
             $totalMonthlyContributions = $totalContributions * 2; // Since contributions are halved per cutoff
+            
+            // Calculate total monthly allowances (current cutoff + first cutoff)
+            $currentCutoffAllowances = $validated['allowances'] ?? 0;
+            $firstCutoffAllowances = 0;
+            if ($firstCutoffPayrollInput) {
+                $firstCutoffAllowances = $firstCutoffPayrollInput->allowances;
+            }
+            $totalMonthlyAllowances = $firstCutoffAllowances + $currentCutoffAllowances;
 
-            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions);
+            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
             \Log::info('Withholding tax result in ManualPayrollAttendanceController', [
                 'total_monthly_gross' => $totalMonthlyGross,
                 'total_monthly_contributions' => $totalMonthlyContributions,
+                'total_monthly_allowances' => $totalMonthlyAllowances,
                 'withholding_tax' => $withholdingTax
             ]);
         }
@@ -271,13 +280,14 @@ class ManualPayrollAttendanceController extends Controller
 
     /**
      * Calculate withholding tax based on monthly computation
-     * Formula: (Total Monthly Gross - Total Monthly Contributions) - 33,333 = taxablePay
+     * Formula: (Total Monthly Gross - Total Monthly Contributions - Total Monthly Allowances) - 33,333 = taxablePay
      * taxablePay * 20% + 1875 = Withholding Tax
      */
-    private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions): float
+    private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions, float $totalMonthlyAllowances = 0): float
     {
-        // Calculate taxable income: Total Gross - Total Monthly Contributions
-        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions;
+        // Calculate taxable income: Total Gross - Total Monthly Contributions - Total Monthly Allowances
+        // Allowances are considered as advance paychecks and should be deducted from taxable income
+        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $totalMonthlyAllowances;
         
         // Subtract lower limit of bracket (33,333) to get taxablePay (excess)
         $taxablePay = $taxableIncome - 33333;
@@ -308,7 +318,7 @@ class ManualPayrollAttendanceController extends Controller
                 'daily_rate' => 'required|numeric|min:0',
                 'rate_type' => 'required|in:daily',
                 'days_worked' => 'required|numeric|min:0|max:31',
-                'regular_hours' => 'nullable|numeric|min:0',
+                'weekends_worked' => 'nullable|numeric|min:0',
                 'overtime_hours' => 'nullable|numeric|min:0',
                 'late_hours' => 'nullable|numeric|min:0',
                 'holiday_days' => 'nullable|numeric|min:0',
@@ -344,7 +354,7 @@ class ManualPayrollAttendanceController extends Controller
                     'daily_rate' => $validated['daily_rate'],
                     'rate_type' => $validated['rate_type'],
                     'days_worked' => $validated['days_worked'],
-                    'regular_hours' => $validated['regular_hours'] ?? 0,
+                    'weekends_worked' => $validated['weekends_worked'] ?? 0,
                     'overtime_hours' => $validated['overtime_hours'] ?? 0,
                     'late_hours' => $validated['late_hours'] ?? 0,
                     'holiday_days' => $validated['holiday_days'] ?? 0,
@@ -366,7 +376,7 @@ class ManualPayrollAttendanceController extends Controller
                     'daily_rate' => $validated['daily_rate'],
                     'rate_type' => $validated['rate_type'],
                     'days_worked' => $validated['days_worked'],
-                    'regular_hours' => $validated['regular_hours'] ?? 0,
+                    'weekends_worked' => $validated['weekends_worked'] ?? 0,
                     'overtime_hours' => $validated['overtime_hours'] ?? 0,
                     'late_hours' => $validated['late_hours'] ?? 0,
                     'holiday_days' => $validated['holiday_days'] ?? 0,

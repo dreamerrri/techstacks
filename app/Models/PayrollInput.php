@@ -14,7 +14,7 @@ class PayrollInput extends Model
         'daily_rate',
         'rate_type',
         'days_worked',
-        'regular_hours',
+        'weekends_worked',
         'overtime_hours',
         'late_hours',
         'holiday_days',
@@ -32,7 +32,7 @@ class PayrollInput extends Model
     protected $casts = [
         'daily_rate'              => 'float',
         'days_worked'             => 'float',
-        'regular_hours'          => 'float',
+        'weekends_worked'          => 'float',
         'overtime_hours'          => 'float',
         'late_hours'              => 'float',
         'holiday_days'            => 'float',
@@ -100,7 +100,7 @@ class PayrollInput extends Model
 
         $attendance = [
             'days_worked' => $this->days_worked,
-            'regular_hours' => $this->regular_hours ?? 0,
+            'weekends_worked' => $this->weekends_worked ?? 0,
             'overtime_hours' => $this->overtime_hours,
             'late_hours' => $this->late_hours,
             'holiday_days' => $this->holiday_days ?? 0,
@@ -161,12 +161,21 @@ class PayrollInput extends Model
             
             $totalMonthlyGross = $firstCutoffGrossPay + $grossPay;
             $totalMonthlyContributions = $totalContributions * 2; // Since contributions are halved per cutoff
+            
+            // Calculate total monthly allowances (current cutoff + first cutoff)
+            $currentCutoffAllowances = $this->allowances;
+            $firstCutoffAllowances = 0;
+            if ($firstCutoffPayrollInput) {
+                $firstCutoffAllowances = $firstCutoffPayrollInput->allowances;
+            }
+            $totalMonthlyAllowances = $firstCutoffAllowances + $currentCutoffAllowances;
 
             \Log::info('Withholding tax calculation in PayrollInput', [
                 'total_monthly_gross' => $totalMonthlyGross,
                 'total_monthly_contributions' => $totalMonthlyContributions,
+                'total_monthly_allowances' => $totalMonthlyAllowances,
             ]);
-            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions);
+            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
             \Log::info('Withholding tax result in PayrollInput', ['withholding_tax' => $withholdingTax]);
         }
 
@@ -207,13 +216,14 @@ class PayrollInput extends Model
 
     /**
      * Calculate withholding tax based on monthly computation
-     * Formula: (Total Monthly Gross - Total Monthly Contributions) - 33,333 = taxablePay
+     * Formula: (Total Monthly Gross - Total Monthly Contributions - Total Monthly Allowances) - 33,333 = taxablePay
      * taxablePay * 20% + 1875 = Withholding Tax
      */
-    private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions): float
+    private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions, float $totalMonthlyAllowances = 0): float
     {
-        // Calculate taxable income: Total Gross - Total Monthly Contributions
-        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions;
+        // Calculate taxable income: Total Gross - Total Monthly Contributions - Total Monthly Allowances
+        // Allowances are considered as advance paychecks and should be deducted from taxable income
+        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $totalMonthlyAllowances;
         
         // Subtract lower limit of bracket (33,333) to get taxablePay (excess)
         $taxablePay = $taxableIncome - 33333;
