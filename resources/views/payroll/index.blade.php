@@ -146,7 +146,7 @@
 <div class="aurora-card" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
 
     {{-- Sticky header --}}
-    <div style="position:sticky; top:0; z-index:10; background:white; padding:20px 28px 0; border-radius:20px 20px 0 0;">
+    <div style="position:sticky; top:0; z-index:0; background:white; padding:20px 28px 0; border-radius:20px 20px 0 0;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
             <h2 class="aurora-card-title" style="margin:0;">
                 <i class="fas fa-list"></i> Payroll Summary
