@@ -34,7 +34,7 @@
         <table style="width:100%; border-collapse:collapse; font-size:14px;">
             <tr style="border-bottom:1px solid #f3f4f6;">
                 <td style="padding:12px 16px; color:#9ca3af; font-weight:600; font-size:12px; text-transform:uppercase; width:160px;">Date / Time</td>
-                <td style="padding:12px 16px; color:#1a1a2e;">{{ $auditLog->created_at->format('M d, Y H:i:s') }}</td>
+                <td style="padding:12px 16px; color:#1a1a2e;">{{ $auditLog->created_at->format('M d, Y h:i:s A') }}</td>
             </tr>
             <tr style="border-bottom:1px solid #f3f4f6;">
                 <td style="padding:12px 16px; color:#9ca3af; font-weight:600; font-size:12px; text-transform:uppercase;">User</td>
