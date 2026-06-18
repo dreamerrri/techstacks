@@ -136,6 +136,11 @@ class EmployeeSeeder extends Seeder
             ];
         }
 
-        DB::table('employees')->insert($employees);
+        foreach ($employees as $employee) {
+            DB::table('employees')->updateOrInsert(
+                ['employee_id' => $employee['employee_id']], // unique key to match on
+                $employee                                      // values to insert/update
+            );
+        }
     }
 }

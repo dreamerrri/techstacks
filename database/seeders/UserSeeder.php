@@ -11,7 +11,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('users')->insert([
+        $users = [
             [
                 'name'              => 'Admin User',
                 'email'             => 'admin@company.com',
@@ -36,6 +36,13 @@ class UserSeeder extends Seeder
                 'created_at'        => Carbon::now(),
                 'updated_at'        => Carbon::now(),
             ],
-        ]);
+        ];
+
+        foreach ($users as $user) {
+            DB::table('users')->updateOrInsert(
+                ['email' => $user['email']], // unique key to match on
+                $user                         // values to insert/update
+            );
+        }
     }
 }
