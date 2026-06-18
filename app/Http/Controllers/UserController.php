@@ -28,7 +28,14 @@ class UserController extends Controller
             $query->where('is_active', $request->status === 'active');
         }
 
-        $users = $query->orderBy('name')->paginate(15)->withQueryString();
+        if ($request->filled('sort') && $request->sort === 'last_login_at') {
+            $direction = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+            $query->orderByRaw("last_login_at IS NULL ASC")->orderBy('last_login_at', $direction);
+        } else {
+            $query->orderBy('name');
+        }
+
+        $users = $query->paginate(15)->withQueryString();
 
         return view('users.index', compact('users'));
     }

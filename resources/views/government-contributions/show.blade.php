@@ -172,7 +172,7 @@
                 return input;
             }
         }
-        return inputs[0]; // Fallback to first if none visible
+        return inputs[0];
     };
 
     // Save custom contributions

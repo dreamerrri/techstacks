@@ -51,7 +51,6 @@ class UserSeeder extends Seeder
         // --- Force-link admin/hr to their RBAC roles and permissions ---
         // Direct, model-based safety net so this works regardless of
         // DB triggers, observers, or other seeders.
-        //UNSAFE: This is a direct DB operation that bypasses model events and observers. Not for Production use. Use with caution.
         $admin = User::where('email', 'admin@company.com')->first();
         $hr    = User::where('email', 'hr@company.com')->first();
 
@@ -65,6 +64,25 @@ class UserSeeder extends Seeder
 
         if ($hr && $hrRole) {
             $hr->roles()->syncWithoutDetaching([$hrRole->id]);
+
+            $hrPermissionSlugs = [
+                'view.employees',
+                'create.employees',
+                'edit.employees',
+                'view.payroll',
+                'compute.payroll',
+                'manage.payroll.periods',
+                'view.attendance',
+                'edit.attendance',
+                'view.gov.contributions',
+                'edit.gov.contributions',
+                'manage.allowances',
+                'manage.benefits',
+                'view.reports',
+            ];
+
+            $hrPermissionIds = Permission::whereIn('slug', $hrPermissionSlugs)->pluck('id')->toArray();
+            $hrRole->permissions()->sync($hrPermissionIds);
         }
     }
 }

@@ -36,7 +36,15 @@ class EmployeeController extends Controller
             $query->where('employment_status', $request->status);
         }
 
-        $employees   = $query->orderBy('last_name')->paginate(15)->withQueryString();
+        $allowedSorts = [
+            'employment_status' => 'employment_status',
+            'date_hired'        => 'date_hired',
+        ];
+        $sortBy  = $request->input('sort');
+        $sortDir = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+        $sortCol = isset($allowedSorts[$sortBy]) ? $allowedSorts[$sortBy] : 'last_name';
+
+        $employees   = $query->orderBy($sortCol, $sortDir)->paginate(15)->withQueryString();
         $departments = Employee::active()->distinct()->pluck('department');
 
         return view('employees.index', compact('employees', 'departments'));
