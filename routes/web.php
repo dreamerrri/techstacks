@@ -17,7 +17,9 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\AuditLogController;
 
-
+Route::get('/test', function () {
+    return 'ok';
+});
 // Public Routes
 Route::get('/', function () {
     return view('welcome');
