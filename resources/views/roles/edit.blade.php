@@ -109,10 +109,10 @@
 
             {{-- Actions --}}
             <div style="display:flex; gap:12px; flex-wrap:wrap; padding-top:4px; border-top:1px solid rgba(0,0,0,0.045);">
-                <button type="submit" class="btn btn-danger">
+                <button type="submit" class="btn btn btn-error">
                     <i class="fas fa-save"></i> Update Role
                 </button>
-                <a href="{{ route('roles.show', $role) }}" class="btn btn-secondary">
+                <a href="{{ route('roles.show', $role) }}" class="btn btn btn-secondary">
                     Cancel
                 </a>
             </div>

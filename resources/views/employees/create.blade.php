@@ -25,10 +25,10 @@
             @csrf
             @include('employees.form')
             <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap;">
-                <button type="submit" class="btn btn-danger">
+                <button type="submit" class="btn btn btn-error">
                     <i class="fas fa-save"></i> Save Employee
                 </button>
-                <a href="{{ route('employees.index') }}" class="btn btn-secondary">
+                <a href="{{ route('employees.index') }}" class="btn btn btn-secondary">
                     Cancel
                 </a>
             </div>

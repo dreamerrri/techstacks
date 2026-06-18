@@ -11,7 +11,7 @@
     {{-- Header --}}
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
         <div>
-            <span class="aurora-badge aurora-badge-admin" style="margin-bottom:8px;">
+            <span class="badge badge badge-soft badge-success" style="margin-bottom:8px;">
                 <i class="fas fa-users-cog"></i> User Management
             </span>
             <p style="color:#6b7280; margin:0;">Manage system accounts, roles, and access.</p>
@@ -78,7 +78,7 @@
                     <option value="active"   {{ request('status') === 'active'   ? 'selected' : '' }}>Active</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                 </select>
-                <button type="submit" class="btn btn-danger btn-sm" style="padding:8px 20px; font-size:14px;">
+                <button type="submit" class="btn btn btn-error btn-sm" style="padding:8px 20px; font-size:14px;">
                     <i class="fas fa-search"></i> Search
                 </button>
                 @if(request()->hasAny(['search','role','status']))
@@ -129,7 +129,7 @@
                                         {{ $user->name }}
                                     @endif
                                     @if($user->id === auth()->id())
-                                        <span class="aurora-badge aurora-badge-hr" style="font-size:10px; padding:2px 8px; margin:0; text-transform:none; letter-spacing:0;">You</span>
+                                        <span class="badge badge badge-soft badge-success" style="font-size:10px; padding:2px 8px; margin:0; text-transform:none; letter-spacing:0;">You</span>
                                     @endif
                                 </div>
                             </td>
@@ -153,11 +153,11 @@
                             {{-- Status --}}
                             <td style="padding:12px;">
                                 @if($user->is_active)
-                                    <span class="aurora-status aurora-status-active">
+                                    <span class="badge badge badge-soft badge-success">
                                         <i class="fas fa-check-circle"></i> Active
                                     </span>
                                 @else
-                                    <span class="aurora-status aurora-status-inactive">
+                                    <span class="badge badge badge-soft badge-error">
                                         <i class="fas fa-times-circle"></i> Inactive
                                     </span>
                                 @endif
@@ -226,7 +226,7 @@
                                         {{ $user->name }}
                                     @endif
                                     @if($user->id === auth()->id())
-                                        <span class="aurora-badge aurora-badge-hr" style="font-size:10px; padding:2px 8px; margin:0 0 0 4px; text-transform:none; letter-spacing:0; vertical-align:middle;">You</span>
+                                        <span class="badge badge badge-soft badge-success" style="font-size:10px; padding:2px 8px; margin:0 0 0 4px; text-transform:none; letter-spacing:0; vertical-align:middle;">You</span>
                                     @endif
                                 </div>
                                 <div style="font-size:12px; color:#6b7280;">{{ $user->email }}</div>
@@ -234,11 +234,11 @@
                         </div>
 
                         @if($user->is_active)
-                            <span class="aurora-status aurora-status-active" style="white-space:nowrap;">
+                            <span class="badge badge badge-soft badge-success" style="white-space:nowrap;">
                                 <i class="fas fa-check-circle"></i> Active
                             </span>
                         @else
-                            <span class="aurora-status aurora-status-inactive" style="white-space:nowrap;">
+                            <span class="badge badge badge-soft badge-error" style="white-space:nowrap;">
                                 <i class="fas fa-times-circle"></i> Inactive
                             </span>
                         @endif

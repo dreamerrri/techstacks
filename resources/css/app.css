@@ -1,4 +1,5 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@plugin "flyonui";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -1059,48 +1060,48 @@
     border: none;
 }
 
-.btn-primary {
+.btn btn-primary {
     background: #3b82f6;
     color: white;
 }
 
-.btn-primary:hover {
+.btn btn-primary:hover {
     background: #2563eb;
 }
 
-.btn-secondary {
+.btn btn-secondary {
     background: #6b7280;
     color: white;
 }
 
-.btn-secondary:hover {
+.btn btn-secondary:hover {
     background: #4b5563;
 }
 
-.btn-info {
+.btn btn-info {
     background: #0ea5e9;
     color: white;
 }
 
-.btn-info:hover {
+.btn btn-info:hover {
     background: #0284c7;
 }
 
-.btn-warning {
+.btn btn-warning {
     background: #f59e0b;
     color: white;
 }
 
-.btn-warning:hover {
+.btn btn-warning:hover {
     background: #d97706;
 }
 
-.btn-danger {
+.btn btn-error {
     background: #ef4444;
     color: white;
 }
 
-.btn-danger:hover {
+.btn btn-error:hover {
     background: #dc2626;
 }
 
@@ -1132,7 +1133,7 @@
 }
 
 /* ── Role access badge ── */
-.aurora-badge {
+.badge {
     display: inline-flex;
     align-items: center;
     gap: 7px;
@@ -1146,8 +1147,8 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 }
-.aurora-badge-admin,
-.aurora-badge-hr {
+.badge badge-soft badge-success,
+.badge badge-soft badge-success {
     background: rgba(16, 185, 129, 0.08);
     border: 1px solid rgba(16, 185, 129, 0.18);
     color: #065f46;
@@ -1308,7 +1309,7 @@
 }
 
 /* ── Status pills ── */
-.aurora-status {
+.badge {
     display: inline-flex;
     align-items: center;
     gap: 5px;
@@ -1317,12 +1318,12 @@
     font-size: 13px;
     font-weight: 600;
 }
-.aurora-status-active {
+.badge badge-soft badge-success {
     background: rgba(16, 185, 129, 0.1);
     border: 1px solid rgba(16, 185, 129, 0.2);
     color: #065f46;
 }
-.aurora-status-inactive {
+.badge badge-soft badge-error {
     background: rgba(220, 38, 38, 0.08);
     border: 1px solid rgba(220, 38, 38, 0.18);
     color: #991b1b;

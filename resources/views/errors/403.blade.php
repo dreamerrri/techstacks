@@ -64,23 +64,23 @@
             font-size: 14px;
         }
 
-        .btn-primary {
+        .btn btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
-        .btn-primary:hover {
+        .btn btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-secondary {
+        .btn btn-secondary {
             background: white;
             color: #667eea;
             border: 2px solid #667eea;
         }
 
-        .btn-secondary:hover {
+        .btn btn-secondary:hover {
             background: #f3f4f6;
         }
     </style>
@@ -93,10 +93,10 @@
         <h1>Access Denied</h1>
         <p>You do not have permission to access this page. Your current role does not grant you access to this resource. Please contact your administrator if you believe this is an error.</p>
         <div class="action-buttons">
-            <a href="/dashboard" class="btn btn-primary">
+            <a href="/dashboard" class="btn btn btn-primary">
                 <i class="fas fa-home"></i> Go to Dashboard
             </a>
-            <a href="/logout" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();" class="btn btn-secondary">
+            <a href="/logout" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();" class="btn btn btn-secondary">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
         </div>

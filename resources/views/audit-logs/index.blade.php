@@ -7,7 +7,7 @@
     {{-- Header --}}
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
         <div>
-            <span class="aurora-badge aurora-badge-admin" style="margin-bottom:8px;">
+            <span class="badge badge badge-soft badge-success" style="margin-bottom:8px;">
                 <i class="fas fa-history"></i> Audit Logs
             </span>
             <p style="color:#6b7280; margin:0;">Track and review all system activity and changes.</p>
@@ -48,7 +48,7 @@
                            style="width:100%; border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; box-sizing:border-box; outline:none;">
                 </div>
                 <div style="display:flex; gap:8px;">
-                    <button type="submit" class="btn btn-danger btn-sm" style="flex:1; padding:8px 16px; font-size:14px;">
+                    <button type="submit" class="btn btn btn-error btn-sm" style="flex:1; padding:8px 16px; font-size:14px;">
                         <i class="fas fa-filter"></i> Filter
                     </button>
                     <a href="{{ route('audit-logs.index') }}"

@@ -13,7 +13,7 @@
 @section('content')
 
     <div style="margin-bottom:24px;">
-        <span class="aurora-badge aurora-badge-admin" style="margin-bottom:8px;">
+        <span class="badge badge badge-soft badge-success" style="margin-bottom:8px;">
             <i class="fas fa-history"></i> Audit Log Detail
         </span>
         <p style="color:#6b7280; margin:0;">Detailed view of a single audit log entry.</p>

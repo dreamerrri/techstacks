@@ -17,13 +17,13 @@
     </div>
 
     @if(session('success'))
-        <div class="aurora-status aurora-status-active" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
+        <div class="badge badge badge-soft badge-success" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
             <i class="fas fa-check-circle"></i> {{ session('success') }}
         </div>
     @endif
 
     @if(session('error'))
-        <div class="aurora-status aurora-status-inactive" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
+        <div class="badge badge badge-soft badge-error" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
             <i class="fas fa-times-circle"></i> {{ session('error') }}
         </div>
     @endif
@@ -41,7 +41,7 @@
                     <code style="font-size:12px; color:#6b7280; background:#f3f4f6; padding:2px 8px; border-radius:4px;">{{ $role->slug }}</code>
                 </div>
             </div>
-            <a href="{{ route('roles.edit', $role) }}" class="btn btn-danger btn-sm" style="font-size:14px; padding:8px 16px;">
+            <a href="{{ route('roles.edit', $role) }}" class="btn btn btn-error btn-sm" style="font-size:14px; padding:8px 16px;">
                 <i class="fas fa-edit"></i> Edit Role
             </a>
         </div>
@@ -61,9 +61,9 @@
                     <span class="aurora-info-label">Status</span>
                     <span class="aurora-info-value">
                         @if($role->is_active)
-                            <span class="aurora-status aurora-status-active"><i class="fas fa-check-circle"></i> Active</span>
+                            <span class="badge badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
                         @else
-                            <span class="aurora-status aurora-status-inactive"><i class="fas fa-times-circle"></i> Inactive</span>
+                            <span class="badge badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
                         @endif
                     </span>
                 </div>
@@ -123,7 +123,7 @@
                                 <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
                             @endforeach
                         </select>
-                        <button type="submit" class="btn btn-danger">
+                        <button type="submit" class="btn btn btn-error">
                             <i class="fas fa-user-plus"></i> Assign User
                         </button>
                     </div>
@@ -151,7 +151,7 @@
                                   data-confirm-icon="warning"
                                   data-confirm-btn="Yes, remove">
                                 @csrf @method('DELETE')
-                                <button class="btn btn-danger btn-sm">
+                                <button class="btn btn btn-error btn-sm">
                                     <i class="fas fa-user-minus"></i> Remove
                                 </button>
                             </form>

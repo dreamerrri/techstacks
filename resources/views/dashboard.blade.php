@@ -16,11 +16,11 @@
 
 {{-- Role access badge --}}
 @if($isAdmin)
-    <span class="aurora-badge aurora-badge-admin">
+    <span class="badge badge badge-soft badge-success">
         <i class="fas fa-shield-alt"></i> Administrator Access
     </span>
 @elseif($isHR)
-    <span class="aurora-badge aurora-badge-hr">
+    <span class="badge badge badge-soft badge-success">
         <i class="fas fa-user-tie"></i> HR Department Access
     </span>
 @endif
@@ -92,11 +92,11 @@
             <span class="aurora-info-label">Account Status</span>
             <span class="aurora-info-value">
                 @if($user->is_active)
-                    <span class="aurora-status aurora-status-active">
+                    <span class="badge badge badge-soft badge-success">
                         <i class="fas fa-check-circle"></i> Active
                     </span>
                 @else
-                    <span class="aurora-status aurora-status-inactive">
+                    <span class="badge badge badge-soft badge-error">
                         <i class="fas fa-times-circle"></i> Inactive
                     </span>
                 @endif

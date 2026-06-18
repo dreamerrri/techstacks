@@ -11,12 +11,12 @@
     {{-- Header --}}
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
         <div>
-            <span class="aurora-badge aurora-badge-admin" style="margin-bottom:8px;">
+            <span class="badge badge badge-soft badge-success" style="margin-bottom:8px;">
                 <i class="fas fa-user-tie"></i> Employee Management
             </span>
             <p style="color:#6b7280; margin:0;">Manage all employee records in the system.</p>
         </div>
-        <a href="{{ route('employees.create') }}" class="btn btn-danger" style="white-space:nowrap;">
+        <a href="{{ route('employees.create') }}" class="btn btn btn-error" style="white-space:nowrap;">
             <i class="fas fa-user-plus"></i> Add Employee
         </a>
     </div>
@@ -87,11 +87,11 @@
                         <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
                     @endforeach
                 </select>
-                <button type="submit" class="btn btn-danger btn-sm" style="padding:8px 20px; font-size:14px;">
+                <button type="submit" class="btn btn btn-error btn-sm" style="padding:8px 20px; font-size:14px;">
                     <i class="fas fa-search"></i> Search
                 </button>
                 @if(request()->hasAny(['search','department','status']))
-                    <a href="{{ route('employees.index') }}" class="btn btn-secondary btn-sm" style="padding:8px 16px; font-size:14px;">
+                    <a href="{{ route('employees.index') }}" class="btn btn btn-secondary btn-sm" style="padding:8px 16px; font-size:14px;">
                         Clear
                     </a>
                 @endif
@@ -161,10 +161,10 @@
                             <td style="padding:12px; color:#6b7280;">{{ $employee->date_hired->format('M d, Y') }}</td>
                             <td style="padding:12px;">
                                 <div style="display:flex; gap:8px;">
-                                    <a href="{{ route('employees.show', $employee) }}" class="btn btn-info btn-sm">
+                                    <a href="{{ route('employees.show', $employee) }}" class="btn btn btn-info btn-sm">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('employees.edit', $employee) }}" class="btn btn-warning btn-sm">
+                                    <a href="{{ route('employees.edit', $employee) }}" class="btn btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <form method="POST" action="{{ route('employees.archive', $employee) }}"
@@ -174,7 +174,7 @@
                                           data-confirm-btn="Yes, archive"
                                           style="display:inline;">
                                         @csrf @method('PATCH')
-                                        <button class="btn btn-danger btn-sm">
+                                        <button class="btn btn btn-error btn-sm">
                                             <i class="fas fa-archive"></i>
                                         </button>
                                     </form>
@@ -242,10 +242,10 @@
                 </div>
 
                 <div class="user-card-meta" style="margin-top:10px; padding-top:10px; border-top:1px solid #f3f4f6; display:flex; gap:8px; flex-wrap:wrap;">
-                    <a href="{{ route('employees.show', $employee) }}" class="btn btn-info btn-sm">
+                    <a href="{{ route('employees.show', $employee) }}" class="btn btn btn-info btn-sm">
                         <i class="fas fa-eye"></i> View
                     </a>
-                    <a href="{{ route('employees.edit', $employee) }}" class="btn btn-warning btn-sm">
+                    <a href="{{ route('employees.edit', $employee) }}" class="btn btn btn-warning btn-sm">
                         <i class="fas fa-edit"></i> Edit
                     </a>
                     <form method="POST" action="{{ route('employees.archive', $employee) }}"
@@ -255,7 +255,7 @@
                           data-confirm-btn="Yes, archive"
                           style="display:inline;">
                         @csrf @method('PATCH')
-                        <button class="btn btn-danger btn-sm">
+                        <button class="btn btn btn-error btn-sm">
                             <i class="fas fa-archive"></i> Archive
                         </button>
                     </form>

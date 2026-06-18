@@ -129,7 +129,7 @@
 {{-- Header --}}
 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
     <div>
-        <span class="aurora-badge" style="background:#fef3c7; color:#92400e; margin-bottom:8px;">
+        <span class="badge" style="background:#fef3c7; color:#92400e; margin-bottom:8px;">
             <i class="fas fa-money-bill-wave"></i> Payroll Preview
         </span>
         <p style="color:#6b7280; margin:0;">

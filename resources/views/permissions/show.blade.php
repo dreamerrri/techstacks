@@ -17,7 +17,7 @@
     </div>
 
     @if(session('success'))
-        <div class="aurora-status aurora-status-active" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
+        <div class="badge badge badge-soft badge-success" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
             <i class="fas fa-check-circle"></i> {{ session('success') }}
         </div>
     @endif
@@ -35,7 +35,7 @@
                     <code style="font-size:12px; color:#6b7280; background:#f3f4f6; padding:2px 8px; border-radius:4px;">{{ $permission->slug }}</code>
                 </div>
             </div>
-            <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-danger btn-sm" style="font-size:14px; padding:8px 16px;">
+            <a href="{{ route('permissions.edit', $permission) }}" class="btn btn btn-error btn-sm" style="font-size:14px; padding:8px 16px;">
                 <i class="fas fa-edit"></i> Edit Permission
             </a>
         </div>
@@ -55,9 +55,9 @@
                     <span class="aurora-info-label">Status</span>
                     <span class="aurora-info-value">
                         @if($permission->is_active)
-                            <span class="aurora-status aurora-status-active"><i class="fas fa-check-circle"></i> Active</span>
+                            <span class="badge badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
                         @else
-                            <span class="aurora-status aurora-status-inactive"><i class="fas fa-times-circle"></i> Inactive</span>
+                            <span class="badge badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
                         @endif
                     </span>
                 </div>
@@ -95,7 +95,7 @@
                                 <code style="font-size:11px; color:#6b7280;">{{ $role->slug }}</code>
                             </div>
                         </div>
-                        <a href="{{ route('roles.show', $role) }}" class="btn btn-info btn-sm">
+                        <a href="{{ route('roles.show', $role) }}" class="btn btn btn-info btn-sm">
                             <i class="fas fa-eye"></i> View Role
                         </a>
                     </div>

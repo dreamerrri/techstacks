@@ -80,7 +80,7 @@
                                 <div style="font-size:12px; color:#6b7280; font-family:monospace;">{{ $employee->employee_id }}</div>
                             </div>
                         </div>
-                        <span class="aurora-status" style="background:#f3f4f6; color:#374151; border:1px solid #e5e7eb; white-space:nowrap;">
+                        <span class="badge" style="background:#f3f4f6; color:#374151; border:1px solid #e5e7eb; white-space:nowrap;">
                             Archived
                         </span>
                     </div>

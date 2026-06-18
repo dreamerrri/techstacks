@@ -115,7 +115,7 @@
 {{-- Header --}}
 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
     <div>
-        <span class="aurora-badge aurora-badge-hr" style="margin-bottom:8px;">
+        <span class="badge badge badge-soft badge-success" style="margin-bottom:8px;">
             <i class="fas fa-id-card"></i> Government Contributions
         </span>
         <p style="color:#6b7280; margin:0;">View and manage employee government contribution rates.</p>

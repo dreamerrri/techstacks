@@ -2,6 +2,7 @@ import './bootstrap';
 import $ from 'jquery';
 import { initBurger }                    from './burger.js';
 import { initToast, initConfirmDialogs } from './alerts.js';
+import 'flyonui/flyonui';
 
 document.addEventListener('DOMContentLoaded', () => {
     initBurger();

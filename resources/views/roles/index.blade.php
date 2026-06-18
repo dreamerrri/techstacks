@@ -10,19 +10,19 @@
 
     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
         <h2 style="margin:0; color:#1f2937; font-size:20px; font-weight:700;">Roles Management</h2>
-        <a href="{{ route('roles.create') }}" class="btn btn-danger btn-sm" style="font-size:14px; padding:8px 16px;">
+        <a href="{{ route('roles.create') }}" class="btn btn btn-error btn-sm" style="font-size:14px; padding:8px 16px;">
             <i class="fas fa-plus"></i> Create Role
         </a>
     </div>
 
     @if(session('success'))
-        <div class="aurora-status aurora-status-active" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
+        <div class="badge badge badge-soft badge-success" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
             <i class="fas fa-check-circle"></i> {{ session('success') }}
         </div>
     @endif
 
     @if(session('error'))
-        <div class="aurora-status aurora-status-inactive" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
+        <div class="badge badge badge-soft badge-error" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
             <i class="fas fa-times-circle"></i> {{ session('error') }}
         </div>
     @endif
@@ -53,17 +53,17 @@
                             <td style="padding:12px 16px; color:#6b7280;">{{ $role->permissions->count() }}</td>
                             <td style="padding:12px 16px;">
                                 @if($role->is_active)
-                                    <span class="aurora-status aurora-status-active"><i class="fas fa-check-circle"></i> Active</span>
+                                    <span class="badge badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
                                 @else
-                                    <span class="aurora-status aurora-status-inactive"><i class="fas fa-times-circle"></i> Inactive</span>
+                                    <span class="badge badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
                                 @endif
                             </td>
                             <td style="padding:12px 16px;">
                                 <div style="display:flex; gap:6px; align-items:center;">
-                                    <a href="{{ route('roles.show', $role) }}" class="btn btn-info btn-sm">
+                                    <a href="{{ route('roles.show', $role) }}" class="btn btn btn-info btn-sm">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">
+                                    <a href="{{ route('roles.edit', $role) }}" class="btn btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     @if($role->users_count == 0)
@@ -73,7 +73,7 @@
                                               data-confirm-icon="warning"
                                               data-confirm-btn="Yes, delete">
                                             @csrf @method('DELETE')
-                                            <button class="btn btn-danger btn-sm">
+                                            <button class="btn btn btn-error btn-sm">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
@@ -108,9 +108,9 @@
                             </div>
                         </div>
                         @if($role->is_active)
-                            <span class="aurora-status aurora-status-active" style="white-space:nowrap;"><i class="fas fa-check-circle"></i> Active</span>
+                            <span class="badge badge badge-soft badge-success" style="white-space:nowrap;"><i class="fas fa-check-circle"></i> Active</span>
                         @else
-                            <span class="aurora-status aurora-status-inactive" style="white-space:nowrap;"><i class="fas fa-times-circle"></i> Inactive</span>
+                            <span class="badge badge badge-soft badge-error" style="white-space:nowrap;"><i class="fas fa-times-circle"></i> Inactive</span>
                         @endif
                     </div>
 
@@ -124,10 +124,10 @@
                     @endif
 
                     <div class="user-card-meta">
-                        <a href="{{ route('roles.show', $role) }}" class="btn btn-info btn-sm">
+                        <a href="{{ route('roles.show', $role) }}" class="btn btn btn-info btn-sm">
                             <i class="fas fa-eye"></i> View
                         </a>
-                        <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">
+                        <a href="{{ route('roles.edit', $role) }}" class="btn btn btn-warning btn-sm">
                             <i class="fas fa-edit"></i> Edit
                         </a>
                         @if($role->users_count == 0)
@@ -137,7 +137,7 @@
                                   data-confirm-icon="warning"
                                   data-confirm-btn="Yes, delete">
                                 @csrf @method('DELETE')
-                                <button class="btn btn-danger btn-sm">
+                                <button class="btn btn btn-error btn-sm">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </form>
