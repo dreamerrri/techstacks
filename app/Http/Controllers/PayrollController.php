@@ -87,6 +87,29 @@ class PayrollController extends Controller
             $payrollData[$employee->id] = $this->calculatePayroll($employee, $selectedPeriod);
         }
 
+        // In-memory sort by computed payroll fields (these aren't DB columns)
+        $sortableFields = [
+            'base_pay'         => fn($e) => $payrollData[$e->id]['base_pay']                          ?? 0,
+            'days_worked'      => fn($e) => $payrollData[$e->id]['attendance_data']['days_worked']     ?? 0,
+            'overtime_hours'   => fn($e) => $payrollData[$e->id]['attendance_data']['overtime_hours']  ?? 0,
+            'holiday_days'     => fn($e) => $payrollData[$e->id]['attendance_data']['holiday_days']    ?? 0,
+            'total_deductions' => fn($e) => $payrollData[$e->id]['total_deductions']                  ?? 0,
+            'net_pay'          => fn($e) => $payrollData[$e->id]['net_pay']                           ?? 0,
+        ];
+
+        $sortBy  = $request->input('sort');
+        $sortDir = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+
+        if ($sortBy && isset($sortableFields[$sortBy])) {
+            $getter       = $sortableFields[$sortBy];
+            $sortedItems  = $employees->getCollection()->sortBy(
+                fn($e) => $getter($e),
+                SORT_NUMERIC,
+                $sortDir === 'desc'
+            );
+            $employees->setCollection($sortedItems->values());
+        }
+
         return view('payroll.index', compact(
             'employees', 'departments', 'payrollData',
             'isAdmin', 'isHR', 'payrollPeriods', 'selectedPeriod'

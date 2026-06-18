@@ -106,7 +106,7 @@
             <span class="aurora-info-label">Last Login</span>
             <span class="aurora-info-value">
                 @if($user->last_login_at)
-                    {{ $user->last_login_at->format('M d, Y H:i A') }}
+                    {{ $user->last_login_at->format('M d, Y h:i A') }}
                 @else
                     First Login
                 @endif

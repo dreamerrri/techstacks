@@ -164,7 +164,7 @@
                             </td>
 
                             <td style="padding:12px; color:#6b7280; font-size:13px;">
-                                {{ $user->last_login_at ? $user->last_login_at->format('M d, Y H:i') : 'Never' }}
+                                {{ $user->last_login_at ? $user->last_login_at->format('M d, Y h:i A') : 'Never' }}
                             </td>
 
                             {{-- Toggle action --}}
@@ -257,7 +257,7 @@
                         </form>
 
                         <span style="font-size:11px; color:#9ca3af;">
-                            {{ $user->last_login_at ? $user->last_login_at->format('M d, Y H:i') : 'Never logged in' }}
+                            {{ $user->last_login_at ? $user->last_login_at->format('M d, Y h:i A') : 'Never logged in' }}
                         </span>
 
                         @if($user->id !== auth()->id())

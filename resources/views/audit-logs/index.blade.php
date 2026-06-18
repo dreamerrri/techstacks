@@ -92,7 +92,7 @@
                         <tr style="border-bottom:1px solid #f3f4f6;">
                             <td style="padding:12px; color:#6b7280; font-size:13px; white-space:nowrap;">
                                 {{ $log->created_at->format('M d, Y') }}<br>
-                                <span style="font-size:11px;">{{ $log->created_at->format('H:i:s') }}</span>
+                                <span style="font-size:11px;">{{ $log->created_at->format('h:i:s A') }}</span>
                             </td>
                             <td style="padding:12px; font-weight:600; color:#1a1a2e;">
                                 {{ $log->user?->name ?? '—' }}
@@ -149,7 +149,7 @@
                             </div>
                             <div>
                                 <div style="font-weight:600; color:#1a1a2e; font-size:14px;">{{ $log->user?->name ?? 'System' }}</div>
-                                <div style="font-size:11px; color:#9ca3af;">{{ $log->created_at->format('M d, Y H:i:s') }}</div>
+                                <div style="font-size:11px; color:#9ca3af;">{{ $log->created_at->format('M d, Y h:i:s A') }}</div>
                             </div>
                         </div>
                         <span style="padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; background:{{ $ac['bg'] }}; color:{{ $ac['color'] }}; white-space:nowrap;">

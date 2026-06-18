@@ -146,7 +146,7 @@
 <div class="aurora-card" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
 
     {{-- Sticky header --}}
-    <div style="position:sticky; top:0; z-index:10; background:white; padding:20px 28px 0; border-radius:20px 20px 0 0;">
+    <div style="position:sticky; top:0; z-index:0; background:white; padding:20px 28px 0; border-radius:20px 20px 0 0;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
             <h2 class="aurora-card-title" style="margin:0;">
                 <i class="fas fa-list"></i> Payroll Summary
@@ -225,14 +225,35 @@
         <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:900px;">
             <thead style="position:sticky; top:0; z-index:5;">
                 <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
+                    @php
+                        $s   = request('sort');
+                        $d   = request('direction', 'asc');
+                        $base = array_merge(request()->except(['sort','direction','page']));
+                        function payrollSortTh(string $key, string $label, string $align, array $base, ?string $s, string $d): string {
+                            $active  = $s === $key;
+                            $nextDir = ($active && $d === 'asc') ? 'desc' : 'asc';
+                            $url     = route('payroll.index', array_merge($base, ['sort' => $key, 'direction' => $nextDir]));
+                            $color   = $active ? '#dc2626' : '#6b7280';
+                            $weight  = $active ? '700' : '600';
+                            $upCol   = ($active && $d === 'asc')  ? '#dc2626' : '#d1d5db';
+                            $dnCol   = ($active && $d === 'desc') ? '#dc2626' : '#d1d5db';
+                            return '<th style="padding:12px; text-align:' . $align . '; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">'
+                                 . '<a href="' . $url . '" style="display:inline-flex; align-items:center; gap:5px; color:' . $color . '; text-decoration:none; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; font-weight:' . $weight . ';">'
+                                 . $label
+                                 . '<span style="display:inline-flex; flex-direction:column; line-height:1; gap:1px;">'
+                                 . '<i class="fas fa-caret-up"   style="font-size:9px; color:' . $upCol . ';"></i>'
+                                 . '<i class="fas fa-caret-down" style="font-size:9px; color:' . $dnCol . ';"></i>'
+                                 . '</span></a></th>';
+                        }
+                    @endphp
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Employee</th>
                     <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Department</th>
-                    <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em;">Basic Pay</th>
-                    <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Days Worked</th>
-                    <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">OT Hrs</th>
-                    <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Holiday</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Total Deductions</th>
-                    <th style="padding:12px; text-align:right; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Net Pay</th>
+                    {!! payrollSortTh('base_pay',         'Basic Pay',        'right',  $base, $s, $d) !!}
+                    {!! payrollSortTh('days_worked',      'Days Worked',      'center', $base, $s, $d) !!}
+                    {!! payrollSortTh('overtime_hours',   'OT Hrs',           'center', $base, $s, $d) !!}
+                    {!! payrollSortTh('holiday_days',     'Holiday',          'center', $base, $s, $d) !!}
+                    {!! payrollSortTh('total_deductions', 'Total Deductions', 'right',  $base, $s, $d) !!}
+                    {!! payrollSortTh('net_pay',          'Net Pay',          'right',  $base, $s, $d) !!}
                     <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
                 </tr>
             </thead>
