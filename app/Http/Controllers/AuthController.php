@@ -144,24 +144,32 @@ class AuthController extends Controller
                     'value' => User::count(),
                     'icon'  => 'fa-users',
                     'color' => '#dc2626',
+
+                    'route' => route('users.index')
                 ],
                 [
                     'label' => 'Admin Users',
                     'value' => User::where('role', 'admin')->count(),
                     'icon'  => 'fa-user-shield',
                     'color' => '#991b1b',
+
+                    'route' => route('users.index')
                 ],
                 [
                     'label' => 'HR Personnel',
                     'value' => User::where('role', 'hr')->count(),
                     'icon'  => 'fa-user-tie',
                     'color' => '#fbbf24',
+
+                    'route' => route('users.index')
                 ],
                 [
                     'label' => 'Active Accounts',
                     'value' => User::where('is_active', true)->count(),
                     'icon'  => 'fa-check-circle',
                     'color' => '#10b981',
+
+                    'route' => route('users.index') //very redundant but keeps the UI consistent with the other stats cards
                 ],
             ];
 

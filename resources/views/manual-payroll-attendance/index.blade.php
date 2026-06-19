@@ -3,111 +3,107 @@
 @section('title', 'Manual Payroll Attendance Encoding')
 @section('breadcrumb')
     <span>Manage Employees</span>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:500;">Attendance</span>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <span class="text-white font-medium">Attendance</span>
 @endsection
+
 @section('content')
 
 @php
-    $user = auth()->user();
+    $user    = auth()->user();
     $isAdmin = $user->isAdmin();
-    $isHR = $user->isHR();
-    $color = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
-    $colorDark = $isAdmin ? '#991b1b' : ($isHR ? '#1e40af' : '#764ba2');
+    $isHR    = $user->isHR();
 @endphp
 
 {{-- Header --}}
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+<div class="flex justify-between items-center flex-wrap gap-3 mb-6">
     <div>
-        <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
+        <span class="badge badge-soft badge-info mb-2">
             <i class="fas fa-keyboard"></i> Manual Payroll Attendance Encoding
-        </div>
-        <p style="color:#6b7280; margin:0;">
+        </span>
+        <p class="text-gray-500 m-0">
             Manually encode attendance totals, overtime, allowances, and deductions for payroll processing.
         </p>
     </div>
     @if($isAdmin || $isHR)
-    <a href="{{ route('payroll-periods.create') }}"
-       style="padding:10px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-        <i class="fas fa-plus"></i> Create Payroll Period
-    </a>
+        <a href="{{ route('payroll-periods.create') }}" class="btn btn-soft btn-error whitespace-nowrap">
+            <i class="fas fa-plus"></i> Create Payroll Period
+        </a>
     @endif
 </div>
 
 {{-- Payroll Periods List --}}
-<div class="card" style="padding:0; overflow:hidden;">
-    <div style="padding:20px 25px; border-bottom:1px solid #e5e7eb;">
-        <h2 style="margin:0;">Payroll Periods</h2>
-        <p style="color:#6b7280; margin:8px 0 0 0; font-size:14px;">Select a payroll period to start encoding attendance</p>
+<div class="card bg-base-100 shadow-sm overflow-hidden p-0">
+    <div class="px-6 py-5 border-b border-gray-200">
+        <h2 class="text-base font-bold text-gray-800 m-0">Payroll Periods</h2>
+        <p class="text-gray-500 text-sm mt-1 mb-0">Select a payroll period to start encoding attendance</p>
     </div>
 
     @if($periods->count() > 0)
-    <div style="padding:25px;">
-        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:16px;">
-            @foreach($periods as $period)
-            @if($period)
-            <div style="border:1px solid #e5e7eb; border-radius:8px; padding:20px; transition:all 0.2s; cursor:pointer;"
-                 onclick="window.location.href='{{ route('manual-payroll-attendance.period', $period) }}'"
-                 onmouseover="this.style.borderColor='{{ $color }}'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)';"
-                 onmouseout="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none';">
-                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:12px;">
-    <div>
-        <div style="font-weight:600; color:#1f2937; font-size:16px;">
-            {{ $period->cutoff_start ? $period->cutoff_start->format('M d') : 'N/A' }} - {{ $period->cutoff_end ? $period->cutoff_end->format('M d, Y') : 'N/A' }}
-        </div>
-        <div style="color:#6b7280; font-size:13px; margin-top:4px;">
-            Payroll Date: {{ $period->payroll_date ? $period->payroll_date->format('M d, Y') : 'N/A' }}
-        </div>
-    </div>
-    <div style="display:flex; align-items:center; gap:8px;">
-        <span style="padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; 
-            {{ $period->status === 'finalized' ? 'background:#dcfce7; color:#166534;' : 'background:#fef3c7; color:#92400e;' }}">
-            {{ ucfirst($period->status) }}
-        </span>
-        @if($isAdmin)
-        <button
-            onclick="event.stopPropagation(); confirmDelete({{ $period->id }}, '{{ $period->period_label }}')"
-            style="padding:4px 8px; background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; border-radius:5px; font-size:12px; cursor:pointer; line-height:1;">
-            <i class="fas fa-trash"></i>
-        </button>
-        @endif
-    </div>
-</div>
-                
-                <div style="display:flex; gap:16px; margin-top:12px; padding-top:12px; border-top:1px solid #f3f4f6; font-size:13px;">
-                    <div>
-                        <span style="color:#6b7280;">Employees Encoded:</span>
-                        <span style="font-weight:600; color:#1f2937; margin-left:4px;">{{ $period->payrollInputs ? $period->payrollInputs->count() : 0 }}</span>
-                    </div>
-                    <div>
-                        <span style="color:#6b7280;">Total Gross:</span>
-                        <span style="font-weight:600; color:#10b981; margin-left:4px;">₱{{ number_format($period->total_gross_pay ?? 0, 2) }}</span>
-                    </div>
-                </div>
-                @endif
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach($periods as $period)
+                    @if($period)
+                        <div id="period-row-{{ $period->id }}"
+                             class="border border-gray-200 rounded-xl p-5 cursor-pointer transition-all hover:border-red-400 hover:shadow-md"
+                             onclick="window.location.href='{{ route('manual-payroll-attendance.period', $period) }}'">
+
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <div class="font-semibold text-gray-800 text-base">
+                                        {{ $period->cutoff_start ? $period->cutoff_start->format('M d') : 'N/A' }}
+                                        -
+                                        {{ $period->cutoff_end ? $period->cutoff_end->format('M d, Y') : 'N/A' }}
+                                    </div>
+                                    <div class="text-gray-500 text-xs mt-1">
+                                        Payroll Date: {{ $period->payroll_date ? $period->payroll_date->format('M d, Y') : 'N/A' }}
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="badge {{ $period->status === 'finalized' ? 'badge-soft badge-success' : 'badge-soft badge-warning' }} whitespace-nowrap">
+                                        {{ ucfirst($period->status) }}
+                                    </span>
+                                    @if($isAdmin)
+                                        <button onclick="event.stopPropagation(); confirmDelete({{ $period->id }}, '{{ $period->period_label }}')"
+                                                class="btn btn-soft btn-error btn-xs">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 mt-3 pt-3 border-t border-gray-100 text-xs">
+                                <div>
+                                    <span class="text-gray-500">Employees Encoded:</span>
+                                    <span class="font-semibold text-gray-800 ml-1">{{ $period->payrollInputs ? $period->payrollInputs->count() : 0 }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500">Total Gross:</span>
+                                    <span class="font-semibold text-emerald-600 ml-1">₱{{ number_format($period->total_gross_pay ?? 0, 2) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
             </div>
-            @endforeach
         </div>
-    </div>
     @else
-    <div style="padding:60px 25px; text-align:center;">
-        <i class="fas fa-calendar-alt" style="font-size:48px; color:#d1d5db; margin-bottom:16px;"></i>
-        <h3 style="color:#6b7280; margin:0 0 8px 0;">No Payroll Periods Found</h3>
-        <p style="color:#9ca3af; margin:0;">Create a payroll period to start encoding attendance.</p>
-        @if($isAdmin || $isHR)
-        <a href="{{ route('payroll-periods.create') }}"
-           style="display:inline-block; margin-top:16px; padding:10px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; text-decoration:none;">
-            <i class="fas fa-plus"></i> Create Payroll Period
-        </a>
-        @endif
-    </div>
+        <div class="py-16 px-6 text-center">
+            <i class="fas fa-calendar-alt text-5xl text-gray-300 mb-4 block"></i>
+            <h3 class="text-gray-500 m-0 mb-2">No Payroll Periods Found</h3>
+            <p class="text-gray-400 m-0">Create a payroll period to start encoding attendance.</p>
+            @if($isAdmin || $isHR)
+                <a href="{{ route('payroll-periods.create') }}" class="btn btn-soft btn-error mt-4">
+                    <i class="fas fa-plus"></i> Create Payroll Period
+                </a>
+            @endif
+        </div>
     @endif
 </div>
 
 @endsection
 
 @section('scripts')
-
 <script>
 function confirmDelete(periodId, label) {
     @if($isAdmin)
@@ -122,7 +118,6 @@ function confirmDelete(periodId, label) {
         cancelButtonText: 'Cancel',
     }).then(result => {
         if (!result.isConfirmed) return;
-
         fetch(`/payroll-periods/${periodId}`, {
             method: 'DELETE',
             headers: {
@@ -139,12 +134,7 @@ function confirmDelete(periodId, label) {
             Toast.fire({ icon: 'error', title: 'Something went wrong.' });
         });
     });
-    @else
-    return;
     @endif
 }
 </script>
-
 @endsection
-
-

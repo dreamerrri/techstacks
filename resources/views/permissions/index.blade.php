@@ -3,78 +3,81 @@
 @section('title', 'Permissions Management')
 @section('breadcrumb')
     <span>Manage Users</span>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:500;">Permissions</span>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <span class="text-white font-medium">Permissions</span>
 @endsection
+
 @section('content')
 
-    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
-        <h2 style="margin:0; color:#1f2937; font-size:20px; font-weight:700;">Permissions Management</h2>
-        <a href="{{ route('permissions.create') }}" class="btn btn btn-error btn-sm" style="font-size:14px; padding:8px 16px;">
+    {{-- Header --}}
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
+        <h2 class="text-xl font-bold text-gray-800 m-0">Permissions Management</h2>
+        <a href="{{ route('permissions.create') }}" class="btn btn-soft btn-error btn-sm">
             <i class="fas fa-plus"></i> Create Permission
         </a>
     </div>
 
+    {{-- Flash messages --}}
     @if(session('success'))
-        <div class="badge badge badge-soft badge-success" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
+        <div class="alert alert-success mb-4">
             <i class="fas fa-check-circle"></i> {{ session('success') }}
         </div>
     @endif
-
     @if(session('error'))
-        <div class="badge badge badge-soft badge-error" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
+        <div class="alert alert-error mb-4">
             <i class="fas fa-times-circle"></i> {{ session('error') }}
         </div>
     @endif
 
     @foreach($permissions as $module => $modulePermissions)
-        <div style="margin-bottom:24px;">
+        <div class="mb-6">
+
             {{-- Module header --}}
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-                <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:700; flex-shrink:0;">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                     {{ strtoupper(substr($module, 0, 1)) }}
                 </div>
-                <h3 style="margin:0; color:#1f2937; font-size:16px; font-weight:700;">{{ ucfirst($module) }}</h3>
-                <span class="badge badge badge-soft badge-success" style="text-transform:none; letter-spacing:0; font-size:11px;">
+                <h3 class="text-base font-bold text-gray-800 m-0">{{ ucfirst($module) }}</h3>
+                <span class="badge badge-soft badge-success text-xs normal-case tracking-normal">
                     {{ $modulePermissions->count() }}
                 </span>
             </div>
 
-            <div class="card bg-base-100 shadow-sm" style="padding:0; overflow:hidden;">
+            <div class="card bg-base-100 shadow-sm overflow-hidden p-0">
 
                 {{-- Desktop Table --}}
-                <div class="table-responsive>
-                    <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:500px;">
+                <div class="table-responsive hidden md:block">
+                    <table class="table table-hover w-full text-sm">
                         <thead>
-                            <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
-                                <th style="padding:12px 16px; text-align:left; color:#6b7280; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Name</th>
-                                <th style="padding:12px 16px; text-align:left; color:#6b7280; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Slug</th>
-                                <th style="padding:12px 16px; text-align:left; color:#6b7280; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Description</th>
-                                <th style="padding:12px 16px; text-align:left; color:#6b7280; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Roles</th>
-                                <th style="padding:12px 16px; text-align:left; color:#6b7280; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Status</th>
-                                <th style="padding:12px 16px; text-align:left; color:#6b7280; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
+                            <tr>
+                                <th>Name</th>
+                                <th>Slug</th>
+                                <th>Description</th>
+                                <th>Roles</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($modulePermissions as $permission)
-                                <tr style="border-bottom:1px solid #f3f4f6;">
-                                    <td style="padding:12px 16px; font-weight:600; color:#1f2937;">{{ $permission->name }}</td>
-                                    <td style="padding:12px 16px;"><code>{{ $permission->slug }}</code></td>
-                                    <td style="padding:12px 16px; color:#6b7280;">{{ $permission->description ?? '—' }}</td>
-                                    <td style="padding:12px 16px; color:#6b7280;">{{ $permission->roles->count() }}</td>
-                                    <td style="padding:12px 16px;">
+                                <tr>
+                                    <td class="font-semibold text-gray-800">{{ $permission->name }}</td>
+                                    <td><code class="bg-gray-100 text-red-600 text-xs px-1.5 py-0.5 rounded">{{ $permission->slug }}</code></td>
+                                    <td class="text-gray-500">{{ $permission->description ?? '—' }}</td>
+                                    <td class="text-gray-500">{{ $permission->roles->count() }}</td>
+                                    <td>
                                         @if($permission->is_active)
-                                            <span class="badge badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
+                                            <span class="badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
                                         @else
-                                            <span class="badge badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
+                                            <span class="badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
                                         @endif
                                     </td>
-                                    <td style="padding:12px 16px;">
-                                        <div style="display:flex; gap:6px; align-items:center;">
-                                            <a href="{{ route('permissions.show', $permission) }}" class="btn btn btn-info btn-sm">
+                                    <td>
+                                        <div class="flex gap-2 items-center">
+                                            <a href="{{ route('permissions.show', $permission) }}" class="btn btn-soft btn-info btn-sm">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('permissions.edit', $permission) }}" class="btn btn btn-warning btn-sm">
+                                            <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft btn-warning btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             @if($permission->roles->count() == 0)
@@ -84,7 +87,7 @@
                                                       data-confirm-icon="warning"
                                                       data-confirm-btn="Yes, delete">
                                                     @csrf @method('DELETE')
-                                                    <button class="btn btn btn-error btn-sm">
+                                                    <button class="btn btn-soft btn-error btn-sm">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
@@ -98,39 +101,39 @@
                 </div>
 
                 {{-- Mobile Cards --}}
-                <div class="user-mobile-cards" style="padding:16px;">
+                <div class="md:hidden p-4 flex flex-col gap-3">
                     @foreach($modulePermissions as $permission)
-                        <div class="user-card">
-                            <div class="user-card-header">
-                                <div style="display:flex; align-items:center; gap:10px;">
-                                    <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; flex-shrink:0;">
-                                        <i class="fas fa-key" style="font-size:12px;"></i>
+                        <div class="card bg-base-100 border border-gray-200 p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white flex-shrink-0">
+                                        <i class="fas fa-key text-xs"></i>
                                     </div>
                                     <div>
-                                        <div style="font-weight:600; color:#1f2937; font-size:14px;">{{ $permission->name }}</div>
-                                        <code style="font-size:11px; color:#6b7280;">{{ $permission->slug }}</code>
+                                        <div class="font-semibold text-gray-800 text-sm">{{ $permission->name }}</div>
+                                        <code class="text-xs text-gray-500">{{ $permission->slug }}</code>
                                     </div>
                                 </div>
                                 @if($permission->is_active)
-                                    <span class="badge badge badge-soft badge-success" style="white-space:nowrap;"><i class="fas fa-check-circle"></i> Active</span>
+                                    <span class="badge badge-soft badge-success whitespace-nowrap"><i class="fas fa-check-circle"></i> Active</span>
                                 @else
-                                    <span class="badge badge badge-soft badge-error" style="white-space:nowrap;"><i class="fas fa-times-circle"></i> Inactive</span>
+                                    <span class="badge badge-soft badge-error whitespace-nowrap"><i class="fas fa-times-circle"></i> Inactive</span>
                                 @endif
                             </div>
 
-                            <div style="margin-top:8px; font-size:13px; color:#6b7280; display:flex; flex-wrap:wrap; gap:6px 16px;">
-                                <span><i class="fas fa-user-tag" style="width:14px;"></i> {{ $permission->roles->count() }} roles</span>
+                            <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
+                                <span><i class="fas fa-user-tag w-3.5"></i> {{ $permission->roles->count() }} roles</span>
                             </div>
 
                             @if($permission->description)
-                                <div style="margin-top:6px; font-size:12px; color:#9ca3af;">{{ $permission->description }}</div>
+                                <div class="text-xs text-gray-400 mt-1">{{ $permission->description }}</div>
                             @endif
 
-                            <div class="user-card-meta">
-                                <a href="{{ route('permissions.show', $permission) }}" class="btn btn btn-info btn-sm">
+                            <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
+                                <a href="{{ route('permissions.show', $permission) }}" class="btn btn-soft btn-info btn-sm">
                                     <i class="fas fa-eye"></i> View
                                 </a>
-                                <a href="{{ route('permissions.edit', $permission) }}" class="btn btn btn-warning btn-sm">
+                                <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft btn-warning btn-sm">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
                                 @if($permission->roles->count() == 0)
@@ -140,7 +143,7 @@
                                           data-confirm-icon="warning"
                                           data-confirm-btn="Yes, delete">
                                         @csrf @method('DELETE')
-                                        <button class="btn btn btn-error btn-sm">
+                                        <button class="btn btn-soft btn-error btn-sm">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
                                     </form>
