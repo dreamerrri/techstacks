@@ -40,7 +40,7 @@
                 <form method="POST" action="{{ route('register') }}" id="registerForm" novalidate>
                     @csrf
 
-                    <div class="form-group">
+                    <div class="fieldset">
                         <label for="name">
                             <i class="fas fa-user"></i> Full Name
                         </label>
@@ -53,14 +53,14 @@
                             required
                         >
                         @error('name')
-                            <div class="error-message">
+                            <div clclass="label text-error text-xs mt-1">
                                 <i class="fas fa-times-circle"></i>
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
 
-                    <div class="form-group">
+                    <div class="fieldset">
                         <label for="email">
                             <i class="fas fa-envelope"></i> Email Address
                         </label>
@@ -73,14 +73,14 @@
                             required
                         >
                         @error('email')
-                            <div class="error-message">
+                            <div clclass="label text-error text-xs mt-1">
                                 <i class="fas fa-times-circle"></i>
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
 
-                    <div class="form-group">
+                    <div class="fieldset">
                         <label for="password">
                             <i class="fas fa-lock"></i> Password
                         </label>
@@ -124,14 +124,14 @@
                         </div>
 
                         @error('password')
-                            <div class="error-message">
+                            <div clclass="label text-error text-xs mt-1">
                                 <i class="fas fa-times-circle"></i>
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
 
-                    <div class="form-group">
+                    <div class="fieldset">
                         <label for="password_confirmation">
                             <i class="fas fa-lock"></i> Confirm Password
                         </label>
@@ -144,7 +144,7 @@
                             autocomplete="new-password"
                         >
                         @error('password_confirmation')
-                            <div class="error-message">
+                            <div clclass="label text-error text-xs mt-1">
                                 <i class="fas fa-times-circle"></i>
                                 {{ $message }}
                             </div>

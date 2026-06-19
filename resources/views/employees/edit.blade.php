@@ -18,8 +18,8 @@
         </a>
     </div>
 
-    <div class="aurora-card">
-        <h2 class="aurora-card-title">
+    <div class="card bg-base-100 shadow-sm">
+        <h2 class="card bg-base-100 shadow-sm-title">
             <i class="fas fa-user-edit" style="color:#dc2626;"></i> Edit — {{ $employee->full_name }}
         </h2>
 

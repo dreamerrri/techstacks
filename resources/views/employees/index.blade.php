@@ -22,29 +22,29 @@
     </div>
 
     {{-- Stats --}}
-    <div class="aurora-stats-grid" style="margin-bottom:24px;">
-        <div class="aurora-stat-card">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5" style="margin-bottom:24px;">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#dc2626; background:#dc26261a;">
                 <i class="fas fa-users"></i>
             </div>
             <div class="aurora-stat-value">{{ $employees->total() }}</div>
             <div class="aurora-stat-label">Total Employees</div>
         </div>
-        <div class="aurora-stat-card">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#10b981; background:#10b9811a;">
                 <i class="fas fa-check-circle"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\Employee::active()->where('employment_status','Regular')->count() }}</div>
             <div class="aurora-stat-label">Regular</div>
         </div>
-        <div class="aurora-stat-card">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#fbbf24; background:#fbbf241a;">
                 <i class="fas fa-clock"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\Employee::active()->where('employment_status','Probationary')->count() }}</div>
             <div class="aurora-stat-label">Probationary</div>
         </div>
-        <div class="aurora-stat-card">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#6b7280; background:#6b72801a;">
                 <i class="fas fa-archive"></i>
             </div>
@@ -54,12 +54,12 @@
     </div>
 
     {{-- Filters + Table --}}
-    <div class="aurora-card" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
+    <div class="card bg-base-100 shadow-sm" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
 
         {{-- Sticky header: title + search --}}
         <div style="position:sticky; top:0; z-index:0; background:white; padding:20px 25px 0; border-radius:20px 20px 0 0; ">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-                <h2 class="aurora-card-title" style="margin:0; font-size:15px;">
+                <h2 class="card bg-base-100 shadow-sm-title" style="margin:0; font-size:15px;">
                     <i class="fas fa-list"></i> Employee List
                 </h2>
                 <a href="{{ route('employees.archived') }}" style="color:#6b7280; font-size:13px; text-decoration:none;">
@@ -99,7 +99,7 @@
         </div>
 
         {{-- Desktop Table --}}
-        <div class="user-table-wrapper" style="overflow-y:auto; max-height:53vh; padding:0 25px;">
+        <div class="table-responsive style="overflow-y:auto; max-height:53vh; padding:0 25px;">
             <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:700px;">
                 <thead style="position:sticky; top:0; z-index:5;">
                     @php
@@ -193,7 +193,7 @@
             </table>
         </div>
 
-    </div>{{-- end aurora-card --}}
+    </div>{{-- end card bg-base-100 shadow-sm --}}
 
     {{-- Mobile Cards --}}
     <div class="user-mobile-cards" style="padding:16px;">

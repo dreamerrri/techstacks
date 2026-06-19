@@ -92,7 +92,7 @@
         </div>
         <h1>Access Denied</h1>
         <p>You do not have permission to access this page. Your current role does not grant you access to this resource. Please contact your administrator if you believe this is an error.</p>
-        <div class="action-buttons">
+        <div class="flex gap-2">
             <a href="/dashboard" class="btn btn btn-primary">
                 <i class="fas fa-home"></i> Go to Dashboard
             </a>

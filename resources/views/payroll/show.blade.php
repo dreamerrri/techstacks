@@ -33,7 +33,7 @@
 </div>
 
 {{-- Profile Header --}}
-<div class="aurora-card" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+<div class="card bg-base-100 shadow-sm" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
     <div style="width:70px; height:70px; border-radius:50%; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:700; flex-shrink:0;">
         {{ strtoupper(substr($employee->full_name, 0, 1)) }}
     </div>
@@ -57,18 +57,18 @@
 </div>
 
 {{-- Government IDs --}}
-<div class="aurora-card">
-    <h2 class="aurora-card-title">
+<div class="card bg-base-100 shadow-sm">
+    <h2 class="card bg-base-100 shadow-sm-title">
         <i class="fas fa-id-card"></i> Government IDs
     </h2>
-    <div class="aurora-stats-grid">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
         @foreach([
             ['SSS Number',        $employee->sss_number,       'fa-shield-alt', '#10b981', 'rgba(16,185,129,0.1)'],
             ['PhilHealth Number', $employee->philhealth_number, 'fa-heart',      '#3b82f6', 'rgba(59,130,246,0.1)'],
             ['Pag-IBIG Number',   $employee->pagibig_number,    'fa-home',       '#f59e0b', 'rgba(245,158,11,0.1)'],
             ['TIN Number',        $employee->tin_number,        'fa-file-invoice','#8b5cf6','rgba(139,92,246,0.1)'],
         ] as [$label, $value, $icon, $clr, $bg])
-        <div class="aurora-stat-card" style="text-align:center;">
+        <div class="card bg-base-100 shadow-sm" style="text-align:center;">
             <div class="aurora-stat-icon" style="color:{{ $clr }}; background:{{ $bg }};">
                 <i class="fas {{ $icon }}"></i>
             </div>
@@ -105,7 +105,7 @@
 {{-- Monthly Breakdown (Only for 2nd Cutoff) --}}
 <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; margin-bottom:20px;">
     {{-- Monthly Gross Breakdown --}}
-    <div class="aurora-card" style="margin-bottom:0; border-left:4px solid #1e40af; background:#eff6ff;">
+    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0; border-left:4px solid #1e40af; background:#eff6ff;">
         <div style="font-size:12px; font-weight:600; color:#1e40af; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Gross Breakdown</div>
         <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
             <span style="color:#6b7280;">1st Cutoff Gross:</span>
@@ -122,7 +122,7 @@
     </div>
 
     {{-- Monthly Contributions Breakdown --}}
-    <div class="aurora-card" style="margin-bottom:0; border-left:4px solid #991b1b; background:#fef2f2;">
+    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0; border-left:4px solid #991b1b; background:#fef2f2;">
         <div style="font-size:12px; font-weight:600; color:#991b1b; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Contributions</div>
         <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
             <span style="color:#6b7280;">1st Cutoff Gov't:</span>
@@ -139,7 +139,7 @@
     </div>
 
     {{-- Monthly Net Pay Breakdown --}}
-    <div class="aurora-card" style="margin-bottom:0; border-left:4px solid #166534; background:#f0fdf4;">
+    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0; border-left:4px solid #166534; background:#f0fdf4;">
         <div style="font-size:12px; font-weight:600; color:#166534; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Net Pay Breakdown</div>
         <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
             <span style="color:#6b7280;">1st Cutoff Net:</span>
@@ -161,8 +161,8 @@
 <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;">
 
     {{-- Attendance-Based Earnings --}}
-    <div class="aurora-card" style="margin-bottom:0;">
-        <h2 class="aurora-card-title">
+    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0;">
+        <h2 class="card bg-base-100 shadow-sm-title">
             <i class="fas fa-clock" style="background:rgba(16,185,129,0.1); color:#10b981; padding:5px; border-radius:6px;"></i> Attendance-Based Earnings
         </h2>
         <table style="width:100%; border-collapse:collapse; font-size:14px;">
@@ -209,8 +209,8 @@
     </div>
 
     {{-- Government Contributions & Deductions --}}
-    <div class="aurora-card" style="margin-bottom:0;">
-        <h2 class="aurora-card-title">
+    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0;">
+        <h2 class="card bg-base-100 shadow-sm-title">
             <i class="fas fa-landmark" style="background:rgba(37,99,235,0.1); color:#2563eb; padding:5px; border-radius:6px;"></i> Government Contributions & Deductions
         </h2>
         <table style="width:100%; border-collapse:collapse; font-size:14px;">
@@ -264,8 +264,8 @@
     </div>
 
     {{-- Tax Information --}}
-    <div class="aurora-card" style="margin-bottom:0;">
-        <h2 class="aurora-card-title">
+    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0;">
+        <h2 class="card bg-base-100 shadow-sm-title">
             <i class="fas fa-file-invoice-dollar" style="background:rgba(220,38,38,0.1); color:#dc2626; padding:5px; border-radius:6px;"></i> Tax Information
         </h2>
         <table style="width:100%; border-collapse:collapse; font-size:14px;">
@@ -296,8 +296,8 @@
     </div>
 
     {{-- Pay Summary (full-width) --}}
-    <div class="aurora-card" style="grid-column:1 / -1; margin-bottom:0;">
-        <h2 class="aurora-card-title">
+    <div class="card bg-base-100 shadow-sm" style="grid-column:1 / -1; margin-bottom:0;">
+        <h2 class="card bg-base-100 shadow-sm-title">
             <i class="fas fa-receipt"></i> Pay Summary
         </h2>
         <table style="width:100%; border-collapse:collapse; font-size:15px;">

@@ -19,29 +19,29 @@
     </div>
 
     {{-- Stats --}}
-    <div class="aurora-stats-grid" style="margin-bottom:24px;">
-        <div class="aurora-stat-card">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5" style="margin-bottom:24px;">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#dc2626; background:rgba(220,38,38,0.1);">
                 <i class="fas fa-users"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\User::count() }}</div>
             <div class="aurora-stat-label">Total Users</div>
         </div>
-        <div class="aurora-stat-card">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#991b1b; background:rgba(153,27,27,0.1);">
                 <i class="fas fa-user-shield"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\User::where('role','admin')->count() }}</div>
             <div class="aurora-stat-label">Admins</div>
         </div>
-        <div class="aurora-stat-card">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#f59e0b; background:rgba(245,158,11,0.1);">
                 <i class="fas fa-user-tie"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\User::where('role','hr')->count() }}</div>
             <div class="aurora-stat-label">HR Personnel</div>
         </div>
-        <div class="aurora-stat-card">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#10b981; background:rgba(16,185,129,0.1);">
                 <i class="fas fa-check-circle"></i>
             </div>
@@ -51,12 +51,12 @@
     </div>
 
     {{-- Filters + Table --}}
-    <div class="aurora-card" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
+    <div class="card bg-base-100 shadow-sm" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
 
         {{-- Sticky header: title + search --}}
         <div style="position:sticky; top:0; z-index:10; background:white; padding:20px 28px 0; border-radius:20px 20px 0 0;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-                <h2 class="aurora-card-title" style="margin:0; font-size:15px;">
+                <h2 class="card bg-base-100 shadow-sm-title" style="margin:0; font-size:15px;">
                     <i class="fas fa-list"></i> User Accounts
                 </h2>
             </div>
@@ -91,7 +91,7 @@
         </div>
 
         {{-- Desktop Table --}}
-        <div class="user-table-wrapper" style="overflow-y:auto; max-height:53vh; padding:0 28px;">
+        <div class="table-responsive style="overflow-y:auto; max-height:53vh; padding:0 28px;">
             <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:600px;">
                 <thead style="position:sticky; top:0; z-index:5;">
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">

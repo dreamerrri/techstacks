@@ -22,7 +22,7 @@
         </div>
     @endif
 
-    <div class="aurora-card">
+    <div class="card bg-base-100 shadow-sm">
 
         {{-- Header --}}
         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
@@ -46,14 +46,14 @@
                 <i class="fas fa-info-circle" style="color:#dc2626;"></i> Permission Information
             </h3>
 
-            <div class="aurora-info-list">
-                <div class="aurora-info-row">
-                    <span class="aurora-info-label">Module</span>
-                    <span class="aurora-info-value">{{ ucfirst($permission->module) }}</span>
+            <div class="flex flex-col">
+                <div class="flex justify-between items-center py-3 border-b border-base-200">
+                    <span class="text-gray-400 font-medium">Module</span>
+                    <span class="font-semibold text-gray-800 text-right">{{ ucfirst($permission->module) }}</span>
                 </div>
-                <div class="aurora-info-row">
-                    <span class="aurora-info-label">Status</span>
-                    <span class="aurora-info-value">
+                <div class="flex justify-between items-center py-3 border-b border-base-200">
+                    <span class="text-gray-400 font-medium">Status</span>
+                    <span class="font-semibold text-gray-800 text-right">
                         @if($permission->is_active)
                             <span class="badge badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
                         @else
@@ -61,14 +61,14 @@
                         @endif
                     </span>
                 </div>
-                <div class="aurora-info-row">
-                    <span class="aurora-info-label">Assigned to Roles</span>
-                    <span class="aurora-info-value">{{ $permission->roles->count() }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-base-200">
+                    <span class="text-gray-400 font-medium">Assigned to Roles</span>
+                    <span class="font-semibold text-gray-800 text-right">{{ $permission->roles->count() }}</span>
                 </div>
                 @if($permission->description)
-                    <div class="aurora-info-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
-                        <span class="aurora-info-label">Description</span>
-                        <span class="aurora-info-value" style="text-align:left; font-weight:400; color:#374151;">{{ $permission->description }}</span>
+                    <div class="flex justify-between items-center py-3 border-b border-base-200" style="flex-direction:column; align-items:flex-start; gap:4px;">
+                        <span class="text-gray-400 font-medium">Description</span>
+                        <span class="font-semibold text-gray-800 text-right" style="text-align:left; font-weight:400; color:#374151;">{{ $permission->description }}</span>
                     </div>
                 @endif
             </div>

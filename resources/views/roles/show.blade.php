@@ -28,7 +28,7 @@
         </div>
     @endif
 
-    <div class="aurora-card">
+    <div class="card bg-base-100 shadow-sm">
 
         {{-- Header --}}
         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
@@ -52,14 +52,14 @@
                 <i class="fas fa-user-tag" style="color:#dc2626;"></i> Role Information
             </h3>
 
-            <div class="aurora-info-list">
-                <div class="aurora-info-row">
-                    <span class="aurora-info-label">Description</span>
-                    <span class="aurora-info-value" style="font-weight:400; color:#374151;">{{ $role->description ?? '—' }}</span>
+            <div class="flex flex-col">
+                <div class="flex justify-between items-center py-3 border-b border-base-200">
+                    <span class="text-gray-400 font-medium">Description</span>
+                    <span class="font-semibold text-gray-800 text-right" style="font-weight:400; color:#374151;">{{ $role->description ?? '—' }}</span>
                 </div>
-                <div class="aurora-info-row">
-                    <span class="aurora-info-label">Status</span>
-                    <span class="aurora-info-value">
+                <div class="flex justify-between items-center py-3 border-b border-base-200">
+                    <span class="text-gray-400 font-medium">Status</span>
+                    <span class="font-semibold text-gray-800 text-right">
                         @if($role->is_active)
                             <span class="badge badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
                         @else
@@ -67,13 +67,13 @@
                         @endif
                     </span>
                 </div>
-                <div class="aurora-info-row">
-                    <span class="aurora-info-label">Total Users</span>
-                    <span class="aurora-info-value">{{ $role->users->count() }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-base-200">
+                    <span class="text-gray-400 font-medium">Total Users</span>
+                    <span class="font-semibold text-gray-800 text-right">{{ $role->users->count() }}</span>
                 </div>
-                <div class="aurora-info-row">
-                    <span class="aurora-info-label">Total Permissions</span>
-                    <span class="aurora-info-value">{{ $role->permissions->count() }}</span>
+                <div class="flex justify-between items-center py-3 border-b border-base-200">
+                    <span class="text-gray-400 font-medium">Total Permissions</span>
+                    <span class="font-semibold text-gray-800 text-right">{{ $role->permissions->count() }}</span>
                 </div>
             </div>
         </div>

@@ -19,7 +19,7 @@
         <p style="color:#6b7280; margin:0;">Detailed view of a single audit log entry.</p>
     </div>
 
-    <div class="aurora-card" style="max-width:720px;">
+    <div class="card bg-base-100 shadow-sm" style="max-width:720px;">
         @php
             $actionColors = [
                 'create' => ['bg' => '#d1fae5', 'color' => '#065f46'],

@@ -143,12 +143,12 @@
 </div>
 
 {{-- Filters + Table --}}
-<div class="aurora-card" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
+<div class="card bg-base-100 shadow-sm" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
 
     {{-- Sticky header --}}
     <div style="position:sticky; top:0; z-index:0; background:white; padding:20px 28px 0; border-radius:20px 20px 0 0;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-            <h2 class="aurora-card-title" style="margin:0;">
+            <h2 class="card bg-base-100 shadow-sm-title" style="margin:0;">
                 <i class="fas fa-list"></i> Payroll Summary
             </h2>
            <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -221,7 +221,7 @@
     @endif
 
     {{-- Desktop Table --}}
-    <div class="user-table-wrapper" style="overflow-y:auto; max-height:47vh; padding:0 28px;">
+    <div class="table-responsive style="overflow-y:auto; max-height:47vh; padding:0 28px;">
         <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:900px;">
             <thead style="position:sticky; top:0; z-index:5;">
                 <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">

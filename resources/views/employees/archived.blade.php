@@ -15,15 +15,15 @@
             <a href="{{ route('employees.index') }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
                 <i class="fas fa-arrow-left"></i> Back
             </a>
-            <h2 class="aurora-card-title" style="margin:0; font-size:18px; color:#1f2937; text-transform:none; letter-spacing:normal;">
+            <h2 class="card bg-base-100 shadow-sm-title" style="margin:0; font-size:18px; color:#1f2937; text-transform:none; letter-spacing:normal;">
                 <i class="fas fa-archive"></i> Archived Employees
             </h2>
         </div>
     </div>
 
     {{-- Desktop Table --}}
-    <div class="aurora-card" style="padding:0; overflow:hidden;">
-        <div class="user-table-wrapper">
+    <div class="card bg-base-100 shadow-sm" style="padding:0; overflow:hidden;">
+        <div class="table-responsive>
             <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:500px;">
                 <thead>
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">

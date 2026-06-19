@@ -15,8 +15,8 @@
     </div>
 
     {{-- Filters --}}
-    <div class="aurora-card" style="margin-bottom:18px;">
-        <h2 class="aurora-card-title"><i class="fas fa-filter"></i> Filters</h2>
+    <div class="card bg-base-100 shadow-sm" style="margin-bottom:18px;">
+        <h2 class="card bg-base-100 shadow-sm-title"><i class="fas fa-filter"></i> Filters</h2>
         <form method="GET" action="{{ route('audit-logs.index') }}">
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; align-items:flex-end;">
                 <div>
@@ -61,7 +61,7 @@
     </div>
 
     {{-- Table Mobile Cards --}}
-    <div class="aurora-card" style="padding:0; overflow:hidden;">
+    <div class="card bg-base-100 shadow-sm" style="padding:0; overflow:hidden;">
 
         {{-- Desktop Table --}}
   

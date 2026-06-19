@@ -44,7 +44,7 @@
                 @endif
 
                 @if (session('success'))
-                    <div class="alert alert-success">
+                    <div class="text-gray-500 text-lg mb-5">
                         <i class="fas fa-check-circle"></i>
                         {{ session('success') }}
                     </div>
@@ -54,7 +54,7 @@
                     @csrf
 
                     {{-- Email --}}
-                    <div class="form-group">
+                    <div class="fieldset">
                         <label for="email">
                             <i class="fas fa-envelope"></i> Email Address
                         </label>
@@ -67,7 +67,7 @@
                             required
                         >
                         @error('email')
-                            <div class="error-message">
+                            <div clclass="label text-error text-xs mt-1">
                                 <i class="fas fa-times-circle"></i>
                                 {{ $message }}
                             </div>
@@ -75,7 +75,7 @@
                     </div>
 
                     {{-- Password with show/hide toggle --}}
-                    <div class="form-group">
+                    <div class="fieldset">
                         <label for="password">
                             <i class="fas fa-lock"></i> Password
                         </label>
@@ -95,7 +95,7 @@
                             </button>
                         </div>
                         @error('password')
-                            <div class="error-message">
+                            <div clclass="label text-error text-xs mt-1">
                                 <i class="fas fa-times-circle"></i>
                                 {{ $message }}
                             </div>

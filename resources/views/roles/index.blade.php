@@ -27,10 +27,10 @@
         </div>
     @endif
 
-    <div class="aurora-card" style="padding:0; overflow:hidden;">
+    <div class="card bg-base-100 shadow-sm" style="padding:0; overflow:hidden;">
 
         {{-- Desktop Table --}}
-        <div class="user-table-wrapper">
+        <div class="table-responsive>
             <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:500px;">
                 <thead>
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">

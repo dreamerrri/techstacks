@@ -16,8 +16,8 @@
         </a>
     </div>
 
-    <div class="aurora-card">
-        <h2 class="aurora-card-title" style="font-size:16px; text-transform:none; color:#1f2937; margin-bottom:24px;">
+    <div class="card bg-base-100 shadow-sm">
+        <h2 class="card bg-base-100 shadow-sm-title" style="font-size:16px; text-transform:none; color:#1f2937; margin-bottom:24px;">
             <i class="fas fa-key" style="color:#dc2626;"></i> Create New Permission
         </h2>
 

@@ -28,7 +28,7 @@
     </div>
 
     {{-- Profile Header --}}
-    <div class="aurora-card" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+    <div class="card bg-base-100 shadow-sm" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
         <div style="width:70px; height:70px; border-radius:50%; overflow:hidden; flex-shrink:0;">
             @if($employee->user?->profile_photo)
                 <img src="{{ asset('storage/' . $employee->user->profile_photo) }}"
@@ -54,20 +54,20 @@
     </div>
 
     {{-- Government Contributions --}}
-    <div class="aurora-card">
-        <h2 class="aurora-card-title">
+    <div class="card bg-base-100 shadow-sm">
+        <h2 class="card bg-base-100 shadow-sm-title">
             <i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions
         </h2>
 
         {{-- ID Numbers Grid --}}
-        <div class="aurora-stats-grid">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
             @foreach([
                 ['SSS Number',  $employee->sss_number,       'fa-shield-alt', '#10b981', 'rgba(16,185,129,0.1)'],
                 ['PhilHealth',  $employee->philhealth_number, 'fa-heart',      '#3b82f6', 'rgba(59,130,246,0.1)'],
                 ['Pag-IBIG',    $employee->pagibig_number,    'fa-home',       '#f59e0b', 'rgba(245,158,11,0.1)'],
                 ['TIN Number',  $employee->tin_number,        'fa-file-invoice','#8b5cf6','rgba(139,92,246,0.1)'],
             ] as [$label, $value, $icon, $color, $bg])
-            <div class="aurora-stat-card" style="text-align:center;">
+            <div class="card bg-base-100 shadow-sm" style="text-align:center;">
                 <div class="aurora-stat-icon" style="color:{{ $color }}; background:{{ $bg }};">
                     <i class="fas {{ $icon }}"></i>
                 </div>

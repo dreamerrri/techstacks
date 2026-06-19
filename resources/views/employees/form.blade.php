@@ -5,7 +5,7 @@
 
 {{-- Personal Information --}}
 <div style="margin-bottom:32px;">
-    <h3 class="aurora-card-title" style="font-size:13px; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid #fecaca;">
+    <h3 class="card bg-base-100 shadow-sm-title" style="font-size:13px; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid #fecaca;">
         <i class="fas fa-user" style="color:#dc2626;"></i> Personal Information
     </h3>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
@@ -110,7 +110,7 @@
 
 {{-- Employment Details --}}
 <div style="margin-bottom:32px;">
-    <h3 class="aurora-card-title" style="font-size:13px; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid #fecaca;">
+    <h3 class="card bg-base-100 shadow-sm-title" style="font-size:13px; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid #fecaca;">
         <i class="fas fa-briefcase" style="color:#dc2626;"></i> Employment Details
     </h3>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
@@ -190,7 +190,7 @@
 
 {{-- Government Contributions --}}
 <div>
-    <h3 class="aurora-card-title" style="font-size:13px; margin-bottom:8px; padding-bottom:10px; border-bottom:2px solid #fecaca;">
+    <h3 class="card bg-base-100 shadow-sm-title" style="font-size:13px; margin-bottom:8px; padding-bottom:10px; border-bottom:2px solid #fecaca;">
         <i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions
     </h3>
     <p style="font-size:12px; color:#6b7280; margin-bottom:16px;">
