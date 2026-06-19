@@ -134,16 +134,15 @@
         var end, payroll;
 
         if (isP1) {
-            // Phase 1: 1st to 15th
-            end     = new Date(year, month - 1, 15);
-            payroll = new Date(year, month - 1, 16);
-        } else {
-            // Phase 2: 16th to last day of month
-            // Get the last day of the month by going to next month and back one day
-            var lastDay = new Date(year, month, 0);
-            end     = lastDay;
-            payroll = new Date(year, month, 1);
-        }
+    // Phase 1: 1st to 15th, payroll on the 20th
+    end     = new Date(year, month - 1, 15);
+    payroll = new Date(year, month - 1, 20);
+} else {
+    // Phase 2: 16th to last day of month, payroll on 5th of next month
+    var lastDay = new Date(year, month, 0);
+    end     = lastDay;
+    payroll = new Date(year, month, 5);
+}
 
         document.querySelectorAll('#preview_end').forEach(function(el)   { el.value = fmt(end); });
         document.querySelectorAll('#preview_payroll').forEach(function(el){ el.value = fmt(payroll); });
