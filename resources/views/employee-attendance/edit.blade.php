@@ -121,9 +121,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const visibleForm = getVisibleElement(forms);
     if (!visibleForm) return;
 
+    // Helper function to get visible input by name
+    const getVisibleInput = (name) => {
+        const inputs = document.querySelectorAll(`input[name="${name}"]`);
+        for (let input of inputs) {
+            if (input.offsetParent !== null) {
+                return input;
+            }
+        }
+        return inputs[0]; // Fallback to first if none visible
+    };
+
     // Auto-set time_out to 9 hours after time_in (8 hours work + 1 hour lunch)
-    const timeInInput = visibleForm.querySelector('input[name="time_in"]');
-    const timeOutInput = visibleForm.querySelector('input[name="time_out"]');
+    const timeInInput = getVisibleInput('time_in');
+    const timeOutInput = getVisibleInput('time_out');
 
     if (timeInInput && timeOutInput) {
         timeInInput.addEventListener('change', function() {
@@ -140,26 +151,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     visibleForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        
-        // Use the visible form's native FormData to capture all values
-        const formData = new FormData(visibleForm);
-        
+
+        // Get visible inputs for form data
+        const timeIn = getVisibleInput('time_in');
+        const timeOut = getVisibleInput('time_out');
+        const remarks = getVisibleInput('remarks');
+
+        const formData = new FormData();
+        formData.append('_method', 'PUT');
+        formData.append('time_in', timeIn ? timeIn.value : '');
+        formData.append('time_out', timeOut ? timeOut.value : '');
+        formData.append('remarks', remarks ? remarks.value : '');
+        formData.append('_token', '{{ csrf_token() }}');
+
         // Debug: log the form data
         console.log('Form data being sent:');
         for (let [key, value] of formData.entries()) {
             console.log(key, ':', value);
         }
         
-        // Check if time_in and time_out are present
-        if (!formData.has('time_in')) {
-            console.warn('time_in is missing from form data');
-        }
-        if (!formData.has('time_out')) {
-            console.warn('time_out is missing from form data');
-        }
-        
         fetch('{{ route('employee-attendance.update', $attendance) }}', {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 'Accept': 'application/json'
