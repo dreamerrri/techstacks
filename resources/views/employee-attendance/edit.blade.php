@@ -121,6 +121,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const visibleForm = getVisibleElement(forms);
     if (!visibleForm) return;
 
+    // Auto-set time_out to 9 hours after time_in (8 hours work + 1 hour lunch)
+    const timeInInput = visibleForm.querySelector('input[name="time_in"]');
+    const timeOutInput = visibleForm.querySelector('input[name="time_out"]');
+
+    if (timeInInput && timeOutInput) {
+        timeInInput.addEventListener('change', function() {
+            const timeInValue = this.value;
+            if (timeInValue) {
+                const [hours, minutes] = timeInValue.split(':').map(Number);
+                const newHours = (hours + 9) % 24;
+                const formattedHours = newHours.toString().padStart(2, '0');
+                const formattedMinutes = minutes.toString().padStart(2, '0');
+                timeOutInput.value = `${formattedHours}:${formattedMinutes}`;
+            }
+        });
+    }
+
     visibleForm.addEventListener('submit', function(e) {
         e.preventDefault();
         

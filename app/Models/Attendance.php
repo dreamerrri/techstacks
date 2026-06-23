@@ -91,7 +91,7 @@ class Attendance extends Model
      * Logic:
      * - < 4 hours = 0 days
      * - 4-8 hours = 0.5 days
-     * - > 8 hours = 1 day
+     * - >= 8 hours = 1 day
      */
     public function computeDays(?float $hours = null): float
     {
@@ -99,7 +99,7 @@ class Attendance extends Model
 
         if ($hours < 4) {
             return 0;
-        } elseif ($hours >= 4 && $hours <= 8) {
+        } elseif ($hours >= 4 && $hours < 8) {
             return 0.5;
         } else {
             return 1;

@@ -82,7 +82,7 @@
             <ul style="margin:0; padding-left:20px; font-size:13px; color:#166534;">
                 <li>Less than 4 hours = 0 days</li>
                 <li>4-8 hours = 0.5 days</li>
-                <li>More than 8 hours = 1 day</li>
+                <li>8 hours or more = 1 day</li>
                 <li>1 hour break is automatically deducted for shifts > 4 hours</li>
             </ul>
         </div>
@@ -121,6 +121,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get the visible form
     const visibleForm = getVisibleElement(forms);
     if (!visibleForm) return;
+
+    // Auto-set time_out to 9 hours after time_in (8 hours work + 1 hour lunch)
+    const timeInInput = visibleForm.querySelector('input[name="time_in"]');
+    const timeOutInput = visibleForm.querySelector('input[name="time_out"]');
+
+    if (timeInInput && timeOutInput) {
+        timeInInput.addEventListener('change', function() {
+            const timeInValue = this.value;
+            if (timeInValue) {
+                const [hours, minutes] = timeInValue.split(':').map(Number);
+                const newHours = (hours + 9) % 24;
+                const formattedHours = newHours.toString().padStart(2, '0');
+                const formattedMinutes = minutes.toString().padStart(2, '0');
+                timeOutInput.value = `${formattedHours}:${formattedMinutes}`;
+            }
+        });
+    }
 
     visibleForm.addEventListener('submit', function(e) {
         e.preventDefault();
