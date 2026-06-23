@@ -74,7 +74,12 @@ class EmployeeAttendanceController extends Controller
             abort(403, 'No employee record found for this user.');
         }
 
-        return view('employee-attendance.create', compact('employee'));
+        // Check if attendance exists for today
+        $todayAttendance = Attendance::where('employee_id', $employee->id)
+            ->where('date', now()->toDateString())
+            ->first();
+
+        return view('employee-attendance.create', compact('employee', 'todayAttendance'));
     }
 
     /**
@@ -95,7 +100,7 @@ class EmployeeAttendanceController extends Controller
 
         $validated = $request->validate([
             'date' => 'required|date',
-            'time_in' => 'nullable|date_format:H:i',
+            'time_in' => 'required|date_format:H:i',
             'time_out' => 'nullable|date_format:H:i',
             'remarks' => 'nullable|string|max:255',
         ]);
@@ -108,25 +113,27 @@ class EmployeeAttendanceController extends Controller
             'time_out_type' => gettype($validated['time_out'] ?? null),
         ]);
 
-        // Check if attendance already exists for this date
+        // Check if attendance already exists for this date, update if it does
         $existingAttendance = Attendance::where('employee_id', $employee->id)
             ->where('date', $validated['date'])
             ->first();
 
         if ($existingAttendance) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Attendance record already exists for this date. Please edit the existing record.',
-            ], 422);
+            $existingAttendance->update([
+                'time_in' => $validated['time_in'] ?? null,
+                'time_out' => $validated['time_out'] ?? null,
+                'remarks' => $validated['remarks'] ?? '',
+            ]);
+            $attendance = $existingAttendance;
+        } else {
+            $attendance = Attendance::create([
+                'employee_id' => $employee->id,
+                'date' => $validated['date'],
+                'time_in' => $validated['time_in'] ?? null,
+                'time_out' => $validated['time_out'] ?? null,
+                'remarks' => $validated['remarks'] ?? '',
+            ]);
         }
-
-        $attendance = Attendance::create([
-            'employee_id' => $employee->id,
-            'date' => $validated['date'],
-            'time_in' => $validated['time_in'] ?? null,
-            'time_out' => $validated['time_out'] ?? null,
-            'remarks' => $validated['remarks'] ?? '',
-        ]);
 
         // Log the created attendance
         \Log::info('Attendance created', [
@@ -140,75 +147,6 @@ class EmployeeAttendanceController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Attendance recorded successfully.',
-            'attendance' => $attendance,
-        ]);
-    }
-
-    /**
-     * GET /employee-attendance/{attendance}/edit
-     * Show form to edit attendance record
-     */
-    public function edit(Attendance $attendance)
-    {
-        $user = Auth::user();
-        $employee = $user->employee;
-
-        if (!$employee || $attendance->employee_id !== $employee->id) {
-            abort(403, 'You can only edit your own attendance records.');
-        }
-
-        return view('employee-attendance.edit', compact('attendance', 'employee'));
-    }
-
-    /**
-     * PUT /employee-attendance/{attendance}
-     * Update attendance record
-     */
-    public function update(Request $request, Attendance $attendance): JsonResponse
-    {
-        $user = Auth::user();
-        $employee = $user->employee;
-
-        if (!$employee || $attendance->employee_id !== $employee->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You can only edit your own attendance records.',
-            ], 403);
-        }
-
-        $validated = $request->validate([
-            'time_in' => 'nullable|date_format:H:i',
-            'time_out' => 'nullable|date_format:H:i',
-            'remarks' => 'nullable|string|max:255',
-        ]);
-
-        // Log the update attempt
-        \Log::info('Attendance update attempt', [
-            'attendance_id' => $attendance->id,
-            'time_in' => $validated['time_in'] ?? 'null',
-            'time_out' => $validated['time_out'] ?? 'null',
-            'remarks' => $validated['remarks'] ?? 'null',
-        ]);
-
-        $attendance->fill([
-            'time_in' => $validated['time_in'] ?? null,
-            'time_out' => $validated['time_out'] ?? null,
-            'remarks' => $validated['remarks'] ?? '',
-        ]);
-        $attendance->save();
-
-        // Log the updated attendance
-        \Log::info('Attendance updated', [
-            'id' => $attendance->id,
-            'time_in' => $attendance->time_in,
-            'time_out' => $attendance->time_out,
-            'rendered_hours' => $attendance->rendered_hours,
-            'computed_days' => $attendance->computed_days,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Attendance updated successfully.',
             'attendance' => $attendance,
         ]);
     }

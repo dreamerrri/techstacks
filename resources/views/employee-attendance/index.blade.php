@@ -105,7 +105,7 @@
                         {{ $attendance->remarks ?? '-' }}
                     </td>
                     <td style="padding:12px 16px; text-align:center;">
-                        <a href="{{ route('employee-attendance.edit', $attendance) }}"
+                        <a href="{{ route('employee-attendance.create') }}"
                            style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
                             <i class="fas fa-edit"></i>
                         </a>

@@ -47,8 +47,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [EmployeeAttendanceController::class, 'index'])->name('index');
         Route::get('/create', [EmployeeAttendanceController::class, 'create'])->name('create');
         Route::post('/', [EmployeeAttendanceController::class, 'store'])->name('store');
-        Route::get('/{attendance}/edit', [EmployeeAttendanceController::class, 'edit'])->name('edit');
-        Route::put('/{attendance}', [EmployeeAttendanceController::class, 'update'])->name('update');
         Route::delete('/{attendance}', [EmployeeAttendanceController::class, 'destroy'])->name('destroy');
         Route::post('/compute-period', [EmployeeAttendanceController::class, 'getPeriodSummary'])->name('compute-period');
     });
