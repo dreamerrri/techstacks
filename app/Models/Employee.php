@@ -143,6 +143,30 @@ protected static function boot()
         return $this->benefits()->active();
     }
 
+    // Relationship: attendance records
+    public function attendances()
+    {
+        return $this->hasMany(\App\Models\Attendance::class);
+    }
+
+    // Get attendance for a specific period
+    public function attendancesForPeriod($startDate, $endDate)
+    {
+        return $this->attendances()->whereBetween('date', [$startDate, $endDate]);
+    }
+
+    // Get total computed days for a period
+    public function getTotalDaysForPeriod($startDate, $endDate): float
+    {
+        return $this->attendancesForPeriod($startDate, $endDate)->sum('computed_days');
+    }
+
+    // Get total rendered hours for a period
+    public function getTotalHoursForPeriod($startDate, $endDate): float
+    {
+        return $this->attendancesForPeriod($startDate, $endDate)->sum('rendered_hours');
+    }
+
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
 {

@@ -229,7 +229,7 @@
                 <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
             </a>
             <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
-            <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
+            <a href="{{ route('employee-attendance.index') }}" class="nav-item {{ request()->routeIs('employee-attendance.*') ? 'active' : '' }}"><i class="fas fa-clock"></i><span>Attendance</span></a>
         @endif
 
         <div style="padding: 10px 20px 15px;">
@@ -504,7 +504,7 @@
                     <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
                 </a>
                 <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
+                <a href="{{ route('employee-attendance.index') }}" class="nav-item {{ request()->routeIs('employee-attendance.*') ? 'active' : '' }}"><i class="fas fa-clock"></i><span>Attendance</span></a>
             @endif
         </nav>
 

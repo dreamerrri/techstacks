@@ -6,6 +6,7 @@ use App\Http\Controllers\PayrollInputController;
 use App\Http\Controllers\PayrollPeriodController;
 use App\Http\Controllers\ManualPayrollAttendanceController;
 use App\Http\Controllers\GovernmentContributionsController;
+use App\Http\Controllers\EmployeeAttendanceController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
@@ -38,6 +39,17 @@ Route::middleware('auth')->group(function () {
 
     // All roles can reach /dashboard; the controller scopes data per role.
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+
+    // Employee Attendance - All authenticated employees can manage their own attendance
+    Route::prefix('employee-attendance')->name('employee-attendance.')->group(function () {
+        Route::get('/', [EmployeeAttendanceController::class, 'index'])->name('index');
+        Route::get('/create', [EmployeeAttendanceController::class, 'create'])->name('create');
+        Route::post('/', [EmployeeAttendanceController::class, 'store'])->name('store');
+        Route::get('/{attendance}/edit', [EmployeeAttendanceController::class, 'edit'])->name('edit');
+        Route::put('/{attendance}', [EmployeeAttendanceController::class, 'update'])->name('update');
+        Route::delete('/{attendance}', [EmployeeAttendanceController::class, 'destroy'])->name('destroy');
+        Route::post('/compute-period', [EmployeeAttendanceController::class, 'getPeriodSummary'])->name('compute-period');
+    });
 
 Route::get('/profile',  [ProfileController::class, 'show'])->name('profile.show');
 Route::put('/profile',  [ProfileController::class, 'update'])->name('profile.update');
