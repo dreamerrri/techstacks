@@ -35,14 +35,22 @@
 {{-- Stats --}}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
     @foreach($stats as $stat)
-        <div class="card bg-base-100 shadow-sm p-5 text-center">
+        @if(!empty($stat['route']))
+            <a href="{{ $stat['route'] }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
+        @else
+            <div class="card bg-base-100 shadow-sm p-5 text-center">
+        @endif
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
                  style="color: {{ $stat['color'] }}; background: {{ $stat['color'] }}1a;">
                 <i class="fas {{ $stat['icon'] }}"></i>
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ $stat['value'] }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">{{ $stat['label'] }}</div>
-        </div>
+        @if(!empty($stat['route']))
+            </a>
+        @else
+            </div>
+        @endif
     @endforeach
 </div>
 
