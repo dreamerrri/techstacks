@@ -2,95 +2,90 @@
 
 @section('title', 'Create Role')
 @section('breadcrumb')
-    <a href="{{ route('users.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Users</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <a href="{{ route('roles.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Roles</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:600;">Create Role</span>
+    <a href="{{ route('users.index') }}" class="text-white/55 no-underline hover:text-white">Manage Users</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('roles.index') }}" class="text-white/55 no-underline hover:text-white">Roles</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <span class="text-white font-semibold">Create Role</span>
 @endsection
+
 @section('content')
 
-    <div style="margin-bottom:20px;">
-        <a href="{{ route('roles.index') }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
+    <div class="mb-5">
+        <a href="{{ route('roles.index') }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
             <i class="fas fa-arrow-left"></i> Back to Roles
         </a>
     </div>
 
-    <div class="card bg-base-100 shadow-sm">
-        <h2 class="card bg-base-100 shadow-sm-title" style="font-size:16px; text-transform:none; color:#1f2937; margin-bottom:24px;">
-            <i class="fas fa-user-tag" style="color:#dc2626;"></i> Create New Role
+    <div class="card bg-base-100 shadow-sm p-6">
+        <h2 class="text-base font-bold text-gray-800 mb-6 flex items-center gap-2">
+            <i class="fas fa-user-tag text-red-600"></i> Create New Role
         </h2>
 
         <form method="POST" action="{{ route('roles.store') }}">
             @csrf
 
             {{-- Role Details --}}
-            <div style="margin-bottom:32px;">
-                <h3 style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#9ca3af; border-bottom:2px solid #fecaca; padding-bottom:8px; margin-bottom:16px;">
-                    <i class="fas fa-info-circle" style="color:#dc2626;"></i> Role Details
+            <div class="mb-8">
+                <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
+                    <i class="fas fa-info-circle text-red-600"></i> Role Details
                 </h3>
 
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
-
-                    <div>
-                        <label style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#6b7280; display:block; margin-bottom:6px;">
-                            Role Name <span style="color:#dc2626;">*</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="fieldset">
+                        <label class="label text-xs font-semibold uppercase tracking-wider text-gray-500">
+                            Role Name <span class="text-red-600">*</span>
                         </label>
                         <input type="text" name="name" value="{{ old('name') }}"
-                               style="width:100%; border:1px solid #e5e7eb; border-radius:8px; padding:9px 12px; font-size:14px; transition:border-color 0.2s; box-sizing:border-box; outline:none;"
-                               required>
-                        @error('name') <p style="color:#dc2626; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
+                               class="input input-bordered w-full" required>
+                        @error('name') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    <div>
-                        <label style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#6b7280; display:block; margin-bottom:6px;">
-                            Slug <span style="color:#dc2626;">*</span>
+                    <div class="fieldset">
+                        <label class="label text-xs font-semibold uppercase tracking-wider text-gray-500">
+                            Slug <span class="text-red-600">*</span>
                         </label>
                         <input type="text" name="slug" id="slug" value="{{ old('slug') }}"
-                               style="width:100%; border:1px solid #e5e7eb; border-radius:8px; padding:9px 12px; font-size:14px; transition:border-color 0.2s; box-sizing:border-box; outline:none;"
+                               class="input input-bordered w-full"
                                placeholder="e.g. admin, hr, employee" required>
-                        <p style="color:#9ca3af; font-size:11px; margin-top:4px;">Lowercase, no spaces (used in code)</p>
-                        @error('slug') <p style="color:#dc2626; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
+                        <p class="text-gray-400 text-xs mt-1">Lowercase, no spaces (used in code)</p>
+                        @error('slug') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    <div style="grid-column: 1 / -1;">
-                        <label style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#6b7280; display:block; margin-bottom:6px;">
-                            Description
-                        </label>
+                    <div class="fieldset md:col-span-2">
+                        <label class="label text-xs font-semibold uppercase tracking-wider text-gray-500">Description</label>
                         <textarea name="description" rows="2"
-                                  style="width:100%; border:1px solid #e5e7eb; border-radius:8px; padding:9px 12px; font-size:14px; transition:border-color 0.2s; box-sizing:border-box; outline:none; resize:vertical;">{{ old('description') }}</textarea>
-                        @error('description') <p style="color:#dc2626; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
+                                  class="textarea textarea-bordered w-full">{{ old('description') }}</textarea>
+                        @error('description') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    <div>
-                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:14px; color:#374151; font-weight:500;">
-                            <input type="checkbox" name="is_active" value="1" {{ old('is_active', '1') ? 'checked' : '' }}
-                                   style="width:16px; height:16px; accent-color:#dc2626;">
-                            <span style="font-weight:600;">Active</span>
-                        </label>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" name="is_active" value="1"
+                               {{ old('is_active', '1') ? 'checked' : '' }}
+                               class="checkbox checkbox-error">
+                        <span class="font-semibold text-gray-700 text-sm">Active</span>
                     </div>
-
                 </div>
             </div>
 
             {{-- Permissions --}}
-            <div style="margin-bottom:32px;">
-                <h3 style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#9ca3af; border-bottom:2px solid #fecaca; padding-bottom:8px; margin-bottom:16px;">
-                    <i class="fas fa-key" style="color:#dc2626;"></i> Permissions
+            <div class="mb-8">
+                <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
+                    <i class="fas fa-key text-red-600"></i> Permissions
                 </h3>
 
                 @if($permissions->count())
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         @foreach($permissions as $module => $modulePermissions)
-                            <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:10px; padding:14px;">
-                                <div style="font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px;">
+                            <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                                <div class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
                                     {{ ucfirst($module) }}
                                 </div>
                                 @foreach($modulePermissions as $permission)
-                                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13px; color:#374151; margin-bottom:6px;">
+                                    <label class="flex items-center gap-2 cursor-pointer text-xs text-gray-700 mb-2">
                                         <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
                                                {{ in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}
-                                               style="width:14px; height:14px; accent-color:#dc2626;">
+                                               class="checkbox checkbox-error checkbox-xs">
                                         {{ $permission->name }}
                                     </label>
                                 @endforeach
@@ -98,19 +93,17 @@
                         @endforeach
                     </div>
                 @else
-                    <p style="color:#9ca3af; font-size:14px; margin:0;">No permissions available. Create permissions first.</p>
+                    <p class="text-gray-400 text-sm m-0">No permissions available. Create permissions first.</p>
                 @endif
-                @error('permissions') <p style="color:#dc2626; font-size:12px; margin-top:8px;">{{ $message }}</p> @enderror
+                @error('permissions') <p class="label text-red-600 text-xs mt-2">{{ $message }}</p> @enderror
             </div>
 
             {{-- Actions --}}
-            <div style="display:flex; gap:12px; flex-wrap:wrap; padding-top:4px; border-top:1px solid rgba(0,0,0,0.045);">
-                <button type="submit" class="btn btn btn-error">
+            <div class="flex gap-3 flex-wrap pt-4 border-t border-gray-100">
+                <button type="submit" class="btn btn-soft btn-error">
                     <i class="fas fa-save"></i> Create Role
                 </button>
-                <a href="{{ route('roles.index') }}" class="btn btn btn-secondary">
-                    Cancel
-                </a>
+                <a href="{{ route('roles.index') }}" class="btn btn-soft">Cancel</a>
             </div>
         </form>
     </div>

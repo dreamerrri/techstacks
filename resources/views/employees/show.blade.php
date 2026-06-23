@@ -236,9 +236,11 @@
                                     </div>
                                     <div style="text-align:right;">
                                         <div style="font-weight:700; color:#10b981; font-size:16px;">₱{{ number_format($allowance->amount, 2) }}</div>
-                                        <form method="POST" action="{{ route('allowances.destroy', [$employee, $allowance]) }}"
-                                              style="margin-top:4px;"
-                                              onsubmit="return confirm('Are you sure you want to delete this allowance?');">
+                                       <form method="POST" action="{{ route('allowances.destroy', [$employee, $allowance]) }}"
+      style="margin-top:4px;"
+      data-confirm="This allowance will be permanently deleted."
+      data-confirm-title="Delete Allowance?"
+      data-confirm-btn="Yes, delete it">
                                             @csrf @method('DELETE')
                                             <button type="submit" style="padding:2px 6px; background:#fecaca; color:#991b1b; border:none; border-radius:4px; cursor:pointer; font-size:10px;">
                                                 <i class="fas fa-trash"></i>
@@ -274,8 +276,10 @@
                                     <div style="text-align:right;">
                                         <div style="font-weight:700; color:#3b82f6; font-size:16px;">₱{{ number_format($benefit->amount, 2) }}</div>
                                         <form method="POST" action="{{ route('benefits.destroy', [$employee, $benefit]) }}"
-                                              style="margin-top:4px;"
-                                              onsubmit="return confirm('Are you sure you want to delete this benefit?');">
+      style="margin-top:4px;"
+      data-confirm="This benefit will be permanently deleted."
+      data-confirm-title="Delete Benefit?"
+      data-confirm-btn="Yes, delete it">
                                             @csrf @method('DELETE')
                                             <button type="submit" style="padding:2px 6px; background:#fecaca; color:#991b1b; border:none; border-radius:4px; cursor:pointer; font-size:10px;">
                                                 <i class="fas fa-trash"></i>

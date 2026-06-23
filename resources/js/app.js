@@ -1,16 +1,55 @@
 import './bootstrap';
 import $ from 'jquery';
-import { initBurger }                    from './burger.js';
-import { initToast, initConfirmDialogs } from './alerts.js';
+import { initBurger } from './burger.js';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
 import 'flyonui/flyonui';
+
+// ── Global Notyf instance ─────────────────────────────────────
+window.notyf = new Notyf({
+    duration: 5000,
+    position: { x: 'right', y: 'top' },
+    dismissible: true,
+    types: [
+        {
+            type: 'warning',
+            background: 'var(--color-warning)',
+            icon: { className: 'fas fa-exclamation-triangle', tagName: 'i', color: 'white' },
+        },
+        {
+            type: 'info',
+            background: 'var(--color-info)',
+            icon: { className: 'fas fa-info-circle', tagName: 'i', color: 'white' },
+        },
+    ],
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     initBurger();
-    initToast();
-    initConfirmDialogs();
 
-    // ── Dropdown state: already restored + animated correctly by inline
-    //    <head> script. Here we just handle saving state on toggle. ─────
+    // ── data-confirm forms → SweetAlert2 ─────────────────────
+    document.querySelectorAll('form[data-confirm]').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const message = form.dataset.confirm      || 'Are you sure you want to proceed?';
+            const title   = form.dataset.confirmTitle || 'Confirm Action';
+            const icon    = form.dataset.confirmIcon  || 'warning';
+            const btnText = form.dataset.confirmBtn   || 'Yes, proceed';
+
+            Swal.fire({
+                title, text: message, icon,
+                showCancelButton:   true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor:  '#6b7280',
+                confirmButtonText:  btnText,
+                cancelButtonText:   'Cancel',
+            }).then(function (result) {
+                if (result.isConfirmed) form.submit();
+            });
+        });
+    });
+
+    // ── Dropdown state persistence ────────────────────────────
     $('.nav-dropdown-trigger').on('click', function () {
         const dropdown = $(this).closest('.nav-dropdown');
         const id       = $(this).find('span').text().trim();
@@ -41,20 +80,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Restore state (class already applied in <head> to prevent flash,
-    // this just syncs the arrow icon)
     if (sessionStorage.getItem(SIDEBAR_KEY) === '1') {
         setSidebar(true);
     }
 
-    // Remove pre-collapsed class so transitions work normally after load
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             document.documentElement.classList.remove('sidebar-pre-collapsed');
         });
     });
 
-    // Toggle on click
     $('#sidebar-toggle').on('click', function () {
         const isCollapsed = $layout.hasClass('sidebar-collapsed');
         setSidebar(!isCollapsed);

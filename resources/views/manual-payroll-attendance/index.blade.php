@@ -106,10 +106,9 @@
 @section('scripts')
 <script>
 function confirmDelete(periodId, label) {
-    @if($isAdmin)
     Swal.fire({
         title: 'Delete Payroll Period?',
-        html: `<span style="color:#6b7280; font-size:14px;"><strong>${label}</strong> and all its encoded attendance data will be permanently deleted.</span>`,
+        text: `"${label}" and all its encoded attendance data will be permanently deleted.`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#dc2626',
@@ -118,6 +117,7 @@ function confirmDelete(periodId, label) {
         cancelButtonText: 'Cancel',
     }).then(result => {
         if (!result.isConfirmed) return;
+
         fetch(`/payroll-periods/${periodId}`, {
             method: 'DELETE',
             headers: {
@@ -127,14 +127,13 @@ function confirmDelete(periodId, label) {
         })
         .then(res => res.json())
         .then(data => {
-            Toast.fire({ icon: 'success', title: data.message });
+            window.notyf.success(data.message);
             document.getElementById(`period-row-${periodId}`)?.remove();
         })
         .catch(() => {
-            Toast.fire({ icon: 'error', title: 'Something went wrong.' });
+            window.notyf.error('Something went wrong.');
         });
     });
-    @endif
 }
 </script>
-@endsection
+@endsection 

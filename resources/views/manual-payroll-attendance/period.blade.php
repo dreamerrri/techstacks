@@ -235,115 +235,95 @@
 
 @section('scripts')
 <script>
-// Helper function to get the visible input from duplicate elements
+
+
 const getVisibleInput = (inputs) => {
     for (let input of inputs) {
-        if (input.offsetParent !== null) {
-            return input;
-        }
+        if (input.offsetParent !== null) return input;
     }
-    return inputs[0]; // Fallback to first if none visible
+    return inputs[0];
 };
 
 function filterEmployees() {
-    // Get all inputs by name to handle duplicates (mobile vs desktop)
-    const searchInputs = document.getElementsByName('searchEmployee');
-    const departmentInputs = document.getElementsByName('filterDepartment');
-    const statusInputs = document.getElementsByName('filterStatus');
-    
-    // Get the visible input for each field
-    const searchInput = getVisibleInput(searchInputs);
-    const departmentInput = getVisibleInput(departmentInputs);
-    const statusInput = getVisibleInput(statusInputs);
-    
-    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    const searchInput     = getVisibleInput(document.getElementsByName('searchEmployee'));
+    const departmentInput = getVisibleInput(document.getElementsByName('filterDepartment'));
+    const statusInput     = getVisibleInput(document.getElementsByName('filterStatus'));
+
+    const searchTerm       = searchInput     ? searchInput.value.toLowerCase() : '';
     const departmentFilter = departmentInput ? departmentInput.value : '';
-    const statusFilter = statusInput ? statusInput.value : '';
-    
-    const employeeCards = document.querySelectorAll('.employee-card');
+    const statusFilter     = statusInput     ? statusInput.value : '';
+
     let visibleCount = 0;
-    
-    employeeCards.forEach(card => {
-        const name = card.dataset.name || '';
-        const employeeId = card.dataset.employeeId || '';
-        const department = card.dataset.department || '';
-        const status = card.dataset.status || '';
-        
-        const matchesSearch = name.includes(searchTerm) || employeeId.includes(searchTerm);
-        const matchesDepartment = !departmentFilter || department === departmentFilter;
-        const matchesStatus = !statusFilter || status === statusFilter;
-        
-        if (matchesSearch && matchesDepartment && matchesStatus) {
-            card.style.display = 'flex';
-            visibleCount++;
-        } else {
-            card.style.display = 'none';
-        }
+
+    document.querySelectorAll('.employee-card').forEach(card => {
+        const matchesSearch     = (card.dataset.name || '').includes(searchTerm) || (card.dataset.employeeId || '').includes(searchTerm);
+        const matchesDepartment = !departmentFilter || card.dataset.department === departmentFilter;
+        const matchesStatus     = !statusFilter     || card.dataset.status     === statusFilter;
+
+        const visible = matchesSearch && matchesDepartment && matchesStatus;
+        card.style.display = visible ? 'flex' : 'none';
+        if (visible) visibleCount++;
     });
-    
+
     document.getElementById('filteredCount').textContent = visibleCount;
-    
-    const noResults = document.getElementById('noResults');
-    if (visibleCount === 0) {
-        noResults.style.display = 'block';
-    } else {
-        noResults.style.display = 'none';
-    }
+    document.getElementById('noResults').style.display   = visibleCount === 0 ? 'block' : 'none';
 }
 
 function clearFilters() {
-    const searchInputs = document.getElementsByName('searchEmployee');
-    const departmentInputs = document.getElementsByName('filterDepartment');
-    const statusInputs = document.getElementsByName('filterStatus');
-    
-    const searchInput = getVisibleInput(searchInputs);
-    const departmentInput = getVisibleInput(departmentInputs);
-    const statusInput = getVisibleInput(statusInputs);
-    
-    if (searchInput) searchInput.value = '';
+    const searchInput     = getVisibleInput(document.getElementsByName('searchEmployee'));
+    const departmentInput = getVisibleInput(document.getElementsByName('filterDepartment'));
+    const statusInput     = getVisibleInput(document.getElementsByName('filterStatus'));
+
+    if (searchInput)     searchInput.value     = '';
     if (departmentInput) departmentInput.value = '';
-    if (statusInput) statusInput.value = '';
-    
+    if (statusInput)     statusInput.value     = '';
+
     filterEmployees();
 }
 
 function loadPeriodSummary() {
     fetch(`{{ route('manual-payroll-attendance.summary', $payrollPeriod) }}`)
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
-            document.getElementById('totalEmployees').textContent = data.encoded_employees;
-            document.getElementById('totalGrossPay').textContent = '₱' + parseFloat(data.total_gross_pay).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.getElementById('totalNetPay').textContent = '₱' + parseFloat(data.total_net_pay).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.getElementById('totalDeductions').textContent = '₱' + parseFloat(data.total_deductions).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('totalEmployees').textContent  = data.encoded_employees;
+            document.getElementById('totalGrossPay').textContent   = '₱' + parseFloat(data.total_gross_pay).toLocaleString('en-US',  { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('totalNetPay').textContent     = '₱' + parseFloat(data.total_net_pay).toLocaleString('en-US',    { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('totalDeductions').textContent = '₱' + parseFloat(data.total_deductions).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             location.reload();
         })
-        .catch(error => console.error('Error loading summary:', error));
+        .catch(() => notyf.error('Failed to load summary.'));
 }
 
 function finalizePayroll() {
-    if(!confirm('Are you sure you want to finalize this payroll period? This action cannot be undone.')) {
-        return;
-    }
+    Swal.fire({
+        title: 'Finalize Payroll Period?',
+        text: 'This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, finalize it',
+        cancelButtonText: 'Cancel',
+    }).then(result => {
+        if (!result.isConfirmed) return;
 
-    fetch(`{{ route('payroll-periods.finalize', $payrollPeriod) }}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success) {
-            alert('Payroll period finalized successfully!');
-            location.reload();
-        } else {
-            alert('Error: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error finalizing payroll:', error);
-        alert('Error finalizing payroll period.');
+        fetch(`{{ route('payroll-periods.finalize', $payrollPeriod) }}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                notyf.success('Success!');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                notyf.error(data.message ?? 'Something went wrong.');
+            }
+        })
+        .catch(() => notyf.error('Error finalizing payroll period.'));
     });
 }
 </script>
