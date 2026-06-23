@@ -159,19 +159,48 @@ public function store(Request $request)
         ]);
     }
 
+
     /**
  * DELETE /payroll-periods/{id}
  * Super admin only — hard deletes the period and cascades to inputs.
  */
-public function destroy(PayrollPeriod $payrollPeriod): JsonResponse
+public function archive(PayrollPeriod $payrollPeriod): JsonResponse
 {
     if (!Auth::user()->isAdmin()) {
         return response()->json(['message' => 'Unauthorized.'], 403);
     }
 
-    $payrollPeriod->delete();
-    LogsAudit::logAction('delete', 'payroll_period', "Deleted payroll period ID {$payrollPeriod->id}");
+    $payrollPeriod->update(['status' => 'archived']);
+    LogsAudit::logAction('archive', 'payroll_period', "Archived payroll period ID {$payrollPeriod->id}");
 
-    return response()->json(['message' => 'Payroll period deleted.']);
+    return response()->json([
+        'success' => true,
+        'message' => 'Payroll period archived.',
+    ]);
+}
+
+public function archived()
+{
+    $periods = PayrollPeriod::with('createdBy')
+        ->where('status', 'archived')
+        ->orderByDesc('cutoff_start')
+        ->get();
+
+return view('manual-payroll-attendance.archived', compact('periods'));
+}
+
+public function restore(PayrollPeriod $payrollPeriod): JsonResponse
+{
+    if (!Auth::user()->isAdmin()) {
+        return response()->json(['message' => 'Unauthorized.'], 403);
+    }
+
+    $payrollPeriod->update(['status' => 'draft']);
+    LogsAudit::logAction('restore', 'payroll_period', "Restored payroll period ID {$payrollPeriod->id}");
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Payroll period restored.',
+    ]);
 }
 }

@@ -24,8 +24,53 @@ window.notyf = new Notyf({
     ],
 });
 
+// ── Global confirmation modal ─────────────────────────────────
+window.confirmAction = function({ url, method = 'POST', csrfToken, title, text, confirmText = 'Yes, proceed', successKey = 'notyf_success' }) {
+    Swal.fire({
+        title: title ?? 'Are you sure?',
+        text:  text  ?? 'This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor:  '#6b7280',
+        confirmButtonText:  confirmText,
+        cancelButtonText:   'Cancel',
+    }).then(result => {
+        if (!result.isConfirmed) return;
+
+        fetch(url, {
+            method,
+            headers: {
+                'Content-Type':  'application/json',
+                'X-CSRF-TOKEN':  csrfToken,
+                'Accept':        'application/json',
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                sessionStorage.setItem(successKey, data.message);
+                location.reload();
+            } else {
+                window.notyf.error(data.message ?? 'Something went wrong.');
+            }
+        })
+        .catch(() => window.notyf.error('Something went wrong.'));
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     initBurger();
+
+    // ── Session flash notifications (survive page reloads) ────
+    const flashTypes = ['success', 'error', 'warning', 'info'];
+    flashTypes.forEach(type => {
+        const msg = sessionStorage.getItem(`notyf_${type}`);
+        if (msg) {
+            sessionStorage.removeItem(`notyf_${type}`);
+            window.notyf[type]?.(msg) ?? window.notyf.open({ type, message: msg });
+        }
+    });
 
     // ── data-confirm forms → SweetAlert2 ─────────────────────
     document.querySelectorAll('form[data-confirm]').forEach(function (form) {

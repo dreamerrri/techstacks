@@ -231,11 +231,9 @@
 
 @endsection
 
+
 @section('scripts')
 <script>
-console.log('JavaScript loaded successfully');
-
-// Initialize global variables with default values
 window.dailyRateValue = '{{ $isEdit ? $payrollInput->daily_rate : $dailyRate }}';
 window.daysWorkedValue = '{{ $isEdit ? $payrollInput->days_worked : '0' }}';
 window.weekendsWorkedValue = '{{ $isEdit ? ($payrollInput->weekends_worked ?? '0') : '0' }}';
@@ -250,18 +248,12 @@ window.reimbursementsValue = '{{ $isEdit ? ($payrollInput->reimbursements ?? '0'
 window.reimbursementsRemarksValue = '{{ $isEdit ? ($payrollInput->reimbursements_remarks ?? '') : '' }}';
 window.isSecondHalfOfMonth = {{ $isSecondHalfOfMonth ? 'true' : 'false' }};
 
-
 function handleSaveAttendance(event) {
     event.preventDefault();
-    console.log('handleSaveAttendance called via onclick');
-    
+
     const form = document.getElementById('attendanceForm');
-    if (!form) {
-        console.error('Form not found in handleSaveAttendance');
-        return;
-    }
-    
-    // Use stored values from global variables instead of reading from input elements
+    if (!form) return;
+
     const formData = new FormData();
     formData.append('payroll_period_id', form.querySelector('[name="payroll_period_id"]').value);
     formData.append('employee_id', form.querySelector('[name="employee_id"]').value);
@@ -279,28 +271,7 @@ function handleSaveAttendance(event) {
     formData.append('reimbursements', window.reimbursementsValue);
     formData.append('reimbursements_remarks', window.reimbursementsRemarksValue);
     formData.append('_token', '{{ csrf_token() }}');
-    
-    console.log('FormData created in handleSaveAttendance');
-    console.log('Using stored values:', {
-        daily_rate: window.dailyRateValue,
-        days_worked: window.daysWorkedValue,
-        weekends_worked: window.weekendsWorkedValue,
-        overtime_hours: window.overtimeHoursValue,
-        late_hours: window.lateHoursValue,
-        holiday_days: window.holidayDaysValue,
-        night_differential_hours: window.nightDifferentialHoursValue,
-        allowances: window.allowancesValue,
-        deductions: window.deductionsValue,
-        deductions_remarks: window.deductionsRemarksValue,
-        reimbursements: window.reimbursementsValue,
-        reimbursements_remarks: window.reimbursementsRemarksValue
-    });
-    
-    // Log form data for debugging
-    for (let [key, value] of formData.entries()) {
-        console.log(key + ': ' + value);
-    }
-    
+
     fetch('{{ route('manual-payroll-attendance.save') }}', {
         method: 'POST',
         headers: {
@@ -309,35 +280,25 @@ function handleSaveAttendance(event) {
         },
         body: formData
     })
-    .then(response => {
-        console.log('Response received:', response.status);
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log('Response data:', data);
-        if(data.success) {
-            alert('Attendance saved successfully!');
+        if (data.success) {
+            sessionStorage.setItem('notyf_success', 'Attendance saved successfully!');
             window.location.href = '{{ route('manual-payroll-attendance.period', $payrollPeriod) }}';
         } else {
-            alert('Error: ' + data.message);
+            window.notyf.error(data.message ?? 'Something went wrong.');
         }
     })
     .catch(error => {
-        console.error('Error saving attendance:', error);
-        alert('Error saving attendance: ' + error.message);
+        window.notyf.error('Error saving attendance: ' + error.message);
     });
 }
 
 function previewPayroll() {
-    console.log('Preview button clicked');
     const form = document.getElementById('attendanceForm');
-    if (!form) {
-        console.error('Form not found');
-        return;
-    }
+    if (!form) return;
 
     const formData = new FormData();
-
     formData.append('payroll_period_id', form.querySelector('[name="payroll_period_id"]').value);
     formData.append('employee_id', form.querySelector('[name="employee_id"]').value);
     formData.append('daily_rate', window.dailyRateValue);
@@ -354,21 +315,6 @@ function previewPayroll() {
     formData.append('reimbursements', window.reimbursementsValue);
     formData.append('reimbursements_remarks', window.reimbursementsRemarksValue);
     formData.append('_token', '{{ csrf_token() }}');
-
-    console.log('Previewing payroll with values:', {
-        daily_rate: window.dailyRateValue,
-        days_worked: window.daysWorkedValue,
-        weekends_worked: window.weekendsWorkedValue,
-        overtime_hours: window.overtimeHoursValue,
-        late_hours: window.lateHoursValue,
-        holiday_days: window.holidayDaysValue,
-        night_differential_hours: window.nightDifferentialHoursValue,
-        allowances: window.allowancesValue,
-        deductions: window.deductionsValue,
-        deductions_remarks: window.deductionsRemarksValue,
-        reimbursements: window.reimbursementsValue,
-        reimbursements_remarks: window.reimbursementsRemarksValue
-    });
 
     fetch('{{ route('manual-payroll-attendance.preview') }}', {
         method: 'POST',
@@ -378,20 +324,12 @@ function previewPayroll() {
         },
         body: formData
     })
-    .then(response => {
-        console.log('Response status:', response.status);
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log('Preview response data:', data);
-        if(data.success) {
+        if (data.success) {
             const previewData = data.preview || {};
-            if(previewData.gross_pay !== undefined && previewData.net_pay !== undefined) {
-                // Update all preview panels (both mobile and desktop)
-                const previewPanels = document.querySelectorAll('#previewPanel');
-                console.log('Found preview panels:', previewPanels.length);
-                previewPanels.forEach((previewPanel, index) => {
-                    console.log('Updating preview panel', index);
+            if (previewData.gross_pay !== undefined && previewData.net_pay !== undefined) {
+                document.querySelectorAll('#previewPanel').forEach(previewPanel => {
                     previewPanel.innerHTML = `
                         <div style="margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
@@ -507,21 +445,15 @@ function previewPayroll() {
                         </div>
                     `;
                 });
-                console.log('All preview panels updated successfully');
-            } else {
-                console.error('Missing gross_pay or net_pay in response:', data);
             }
         } else {
-            console.error('Preview failed:', data.message || 'Unknown error');
-            alert('Preview failed: ' + (data.message || 'Unknown error'));
+            window.notyf.error('Preview failed: ' + (data.message || 'Unknown error'));
         }
     })
     .catch(error => {
-        console.error('Error previewing payroll:', error);
-        alert('Error previewing payroll: ' + error.message);
+        window.notyf.error('Error previewing payroll: ' + error.message);
     });
 }
-
-let previewTimeout;
 </script>
 @endsection
+

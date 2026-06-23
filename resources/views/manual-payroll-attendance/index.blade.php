@@ -25,11 +25,19 @@
             Manually encode attendance totals, overtime, allowances, and deductions for payroll processing.
         </p>
     </div>
-    @if($isAdmin || $isHR)
-        <a href="{{ route('payroll-periods.create') }}" class="btn btn-soft btn-error whitespace-nowrap">
-            <i class="fas fa-plus"></i> Create Payroll Period
-        </a>
-    @endif
+
+    <div class="flex items-center gap-2">
+        @if($isAdmin)
+            <a href="{{ route('payroll-periods.archived') }}" class="btn btn-soft btn-neutral whitespace-nowrap">
+                <i class="fas fa-archive"></i> Archived
+            </a>
+        @endif
+        @if($isAdmin || $isHR)
+            <a href="{{ route('payroll-periods.create') }}" class="btn btn-soft btn-error whitespace-nowrap">
+                <i class="fas fa-plus"></i> Create Payroll Period
+            </a>
+        @endif
+    </div>
 </div>
 
 {{-- Payroll Periods List --}}
@@ -37,7 +45,10 @@
     <div class="px-6 py-5 border-b border-gray-200">
         <h2 class="text-base font-bold text-gray-800 m-0">Payroll Periods</h2>
         <p class="text-gray-500 text-sm mt-1 mb-0">Select a payroll period to start encoding attendance</p>
+
+
     </div>
+      
 
     @if($periods->count() > 0)
         <div class="p-6">
@@ -64,10 +75,10 @@
                                         {{ ucfirst($period->status) }}
                                     </span>
                                     @if($isAdmin)
-                                        <button onclick="event.stopPropagation(); confirmDelete({{ $period->id }}, '{{ $period->period_label }}')"
-                                                class="btn btn-soft btn-error btn-xs">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                    <button onclick="event.stopPropagation(); confirmDelete({{ $period->id }}, '{{ $period->period_label }}', '{{ route('payroll-periods.archive', $period) }}')"
+        class="btn btn-soft btn-error btn-xs">
+    <i class="fas fa-trash"></i>
+</button>
                                     @endif
                                 </div>
                             </div>
@@ -105,21 +116,21 @@
 
 @section('scripts')
 <script>
-function confirmDelete(periodId, label) {
+    function confirmDelete(periodId, label, url) {
     Swal.fire({
-        title: 'Delete Payroll Period?',
-        text: `"${label}" and all its encoded attendance data will be permanently deleted.`,
+        title: 'Archive Payroll Period?',
+        text: `"${label}" and all its encoded attendance data will be archived.`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#dc2626',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Yes, delete it',
-        cancelButtonText: 'Cancel',
+        cancelButtonColor:  '#6b7280',
+        confirmButtonText:  'Yes, archive it',
+        cancelButtonText:   'Cancel',
     }).then(result => {
         if (!result.isConfirmed) return;
 
-        fetch(`/payroll-periods/${periodId}`, {
-            method: 'DELETE',
+        fetch(url, {
+            method: 'PATCH',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                 'Accept': 'application/json',
@@ -127,12 +138,10 @@ function confirmDelete(periodId, label) {
         })
         .then(res => res.json())
         .then(data => {
-            window.notyf.success(data.message);
             document.getElementById(`period-row-${periodId}`)?.remove();
+            window.notyf.success(data.message);
         })
-        .catch(() => {
-            window.notyf.error('Something went wrong.');
-        });
+        .catch(() => window.notyf.error('Something went wrong.'));
     });
 }
 </script>

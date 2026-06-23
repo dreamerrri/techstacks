@@ -291,39 +291,16 @@ function loadPeriodSummary() {
             document.getElementById('totalDeductions').textContent = '₱' + parseFloat(data.total_deductions).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             location.reload();
         })
-        .catch(() => notyf.error('Failed to load summary.'));
+.catch(() => window.notyf.error('Failed to load summary.'));
 }
 
 function finalizePayroll() {
-    Swal.fire({
-        title: 'Finalize Payroll Period?',
-        text: 'This action cannot be undone.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc2626',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Yes, finalize it',
-        cancelButtonText: 'Cancel',
-    }).then(result => {
-        if (!result.isConfirmed) return;
-
-        fetch(`{{ route('payroll-periods.finalize', $payrollPeriod) }}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            },
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                notyf.success('Success!');
-                setTimeout(() => location.reload(), 1500);
-            } else {
-                notyf.error(data.message ?? 'Something went wrong.');
-            }
-        })
-        .catch(() => notyf.error('Error finalizing payroll period.'));
+    window.confirmAction({
+        url:         '{{ route('payroll-periods.finalize', $payrollPeriod) }}',
+        csrfToken:   '{{ csrf_token() }}',
+        title:       'Finalize Payroll Period?',
+        text:        'This action cannot be undone.',
+        confirmText: 'Yes, finalize it',
     });
 }
 </script>
