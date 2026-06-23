@@ -153,17 +153,17 @@ class EmployeeAttendanceController extends Controller
 
     /**
      * DELETE /employee-attendance/{attendance}
-     * Delete attendance record
+     * Delete attendance record (only admin/HR)
      */
     public function destroy(Attendance $attendance): JsonResponse
     {
         $user = Auth::user();
-        $employee = $user->employee;
 
-        if (!$employee || $attendance->employee_id !== $employee->id) {
+        // Only admin and HR can delete attendance records
+        if (!$user->isAdmin() && !$user->isHR()) {
             return response()->json([
                 'success' => false,
-                'message' => 'You can only delete your own attendance records.',
+                'message' => 'Only administrators and HR can delete attendance records.',
             ], 403);
         }
 

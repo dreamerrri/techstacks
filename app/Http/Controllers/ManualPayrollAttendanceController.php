@@ -48,11 +48,61 @@ class ManualPayrollAttendanceController extends Controller
             // If loading fails, try loading without nested relationships
             $payrollPeriod->load('payrollInputs');
         }
-        
-        // Get employees not yet encoded for this period
+
+        // Auto-encode employees who have attendance records but no payroll input
         $encodedIds = $payrollPeriod->payrollInputs ? $payrollPeriod->payrollInputs->pluck('employee_id')->toArray() : [];
-        
-        // Handle empty array case for whereNotIn
+
+        // Get employees with attendance records for this period
+        $employeesWithAttendance = \App\Models\Attendance::whereBetween('date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+            ->distinct()
+            ->pluck('employee_id')
+            ->toArray();
+
+        // For each employee with attendance but no payroll input, create one
+        foreach ($employeesWithAttendance as $employeeId) {
+            if (!in_array($employeeId, $encodedIds)) {
+                $employee = Employee::find($employeeId);
+                if ($employee && !$employee->is_archived) {
+                    // Get computed days from attendance
+                    $computedDays = \App\Models\Attendance::where('employee_id', $employeeId)
+                        ->whereBetween('date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+                        ->sum('computed_days');
+
+                    // Only create if there are computed days
+                    if ($computedDays > 0) {
+                        $dailyRate = $this->computeDailyRate($employee);
+
+                        $payrollInput = new PayrollInput([
+                            'payroll_period_id' => $payrollPeriod->id,
+                            'employee_id' => $employeeId,
+                            'daily_rate' => $dailyRate,
+                            'rate_type' => 'daily',
+                            'days_worked' => $computedDays,
+                            'weekends_worked' => 0,
+                            'overtime_hours' => 0,
+                            'late_hours' => 0,
+                            'holiday_days' => 0,
+                            'night_differential_hours' => 0,
+                            'allowances' => $employee->activeAllowances->sum('amount') + $employee->activeBenefits->sum('amount'),
+                            'deductions' => 0,
+                            'deductions_remarks' => '',
+                            'reimbursements' => 0,
+                            'reimbursements_remarks' => '',
+                        ]);
+                        $payrollInput->computePay()->save();
+
+                        // Add to encoded IDs
+                        $encodedIds[] = $employeeId;
+                    }
+                }
+            }
+        }
+
+        // Reload payroll period with newly created inputs
+        $payrollPeriod->load(['payrollInputs.employee', 'payrollInputs.adjustments']);
+        $encodedIds = $payrollPeriod->payrollInputs ? $payrollPeriod->payrollInputs->pluck('employee_id')->toArray() : [];
+
+        // Get employees not yet encoded for this period
         if (empty($encodedIds)) {
             $unencodedEmployees = Employee::where('is_archived', false)->get();
         } else {
@@ -86,11 +136,17 @@ class ManualPayrollAttendanceController extends Controller
         // Load employee's active allowances and benefits
         $employee->load(['activeAllowances', 'activeBenefits']);
 
+        // Get computed days from attendance records for this payroll period
+        $computedDaysFromAttendance = \App\Models\Attendance::where('employee_id', $employee->id)
+            ->whereBetween('date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+            ->sum('computed_days');
+
         return view('manual-payroll-attendance.employee-form', compact(
             'payrollPeriod',
             'employee',
             'payrollInput',
-            'dailyRate'
+            'dailyRate',
+            'computedDaysFromAttendance'
         ));
     }
 
