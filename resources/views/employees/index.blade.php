@@ -102,13 +102,34 @@
         <div class="user-table-wrapper" style="overflow-y:auto; max-height:53vh; padding:0 25px;">
             <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:700px;">
                 <thead style="position:sticky; top:0; z-index:5;">
+                    @php
+                        $s    = request('sort');
+                        $d    = request('direction', 'asc');
+                        $base = request()->except(['sort', 'direction', 'page']);
+                        function empSortTh(string $key, string $label, array $base, ?string $s, string $d): string {
+                            $active  = $s === $key;
+                            $nextDir = ($active && $d === 'asc') ? 'desc' : 'asc';
+                            $url     = route('employees.index', array_merge($base, ['sort' => $key, 'direction' => $nextDir]));
+                            $color   = $active ? '#dc2626' : '#6b7280';
+                            $weight  = $active ? '700' : '600';
+                            $upCol   = ($active && $d === 'asc')  ? '#dc2626' : '#d1d5db';
+                            $dnCol   = ($active && $d === 'desc') ? '#dc2626' : '#d1d5db';
+                            return '<th style="padding:12px; text-align:left; font-size:12px; text-transform:uppercase; white-space:nowrap;">'
+                                 . '<a href="' . $url . '" style="display:inline-flex; align-items:center; gap:5px; color:' . $color . '; text-decoration:none; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; font-weight:' . $weight . ';">'
+                                 . $label
+                                 . '<span style="display:inline-flex; flex-direction:column; line-height:1; gap:1px;">'
+                                 . '<i class="fas fa-caret-up"   style="font-size:9px; color:' . $upCol . ';"></i>'
+                                 . '<i class="fas fa-caret-down" style="font-size:9px; color:' . $dnCol . ';"></i>'
+                                 . '</span></a></th>';
+                        }
+                    @endphp
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Employee ID</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Full Name</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Department</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Position</th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Status</th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Date Hired</th>
+                        {!! empSortTh('employment_status', 'Status',     $base, $s, $d) !!}
+                        {!! empSortTh('date_hired',        'Date Hired', $base, $s, $d) !!}
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Actions</th>
                     </tr>
                 </thead>

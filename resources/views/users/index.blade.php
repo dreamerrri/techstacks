@@ -100,7 +100,20 @@
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Email</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Role</th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Status</th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Last Login</th>
+                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">
+                            @php
+                                $loginDir = (request('sort') === 'last_login_at' && request('direction') === 'asc') ? 'desc' : 'asc';
+                                $loginActive = request('sort') === 'last_login_at';
+                            @endphp
+                            <a href="{{ route('users.index', array_merge(request()->except(['sort','direction','page']), ['sort' => 'last_login_at', 'direction' => $loginDir])) }}"
+                               style="display:inline-flex; align-items:center; gap:5px; color:{{ $loginActive ? '#dc2626' : '#6b7280' }}; text-decoration:none; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; font-weight:{{ $loginActive ? '700' : '600' }};">
+                                Last Login
+                                <span style="display:inline-flex; flex-direction:column; line-height:1; gap:1px;">
+                                    <i class="fas fa-caret-up"   style="font-size:9px; color:{{ ($loginActive && request('direction') === 'asc')  ? '#dc2626' : '#d1d5db' }};"></i>
+                                    <i class="fas fa-caret-down" style="font-size:9px; color:{{ ($loginActive && request('direction') === 'desc') ? '#dc2626' : '#d1d5db' }};"></i>
+                                </span>
+                            </a>
+                        </th>
                         <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
                     </tr>
                 </thead>
