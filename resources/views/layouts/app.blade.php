@@ -175,7 +175,7 @@
                class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
                 <i class="fas fa-calendar-check"></i><span>Attendance</span>
             </a>
-            <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
+            <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Work Requests</span></a>
             <a href="{{ route('payroll.index') }}"
                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                 <i class="fas fa-money-bill"></i><span>Payroll</span>
@@ -356,8 +356,9 @@
                            class="nav-item nav-sub-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
                             <i class="fas fa-calendar-check"></i><span>Attendance</span>
                         </a>
-                        <a href="#" class="nav-item nav-sub-item">
-                            <i class="fas fa-suitcase"></i><span>Leave Requests</span>
+                        <a href="{{ route('work-requests.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
+                            <i class="fas fa-calendar-check"></i><span>Work Requests</span>
                         </a>
                     </div>
                 </div>
@@ -419,8 +420,9 @@
                            class="nav-item nav-sub-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
                             <i class="fas fa-calendar-check"></i><span>Attendance</span>
                         </a>
-                        <a href="#" class="nav-item nav-sub-item">
-                            <i class="fas fa-suitcase"></i><span>Leave Requests</span>
+                        <a href="{{ route('work-requests.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
+                            <i class="fas fa-calendar-check"></i><span>Work Requests</span>
                         </a>
                     </div>
                 </div>
@@ -467,7 +469,7 @@
                    class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                     <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
                 </a>
-                <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
+                <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Work Requests</span></a>
                 <a href="{{ route('employee-attendance.index') }}" class="nav-item {{ request()->routeIs('employee-attendance.*') ? 'active' : '' }}"><i class="fas fa-clock"></i><span>Attendance</span></a>
             @endif
         </nav>

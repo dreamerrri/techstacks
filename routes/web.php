@@ -18,6 +18,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\WorkRequestController;
 
 Route::get('/test', function () {
     return 'ok';
@@ -189,6 +190,25 @@ Route::prefix('payroll')->name('payroll.')->group(function () {
         Route::post('/{notification}/mark-read', [NotificationController::class, 'markAsRead'])->name('mark-read');
         Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
         Route::post('/generate-hr-admin', [NotificationController::class, 'generateHrAdminNotifications'])->name('generate-hr-admin');
+    });
+
+    // Work Request Routes
+    Route::prefix('work-requests')->name('work-requests.')->group(function () {
+        Route::get('/', [WorkRequestController::class, 'index'])->name('index');
+        Route::get('/create', [WorkRequestController::class, 'create'])->name('create');
+        Route::post('/', [WorkRequestController::class, 'store'])->name('store');
+        
+        // HR/Admin only routes - must come before parameterized routes
+        Route::middleware('permission:view.employees')->group(function () {
+            Route::get('/pending', [WorkRequestController::class, 'pending'])->name('pending');
+            Route::post('/{workRequest}/approve', [WorkRequestController::class, 'approve'])->name('approve');
+            Route::post('/{workRequest}/reject', [WorkRequestController::class, 'reject'])->name('reject');
+        });
+        
+        Route::get('/{workRequest}', [WorkRequestController::class, 'show'])->name('show');
+        Route::get('/{workRequest}/edit', [WorkRequestController::class, 'edit'])->name('edit');
+        Route::put('/{workRequest}', [WorkRequestController::class, 'update'])->name('update');
+        Route::delete('/{workRequest}', [WorkRequestController::class, 'destroy'])->name('destroy');
     });
 });
 

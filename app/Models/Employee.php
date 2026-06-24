@@ -149,6 +149,12 @@ protected static function boot()
         return $this->hasMany(\App\Models\Attendance::class);
     }
 
+    // Relationship: work requests
+    public function workRequests()
+    {
+        return $this->hasMany(\App\Models\WorkRequest::class);
+    }
+
     // Get attendance for a specific period
     public function attendancesForPeriod($startDate, $endDate)
     {
