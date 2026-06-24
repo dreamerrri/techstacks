@@ -49,6 +49,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [EmployeeAttendanceController::class, 'store'])->name('store');
         Route::delete('/{attendance}', [EmployeeAttendanceController::class, 'destroy'])->name('destroy');
         Route::post('/compute-period', [EmployeeAttendanceController::class, 'getPeriodSummary'])->name('compute-period');
+        
+        // HR/Admin can view specific employee's attendance records
+        Route::middleware('permission:view.employees')->group(function () {
+            Route::get('/employee/{employee}', [EmployeeAttendanceController::class, 'showEmployee'])->name('show-employee');
+        });
     });
 
 Route::get('/profile',  [ProfileController::class, 'show'])->name('profile.show');

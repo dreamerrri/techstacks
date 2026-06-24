@@ -231,4 +231,54 @@ class EmployeeAttendanceController extends Controller
             'total_days' => $attendances->sum('computed_days'),
         ]);
     }
+
+    /**
+     * GET /employee-attendance/employee/{employee}
+     * Show attendance records for a specific employee (HR/Admin only)
+     */
+    public function showEmployee(Employee $employee)
+    {
+        $user = Auth::user();
+
+        // Only admin and HR can view other employees' attendance
+        if (!$user->isAdmin() && !$user->isHR()) {
+            abort(403, 'Only administrators and HR can view employee attendance records.');
+        }
+
+        // Get current payroll period
+        $currentPeriod = PayrollPeriod::where('status', 'draft')
+            ->where('cutoff_start', '<=', now())
+            ->where('cutoff_end', '>=', now())
+            ->first();
+
+        // Get attendance records for current period
+        $attendances = [];
+        $totalHours = 0;
+        $totalDays = 0;
+
+        if ($currentPeriod) {
+            $attendances = Attendance::where('employee_id', $employee->id)
+                ->whereBetween('date', [$currentPeriod->cutoff_start->toDateString(), $currentPeriod->cutoff_end->toDateString()])
+                ->orderBy('date')
+                ->get();
+
+            $totalHours = $attendances->sum('rendered_hours');
+            $totalDays = $attendances->sum('computed_days');
+        }
+
+        // Get recent attendance records (last 30 days)
+        $recentAttendances = Attendance::where('employee_id', $employee->id)
+            ->where('date', '>=', now()->subDays(30)->toDateString())
+            ->orderBy('date', 'desc')
+            ->get();
+
+        return view('employee-attendance.show-employee', compact(
+            'employee',
+            'currentPeriod',
+            'attendances',
+            'totalHours',
+            'totalDays',
+            'recentAttendances'
+        ));
+    }
 }
