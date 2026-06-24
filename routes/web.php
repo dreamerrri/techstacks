@@ -24,8 +24,8 @@ Route::get('/test', function () {
     return 'ok';
 });
 // Public Routes
-Route::get('/login', function () {
-   // return view('welcome');
+Route::get('/', function () {
+    return redirect()->route('login');
 });
 
 // Authentication Routes
