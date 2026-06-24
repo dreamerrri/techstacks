@@ -55,6 +55,38 @@
             <input type="hidden" name="payroll_period_id" value="{{ $payrollPeriod->id }}">
             <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
+            {{-- Approved Work Requests Section --}}
+            @php
+                $approvedRequests = \App\Models\WorkRequest::where('employee_id', $employee->id)
+                    ->where('status', 'approved')
+                    ->whereBetween('work_date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+                    ->get();
+            @endphp
+            @if($approvedRequests->count() > 0)
+            <div style="margin-bottom:24px; padding:16px; background:#ecfdf5; border:1px solid #10b981; border-radius:8px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                    <i class="fas fa-calendar-check" style="color:#10b981;"></i>
+                    <span style="font-weight:600; color:#065f46;">Approved Work Requests ({{ $approvedRequests->count() }})</span>
+                </div>
+                <div style="font-size:13px; color:#064e3b;">
+                    @foreach($approvedRequests as $request)
+                    <div style="padding:8px 0; border-bottom:1px solid #d1fae5;">
+                        <span style="font-weight:600;">{{ ucfirst($request->request_type) }}</span>
+                        <span style="color:#6b7280;">|</span>
+                        <span>{{ $request->work_date->format('M d, Y') }}</span>
+                        @if($request->estimated_hours)
+                        <span style="color:#6b7280;">|</span>
+                        <span>{{ number_format($request->estimated_hours, 1) }} hrs</span>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+                <p style="font-size:12px; color:#065f46; margin-top:8px; margin-bottom:0;">
+                    These requests have been auto-populated to the payroll fields below.
+                </p>
+            </div>
+            @endif
+
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Rate Type</label>
                 <div style="padding:10px 12px; background:#f9fafb; border:1px solid #d1d5db; border-radius:6px; font-size:14px; color:#374151;">
@@ -70,24 +102,26 @@
                     <input type="number" name="daily_rate" step="0.01" min="0" required
                            value="{{ $isEdit ? $payrollInput->daily_rate : $dailyRate }}"
                            style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                           oninput="window.dailyRateValue = this.value; console.log('Daily rate changed:', this.value)">
+                           oninput="window.dailyRateValue = this.value">
                     <p style="color:#6b7280; font-size:12px; margin-top:4px;">Based on basic salary (₱{{ number_format($employee->basic_salary ?? 0, 2) }})</p>
                 </div>
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Days Worked</label>
-                    <input type="number" name="days_worked" step="0.5" min="0" max="31" required
-                           value="{{ $isEdit ? $payrollInput->days_worked : '0' }}"
+                    <input type="number" name="days_worked" step="0.5" min="0" max="31"
+                           value="{{ $isEdit ? $payrollInput->days_worked : ($computedDaysFromAttendance ?? '0') }}"
                            style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                           oninput="window.daysWorkedValue = this.value; console.log('Days worked changed:', this.value)">
+                           oninput="window.daysWorkedValue = this.value"
+                           placeholder="{{ $computedDaysFromAttendance ? 'Leave blank to use ' . number_format($computedDaysFromAttendance, 2) . ' days from attendance' : 'Enter days worked' }}">
+                    <p style="color:#6b7280; font-size:12px; margin-top:4px;">@if($computedDaysFromAttendance) Leave blank to use {{ number_format($computedDaysFromAttendance, 2) }} days from attendance records, or enter a custom value. @else Enter days worked for the period. @endif</p>
                 </div>
             </div>
 
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Weekends Worked</label>
                 <input type="number" name="weekends_worked" step="0.5" min="0"
-                       value="{{ $isEdit ? ($payrollInput->weekends_worked ?? '0') : '0' }}"
+                       value="{{ $isEdit ? ($payrollInput->weekends_worked ?? '0') : ($weekendsWorked ?? '0') }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                       oninput="window.weekendsWorkedValue = this.value; console.log('Weekends worked changed:', this.value)">
+                       oninput="window.weekendsWorkedValue = this.value">
                 <p style="color:#6b7280; font-size:12px; margin-top:4px;">Number of weekend days worked (paid at 30% premium of daily rate)</p>
             </div>
 
@@ -95,25 +129,25 @@
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Overtime Hours</label>
                     <input type="number" name="overtime_hours" step="0.5" min="0"
-                           value="{{ $isEdit ? $payrollInput->overtime_hours : '0' }}"
+                           value="{{ $isEdit ? $payrollInput->overtime_hours : ($overtimeHours ?? '0') }}"
                            style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                           oninput="window.overtimeHoursValue = this.value; console.log('Overtime hours changed:', this.value)">
+                           oninput="window.overtimeHoursValue = this.value">
                 </div>
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Late Hours</label>
                     <input type="number" name="late_hours" step="0.5" min="0"
                            value="{{ $isEdit ? $payrollInput->late_hours : '0' }}"
                            style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                           oninput="window.lateHoursValue = this.value; console.log('Late hours changed:', this.value)">
+                           oninput="window.lateHoursValue = this.value">
                 </div>
             </div>
 
             <div style="margin-bottom:24px;">
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Holiday Days Worked</label>
                 <input type="number" name="holiday_days" step="0.5" min="0"
-                       value="{{ $isEdit ? ($payrollInput->holiday_days ?? '0') : '0' }}"
+                       value="{{ $isEdit ? ($payrollInput->holiday_days ?? '0') : ($holidayDays ?? '0') }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                       oninput="window.holidayDaysValue = this.value; console.log('Holiday days changed:', this.value)">
+                       oninput="window.holidayDaysValue = this.value">
                 <p style="color:#6b7280; font-size:12px; margin-top:4px;">Number of regular holidays worked (paid at 200% of daily rate)</p>
             </div>
 
@@ -122,7 +156,7 @@
                 <input type="number" name="night_differential_hours" step="0.5" min="0"
                        value="{{ $isEdit ? ($payrollInput->night_differential_hours ?? '0') : '0' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                       oninput="window.nightDifferentialHoursValue = this.value; console.log('Night differential hours changed:', this.value)">
+                       oninput="window.nightDifferentialHoursValue = this.value">
                 <p style="color:#6b7280; font-size:12px; margin-top:4px;">Hours worked during night shift (paid at 10% premium of hourly rate)</p>
             </div>
 
@@ -176,7 +210,7 @@
                 <input type="number" name="deductions" step="0.01" min="0"
                        value="{{ $isEdit ? $payrollInput->deductions : '0' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                       oninput="window.deductionsValue = this.value; console.log('Deductions changed:', this.value)">
+                       oninput="window.deductionsValue = this.value">
                 <input type="text" name="deductions_remarks"
                        value="{{ $isEdit ? ($payrollInput->deductions_remarks ?? '') : '' }}"
                        placeholder="Remarks (optional)"
@@ -189,7 +223,7 @@
                 <input type="number" name="reimbursements" step="0.01" min="0"
                        value="{{ $isEdit ? ($payrollInput->reimbursements ?? '0') : '0' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                       oninput="window.reimbursementsValue = this.value; console.log('Reimbursements changed:', this.value)">
+                       oninput="window.reimbursementsValue = this.value">
                 <input type="text" name="reimbursements_remarks"
                        value="{{ $isEdit ? ($payrollInput->reimbursements_remarks ?? '') : '' }}"
                        placeholder="Remarks (optional)"
@@ -233,11 +267,9 @@
 
 @section('scripts')
 <script>
-console.log('JavaScript loaded successfully');
-
 // Initialize global variables with default values
 window.dailyRateValue = '{{ $isEdit ? $payrollInput->daily_rate : $dailyRate }}';
-window.daysWorkedValue = '{{ $isEdit ? $payrollInput->days_worked : '0' }}';
+window.daysWorkedValue = '{{ $isEdit ? $payrollInput->days_worked : ($computedDaysFromAttendance ?? '0') }}';
 window.weekendsWorkedValue = '{{ $isEdit ? ($payrollInput->weekends_worked ?? '0') : '0' }}';
 window.overtimeHoursValue = '{{ $isEdit ? $payrollInput->overtime_hours : '0' }}';
 window.lateHoursValue = '{{ $isEdit ? $payrollInput->late_hours : '0' }}';
@@ -253,11 +285,9 @@ window.isSecondHalfOfMonth = {{ $isSecondHalfOfMonth ? 'true' : 'false' }};
 
 function handleSaveAttendance(event) {
     event.preventDefault();
-    console.log('handleSaveAttendance called via onclick');
     
     const form = document.getElementById('attendanceForm');
     if (!form) {
-        console.error('Form not found in handleSaveAttendance');
         return;
     }
     
@@ -280,27 +310,6 @@ function handleSaveAttendance(event) {
     formData.append('reimbursements_remarks', window.reimbursementsRemarksValue);
     formData.append('_token', '{{ csrf_token() }}');
     
-    console.log('FormData created in handleSaveAttendance');
-    console.log('Using stored values:', {
-        daily_rate: window.dailyRateValue,
-        days_worked: window.daysWorkedValue,
-        weekends_worked: window.weekendsWorkedValue,
-        overtime_hours: window.overtimeHoursValue,
-        late_hours: window.lateHoursValue,
-        holiday_days: window.holidayDaysValue,
-        night_differential_hours: window.nightDifferentialHoursValue,
-        allowances: window.allowancesValue,
-        deductions: window.deductionsValue,
-        deductions_remarks: window.deductionsRemarksValue,
-        reimbursements: window.reimbursementsValue,
-        reimbursements_remarks: window.reimbursementsRemarksValue
-    });
-    
-    // Log form data for debugging
-    for (let [key, value] of formData.entries()) {
-        console.log(key + ': ' + value);
-    }
-    
     fetch('{{ route('manual-payroll-attendance.save') }}', {
         method: 'POST',
         headers: {
@@ -310,11 +319,9 @@ function handleSaveAttendance(event) {
         body: formData
     })
     .then(response => {
-        console.log('Response received:', response.status);
         return response.json();
     })
     .then(data => {
-        console.log('Response data:', data);
         if(data.success) {
             alert('Attendance saved successfully!');
             window.location.href = '{{ route('manual-payroll-attendance.period', $payrollPeriod) }}';
@@ -323,16 +330,13 @@ function handleSaveAttendance(event) {
         }
     })
     .catch(error => {
-        console.error('Error saving attendance:', error);
         alert('Error saving attendance: ' + error.message);
     });
 }
 
 function previewPayroll() {
-    console.log('Preview button clicked');
     const form = document.getElementById('attendanceForm');
     if (!form) {
-        console.error('Form not found');
         return;
     }
 
@@ -355,21 +359,6 @@ function previewPayroll() {
     formData.append('reimbursements_remarks', window.reimbursementsRemarksValue);
     formData.append('_token', '{{ csrf_token() }}');
 
-    console.log('Previewing payroll with values:', {
-        daily_rate: window.dailyRateValue,
-        days_worked: window.daysWorkedValue,
-        weekends_worked: window.weekendsWorkedValue,
-        overtime_hours: window.overtimeHoursValue,
-        late_hours: window.lateHoursValue,
-        holiday_days: window.holidayDaysValue,
-        night_differential_hours: window.nightDifferentialHoursValue,
-        allowances: window.allowancesValue,
-        deductions: window.deductionsValue,
-        deductions_remarks: window.deductionsRemarksValue,
-        reimbursements: window.reimbursementsValue,
-        reimbursements_remarks: window.reimbursementsRemarksValue
-    });
-
     fetch('{{ route('manual-payroll-attendance.preview') }}', {
         method: 'POST',
         headers: {
@@ -379,19 +368,15 @@ function previewPayroll() {
         body: formData
     })
     .then(response => {
-        console.log('Response status:', response.status);
         return response.json();
     })
     .then(data => {
-        console.log('Preview response data:', data);
         if(data.success) {
             const previewData = data.preview || {};
             if(previewData.gross_pay !== undefined && previewData.net_pay !== undefined) {
                 // Update all preview panels (both mobile and desktop)
                 const previewPanels = document.querySelectorAll('#previewPanel');
-                console.log('Found preview panels:', previewPanels.length);
                 previewPanels.forEach((previewPanel, index) => {
-                    console.log('Updating preview panel', index);
                     previewPanel.innerHTML = `
                         <div style="margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
@@ -507,17 +492,14 @@ function previewPayroll() {
                         </div>
                     `;
                 });
-                console.log('All preview panels updated successfully');
             } else {
-                console.error('Missing gross_pay or net_pay in response:', data);
+                alert('Missing gross_pay or net_pay in response');
             }
         } else {
-            console.error('Preview failed:', data.message || 'Unknown error');
             alert('Preview failed: ' + (data.message || 'Unknown error'));
         }
     })
     .catch(error => {
-        console.error('Error previewing payroll:', error);
         alert('Error previewing payroll: ' + error.message);
     });
 }

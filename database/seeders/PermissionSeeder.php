@@ -63,6 +63,11 @@ class PermissionSeeder extends Seeder
 
             // Reports
             ['name' => 'View Reports', 'slug' => 'view.reports', 'module' => 'reports', 'description' => 'View system reports'],
+
+            // Work Request Management
+            ['name' => 'Create Work Requests', 'slug' => 'create.work.requests', 'module' => 'work.requests', 'description' => 'Submit work requests for weekend/holiday/overtime'],
+            ['name' => 'Approve Work Requests', 'slug' => 'approve.work.requests', 'module' => 'work.requests', 'description' => 'Approve or reject work requests (HR/Admin only)'],
+            ['name' => 'View Work Requests', 'slug' => 'view.work.requests', 'module' => 'work.requests', 'description' => 'View work requests (own for employees, all for HR/Admin)'],
         ];
 
         foreach ($permissions as $permission) {

@@ -57,45 +57,9 @@
         return asset('images/placeholder-avatar.png');
     }
 
-    // 1. Unassigned department/position
-    $unassigned = \App\Models\Employee::active()
-        ->where(function($q) {
-            $q->where('department', 'Unassigned')
-              ->orWhere('position', 'Unassigned');
-        })->get();
-
-    // 2. Missing government IDs
-    $missingGovIds = \App\Models\Employee::active()
-        ->where(function($q) {
-            $q->whereNull('sss_number')
-              ->orWhereNull('philhealth_number')
-              ->orWhereNull('pagibig_number')
-              ->orWhereNull('tin_number');
-        })->get();
-
-    // 3. Draft payrolls whose payroll_date has passed
-    $overduePayrolls = \App\Models\PayrollPeriod::where('status', 'draft')
-        ->where('payroll_date', '<', now()->toDateString())
-        ->get();
-
-    // 4. Allowances & benefits expiring within 7 days
-    $expiringAllowances = \App\Models\Allowance::where('is_active', 1)
-        ->whereNotNull('end_date')
-        ->whereBetween('end_date', [now()->toDateString(), now()->addDays(7)->toDateString()])
-        ->with('employee')
-        ->get();
-
-    $expiringBenefits = \App\Models\Benefit::where('is_active', 1)
-        ->whereNotNull('end_date')
-        ->whereBetween('end_date', [now()->toDateString(), now()->addDays(7)->toDateString()])
-        ->with('employee')
-        ->get();
-
-    $notifCount = $unassigned->count()
-        + $missingGovIds->count()
-        + $overduePayrolls->count()
-        + $expiringAllowances->count()
-        + $expiringBenefits->count();
+    // Get notifications for current user based on role
+    $notifications = \App\Models\Notification::forCurrentUser()->unread()->latest()->limit(50)->get();
+    $notifCount = $notifications->count();
 @endphp
 
     {{-- ═══════════════════════════════════════
@@ -211,7 +175,7 @@
                class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
                 <i class="fas fa-calendar-check"></i><span>Attendance</span>
             </a>
-            <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
+            <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Work Requests</span></a>
             <a href="{{ route('payroll.index') }}"
                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                 <i class="fas fa-money-bill"></i><span>Payroll</span>
@@ -229,7 +193,7 @@
                 <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
             </a>
             <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
-            <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
+            <a href="{{ route('employee-attendance.index') }}" class="nav-item {{ request()->routeIs('employee-attendance.*') ? 'active' : '' }}"><i class="fas fa-clock"></i><span>Attendance</span></a>
         @endif
 
         <div style="padding: 10px 20px 15px;">
@@ -392,8 +356,9 @@
                            class="nav-item nav-sub-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
                             <i class="fas fa-calendar-check"></i><span>Attendance</span>
                         </a>
-                        <a href="#" class="nav-item nav-sub-item">
-                            <i class="fas fa-suitcase"></i><span>Leave Requests</span>
+                        <a href="{{ route('work-requests.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
+                            <i class="fas fa-calendar-check"></i><span>Work Requests</span>
                         </a>
                     </div>
                 </div>
@@ -455,8 +420,9 @@
                            class="nav-item nav-sub-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
                             <i class="fas fa-calendar-check"></i><span>Attendance</span>
                         </a>
-                        <a href="#" class="nav-item nav-sub-item">
-                            <i class="fas fa-suitcase"></i><span>Leave Requests</span>
+                        <a href="{{ route('work-requests.index') }}"
+                           class="nav-item nav-sub-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
+                            <i class="fas fa-calendar-check"></i><span>Work Requests</span>
                         </a>
                     </div>
                 </div>
@@ -503,8 +469,8 @@
                    class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                     <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
                 </a>
-                <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
+                <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="fas fa-calendar-check"></i><span>Work Requests</span></a>
+                <a href="{{ route('employee-attendance.index') }}" class="nav-item {{ request()->routeIs('employee-attendance.*') ? 'active' : '' }}"><i class="fas fa-clock"></i><span>Attendance</span></a>
             @endif
         </nav>
 
