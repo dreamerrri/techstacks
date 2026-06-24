@@ -17,6 +17,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/test', function () {
     return 'ok';
@@ -180,6 +181,14 @@ Route::prefix('payroll')->name('payroll.')->group(function () {
     Route::middleware('permission:view.audit.logs')->prefix('audit-logs')->name('audit-logs.')->group(function () {
         Route::get('/', [AuditLogController::class, 'index'])->name('index');
         Route::get('/{auditLog}', [AuditLogController::class, 'show'])->name('show');
+    });
+
+    // Notification Routes
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::post('/{notification}/mark-read', [NotificationController::class, 'markAsRead'])->name('mark-read');
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::post('/generate-hr-admin', [NotificationController::class, 'generateHrAdminNotifications'])->name('generate-hr-admin');
     });
 });
 

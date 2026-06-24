@@ -57,45 +57,9 @@
         return asset('images/placeholder-avatar.png');
     }
 
-    // 1. Unassigned department/position
-    $unassigned = \App\Models\Employee::active()
-        ->where(function($q) {
-            $q->where('department', 'Unassigned')
-              ->orWhere('position', 'Unassigned');
-        })->get();
-
-    // 2. Missing government IDs
-    $missingGovIds = \App\Models\Employee::active()
-        ->where(function($q) {
-            $q->whereNull('sss_number')
-              ->orWhereNull('philhealth_number')
-              ->orWhereNull('pagibig_number')
-              ->orWhereNull('tin_number');
-        })->get();
-
-    // 3. Draft payrolls whose payroll_date has passed
-    $overduePayrolls = \App\Models\PayrollPeriod::where('status', 'draft')
-        ->where('payroll_date', '<', now()->toDateString())
-        ->get();
-
-    // 4. Allowances & benefits expiring within 7 days
-    $expiringAllowances = \App\Models\Allowance::where('is_active', 1)
-        ->whereNotNull('end_date')
-        ->whereBetween('end_date', [now()->toDateString(), now()->addDays(7)->toDateString()])
-        ->with('employee')
-        ->get();
-
-    $expiringBenefits = \App\Models\Benefit::where('is_active', 1)
-        ->whereNotNull('end_date')
-        ->whereBetween('end_date', [now()->toDateString(), now()->addDays(7)->toDateString()])
-        ->with('employee')
-        ->get();
-
-    $notifCount = $unassigned->count()
-        + $missingGovIds->count()
-        + $overduePayrolls->count()
-        + $expiringAllowances->count()
-        + $expiringBenefits->count();
+    // Get notifications for current user based on role
+    $notifications = \App\Models\Notification::forCurrentUser()->unread()->latest()->limit(50)->get();
+    $notifCount = $notifications->count();
 @endphp
 
     {{-- ═══════════════════════════════════════
