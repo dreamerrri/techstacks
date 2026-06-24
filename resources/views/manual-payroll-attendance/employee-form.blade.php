@@ -55,6 +55,38 @@
             <input type="hidden" name="payroll_period_id" value="{{ $payrollPeriod->id }}">
             <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
+            {{-- Approved Work Requests Section --}}
+            @php
+                $approvedRequests = \App\Models\WorkRequest::where('employee_id', $employee->id)
+                    ->where('status', 'approved')
+                    ->whereBetween('work_date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+                    ->get();
+            @endphp
+            @if($approvedRequests->count() > 0)
+            <div style="margin-bottom:24px; padding:16px; background:#ecfdf5; border:1px solid #10b981; border-radius:8px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                    <i class="fas fa-calendar-check" style="color:#10b981;"></i>
+                    <span style="font-weight:600; color:#065f46;">Approved Work Requests ({{ $approvedRequests->count() }})</span>
+                </div>
+                <div style="font-size:13px; color:#064e3b;">
+                    @foreach($approvedRequests as $request)
+                    <div style="padding:8px 0; border-bottom:1px solid #d1fae5;">
+                        <span style="font-weight:600;">{{ ucfirst($request->request_type) }}</span>
+                        <span style="color:#6b7280;">|</span>
+                        <span>{{ $request->work_date->format('M d, Y') }}</span>
+                        @if($request->estimated_hours)
+                        <span style="color:#6b7280;">|</span>
+                        <span>{{ number_format($request->estimated_hours, 1) }} hrs</span>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+                <p style="font-size:12px; color:#065f46; margin-top:8px; margin-bottom:0;">
+                    These requests have been auto-populated to the payroll fields below.
+                </p>
+            </div>
+            @endif
+
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Rate Type</label>
                 <div style="padding:10px 12px; background:#f9fafb; border:1px solid #d1d5db; border-radius:6px; font-size:14px; color:#374151;">
@@ -87,7 +119,7 @@
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Weekends Worked</label>
                 <input type="number" name="weekends_worked" step="0.5" min="0"
-                       value="{{ $isEdit ? ($payrollInput->weekends_worked ?? '0') : '0' }}"
+                       value="{{ $isEdit ? ($payrollInput->weekends_worked ?? '0') : ($weekendsWorked ?? '0') }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
                        oninput="window.weekendsWorkedValue = this.value">
                 <p style="color:#6b7280; font-size:12px; margin-top:4px;">Number of weekend days worked (paid at 30% premium of daily rate)</p>
@@ -97,7 +129,7 @@
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Overtime Hours</label>
                     <input type="number" name="overtime_hours" step="0.5" min="0"
-                           value="{{ $isEdit ? $payrollInput->overtime_hours : '0' }}"
+                           value="{{ $isEdit ? $payrollInput->overtime_hours : ($overtimeHours ?? '0') }}"
                            style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
                            oninput="window.overtimeHoursValue = this.value">
                 </div>
@@ -113,7 +145,7 @@
             <div style="margin-bottom:24px;">
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Holiday Days Worked</label>
                 <input type="number" name="holiday_days" step="0.5" min="0"
-                       value="{{ $isEdit ? ($payrollInput->holiday_days ?? '0') : '0' }}"
+                       value="{{ $isEdit ? ($payrollInput->holiday_days ?? '0') : ($holidayDays ?? '0') }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
                        oninput="window.holidayDaysValue = this.value">
                 <p style="color:#6b7280; font-size:12px; margin-top:4px;">Number of regular holidays worked (paid at 200% of daily rate)</p>

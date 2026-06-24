@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\PayrollPeriod;
 use App\Models\PayrollInput;
 use App\Models\PayrollAdjustment;
+use App\Models\WorkRequest;
 use App\Services\Payroll\PayrollComputationEngine;
 use App\Services\SssContributionService;
 use App\Services\PhilHealthContributionService;
@@ -68,8 +69,19 @@ class ManualPayrollAttendanceController extends Controller
                         ->whereBetween('date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
                         ->sum('computed_days');
 
-                    // Only create if there are computed days
-                    if ($computedDays > 0) {
+                    // Get approved work requests for this period
+                    $approvedRequests = WorkRequest::where('employee_id', $employeeId)
+                        ->where('status', 'approved')
+                        ->whereBetween('work_date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+                        ->get();
+
+                    // Calculate special work from approved requests
+                    $weekendsWorked = $approvedRequests->where('request_type', 'weekend')->count();
+                    $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('estimated_hours');
+                    $holidayDays = $approvedRequests->where('request_type', 'holiday')->count();
+
+                    // Only create if there are computed days or special work
+                    if ($computedDays > 0 || $weekendsWorked > 0 || $overtimeHours > 0 || $holidayDays > 0) {
                         $dailyRate = $this->computeDailyRate($employee);
 
                         $payrollInput = new PayrollInput([
@@ -78,10 +90,10 @@ class ManualPayrollAttendanceController extends Controller
                             'daily_rate' => $dailyRate,
                             'rate_type' => 'daily',
                             'days_worked' => $computedDays,
-                            'weekends_worked' => 0,
-                            'overtime_hours' => 0,
+                            'weekends_worked' => $weekendsWorked,
+                            'overtime_hours' => $overtimeHours,
                             'late_hours' => 0,
-                            'holiday_days' => 0,
+                            'holiday_days' => $holidayDays,
                             'night_differential_hours' => 0,
                             'allowances' => $employee->activeAllowances->sum('amount') + $employee->activeBenefits->sum('amount'),
                             'deductions' => 0,
@@ -141,12 +153,36 @@ class ManualPayrollAttendanceController extends Controller
             ->whereBetween('date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
             ->sum('computed_days');
 
+        // Get approved work requests for this period to auto-populate special work fields
+        $approvedRequests = \App\Models\WorkRequest::where('employee_id', $employee->id)
+            ->where('status', 'approved')
+            ->whereBetween('work_date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+            ->get();
+
+        // Calculate special work from approved requests
+        $weekendsWorked = $approvedRequests->where('request_type', 'weekend')->count();
+        $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('estimated_hours');
+        $holidayDays = $approvedRequests->where('request_type', 'holiday')->count();
+
+        // If payroll input exists, use approved request values as defaults (don't save to DB)
+        // This allows HR to see the auto-populated values and decide whether to use them
+        if ($payrollInput) {
+            // Override with approved request values for display purposes
+            $payrollInput->weekends_worked = $weekendsWorked;
+            $payrollInput->overtime_hours = $overtimeHours;
+            $payrollInput->holiday_days = $holidayDays;
+        }
+
         return view('manual-payroll-attendance.employee-form', compact(
             'payrollPeriod',
             'employee',
             'payrollInput',
             'dailyRate',
-            'computedDaysFromAttendance'
+            'computedDaysFromAttendance',
+            'approvedRequests',
+            'weekendsWorked',
+            'overtimeHours',
+            'holidayDays'
         ));
     }
 

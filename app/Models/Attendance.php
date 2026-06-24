@@ -13,6 +13,7 @@ class Attendance extends Model
 
     protected $fillable = [
         'employee_id',
+        'work_request_id',
         'date',
         'time_in',
         'time_out',
@@ -33,6 +34,14 @@ class Attendance extends Model
     public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class);
+    }
+
+    /**
+     * Relationship: belongs to work request
+     */
+    public function workRequest(): BelongsTo
+    {
+        return $this->belongsTo(WorkRequest::class);
     }
 
     /**
@@ -108,6 +117,7 @@ class Attendance extends Model
 
     /**
      * Auto-compute rendered_hours and computed_days before saving
+     * Auto-link to approved work request if exists
      */
     protected static function boot()
     {
@@ -121,6 +131,11 @@ class Attendance extends Model
                 // Set to 0 if times are missing
                 $attendance->rendered_hours = 0;
                 $attendance->computed_days = 0;
+            }
+
+            // Auto-link to approved work request if not already linked
+            if (!$attendance->work_request_id) {
+                $attendance->linkToApprovedWorkRequest();
             }
         });
     }
@@ -159,5 +174,62 @@ class Attendance extends Model
         return self::forEmployee($employeeId)
             ->forPeriod($startDate, $endDate)
             ->sum('rendered_hours');
+    }
+
+    /**
+     * Auto-link attendance to approved work request for the same date
+     * Returns true if linked, false otherwise
+     */
+    public function linkToApprovedWorkRequest(): bool
+    {
+        if ($this->work_request_id) {
+            return true; // Already linked
+        }
+
+        $approvedRequest = WorkRequest::where('employee_id', $this->employee_id)
+            ->where('work_date', $this->date)
+            ->where('status', 'approved')
+            ->first();
+
+        if ($approvedRequest) {
+            $this->work_request_id = $approvedRequest->id;
+            $this->save();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if attendance has an approved work request
+     */
+    public function hasApprovedWorkRequest(): bool
+    {
+        return $this->workRequest && $this->workRequest->status === 'approved';
+    }
+
+    /**
+     * Check if attendance is on a weekend without approved request
+     */
+    public function isUnauthorizedWeekendWork(): bool
+    {
+        $date = Carbon::parse($this->date);
+        return $date->isWeekend() && !$this->hasApprovedWorkRequest();
+    }
+
+    /**
+     * Check if attendance is on a holiday without approved request
+     */
+    public function isUnauthorizedHolidayWork(): bool
+    {
+        return Holiday::isHoliday($this->date) && !$this->hasApprovedWorkRequest();
+    }
+
+    /**
+     * Check if attendance needs HR review (unauthorized special work)
+     */
+    public function needsHrReview(): bool
+    {
+        return $this->isUnauthorizedWeekendWork() || $this->isUnauthorizedHolidayWork();
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WorkRequest extends Model
 {
@@ -31,6 +32,42 @@ class WorkRequest extends Model
     ];
 
     /**
+     * Set start_time attribute - convert H:i to H:i:s for TIME column
+     */
+    public function setStartTimeAttribute($value)
+    {
+        if (empty($value) || trim($value) === '') {
+            $this->attributes['start_time'] = null;
+        } else {
+            // Check if value already has seconds (H:i:s format)
+            if (substr_count($value, ':') === 2) {
+                $this->attributes['start_time'] = $value;
+            } else {
+                // Convert H:i to H:i:s format for MySQL TIME column
+                $this->attributes['start_time'] = $value . ':00';
+            }
+        }
+    }
+
+    /**
+     * Set end_time attribute - convert H:i to H:i:s for TIME column
+     */
+    public function setEndTimeAttribute($value)
+    {
+        if (empty($value) || trim($value) === '') {
+            $this->attributes['end_time'] = null;
+        } else {
+            // Check if value already has seconds (H:i:s format)
+            if (substr_count($value, ':') === 2) {
+                $this->attributes['end_time'] = $value;
+            } else {
+                // Convert H:i to H:i:s format for MySQL TIME column
+                $this->attributes['end_time'] = $value . ':00';
+            }
+        }
+    }
+
+    /**
      * Relationship: belongs to employee
      */
     public function employee(): BelongsTo
@@ -44,6 +81,14 @@ class WorkRequest extends Model
     public function approvedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    /**
+     * Relationship: has many attendances
+     */
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
     }
 
     /**

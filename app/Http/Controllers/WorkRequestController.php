@@ -99,11 +99,13 @@ class WorkRequestController extends Controller
         $validated = $request->validate([
             'request_type' => 'required|in:weekend,holiday,overtime',
             'work_date' => 'required|date|after_or_equal:today',
-            'start_time' => 'nullable|date_format:H:i',
-            'end_time' => 'nullable|date_format:H:i|after:start_time',
             'estimated_hours' => 'nullable|numeric|min:0|max:24',
             'reason' => 'nullable|string|max:500',
         ]);
+
+        // Handle time fields separately - pass directly to model without validation
+        $validated['start_time'] = $request->input('start_time');
+        $validated['end_time'] = $request->input('end_time');
 
         // Check if there's already a pending request for this date
         $existingRequest = WorkRequest::where('employee_id', $employee->id)
@@ -259,11 +261,13 @@ class WorkRequestController extends Controller
         $validated = $request->validate([
             'request_type' => 'required|in:weekend,holiday,overtime',
             'work_date' => 'required|date|after_or_equal:today',
-            'start_time' => 'nullable|date_format:H:i',
-            'end_time' => 'nullable|date_format:H:i|after:start_time',
             'estimated_hours' => 'nullable|numeric|min:0|max:24',
             'reason' => 'nullable|string|max:500',
         ]);
+
+        // Handle time fields separately - pass directly to model without validation
+        $validated['start_time'] = $request->input('start_time');
+        $validated['end_time'] = $request->input('end_time');
 
         // Validate based on request type (optional validation - HR can review during approval)
         // Commented out for now to allow requests even if holidays aren't set up in system
