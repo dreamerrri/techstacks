@@ -12,6 +12,18 @@
 
 @section('content')
 
+<style>
+    .clock-tooltip {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .clock-icon-wrapper:hover .clock-tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+</style>
+
 @php
     $user = auth()->user();
     $isAdmin = $user->isAdmin();
@@ -59,6 +71,7 @@
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Time In</label>
                 <input type="time" name="time_in"
                        value="{{ $todayAttendance && $todayAttendance->time_in ? (is_string($todayAttendance->time_in) ? substr($todayAttendance->time_in, 0, 5) : $todayAttendance->time_in->format('H:i')) : '' }}"
+                       {{ $todayAttendance && $todayAttendance->time_in ? 'readonly' : '' }}
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; background:#f9fafb;">
                 <p style="color:#6b7280; font-size:12px; margin-top:4px;">Auto-set when you clock in</p>
             </div>
@@ -83,25 +96,27 @@
         </div>
 
         @if($todayAttendance && $todayAttendance->time_in && !$todayAttendance->time_out)
-        <div style="background:#fef3c7; border:1px solid #f59e0b; border-radius:6px; padding:16px; margin-bottom:24px;">
-            <div style="font-size:13px; font-weight:600; color:#92400e; margin-bottom:8px;">
-                <i class="fas fa-info-circle"></i> Expected Clock Out Time
+        @php
+            $timeInParts = explode(':', $todayAttendance->time_in);
+            $expectedHours = (intval($timeInParts[0]) + 9) % 24;
+            $expectedMinutes = $timeInParts[1];
+            $period = $expectedHours >= 12 ? 'PM' : 'AM';
+            $displayHours = $expectedHours % 12;
+            $displayHours = $displayHours ? $displayHours : 12; // Convert 0 to 12
+            $expectedTimeOut12Hour = $displayHours . ':' . $expectedMinutes . ' ' . $period;
+        @endphp
+        <div style="margin-bottom:24px; display:flex; align-items:center; gap:8px;">
+            <div class="clock-icon-wrapper" style="position:relative; display:inline-block; padding:5px;">
+                <i class="fas fa-clock" style="font-size:28px; color:#f59e0b; cursor:help;"></i>
+                <div class="clock-tooltip" style="position:absolute; z-index:1000; bottom:140%; left:0; width:280px; background:#1f2937; color:white; text-align:center; border-radius:8px; padding:12px; font-size:13px; pointer-events:none; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                    <div style="font-weight:600; margin-bottom:6px;">Expected Clock Out Time</div>
+                    <div style="font-size:14px; margin-bottom:4px;"><strong>{{ $expectedTimeOut12Hour }}</strong></div>
+                    <div style="font-size:12px; color:#d1d5db;">9 hours after clock in, including 1-hour lunch break</div>
+                    <div style="margin-top:8px; padding-top:8px; border-top:1px solid #374151; font-size:11px; color:#9ca3af;">Click "Clock Out" to record actual time</div>
+                    <div style="position:absolute; top:100%; left:15px; border-width:5px; border-style:solid; border-color:#1f2937 transparent transparent transparent;"></div>
+                </div>
             </div>
-            <div style="font-size:14px; color:#92400e;">
-                @php
-                    $timeInParts = explode(':', $todayAttendance->time_in);
-                    $expectedHours = (intval($timeInParts[0]) + 9) % 24;
-                    $expectedMinutes = $timeInParts[1];
-                    $period = $expectedHours >= 12 ? 'PM' : 'AM';
-                    $displayHours = $expectedHours % 12;
-                    $displayHours = $displayHours ? $displayHours : 12; // Convert 0 to 12
-                    $expectedTimeOut12Hour = $displayHours . ':' . $expectedMinutes . ' ' . $period;
-                @endphp
-                <strong>{{ $expectedTimeOut12Hour }}</strong> (9 hours after clock in, including 1-hour lunch break)
-            </div>
-            <p style="color:#92400e; font-size:12px; margin-top:8px; margin-bottom:0;">
-                Click "Clock Out" to record the actual time (not this expected time)
-            </p>
+            <span style="color:#6b7280; font-size:13px;">Hover to see expected clock out time</span>
         </div>
         @endif
 
