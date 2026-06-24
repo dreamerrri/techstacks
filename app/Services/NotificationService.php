@@ -31,7 +31,7 @@ class NotificationService
                     'title' => 'Unassigned Employee',
                     'message' => "{$emp->full_name} needs department/position assignment",
                     'type' => 'alert',
-                    'link' => route('employees.edit', $emp),
+                    'link' => route('employees.edit', $emp, false),
                     'data' => ['employee_id' => $emp->id],
                 ]);
             }
@@ -62,7 +62,7 @@ class NotificationService
                     'title' => 'Missing Government IDs',
                     'message' => "{$emp->full_name} missing: {$missing}",
                     'type' => 'warning',
-                    'link' => route('employees.edit', $emp),
+                    'link' => route('employees.edit', $emp, false),
                     'data' => ['employee_id' => $emp->id],
                 ]);
             }
@@ -84,7 +84,7 @@ class NotificationService
                     'title' => 'Overdue Payroll',
                     'message' => Carbon::parse($period->cutoff_start)->format('M d') . ' – ' . Carbon::parse($period->cutoff_end)->format('M d, Y') . ' due ' . Carbon::parse($period->payroll_date)->format('M d, Y'),
                     'type' => 'error',
-                    'link' => route('payroll.index'),
+                    'link' => route('payroll.index', [], false),
                     'data' => ['payroll_period_id' => $period->id],
                 ]);
             }
@@ -108,7 +108,7 @@ class NotificationService
                     'title' => 'Expiring Allowance',
                     'message' => "{$allowance->employee->full_name}'s \"{$allowance->name}\" expires " . Carbon::parse($allowance->end_date)->format('M d, Y'),
                     'type' => 'warning',
-                    'link' => route('employees.show', $allowance->employee),
+                    'link' => route('employees.show', $allowance->employee, false),
                     'data' => ['allowance_id' => $allowance->id],
                 ]);
             }
@@ -132,7 +132,7 @@ class NotificationService
                     'title' => 'Expiring Benefit',
                     'message' => "{$benefit->employee->full_name}'s \"{$benefit->name}\" expires " . Carbon::parse($benefit->end_date)->format('M d, Y'),
                     'type' => 'warning',
-                    'link' => route('employees.show', $benefit->employee),
+                    'link' => route('employees.show', $benefit->employee, false),
                     'data' => ['benefit_id' => $benefit->id],
                 ]);
             }
@@ -145,7 +145,7 @@ class NotificationService
             'title' => 'New Work Request Submitted',
             'message' => "{$employee->full_name} submitted a {$workRequest->request_type} request for " . Carbon::parse($workRequest->work_date)->format('M d, Y'),
             'type' => 'info',
-            'link' => route('work-requests.pending'),
+            'link' => route('work-requests.pending', [], false),
             'data' => ['work_request_id' => $workRequest->id, 'employee_id' => $employee->id],
         ]);
     }
@@ -156,7 +156,7 @@ class NotificationService
             'title' => 'Work Request Approved',
             'message' => "Your {$workRequest->request_type} request for " . Carbon::parse($workRequest->work_date)->format('M d, Y') . " has been approved",
             'type' => 'success',
-            'link' => route('work-requests.index'),
+            'link' => route('work-requests.index', [], false),
             'user_id' => $employee->user_id,
             'data' => ['work_request_id' => $workRequest->id],
         ]);
@@ -168,7 +168,7 @@ class NotificationService
             'title' => 'Work Request Rejected',
             'message' => "Your {$workRequest->request_type} request for " . Carbon::parse($workRequest->work_date)->format('M d, Y') . " was rejected: {$reason}",
             'type' => 'error',
-            'link' => route('work-requests.index'),
+            'link' => route('work-requests.index', [], false),
             'user_id' => $employee->user_id,
             'data' => ['work_request_id' => $workRequest->id, 'rejection_reason' => $reason],
         ]);
@@ -180,7 +180,7 @@ class NotificationService
             'title' => 'Work Request Cancelled',
             'message' => "Your {$workRequest->request_type} request for " . Carbon::parse($workRequest->work_date)->format('M d, Y') . " has been cancelled",
             'type' => 'info',
-            'link' => route('work-requests.index'),
+            'link' => route('work-requests.index', [], false),
             'user_id' => $employee->user_id,
             'data' => ['work_request_id' => $workRequest->id],
         ]);
@@ -192,7 +192,7 @@ class NotificationService
             'title' => 'Upcoming Work Reminder',
             'message' => "Reminder: You have approved {$workRequest->request_type} work scheduled for " . Carbon::parse($workRequest->work_date)->format('M d, Y') . " at {$workRequest->start_time}",
             'type' => 'info',
-            'link' => route('work-requests.index'),
+            'link' => route('work-requests.index', [], false),
             'user_id' => $employee->user_id,
             'data' => ['work_request_id' => $workRequest->id],
         ]);
