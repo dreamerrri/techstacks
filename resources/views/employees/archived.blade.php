@@ -2,53 +2,55 @@
 
 @section('title', 'Archived Employees')
 @section('breadcrumb')
-    <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Employees</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Employees</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:600;">Archived Employees</span>
+    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline hover:text-white">Manage Employees</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline hover:text-white">Employees</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <span class="text-white font-semibold">Archived Employees</span>
 @endsection
+
 @section('content')
 
-    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
-        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-            <a href="{{ route('employees.index') }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
+        <div class="flex items-center gap-3 flex-wrap">
+            <a href="{{ route('employees.index') }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
                 <i class="fas fa-arrow-left"></i> Back
             </a>
-            <h2 class="card bg-base-100 shadow-sm-title" style="margin:0; font-size:18px; color:#1f2937; text-transform:none; letter-spacing:normal;">
+            <h2 class="text-lg font-bold text-gray-800 m-0 flex items-center gap-2">
                 <i class="fas fa-archive"></i> Archived Employees
             </h2>
         </div>
     </div>
 
-    {{-- Desktop Table --}}
-    <div class="card bg-base-100 shadow-sm" style="padding:0; overflow:hidden;">
-        <div class="table-responsive>
-            <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:500px;">
+    <div class="card bg-base-100 shadow-sm overflow-hidden p-0">
+
+        {{-- Desktop Table --}}
+        <div class="table-responsive hidden md:block">
+            <table class="table table-hover w-full text-sm">
                 <thead>
-                    <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Employee ID</th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Full Name</th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Department</th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Position</th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase;">Actions</th>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Full Name</th>
+                        <th>Department</th>
+                        <th>Position</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($employees as $employee)
-                        <tr style="border-bottom:1px solid #e5e7eb;">
-                            <td style="padding:12px; font-family:monospace; color:#6b7280;">{{ $employee->employee_id }}</td>
-                            <td style="padding:12px; font-weight:600; color:#1f2937;">{{ $employee->full_name }}</td>
-                            <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
-                            <td style="padding:12px; color:#6b7280;">{{ $employee->position }}</td>
-                            <td style="padding:12px;">
+                        <tr>
+                            <td class="font-mono text-gray-500">{{ $employee->employee_id }}</td>
+                            <td class="font-semibold text-gray-800">{{ $employee->full_name }}</td>
+                            <td class="text-gray-500">{{ $employee->department }}</td>
+                            <td class="text-gray-500">{{ $employee->position }}</td>
+                            <td>
                                 <form method="POST" action="{{ route('employees.restore', $employee) }}"
                                       data-confirm="This employee will be restored to the active list."
                                       data-confirm-title="Restore Employee?"
                                       data-confirm-icon="question"
                                       data-confirm-btn="Yes, restore">
                                     @csrf @method('PATCH')
-                                    <button class="btn btn-sm" style="background:#d1fae5; color:#065f46;">
+                                    <button class="btn btn-soft btn-success btn-sm">
                                         <i class="fas fa-undo"></i> Restore
                                     </button>
                                 </form>
@@ -56,8 +58,8 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" style="padding:40px; text-align:center; color:#9ca3af;">
-                                <i class="fas fa-archive" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+                            <td colspan="5" class="py-10 text-center text-gray-400">
+                                <i class="fas fa-archive text-3xl mb-2 block"></i>
                                 No archived employees.
                             </td>
                         </tr>
@@ -67,51 +69,50 @@
         </div>
 
         {{-- Mobile Cards --}}
-        <div class="user-mobile-cards" style="padding:16px;">
+        <div class="md:hidden p-4 flex flex-col gap-3">
             @forelse($employees as $employee)
-                <div class="user-card">
-                    <div class="user-card-header">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#6b7280,#374151); display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:700; flex-shrink:0;">
+                <div class="card bg-base-100 border border-gray-200 p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-500 to-gray-700 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                                 {{ strtoupper(substr($employee->full_name, 0, 1)) }}
                             </div>
                             <div>
-                                <div style="font-weight:600; color:#1f2937; font-size:14px;">{{ $employee->full_name }}</div>
-                                <div style="font-size:12px; color:#6b7280; font-family:monospace;">{{ $employee->employee_id }}</div>
+                                <div class="font-semibold text-gray-800 text-sm">{{ $employee->full_name }}</div>
+                                <div class="text-xs text-gray-500 font-mono">{{ $employee->employee_id }}</div>
                             </div>
                         </div>
-                        <span class="badge" style="background:#f3f4f6; color:#374151; border:1px solid #e5e7eb; white-space:nowrap;">
-                            Archived
-                        </span>
+                        <span class="badge badge-soft badge-neutral whitespace-nowrap">Archived</span>
                     </div>
 
-                    <div style="margin-top:8px; font-size:13px; color:#6b7280; display:flex; flex-wrap:wrap; gap:6px 16px;">
-                        <span><i class="fas fa-building" style="width:14px;"></i> {{ $employee->department }}</span>
-                        <span><i class="fas fa-briefcase" style="width:14px;"></i> {{ $employee->position }}</span>
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
+                        <span><i class="fas fa-building w-3.5"></i> {{ $employee->department }}</span>
+                        <span><i class="fas fa-briefcase w-3.5"></i> {{ $employee->position }}</span>
                     </div>
 
-                    <div style="margin-top:10px; padding-top:10px; border-top:1px solid #f3f4f6;">
+                    <div class="mt-3 pt-3 border-t border-gray-100">
                         <form method="POST" action="{{ route('employees.restore', $employee) }}"
                               data-confirm="This employee will be restored to the active list."
                               data-confirm-title="Restore Employee?"
                               data-confirm-icon="question"
                               data-confirm-btn="Yes, restore">
                             @csrf @method('PATCH')
-                            <button class="btn btn-sm" style="background:#d1fae5; color:#065f46;">
+                            <button class="btn btn-soft btn-success btn-sm">
                                 <i class="fas fa-undo"></i> Restore
                             </button>
                         </form>
                     </div>
                 </div>
             @empty
-                <div style="padding:40px; text-align:center; color:#9ca3af;">
-                    <i class="fas fa-archive" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+                <div class="py-10 text-center text-gray-400">
+                    <i class="fas fa-archive text-3xl mb-2 block"></i>
                     No archived employees.
                 </div>
             @endforelse
         </div>
+
     </div>
 
-    <div style="margin-top:20px;">{{ $employees->links() }}</div>
+    <div class="mt-5">{{ $employees->links() }}</div>
 
 @endsection

@@ -3,36 +3,35 @@
 @section('title', 'Edit Employee')
 @section('breadcrumb')
     <span>Manage Employees</span>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Employees</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <a href="{{ route('employees.show', $employee) }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">{{ $employee->full_name }}</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:600;">Edit {{ $employee->full_name }}</span>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline hover:text-white">Employees</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('employees.show', $employee) }}" class="text-white/55 no-underline hover:text-white">{{ $employee->full_name }}</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <span class="text-white font-semibold">Edit {{ $employee->full_name }}</span>
 @endsection
+
 @section('content')
 
-    <div style="margin-bottom:20px;">
-        <a href="{{ route('employees.show', $employee) }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
+    <div class="mb-5">
+        <a href="{{ route('employees.show', $employee) }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
             <i class="fas fa-arrow-left"></i> Back to Employee Profile
         </a>
     </div>
 
-    <div class="card bg-base-100 shadow-sm">
-        <h2 class="card bg-base-100 shadow-sm-title">
-            <i class="fas fa-user-edit" style="color:#dc2626;"></i> Edit — {{ $employee->full_name }}
+    <div class="card bg-base-100 shadow-sm p-6">
+        <h2 class="text-base font-bold text-gray-800 mb-6 flex items-center gap-2">
+            <i class="fas fa-user-edit text-red-600"></i> Edit — {{ $employee->full_name }}
         </h2>
 
         <form method="POST" action="{{ route('employees.update', $employee) }}">
             @csrf @method('PUT')
             @include('employees.form')
-            <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap;">
-                <button type="submit" class="btn btn btn-error">
+            <div class="flex gap-3 flex-wrap mt-6">
+                <button type="submit" class="btn btn-soft btn-error">
                     <i class="fas fa-save"></i> Update Employee
                 </button>
-                <a href="{{ route('employees.show', $employee) }}" class="btn btn btn-secondary">
-                    Cancel
-                </a>
+                <a href="{{ route('employees.show', $employee) }}" class="btn btn-soft">Cancel</a>
             </div>
         </form>
     </div>
