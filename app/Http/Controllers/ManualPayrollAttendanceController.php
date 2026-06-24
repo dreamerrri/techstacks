@@ -369,7 +369,7 @@ class ManualPayrollAttendanceController extends Controller
                 'employee_id' => 'required|exists:employees,id',
                 'daily_rate' => 'required|numeric|min:0',
                 'rate_type' => 'required|in:daily',
-                'days_worked' => 'required|numeric|min:0|max:31',
+                'days_worked' => 'nullable|numeric|min:0|max:31',
                 'weekends_worked' => 'nullable|numeric|min:0',
                 'overtime_hours' => 'nullable|numeric|min:0',
                 'late_hours' => 'nullable|numeric|min:0',
@@ -392,6 +392,14 @@ class ManualPayrollAttendanceController extends Controller
                     'success' => false,
                     'message' => 'Cannot edit a finalized payroll period.',
                 ], 422);
+            }
+
+            // If days_worked is null or empty, default to attendance computed days
+            if (!isset($validated['days_worked']) || $validated['days_worked'] === '' || $validated['days_worked'] === null) {
+                $computedDaysFromAttendance = \App\Models\Attendance::where('employee_id', $validated['employee_id'])
+                    ->whereBetween('date', [$period->cutoff_start->toDateString(), $period->cutoff_end->toDateString()])
+                    ->sum('computed_days');
+                $validated['days_worked'] = $computedDaysFromAttendance > 0 ? $computedDaysFromAttendance : 0;
             }
 
             // Check if payroll input already exists

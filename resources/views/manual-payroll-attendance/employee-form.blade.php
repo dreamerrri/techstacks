@@ -75,11 +75,12 @@
                 </div>
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Days Worked</label>
-                    <input type="number" name="days_worked" step="0.5" min="0" max="31" required
+                    <input type="number" name="days_worked" step="0.5" min="0" max="31"
                            value="{{ $isEdit ? $payrollInput->days_worked : ($computedDaysFromAttendance ?? '0') }}"
                            style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                           oninput="window.daysWorkedValue = this.value">
-                    <p style="color:#6b7280; font-size:12px; margin-top:4px;">@if(!$isEdit && $computedDaysFromAttendance) Retrieved from attendance records ({{ number_format($computedDaysFromAttendance, 2) }} days). You can override this value. @else Enter days worked for the period. @endif</p>
+                           oninput="window.daysWorkedValue = this.value"
+                           placeholder="{{ $computedDaysFromAttendance ? 'Leave blank to use ' . number_format($computedDaysFromAttendance, 2) . ' days from attendance' : 'Enter days worked' }}">
+                    <p style="color:#6b7280; font-size:12px; margin-top:4px;">@if($computedDaysFromAttendance) Leave blank to use {{ number_format($computedDaysFromAttendance, 2) }} days from attendance records, or enter a custom value. @else Enter days worked for the period. @endif</p>
                 </div>
             </div>
 

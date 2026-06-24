@@ -65,7 +65,7 @@ class EmployeeAttendanceController extends Controller
      * GET /employee-attendance/create
      * Show form to add attendance record
      */
-    public function create()
+    public function create(Request $request)
     {
         $user = Auth::user();
         $employee = $user->employee;
@@ -74,10 +74,13 @@ class EmployeeAttendanceController extends Controller
             abort(403, 'No employee record found for this user.');
         }
 
-        // Check if attendance exists for today
-        $todayAttendance = Attendance::where('employee_id', $employee->id)
-            ->where('date', now()->toDateString())
-            ->first();
+        // Check if attendance exists for today (only if not creating a new record)
+        $todayAttendance = null;
+        if (!$request->has('new') || $request->get('new') !== 'true') {
+            $todayAttendance = Attendance::where('employee_id', $employee->id)
+                ->where('date', now()->toDateString())
+                ->first();
+        }
 
         return view('employee-attendance.create', compact('employee', 'todayAttendance'));
     }

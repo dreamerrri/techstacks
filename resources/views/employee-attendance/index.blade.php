@@ -29,10 +29,16 @@
             Track your daily time-in/time-out records
         </p>
     </div>
-    <a href="{{ route('employee-attendance.create') }}"
-       style="padding:12px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-        <i class="fas fa-plus"></i> Add Attendance
-    </a>
+    <div style="display:flex; gap:8px;">
+        <a href="{{ route('employee-attendance.create', ['new' => 'true']) }}"
+           style="padding:12px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+            <i class="fas fa-plus"></i> Add New Attendance
+        </a>
+        <a href="{{ route('employee-attendance.create') }}"
+           style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+            <i class="fas fa-edit"></i> Edit Today's Attendance
+        </a>
+    </div>
 </div>
 
 {{-- Current Period Summary --}}
