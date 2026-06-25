@@ -74,7 +74,7 @@
             <div style="margin-bottom:28px;">
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">
                     Payroll Date
-                    <span style="font-weight:400; color:#9ca3af; font-size:12px;">— auto (day after end)</span>
+                    <span style="font-weight:400; color:#9ca3af; font-size:12px;">— auto (5 days after end)</span>
                 </label>
                 <input type="text" id="preview_payroll" disabled placeholder="Computed after picking start date"
                        style="width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:6px; font-size:14px; background:#f9fafb; color:#6b7280;">
