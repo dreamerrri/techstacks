@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WorkRequest;
 use App\Models\Employee;
 use App\Models\Holiday;
+use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -153,6 +154,9 @@ class WorkRequestController extends Controller
             'reason' => $validated['reason'] ?? null,
             'status' => 'pending',
         ]);
+
+        // Notify HR/Admin of new work request
+        NotificationService::notifyWorkRequestSubmitted($employee, $workRequest);
 
         return response()->json([
             'success' => true,
@@ -340,6 +344,9 @@ class WorkRequestController extends Controller
 
         $workRequest->update(['status' => 'cancelled']);
 
+        // Notify employee of cancellation
+        NotificationService::notifyWorkRequestCancelled($workRequest->employee, $workRequest);
+
         return response()->json([
             'success' => true,
             'message' => 'Work request cancelled successfully.',
@@ -394,6 +401,9 @@ class WorkRequestController extends Controller
             'approved_at' => now(),
         ]);
 
+        // Notify employee of approval
+        NotificationService::notifyWorkRequestApproved($workRequest->employee, $workRequest);
+
         return response()->json([
             'success' => true,
             'message' => 'Work request approved successfully.',
@@ -431,6 +441,9 @@ class WorkRequestController extends Controller
             'status' => 'rejected',
             'rejection_reason' => $validated['rejection_reason'],
         ]);
+
+        // Notify employee of rejection
+        NotificationService::notifyWorkRequestRejected($workRequest->employee, $workRequest, $validated['rejection_reason']);
 
         return response()->json([
             'success' => true,
