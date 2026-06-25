@@ -45,7 +45,7 @@ class PayrollComputationEngine
 
         // 2. Overtime Pay
         $overtimeHours = $attendance['overtime_hours'] ?? 0;
-        $overtimePay = round($hourlyRate * 1.25 * $overtimeHours, 2);
+        $overtimePay = round($hourlyRate * $overtimeHours, 2);
 
         // 3. Holiday Pay (daily rate × holiday days)
         // Support both 'holiday_days' and 'regular_holiday_worked' for compatibility

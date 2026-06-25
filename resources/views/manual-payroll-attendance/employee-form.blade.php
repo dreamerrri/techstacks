@@ -60,6 +60,7 @@
                 $approvedRequests = \App\Models\WorkRequest::where('employee_id', $employee->id)
                     ->where('status', 'approved')
                     ->whereBetween('work_date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+                    ->where('work_date', '<=', now()->toDateString())
                     ->get();
             @endphp
             @if($approvedRequests->count() > 0)
