@@ -61,6 +61,7 @@ window.confirmAction = function({ url, method = 'POST', csrfToken, title, text, 
 
 document.addEventListener('DOMContentLoaded', () => {
     initBurger();
+    
 
     // ── Session flash notifications (survive page reloads) ────
     const flashTypes = ['success', 'error', 'warning', 'info'];
@@ -94,8 +95,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Dropdown state persistence ────────────────────────────
-    $('.nav-dropdown-trigger').on('click', function () {
+    // ── Dropdown state persistence (accordion only — mini mode hides
+    //    the trigger entirely via CSS, so this only runs at full width) ──
+    const $sidebar = $('#main-sidebar');
+
+    $('.nav-dropdown-trigger').on('click', function (e) {
         const dropdown = $(this).closest('.nav-dropdown');
         const id       = $(this).find('span').text().trim();
 
@@ -108,25 +112,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ── Desktop sidebar toggle ────────────────────────────────
+    // ── Desktop sidebar minify toggle (FlyonUI overlay minifier) ──
     const SIDEBAR_KEY = 'sidebar_collapsed';
-    const $layout     = $('.desktop-layout');
-    const $arrow      = $('#sidebar-arrow');
+    const $layout      = $('.desktop-layout');
+    const $arrow       = $('#sidebar-arrow');
 
-    function setSidebar(collapsed) {
-        if (collapsed) {
-            $layout.addClass('sidebar-collapsed');
-            $arrow.removeClass('fa-chevron-left').addClass('fa-chevron-right');
+    function syncSidebarUI(isMinified) {
+        $layout.toggleClass('sidebar-mini', isMinified);
+        $arrow.toggleClass('fa-chevron-left', !isMinified)
+              .toggleClass('fa-chevron-right', isMinified);
+        if (isMinified) {
             sessionStorage.setItem(SIDEBAR_KEY, '1');
         } else {
-            $layout.removeClass('sidebar-collapsed');
-            $arrow.removeClass('fa-chevron-right').addClass('fa-chevron-left');
             sessionStorage.removeItem(SIDEBAR_KEY);
         }
     }
 
-    if (sessionStorage.getItem(SIDEBAR_KEY) === '1') {
-        setSidebar(true);
+    // Restore minified state on load. We apply the same classes FlyonUI's
+    // own minify() would apply directly, rather than calling the HSOverlay
+    // static API - its collection is only populated on window 'load',
+    // which fires after DOMContentLoaded, so the static call would no-op.
+    if (sessionStorage.getItem(SIDEBAR_KEY) === '1' && $sidebar.length) {
+        $sidebar.addClass('minified');
+        document.body.classList.add('overlay-minified');
+        syncSidebarUI(true);
     }
 
     requestAnimationFrame(() => {
@@ -135,8 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    $('#sidebar-toggle').on('click', function () {
-        const isCollapsed = $layout.hasClass('sidebar-collapsed');
-        setSidebar(!isCollapsed);
+    // FlyonUI dispatches this custom event on the sidebar element itself
+    // whenever the minifier button (data-overlay-minifier) is clicked.
+    // Note: HSOverlay's dispatch() nests the payload under e.detail.payload.
+    document.getElementById('main-sidebar')?.addEventListener('toggleMinifierClicked.overlay', function (e) {
+        syncSidebarUI(!!e.detail?.payload?.isMinified);
     });
 });

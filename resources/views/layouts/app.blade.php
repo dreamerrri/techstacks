@@ -115,7 +115,7 @@
                 <button id="notifBtnMobile"
                         onclick="document.getElementById('notifDropdownMobile').classList.toggle('notif-open')"
                         style="background:none; border:none; cursor:pointer; color:white; font-size:18px; position:relative; padding:4px;">
-                    <i class="fas fa-bell"></i>
+                    <i class="icon-[ph--bell-fill]"></i>
                     @if($notifCount > 0)
                         <span style="position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">
                             {{ $notifCount > 9 ? '9+' : $notifCount }}
@@ -127,7 +127,7 @@
                      style="display:none; position:fixed; right:8px; top:60px; width:calc(100vw - 16px); max-width:340px; background:white; border-radius:14px; box-shadow:0 12px 32px rgba(0,0,0,0.14); border:1px solid #e5e7eb; z-index:999; overflow:hidden;">
                     <div style="padding:13px 16px; border-bottom:1px solid #f3f4f6; display:flex; justify-content:space-between; align-items:center;">
                         <span style="font-size:14px; font-weight:700; color:#111827; display:flex; align-items:center; gap:7px;">
-                            <i class="fas fa-bell" style="font-size:13px; color:#6b7280;"></i> Notifications
+                            <i class="icon-[ph--bell-fill]" style="font-size:13px; color:#6b7280;"></i> Notifications
                         </span>
                         @if($notifCount > 0)
                             <span style="background:#f3f4f6; color:#374151; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px;">{{ $notifCount }} pending</span>
@@ -153,7 +153,7 @@
 
             <button id="burgerBtn"
                     style="background:none; border:none; cursor:pointer; color:white; font-size:20px; padding:4px; display:flex; align-items:center;">
-                <i class="fas fa-bars" id="burgerIcon"></i>
+                <i class="icon-[ph--list-fill]" id="burgerIcon"></i>
             </button>
         </div>
     </div>
@@ -161,66 +161,66 @@
     <div class="burger-dropdown sidebar-{{ $role }}" id="burgerDropdown">
         <a href="{{ route('dashboard') }}"
            class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <i class="fas fa-home"></i><span>Dashboard</span>
+            <i class="icon-[ph--house-fill]"></i><span>Dashboard</span>
         </a>
 
         @if($isAdmin)
             <a href="{{ route('users.index') }}" class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                <i class="fas fa-users"></i><span>All Users</span>
+                <i class="icon-[ph--users-fill]"></i><span>All Users</span>
             </a>
             <a href="{{ route('employees.index') }}" class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                <i class="fas fa-user-tie"></i><span>Employees</span>
+                <i class="icon-[ph--users-three-fill]"></i><span>Employees</span>
             </a>
             <a href="{{ route('government-contributions.index') }}" class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+                <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
             </a>
             <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                <i class="fas fa-money-bill"></i><span>Payroll</span>
+                <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
             </a>
             <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
-                <i class="fas fa-calendar-check"></i><span>Attendance</span>
+                <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
             </a>
             <a href="{{ route('roles.index') }}" class="nav-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
-                <i class="fas fa-lock"></i><span>Roles</span>
+                <i class="icon-[ph--lock-fill]"></i><span>Roles</span>
             </a>
             <a href="{{ route('permissions.index') }}" class="nav-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
-                <i class="fas fa-shield-alt"></i><span>Permissions</span>
+                <i class="icon-[ph--shield-check-fill]"></i><span>Permissions</span>
             </a>
             <a href="{{ route('audit-logs.index') }}" class="nav-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
-                <i class="fas fa-file-alt"></i><span>Audit Logs</span>
+                <i class="icon-[ph--file-text-fill]"></i><span>Audit Logs</span>
             </a>
         @elseif($isHR)
             <a href="{{ route('employees.index') }}" class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                <i class="fas fa-id-badge"></i><span>Employees</span>
+                <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
             </a>
             <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
-                <i class="fas fa-calendar-check"></i><span>Attendance</span>
+                <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
             </a>
-            <a href="#" class="nav-item"><i class="fas fa-suitcase"></i><span>Leave Requests</span></a>
+            <a href="#" class="nav-item"><i class="icon-[ph--briefcase-fill]"></i><span>Leave Requests</span></a>
             <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                <i class="fas fa-money-bill"></i><span>Payroll</span>
+                <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
             </a>
             <a href="{{ route('government-contributions.index') }}" class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+                <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
             </a>
-            <a href="#" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
-            <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+            <a href="#" class="nav-item"><i class="icon-[ph--chart-bar-fill]"></i><span>Reports</span></a>
+            <a href="#" class="nav-item"><i class="icon-[ph--gear-fill]"></i><span>Settings</span></a>
         @else
             <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
-                <i class="fas fa-user"></i><span>My Profile</span>
+                <i class="icon-[ph--user-fill]"></i><span>My Profile</span>
             </a>
             <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
+                <i class="icon-[ph--receipt-fill]"></i><span>My Payslip</span>
             </a>
-            <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
-            <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
+            <a href="#" class="nav-item"><i class="icon-[ph--calendar-x-fill]"></i><span>Leave Request</span></a>
+            <a href="#" class="nav-item"><i class="icon-[ph--clock-fill]"></i><span>Attendance</span></a>
         @endif
 
         <div style="padding: 10px 20px 15px;">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                    <i class="icon-[ph--sign-out-fill]"></i> Logout
                 </button>
             </form>
         </div>
@@ -267,7 +267,7 @@
             <div style="position:relative; z-index:1000; pointer-events:auto;">
                 <button id="notifBtn"
                         style="background:none; border:none; cursor:pointer; color:white; font-size:18px; position:relative; padding:4px; z-index:1001; pointer-events:auto;">
-                    <i class="fas fa-bell"></i>
+                    <i class="icon-[ph--bell-fill]"></i>
                     @if($notifCount > 0)
                         <span style="position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">
                             {{ $notifCount > 9 ? '9+' : $notifCount }}
@@ -278,7 +278,7 @@
                      style="display:none; position:absolute; right:0; top:calc(100% + 10px); width:320px; background:white; border-radius:14px; box-shadow:0 12px 32px rgba(0,0,0,0.14); border:1px solid #e5e7eb; z-index:999; overflow:hidden;">
                     <div style="padding:13px 16px; border-bottom:1px solid #f3f4f6; display:flex; justify-content:space-between; align-items:center;">
                         <span style="font-size:14px; font-weight:700; color:#111827; display:flex; align-items:center; gap:7px;">
-                            <i class="fas fa-bell" style="font-size:13px; color:#6b7280;"></i> Notifications
+                            <i class="icon-[ph--bell-fill]" style="font-size:13px; color:#6b7280;"></i> Notifications
                         </span>
                         @if($notifCount > 0)
                             <span style="background:#f3f4f6; color:#374151; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px;">{{ $notifCount }} pending</span>
@@ -316,11 +316,18 @@
     </div>
 
     {{-- Sidebar --}}
-    <div class="sidebar sidebar-{{ $role }}" style="grid-column: 1; grid-row: 2;">
+    <div id="main-sidebar" class="sidebar sidebar-{{ $role }} overlay [--auto-close:false]" style="grid-column: 1; grid-row: 2;">
+        <div class="sidebar-toggle-row">
+            <button id="sidebar-toggle" type="button"
+                    aria-haspopup="true" aria-expanded="false" aria-label="Toggle sidebar"
+                    data-overlay-minifier="#main-sidebar">
+                <i class="icon-[ph--caret-left-fill]" id="sidebar-arrow"></i>
+            </button>
+        </div>
         <nav style="flex: 1;">
             <a href="{{ route('dashboard') }}"
                class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                <i class="fas fa-home"></i><span>Dashboard</span>
+                <i class="icon-[ph--house-fill]"></i><span>Dashboard</span>
             </a>
 
             @if($isAdmin)
@@ -333,66 +340,66 @@
 
                 <div class="nav-dropdown {{ $userMgmtOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-users-cog"></i><span>Manage Users</span>
-                        <i class="fas fa-chevron-down nav-chevron"></i>
+                        <i class="icon-[ph--user-gear-fill]"></i><span>Manage Users</span>
+                        <i class="icon-[ph--caret-down-fill] nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
                         <a href="{{ route('users.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                            <i class="fas fa-users"></i><span>Users</span>
+                            <i class="icon-[ph--users-fill]"></i><span>Users</span>
                         </a>
                         <a href="{{ route('roles.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
-                            <i class="fas fa-lock"></i><span>Roles</span>
+                            <i class="icon-[ph--lock-fill]"></i><span>Roles</span>
                         </a>
                         <a href="{{ route('permissions.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
-                            <i class="fas fa-shield-alt"></i><span>Permissions</span>
+                            <i class="icon-[ph--shield-check-fill]"></i><span>Permissions</span>
                         </a>
                     </div>
                 </div>
 
                 <div class="nav-dropdown {{ $empMgmtOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-user-tie"></i><span>Manage Employees</span>
-                        <i class="fas fa-chevron-down nav-chevron"></i>
+                        <i class="icon-[ph--users-three-fill]"></i><span>Manage Employees</span>
+                        <i class="icon-[ph--caret-down-fill] nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
                         <a href="{{ route('employees.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                            <i class="fas fa-id-badge"></i><span>Employees</span>
+                            <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
                         </a>
                         <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
-                            <i class="fas fa-calendar-check"></i><span>Attendance</span>
+                            <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
                         </a>
                         <a href="#" class="nav-item nav-sub-item">
-                            <i class="fas fa-suitcase"></i><span>Leave Requests</span>
+                            <i class="icon-[ph--briefcase-fill]"></i><span>Leave Requests</span>
                         </a>
                     </div>
                 </div>
 
                 <div class="nav-dropdown {{ $payrollMgmtOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-money-bill-wave"></i><span>Manage Payroll</span>
-                        <i class="fas fa-chevron-down nav-chevron"></i>
+                        <i class="icon-[ph--wallet-fill]"></i><span>Manage Payroll</span>
+                        <i class="icon-[ph--caret-down-fill] nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
                         <a href="{{ route('payroll.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                            <i class="fas fa-money-bill"></i><span>Payroll</span>
+                            <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
                         </a>
                         <a href="{{ route('government-contributions.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                            <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+                            <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
                         </a>
                     </div>
                 </div>
 
                 <div class="nav-dropdown {{ $monitoringOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-chart-line"></i><span>Monitoring</span>
-                        <i class="fas fa-chevron-down nav-chevron"></i>
+                        <i class="icon-[ph--chart-line-fill]"></i><span>Monitoring</span>
+                        <i class="icon-[ph--caret-down-fill] nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
                         <a href="{{ route('audit-logs.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
-                            <i class="fas fa-file-alt"></i><span>Audit Logs</span>
+                            <i class="icon-[ph--file-text-fill]"></i><span>Audit Logs</span>
                         </a>
                         <a href="#" class="nav-item nav-sub-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                            <i class="fas fa-chart-bar"></i><span>Reports</span>
+                            <i class="icon-[ph--chart-bar-fill]"></i><span>Reports</span>
                         </a>
                     </div>
                 </div>
@@ -406,61 +413,64 @@
 
                 <div class="nav-dropdown {{ $hrEmpOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-user-tie"></i><span>Employee Management</span>
-                        <i class="fas fa-chevron-down nav-chevron"></i>
+                        <i class="icon-[ph--users-three-fill]"></i><span>Employee Management</span>
+                        <i class="icon-[ph--caret-down-fill] nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
                         <a href="{{ route('employees.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                            <i class="fas fa-id-badge"></i><span>Employees</span>
+                            <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
                         </a>
                         <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
-                            <i class="fas fa-calendar-check"></i><span>Attendance</span>
+                            <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
                         </a>
                         <a href="#" class="nav-item nav-sub-item">
-                            <i class="fas fa-suitcase"></i><span>Leave Requests</span>
+                            <i class="icon-[ph--briefcase-fill]"></i><span>Leave Requests</span>
                         </a>
                     </div>
                 </div>
 
                 <div class="nav-dropdown {{ $hrPayrollOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-money-bill-wave"></i><span>Payroll</span>
-                        <i class="fas fa-chevron-down nav-chevron"></i>
+                        <i class="icon-[ph--wallet-fill]"></i><span>Payroll</span>
+                        <i class="icon-[ph--caret-down-fill] nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
                         <a href="{{ route('payroll.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                            <i class="fas fa-money-bill"></i><span>Payroll</span>
+                            <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
                         </a>
                         <a href="{{ route('government-contributions.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                            <i class="fas fa-id-card"></i><span>Gov. Contributions</span>
+                            <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
                         </a>
                     </div>
                 </div>
 
                 <div class="nav-dropdown {{ $hrOtherOpen ? 'open' : '' }}">
                     <button class="nav-item nav-dropdown-trigger" type="button">
-                        <i class="fas fa-chart-line"></i><span>Reports & Settings</span>
-                        <i class="fas fa-chevron-down nav-chevron"></i>
+                        <i class="icon-[ph--chart-line-fill]"></i><span>Reports & Settings</span>
+                        <i class="icon-[ph--caret-down-fill] nav-chevron"></i>
                     </button>
                     <div class="nav-dropdown-menu">
                         <a href="#" class="nav-item nav-sub-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                            <i class="fas fa-chart-bar"></i><span>Reports</span>
+                            <i class="icon-[ph--chart-bar-fill]"></i><span>Reports</span>
                         </a>
+
+
+                        
                         <a href="#" class="nav-item nav-sub-item">
-                            <i class="fas fa-cog"></i><span>Settings</span>
+                            <i class="icon-[ph--gear-fill]"></i><span>Settings</span>
                         </a>
                     </div>
                 </div>
 
             @else
                 <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
-                    <i class="fas fa-user"></i><span>My Profile</span>
+                    <i class="icon-[ph--user-fill]"></i><span>My Profile</span>
                 </a>
                 <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="fas fa-file-invoice-dollar"></i><span>My Payslip</span>
+                    <i class="icon-[ph--receipt-fill]"></i><span>My Payslip</span>
                 </a>
-                <a href="#" class="nav-item"><i class="fas fa-calendar-times"></i><span>Leave Request</span></a>
-                <a href="#" class="nav-item"><i class="fas fa-clock"></i><span>Attendance</span></a>
+                <a href="#" class="nav-item"><i class="icon-[ph--calendar-x-fill]"></i><span>Leave Request</span></a>
+                <a href="#" class="nav-item"><i class="icon-[ph--clock-fill]"></i><span>Attendance</span></a>
             @endif
         </nav>
 
@@ -468,16 +478,11 @@
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                    <i class="icon-[ph--sign-out-fill]"></i> Logout
                 </button>
             </form>
         </div>
     </div>
-
-    {{-- Sidebar toggle --}}
-    <button id="sidebar-toggle">
-        <i class="fas fa-chevron-left" id="sidebar-arrow"></i>
-    </button>
 
     {{-- Main Content --}}
     <div class="bg-{{ $role }}" style="grid-column: 2; grid-row: 2; overflow-y: auto;">
