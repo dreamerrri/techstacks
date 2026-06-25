@@ -69,10 +69,11 @@ class ManualPayrollAttendanceController extends Controller
                         ->whereBetween('date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
                         ->sum('computed_days');
 
-                    // Get approved work requests for this period
+                    // Get approved work requests for this period (only if work date has passed)
                     $approvedRequests = WorkRequest::where('employee_id', $employeeId)
                         ->where('status', 'approved')
                         ->whereBetween('work_date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+                        ->where('work_date', '<=', now()->toDateString())
                         ->get();
 
                     // Calculate special work from approved requests
@@ -153,10 +154,11 @@ class ManualPayrollAttendanceController extends Controller
             ->whereBetween('date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
             ->sum('computed_days');
 
-        // Get approved work requests for this period to auto-populate special work fields
+        // Get approved work requests for this period to auto-populate special work fields (only if work date has passed)
         $approvedRequests = \App\Models\WorkRequest::where('employee_id', $employee->id)
             ->where('status', 'approved')
             ->whereBetween('work_date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+            ->where('work_date', '<=', now()->toDateString())
             ->get();
 
         // Calculate special work from approved requests
