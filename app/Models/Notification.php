@@ -64,8 +64,8 @@ class Notification extends Model
         }
 
         return $query->where(function ($q) {
-            $q->where('audience_type', 'employee')
-              ->orWhere('audience_type', 'all')
+            $q->where('audience_type', 'all')
+
               ->orWhere('user_id', auth()->id());
         });
     }
