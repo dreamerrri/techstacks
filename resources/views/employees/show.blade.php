@@ -186,7 +186,21 @@
             </div>
         </div>
 
-        {{-- Allowances and Benefits --}}
+        {{-- Attendance Records Link (full-width) --}}
+        <div class="card" style="grid-column: 1 / -1;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 style="margin:0;"><i class="fas fa-clock" style="color:#dc2626;"></i> Attendance Records</h2>
+                    <p style="margin:4px 0 0 0; color:#6b7280; font-size:13px;">View daily time-in/time-out records and attendance history for this employee.</p>
+                </div>
+                <a href="{{ route('employee-attendance.show-employee', $employee) }}"
+                   style="padding:8px 16px; background:#d1fae5; color:#065f46; border-radius:6px; text-decoration:none; font-size:13px; font-weight:600;">
+                    <i class="fas fa-eye"></i> View Attendance
+                </a>
+            </div>
+        </div>
+
+        {{-- Allowances and Benefits (admin and HR only) --}}
         @if(auth()->user()->isAdmin() || auth()->user()->isHR())
         <div class="card bg-base-100 shadow-sm p-5 md:col-span-2">
             <div class="flex justify-between items-center mb-4">

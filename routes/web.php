@@ -6,6 +6,7 @@ use App\Http\Controllers\PayrollInputController;
 use App\Http\Controllers\PayrollPeriodController;
 use App\Http\Controllers\ManualPayrollAttendanceController;
 use App\Http\Controllers\GovernmentContributionsController;
+use App\Http\Controllers\EmployeeAttendanceController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
@@ -16,13 +17,15 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\WorkRequestController;
 
 Route::get('/test', function () {
     return 'ok';
 });
 // Public Routes
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 // Authentication Routes
@@ -40,6 +43,20 @@ Route::middleware('auth')->group(function () {
 
     // All roles can reach /dashboard; the controller scopes data per role.
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+
+    // Employee Attendance - All authenticated employees can manage their own attendance
+    Route::prefix('employee-attendance')->name('employee-attendance.')->group(function () {
+        Route::get('/', [EmployeeAttendanceController::class, 'index'])->name('index');
+        Route::get('/create', [EmployeeAttendanceController::class, 'create'])->name('create');
+        Route::post('/', [EmployeeAttendanceController::class, 'store'])->name('store');
+        Route::delete('/{attendance}', [EmployeeAttendanceController::class, 'destroy'])->name('destroy');
+        Route::post('/compute-period', [EmployeeAttendanceController::class, 'getPeriodSummary'])->name('compute-period');
+        
+        // HR/Admin can view specific employee's attendance records
+        Route::middleware('permission:view.employees')->group(function () {
+            Route::get('/employee/{employee}', [EmployeeAttendanceController::class, 'showEmployee'])->name('show-employee');
+        });
+    });
 
 Route::get('/profile',  [ProfileController::class, 'show'])->name('profile.show');
 Route::put('/profile',  [ProfileController::class, 'update'])->name('profile.update');
@@ -167,6 +184,33 @@ Route::middleware('permission:manage.payroll.periods')->prefix('payroll-periods'
     Route::middleware('permission:view.audit.logs')->prefix('audit-logs')->name('audit-logs.')->group(function () {
         Route::get('/', [AuditLogController::class, 'index'])->name('index');
         Route::get('/{auditLog}', [AuditLogController::class, 'show'])->name('show');
+    });
+
+    // Notification Routes
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::post('/{notification}/mark-read', [NotificationController::class, 'markAsRead'])->name('mark-read');
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::post('/generate-hr-admin', [NotificationController::class, 'generateHrAdminNotifications'])->name('generate-hr-admin');
+    });
+
+    // Work Request Routes
+    Route::prefix('work-requests')->name('work-requests.')->group(function () {
+        Route::get('/', [WorkRequestController::class, 'index'])->name('index');
+        Route::get('/create', [WorkRequestController::class, 'create'])->name('create');
+        Route::post('/', [WorkRequestController::class, 'store'])->name('store');
+        
+        // HR/Admin only routes - must come before parameterized routes
+        Route::middleware('permission:view.employees')->group(function () {
+            Route::get('/pending', [WorkRequestController::class, 'pending'])->name('pending');
+            Route::post('/{workRequest}/approve', [WorkRequestController::class, 'approve'])->name('approve');
+            Route::post('/{workRequest}/reject', [WorkRequestController::class, 'reject'])->name('reject');
+        });
+        
+        Route::get('/{workRequest}', [WorkRequestController::class, 'show'])->name('show');
+        Route::get('/{workRequest}/edit', [WorkRequestController::class, 'edit'])->name('edit');
+        Route::put('/{workRequest}', [WorkRequestController::class, 'update'])->name('update');
+        Route::delete('/{workRequest}', [WorkRequestController::class, 'destroy'])->name('destroy');
     });
 });
 

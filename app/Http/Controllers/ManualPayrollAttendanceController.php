@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\PayrollPeriod;
 use App\Models\PayrollInput;
 use App\Models\PayrollAdjustment;
+use App\Models\WorkRequest;
 use App\Services\Payroll\PayrollComputationEngine;
 use App\Services\SssContributionService;
 use App\Services\PhilHealthContributionService;
@@ -52,11 +53,72 @@ class ManualPayrollAttendanceController extends Controller
             // If loading fails, try loading without nested relationships
             $payrollPeriod->load('payrollInputs');
         }
-        
-        // Get employees not yet encoded for this period
+
+        // Auto-encode employees who have attendance records but no payroll input
         $encodedIds = $payrollPeriod->payrollInputs ? $payrollPeriod->payrollInputs->pluck('employee_id')->toArray() : [];
-        
-        // Handle empty array case for whereNotIn
+
+        // Get employees with attendance records for this period
+        $employeesWithAttendance = \App\Models\Attendance::whereBetween('date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+            ->distinct()
+            ->pluck('employee_id')
+            ->toArray();
+
+        // For each employee with attendance but no payroll input, create one
+        foreach ($employeesWithAttendance as $employeeId) {
+            if (!in_array($employeeId, $encodedIds)) {
+                $employee = Employee::find($employeeId);
+                if ($employee && !$employee->is_archived) {
+                    // Get computed days from attendance
+                    $computedDays = \App\Models\Attendance::where('employee_id', $employeeId)
+                        ->whereBetween('date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+                        ->sum('computed_days');
+
+                    // Get approved work requests for this period
+                    $approvedRequests = WorkRequest::where('employee_id', $employeeId)
+                        ->where('status', 'approved')
+                        ->whereBetween('work_date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+                        ->get();
+
+                    // Calculate special work from approved requests
+                    $weekendsWorked = $approvedRequests->where('request_type', 'weekend')->count();
+                    $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('estimated_hours');
+                    $holidayDays = $approvedRequests->where('request_type', 'holiday')->count();
+
+                    // Only create if there are computed days or special work
+                    if ($computedDays > 0 || $weekendsWorked > 0 || $overtimeHours > 0 || $holidayDays > 0) {
+                        $dailyRate = $this->computeDailyRate($employee);
+
+                        $payrollInput = new PayrollInput([
+                            'payroll_period_id' => $payrollPeriod->id,
+                            'employee_id' => $employeeId,
+                            'daily_rate' => $dailyRate,
+                            'rate_type' => 'daily',
+                            'days_worked' => $computedDays,
+                            'weekends_worked' => $weekendsWorked,
+                            'overtime_hours' => $overtimeHours,
+                            'late_hours' => 0,
+                            'holiday_days' => $holidayDays,
+                            'night_differential_hours' => 0,
+                            'allowances' => $employee->activeAllowances->sum('amount') + $employee->activeBenefits->sum('amount'),
+                            'deductions' => 0,
+                            'deductions_remarks' => '',
+                            'reimbursements' => 0,
+                            'reimbursements_remarks' => '',
+                        ]);
+                        $payrollInput->computePay()->save();
+
+                        // Add to encoded IDs
+                        $encodedIds[] = $employeeId;
+                    }
+                }
+            }
+        }
+
+        // Reload payroll period with newly created inputs
+        $payrollPeriod->load(['payrollInputs.employee', 'payrollInputs.adjustments']);
+        $encodedIds = $payrollPeriod->payrollInputs ? $payrollPeriod->payrollInputs->pluck('employee_id')->toArray() : [];
+
+        // Get employees not yet encoded for this period
         if (empty($encodedIds)) {
             $unencodedEmployees = Employee::where('is_archived', false)->get();
         } else {
@@ -90,11 +152,41 @@ class ManualPayrollAttendanceController extends Controller
         // Load employee's active allowances and benefits
         $employee->load(['activeAllowances', 'activeBenefits']);
 
+        // Get computed days from attendance records for this payroll period
+        $computedDaysFromAttendance = \App\Models\Attendance::where('employee_id', $employee->id)
+            ->whereBetween('date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+            ->sum('computed_days');
+
+        // Get approved work requests for this period to auto-populate special work fields
+        $approvedRequests = \App\Models\WorkRequest::where('employee_id', $employee->id)
+            ->where('status', 'approved')
+            ->whereBetween('work_date', [$payrollPeriod->cutoff_start->toDateString(), $payrollPeriod->cutoff_end->toDateString()])
+            ->get();
+
+        // Calculate special work from approved requests
+        $weekendsWorked = $approvedRequests->where('request_type', 'weekend')->count();
+        $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('estimated_hours');
+        $holidayDays = $approvedRequests->where('request_type', 'holiday')->count();
+
+        // If payroll input exists, use approved request values as defaults (don't save to DB)
+        // This allows HR to see the auto-populated values and decide whether to use them
+        if ($payrollInput) {
+            // Override with approved request values for display purposes
+            $payrollInput->weekends_worked = $weekendsWorked;
+            $payrollInput->overtime_hours = $overtimeHours;
+            $payrollInput->holiday_days = $holidayDays;
+        }
+
         return view('manual-payroll-attendance.employee-form', compact(
             'payrollPeriod',
             'employee',
             'payrollInput',
-            'dailyRate'
+            'dailyRate',
+            'computedDaysFromAttendance',
+            'approvedRequests',
+            'weekendsWorked',
+            'overtimeHours',
+            'holidayDays'
         ));
     }
 
@@ -317,7 +409,7 @@ class ManualPayrollAttendanceController extends Controller
                 'employee_id' => 'required|exists:employees,id',
                 'daily_rate' => 'required|numeric|min:0',
                 'rate_type' => 'required|in:daily',
-                'days_worked' => 'required|numeric|min:0|max:31',
+                'days_worked' => 'nullable|numeric|min:0|max:31',
                 'weekends_worked' => 'nullable|numeric|min:0',
                 'overtime_hours' => 'nullable|numeric|min:0',
                 'late_hours' => 'nullable|numeric|min:0',
@@ -340,6 +432,14 @@ class ManualPayrollAttendanceController extends Controller
                     'success' => false,
                     'message' => 'Cannot edit a finalized payroll period.',
                 ], 422);
+            }
+
+            // If days_worked is null or empty, default to attendance computed days
+            if (!isset($validated['days_worked']) || $validated['days_worked'] === '' || $validated['days_worked'] === null) {
+                $computedDaysFromAttendance = \App\Models\Attendance::where('employee_id', $validated['employee_id'])
+                    ->whereBetween('date', [$period->cutoff_start->toDateString(), $period->cutoff_end->toDateString()])
+                    ->sum('computed_days');
+                $validated['days_worked'] = $computedDaysFromAttendance > 0 ? $computedDaysFromAttendance : 0;
             }
 
             // Check if payroll input already exists
