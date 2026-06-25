@@ -1,93 +1,76 @@
 @extends('layouts.app')
 
 @section('title', 'Audit Log Detail')
-
 @section('breadcrumb')
     <span>Monitoring</span>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <a href="{{ route('audit-logs.index') }}" style="color:rgba(255,255,255,0.7); text-decoration:none;">Audit Logs</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:500;">Log #{{ $auditLog->id }}</span>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('audit-logs.index') }}" class="text-white/70 no-underline hover:text-white">Audit Logs</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <span class="text-white font-medium">Log #{{ $auditLog->id }}</span>
 @endsection
 
 @section('content')
 
-    <div style="margin-bottom:24px;">
-        <span class="badge badge badge-soft badge-success" style="margin-bottom:8px;">
+    <div class="mb-6">
+        <span class="badge badge-soft badge-success mb-2">
             <i class="fas fa-history"></i> Audit Log Detail
         </span>
-        <p style="color:#6b7280; margin:0;">Detailed view of a single audit log entry.</p>
+        <p class="text-gray-500 m-0">Detailed view of a single audit log entry.</p>
     </div>
 
-    <div class="card bg-base-100 shadow-sm" style="max-width:720px;">
+    <div class="card bg-base-100 shadow-sm p-0 max-w-2xl">
         @php
-            $actionColors = [
-                'create' => ['bg' => '#d1fae5', 'color' => '#065f46'],
-                'update' => ['bg' => '#fef3c7', 'color' => '#92400e'],
-                'delete' => ['bg' => '#fee2e2', 'color' => '#991b1b'],
-                'login'  => ['bg' => '#eff6ff', 'color' => '#1d4ed8'],
-                'logout' => ['bg' => '#f3f4f6', 'color' => '#374151'],
-            ];
-            $ac = $actionColors[strtolower($auditLog->action)] ?? ['bg' => '#f3f4f6', 'color' => '#374151'];
+            $actionClass = match(strtolower($auditLog->action)) {
+                'create' => 'badge-soft badge-success',
+                'update' => 'badge-soft badge-warning',
+                'delete' => 'badge-soft badge-error',
+                'login'  => 'badge-soft badge-info',
+                'logout' => 'badge-soft badge-neutral',
+                default  => 'badge-soft',
+            };
         @endphp
 
-        <table style="width:100%; border-collapse:collapse; font-size:14px;">
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:12px 16px; color:#9ca3af; font-weight:600; font-size:12px; text-transform:uppercase; width:160px;">Date / Time</td>
-                <td style="padding:12px 16px; color:#1a1a2e;">{{ $auditLog->created_at->format('M d, Y h:i:s A') }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:12px 16px; color:#9ca3af; font-weight:600; font-size:12px; text-transform:uppercase;">User</td>
-                <td style="padding:12px 16px; color:#1a1a2e; font-weight:600;">{{ $auditLog->user?->name ?? '—' }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:12px 16px; color:#9ca3af; font-weight:600; font-size:12px; text-transform:uppercase;">Action</td>
-                <td style="padding:12px 16px;">
-                    <span style="padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; background:{{ $ac['bg'] }}; color:{{ $ac['color'] }};">
-                        {{ ucfirst($auditLog->action) }}
-                    </span>
-                </td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:12px 16px; color:#9ca3af; font-weight:600; font-size:12px; text-transform:uppercase;">Module</td>
-                <td style="padding:12px 16px; color:#1a1a2e;">{{ ucfirst($auditLog->module) }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:12px 16px; color:#9ca3af; font-weight:600; font-size:12px; text-transform:uppercase;">Description</td>
-                <td style="padding:12px 16px; color:#1a1a2e;">{{ $auditLog->description }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:12px 16px; color:#9ca3af; font-weight:600; font-size:12px; text-transform:uppercase;">IP Address</td>
-                <td style="padding:12px 16px; color:#1a1a2e; font-family:monospace;">{{ $auditLog->ip_address ?? '—' }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:12px 16px; color:#9ca3af; font-weight:600; font-size:12px; text-transform:uppercase;">User Agent</td>
-                <td style="padding:12px 16px; color:#6b7280; font-size:12px; word-break:break-all;">{{ $auditLog->user_agent ?? '—' }}</td>
-            </tr>
-            @if($auditLog->old_values)
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:12px 16px; color:#9ca3af; font-weight:600; font-size:12px; text-transform:uppercase;">Old Values</td>
-                <td style="padding:12px 16px;">
-                    <pre style="margin:0; font-size:12px; background:#f9fafb; padding:10px; border-radius:8px; overflow-x:auto;">{{ json_encode($auditLog->old_values, JSON_PRETTY_PRINT) }}</pre>
-                </td>
-            </tr>
-            @endif
-            @if($auditLog->new_values)
-            <tr>
-                <td style="padding:12px 16px; color:#9ca3af; font-weight:600; font-size:12px; text-transform:uppercase;">New Values</td>
-                <td style="padding:12px 16px;">
-                    <pre style="margin:0; font-size:12px; background:#f9fafb; padding:10px; border-radius:8px; overflow-x:auto;">{{ json_encode($auditLog->new_values, JSON_PRETTY_PRINT) }}</pre>
-                </td>
-            </tr>
-            @endif
-        </table>
+        <div class="flex flex-col text-sm">
+            @foreach([
+                ['Date / Time', $auditLog->created_at->format('M d, Y h:i:s A'), 'text-gray-800'],
+                ['User',        $auditLog->user?->name ?? '—',                   'text-gray-800 font-semibold'],
+                ['Module',      ucfirst($auditLog->module),                      'text-gray-800'],
+                ['Description', $auditLog->description,                          'text-gray-800'],
+                ['IP Address',  $auditLog->ip_address ?? '—',                    'text-gray-800 font-mono'],
+                ['User Agent',  $auditLog->user_agent ?? '—',                    'text-gray-500 text-xs break-all'],
+            ] as [$label, $value, $cls])
+                <div class="flex justify-between items-start py-3 px-5 border-b border-gray-100 gap-4">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 w-32 flex-shrink-0 pt-0.5">{{ $label }}</span>
+                    <span class="{{ $cls }} text-right flex-1">{{ $value }}</span>
+                </div>
+            @endforeach
 
-        <div style="padding:16px; border-top:1px solid #f3f4f6;">
-            <a href="{{ route('audit-logs.index') }}"
-               style="padding:8px 16px; background:#f3f4f6; color:#374151; border-radius:8px; text-decoration:none; font-size:13px; font-weight:600;">
+            {{-- Action row with badge --}}
+            <div class="flex justify-between items-center py-3 px-5 border-b border-gray-100 gap-4">
+                <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 w-32 flex-shrink-0">Action</span>
+                <span class="badge {{ $actionClass }}">{{ ucfirst($auditLog->action) }}</span>
+            </div>
+
+            @if($auditLog->old_values)
+                <div class="flex flex-col gap-2 py-3 px-5 border-b border-gray-100">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Old Values</span>
+                    <pre class="m-0 text-xs bg-gray-50 p-3 rounded-xl overflow-x-auto">{{ json_encode($auditLog->old_values, JSON_PRETTY_PRINT) }}</pre>
+                </div>
+            @endif
+
+            @if($auditLog->new_values)
+                <div class="flex flex-col gap-2 py-3 px-5 border-b border-gray-100">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">New Values</span>
+                    <pre class="m-0 text-xs bg-gray-50 p-3 rounded-xl overflow-x-auto">{{ json_encode($auditLog->new_values, JSON_PRETTY_PRINT) }}</pre>
+                </div>
+            @endif
+        </div>
+
+        <div class="px-5 py-4 border-t border-gray-100">
+            <a href="{{ route('audit-logs.index') }}" class="btn btn-soft btn-sm">
                 <i class="fas fa-arrow-left"></i> Back to Audit Logs
             </a>
         </div>
     </div>
 
-@endsection 
+@endsection

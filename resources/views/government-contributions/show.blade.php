@@ -2,159 +2,162 @@
 
 @section('title', $employee->full_name . ' - Government Contributions')
 @section('breadcrumb')
-    <a href="{{ route('payroll.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Payroll</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <a href="{{ route('government-contributions.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Gov. Contributions</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:600;">{{ $employee->full_name }}</span>
+    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline hover:text-white">Manage Payroll</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('government-contributions.index') }}" class="text-white/55 no-underline hover:text-white">Gov. Contributions</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <span class="text-white font-semibold">{{ $employee->full_name }}</span>
 @endsection
+
 @section('content')
 
     {{-- Top nav --}}
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
-        <a href="{{ route('government-contributions.index') }}" style="color:#9ca3af; text-decoration:none; font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:6px;">
+    <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
+        <a href="{{ route('government-contributions.index') }}"
+           class="text-gray-500 no-underline text-sm hover:text-emerald-600 flex items-center gap-1">
             <i class="fas fa-arrow-left"></i> Back to Government Contributions
         </a>
-        <div style="display:flex; gap:8px;">
-            <button onclick="printContributionDetail()"
-                    style="padding:8px 16px; background:#1e40af; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+        <div class="flex gap-2">
+            <button onclick="printContributionDetail()" class="btn btn-soft btn-info btn-sm">
                 <i class="fas fa-print"></i> Print
             </button>
-            <button onclick="exportContributionDetailCSV()"
-                    style="padding:8px 16px; background:#065f46; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+            <button onclick="exportContributionDetailCSV()" class="btn btn-soft btn-success btn-sm">
                 <i class="fas fa-file-csv"></i> Export CSV
             </button>
         </div>
     </div>
 
     {{-- Profile Header --}}
-    <div class="card bg-base-100 shadow-sm" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-        <div style="width:70px; height:70px; border-radius:50%; overflow:hidden; flex-shrink:0;">
+    <div class="card bg-base-100 shadow-sm p-5 flex items-center gap-5 flex-wrap mb-5">
+        <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
             @if($employee->user?->profile_photo)
                 <img src="{{ asset('storage/' . $employee->user->profile_photo) }}"
                      alt="{{ $employee->full_name }}"
-                     style="width:100%; height:100%; object-fit:cover;">
+                     class="w-full h-full object-cover">
             @else
-                <div style="width:70px; height:70px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:700;">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-2xl font-bold">
                     {{ strtoupper(substr($employee->first_name, 0, 1)) }}
                 </div>
             @endif
         </div>
         <div>
-            <h2 style="margin:0 0 4px; font-size:22px; color:#1a1a2e; font-weight:700;">{{ $employee->full_name }}</h2>
-            <p style="margin:0; color:#6b7280;">{{ $employee->position }} — {{ $employee->department }}</p>
-            <p style="margin:4px 0 0; color:#1a1a2e; font-weight:600; font-size:14px;">Basic Salary: ₱{{ number_format($employee->basic_salary, 2) }}</p>
-            <span style="display:inline-block; margin-top:6px; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;
-                {{ $employee->employment_status === 'Regular'      ? 'background:#d1fae5; color:#065f46;'  : '' }}
-                {{ $employee->employment_status === 'Probationary' ? 'background:#fef3c7; color:#92400e;'  : '' }}
-                {{ $employee->employment_status === 'Contractual'  ? 'background:#dbeafe; color:#1e40af;'  : '' }}
-                {{ $employee->employment_status === 'Part-time'    ? 'background:#f3f4f6; color:#374151;'  : '' }}
-            ">{{ $employee->employment_status }}</span>
+            <h2 class="text-xl font-bold text-gray-800 m-0 mb-1">{{ $employee->full_name }}</h2>
+            <p class="text-gray-500 m-0">{{ $employee->position }} — {{ $employee->department }}</p>
+            <p class="text-gray-800 font-semibold text-sm mt-1 m-0">Basic Salary: ₱{{ number_format($employee->basic_salary, 2) }}</p>
+            @php
+                $statusClass = match($employee->employment_status) {
+                    'Regular'      => 'badge-soft badge-success',
+                    'Probationary' => 'badge-soft badge-warning',
+                    'Contractual'  => 'badge-soft badge-info',
+                    'Part-time'    => 'badge-soft badge-neutral',
+                    default        => 'badge-soft',
+                };
+            @endphp
+            <span class="badge {{ $statusClass }} mt-2">{{ $employee->employment_status }}</span>
         </div>
     </div>
 
     {{-- Government Contributions --}}
-    <div class="card bg-base-100 shadow-sm">
-        <h2 class="card bg-base-100 shadow-sm-title">
-            <i class="fas fa-id-card" style="color:#dc2626;"></i> Government Contributions
+    <div class="card bg-base-100 shadow-sm p-6">
+        <h2 class="text-sm font-bold text-gray-800 mb-5 flex items-center gap-2">
+            <i class="fas fa-id-card text-red-600"></i> Government Contributions
         </h2>
 
         {{-- ID Numbers Grid --}}
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             @foreach([
-                ['SSS Number',  $employee->sss_number,       'fa-shield-alt', '#10b981', 'rgba(16,185,129,0.1)'],
-                ['PhilHealth',  $employee->philhealth_number, 'fa-heart',      '#3b82f6', 'rgba(59,130,246,0.1)'],
-                ['Pag-IBIG',    $employee->pagibig_number,    'fa-home',       '#f59e0b', 'rgba(245,158,11,0.1)'],
-                ['TIN Number',  $employee->tin_number,        'fa-file-invoice','#8b5cf6','rgba(139,92,246,0.1)'],
+                ['SSS Number',   $employee->sss_number,        'fa-shield-alt',   'text-emerald-600', 'bg-emerald-100'],
+                ['PhilHealth',   $employee->philhealth_number,  'fa-heart',        'text-blue-600',    'bg-blue-100'],
+                ['Pag-IBIG',     $employee->pagibig_number,     'fa-home',         'text-amber-500',   'bg-amber-100'],
+                ['TIN Number',   $employee->tin_number,         'fa-file-invoice', 'text-violet-600',  'bg-violet-100'],
             ] as [$label, $value, $icon, $color, $bg])
-            <div class="card bg-base-100 shadow-sm" style="text-align:center;">
-                <div class="aurora-stat-icon" style="color:{{ $color }}; background:{{ $bg }};">
-                    <i class="fas {{ $icon }}"></i>
+                <div class="card bg-base-100 shadow-sm p-4 text-center">
+                    <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 {{ $color }} {{ $bg }}">
+                        <i class="fas {{ $icon }}"></i>
+                    </div>
+                    <div class="text-xs text-gray-400 uppercase tracking-widest font-medium mb-1">{{ $label }}</div>
+                    <div class="font-bold font-mono text-gray-800 text-xs break-all">{{ $value ?? '—' }}</div>
                 </div>
-                <div style="font-size:12px; color:#9ca3af; text-transform:uppercase; letter-spacing:0.07em; font-weight:500; margin-bottom:6px;">{{ $label }}</div>
-                <div style="font-weight:700; font-family:monospace; color:#1a1a2e; font-size:13px; word-break:break-all;">{{ $value ?? '—' }}</div>
-            </div>
             @endforeach
         </div>
 
-        {{-- SSS Contribution Breakdown --}}
-        <div style="margin-top:24px; padding:20px; background:#eff6ff; border-radius:16px; border:1px solid #bfdbfe;">
-            <h4 style="margin:0 0 16px; font-size:13px; color:#1e40af; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
-                <i class="fas fa-calculator"></i> &nbsp;SSS Contribution (Circular No. 2024-006)
+        {{-- SSS --}}
+        <div class="mt-4 p-5 bg-blue-50 rounded-2xl border border-blue-200">
+            <h4 class="text-xs font-bold text-blue-800 uppercase tracking-widest mb-4">
+                <i class="fas fa-calculator"></i> SSS Contribution (Circular No. 2024-006)
             </h4>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
-                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Monthly Salary Credit</div>
-                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($sssContribution['salary_credit'], 2) }}</div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Monthly Salary Credit</div>
+                    <div class="font-bold text-gray-800 text-lg">₱{{ number_format($sssContribution['salary_credit'], 2) }}</div>
                 </div>
-                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Share</div>
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Employee Share</div>
                     <input type="number" name="custom_sss_contribution" id="custom_sss_contribution"
                            value="{{ $employee->custom_sss_contribution ?? $sssContribution['employee_share'] }}"
                            step="0.01" min="0"
-                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-weight:700; color:#dc2626; font-size:16px; box-sizing:border-box;">
+                           class="input input-bordered w-full font-bold text-red-600 text-lg">
                 </div>
-                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Total Contribution</div>
-                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($sssContribution['total'], 2) }}</div>
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Total Contribution</div>
+                    <div class="font-bold text-gray-800 text-lg">₱{{ number_format($sssContribution['total'], 2) }}</div>
                 </div>
             </div>
         </div>
 
-        {{-- PhilHealth Contribution Breakdown --}}
-        <div style="margin-top:16px; padding:20px; background:#ecfdf5; border-radius:16px; border:1px solid #a7f3d0;">
-            <h4 style="margin:0 0 16px; font-size:13px; color:#065f46; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
-                <i class="fas fa-heartbeat"></i> &nbsp;PhilHealth Contribution (2025/2026)
+        {{-- PhilHealth --}}
+        <div class="mt-4 p-5 bg-emerald-50 rounded-2xl border border-emerald-200">
+            <h4 class="text-xs font-bold text-emerald-800 uppercase tracking-widest mb-4">
+                <i class="fas fa-heartbeat"></i> PhilHealth Contribution (2025/2026)
             </h4>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
-                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Salary Basis</div>
-                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($philHealthContribution['salary_basis'], 2) }}</div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Salary Basis</div>
+                    <div class="font-bold text-gray-800 text-lg">₱{{ number_format($philHealthContribution['salary_basis'], 2) }}</div>
                 </div>
-                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Rate</div>
-                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">{{ number_format($philHealthContribution['employee_rate'] * 100, 1) }}%</div>
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Employee Rate</div>
+                    <div class="font-bold text-gray-800 text-lg">{{ number_format($philHealthContribution['employee_rate'] * 100, 1) }}%</div>
                 </div>
-                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Share</div>
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Employee Share</div>
                     <input type="number" name="custom_philhealth_contribution" id="custom_philhealth_contribution"
                            value="{{ $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'] }}"
                            step="0.01" min="0"
-                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-weight:700; color:#dc2626; font-size:16px; box-sizing:border-box;">
+                           class="input input-bordered w-full font-bold text-red-600 text-lg">
                 </div>
             </div>
         </div>
 
-        {{-- Pag-IBIG Contribution Breakdown --}}
-        <div style="margin-top:16px; padding:20px; background:#fef3c7; border-radius:16px; border:1px solid #fcd34d;">
-            <h4 style="margin:0 0 16px; font-size:13px; color:#92400e; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">
-                <i class="fas fa-home"></i> &nbsp;Pag-IBIG Contribution (2026)
+        {{-- Pag-IBIG --}}
+        <div class="mt-4 p-5 bg-amber-50 rounded-2xl border border-amber-200">
+            <h4 class="text-xs font-bold text-amber-800 uppercase tracking-widest mb-4">
+                <i class="fas fa-home"></i> Pag-IBIG Contribution (2026)
             </h4>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
-                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Monthly Salary</div>
-                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">₱{{ number_format($pagIbigContribution['salary'], 2) }}</div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Monthly Salary</div>
+                    <div class="font-bold text-gray-800 text-lg">₱{{ number_format($pagIbigContribution['salary'], 2) }}</div>
                 </div>
                 @if($pagIbigContribution['employee_rate'] !== null)
-                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Rate</div>
-                    <div style="font-weight:700; color:#1a1a2e; font-size:16px;">{{ number_format($pagIbigContribution['employee_rate'] * 100, 1) }}%</div>
-                </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm">
+                        <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Employee Rate</div>
+                        <div class="font-bold text-gray-800 text-lg">{{ number_format($pagIbigContribution['employee_rate'] * 100, 1) }}%</div>
+                    </div>
                 @endif
-                <div style="background:white; padding:14px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
-                    <div style="font-size:11px; color:#9ca3af; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em;">Employee Share</div>
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Employee Share</div>
                     <input type="number" name="custom_pagibig_contribution" id="custom_pagibig_contribution"
                            value="{{ $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'] }}"
                            step="0.01" min="0"
-                           style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; font-weight:700; color:#dc2626; font-size:16px; box-sizing:border-box;">
+                           class="input input-bordered w-full font-bold text-red-600 text-lg">
                 </div>
             </div>
         </div>
 
         {{-- Save Button --}}
-        <div style="margin-top:24px; text-align:right;">
-            <button onclick="saveCustomContributions()"
-                    style="padding:12px 24px; background:#dc2626; color:white; border-radius:8px; font-size:14px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
+        <div class="mt-6 text-right">
+            <button onclick="saveCustomContributions()" class="btn btn-soft btn-error">
                 <i class="fas fa-save"></i> Save Custom Contributions
             </button>
         </div>
@@ -165,67 +168,40 @@
 
 @section('scripts')
 <script>
-    // Helper function to get visible input (handles duplicate elements issue)
     const getVisibleInput = (inputs) => {
-        for (let input of inputs) {
-            if (input.offsetParent !== null) {
-                return input;
-            }
-        }
+        for (let input of inputs) { if (input.offsetParent !== null) return input; }
         return inputs[0];
     };
 
-    // Save custom contributions
     function saveCustomContributions() {
-        const employeeId = '{{ $employee->employee_id }}';
-        
-        // Get all inputs by name attribute (handles duplicates)
-        const sssInputs = document.getElementsByName('custom_sss_contribution');
-        const philInputs = document.getElementsByName('custom_philhealth_contribution');
-        const pagInputs = document.getElementsByName('custom_pagibig_contribution');
-        
-        // Get visible inputs
-        const sssInput = getVisibleInput(sssInputs);
-        const philInput = getVisibleInput(philInputs);
-        const pagInput = getVisibleInput(pagInputs);
-        
-        const data = {
-            custom_sss_contribution: sssInput.value || null,
-            custom_philhealth_contribution: philInput.value || null,
-            custom_pagibig_contribution: pagInput.value || null,
-        };
-        
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-        if (!csrfToken) {
-            console.error('CSRF token not found');
-            alert('Error: Security token not found. Please refresh the page.');
-            return;
-        }
-        
-        fetch(`/government-contributions/${employeeId}`, {
+        const sssInput  = getVisibleInput(document.getElementsByName('custom_sss_contribution'));
+        const philInput = getVisibleInput(document.getElementsByName('custom_philhealth_contribution'));
+        const pagInput  = getVisibleInput(document.getElementsByName('custom_pagibig_contribution'));
+
+        fetch(`/government-contributions/{{ $employee->employee_id }}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+                custom_sss_contribution:       sssInput.value || null,
+                custom_philhealth_contribution: philInput.value || null,
+                custom_pagibig_contribution:    pagInput.value || null,
+            })
         })
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
             if (data.success) {
-                alert('Custom contributions updated successfully!');
-                location.reload();
+                Toast?.fire({ icon: 'success', title: 'Custom contributions updated successfully!' });
+                setTimeout(() => location.reload(), 1200);
             } else {
-                alert('Error updating contributions. Please try again.');
+                Toast?.fire({ icon: 'error', title: 'Error updating contributions.' });
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error updating contributions. Please try again.');
-        });
+        .catch(() => Toast?.fire({ icon: 'error', title: 'Error updating contributions.' }));
     }
 
-    // Data passed from Blade to JS for export
     const employeeData = {
         id:         '{{ $employee->employee_id }}',
         name:       '{{ addslashes($employee->full_name) }}',
@@ -237,172 +213,78 @@
         philNumber: '{{ $employee->philhealth_number ?? "—" }}',
         pagNumber:  '{{ $employee->pagibig_number ?? "—" }}',
         tinNumber:  '{{ $employee->tin_number ?? "—" }}',
-        // SSS
         sssSalaryCredit:  '{{ number_format($sssContribution["salary_credit"], 2) }}',
         sssEmployeeShare: '{{ number_format($sssContribution["employee_share"], 2) }}',
         sssTotal:         '{{ number_format($sssContribution["total"], 2) }}',
-        // PhilHealth
         philSalaryBasis:   '{{ number_format($philHealthContribution["salary_basis"], 2) }}',
         philEmployeeRate:  '{{ number_format($philHealthContribution["employee_rate"] * 100, 1) }}',
         philEmployeeShare: '{{ number_format($philHealthContribution["employee_share"], 2) }}',
-        // Pag-IBIG
-        pagSalary:       '{{ number_format($pagIbigContribution["salary"], 2) }}',
-        pagEmployeeRate: '{{ $pagIbigContribution["employee_rate"] !== null ? number_format($pagIbigContribution["employee_rate"] * 100, 1) : "—" }}',
-        pagEmployeeShare:'{{ number_format($pagIbigContribution["employee_share"], 2) }}',
+        pagSalary:        '{{ number_format($pagIbigContribution["salary"], 2) }}',
+        pagEmployeeRate:  '{{ $pagIbigContribution["employee_rate"] !== null ? number_format($pagIbigContribution["employee_rate"] * 100, 1) : "—" }}',
+        pagEmployeeShare: '{{ number_format($pagIbigContribution["employee_share"], 2) }}',
     };
 
-function printContributionDetail() {
-    const d = employeeData;
-    const win = window.open('', '_blank');
-    win.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Government Contributions — ${d.name}</title>
-            <style>
-                * { margin:0; padding:0; box-sizing:border-box; }
-                body { font-family:Arial, sans-serif; font-size:11px; color:#111; padding:20px; }
-                .report-header { margin-bottom:20px; }
-                .report-header h1 { font-size:16px; color:#1a1a2e; }
-                .report-header p  { font-size:11px; color:#6b7280; margin-top:4px; }
-                .profile-block { background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:14px; margin-bottom:16px; display:flex; gap:24px; flex-wrap:wrap; }
-                .profile-block .field { min-width:140px; }
-                .profile-block .label { font-size:9px; color:#9ca3af; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
-                .profile-block .value { font-weight:600; color:#1a1a2e; font-size:12px; }
-                .section { margin-bottom:16px; }
-                .section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:6px 10px; margin-bottom:8px; border-radius:4px; }
-                .sss-title   { background:#dbeafe; color:#1e40af; }
-                .phil-title  { background:#d1fae5; color:#065f46; }
-                .pagibig-title { background:#fef3c7; color:#92400e; }
-                .ids-title   { background:#f3f4f6; color:#374151; }
-                table { width:100%; border-collapse:collapse; }
-                th { background:#1e40af; color:white; padding:6px 10px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:0.04em; }
-                td { padding:6px 10px; border-bottom:1px solid #e5e7eb; font-size:11px; }
-                td.amount { font-weight:600; }
-                @media print { body { padding:0; } }
-            </style>
-        </head>
-        <body>
-            <div class="report-header">
-                <h1>Government Contributions Report</h1>
-                <p>Generated: ${new Date().toLocaleString()}</p>
-            </div>
+    function printContributionDetail() {
+        const d = employeeData;
+        const win = window.open('', '_blank');
+        win.document.write(`<!DOCTYPE html><html><head><title>Government Contributions — ${d.name}</title>
+        <style>* { margin:0; padding:0; box-sizing:border-box; } body { font-family:Arial,sans-serif; font-size:11px; color:#111; padding:20px; }
+        h1 { font-size:16px; color:#1a1a2e; margin-bottom:4px; } p { font-size:11px; color:#6b7280; margin-bottom:16px; }
+        .profile { background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:14px; margin-bottom:16px; display:flex; gap:24px; flex-wrap:wrap; }
+        .field .label { font-size:9px; color:#9ca3af; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:2px; }
+        .field .value { font-weight:600; color:#1a1a2e; font-size:12px; }
+        .section { margin-bottom:16px; }
+        .section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:6px 10px; margin-bottom:8px; border-radius:4px; }
+        .sss-title { background:#dbeafe; color:#1e40af; } .phil-title { background:#d1fae5; color:#065f46; }
+        .pagibig-title { background:#fef3c7; color:#92400e; } .ids-title { background:#f3f4f6; color:#374151; }
+        table { width:100%; border-collapse:collapse; } th { background:#1e40af; color:white; padding:6px 10px; text-align:left; font-size:10px; text-transform:uppercase; }
+        td { padding:6px 10px; border-bottom:1px solid #e5e7eb; font-size:11px; } td.amount { font-weight:600; }
+        @media print { body { padding:0; } }</style></head><body>
+        <h1>Government Contributions Report</h1><p>Generated: ${new Date().toLocaleString()}</p>
+        <div class="profile">
+            <div class="field"><div class="label">Employee ID</div><div class="value" style="font-family:monospace;">${d.id}</div></div>
+            <div class="field"><div class="label">Full Name</div><div class="value">${d.name}</div></div>
+            <div class="field"><div class="label">Department</div><div class="value">${d.department}</div></div>
+            <div class="field"><div class="label">Position</div><div class="value">${d.position}</div></div>
+            <div class="field"><div class="label">Basic Salary</div><div class="value">₱${d.salary}</div></div>
+            <div class="field"><div class="label">Status</div><div class="value">${d.status}</div></div>
+        </div>
+        <div class="section"><div class="section-title ids-title">Government ID Numbers</div>
+        <table><thead><tr><th>SSS Number</th><th>PhilHealth Number</th><th>Pag-IBIG Number</th><th>TIN Number</th></tr></thead>
+        <tbody><tr><td style="font-family:monospace;">${d.sssNumber}</td><td style="font-family:monospace;">${d.philNumber}</td><td style="font-family:monospace;">${d.pagNumber}</td><td style="font-family:monospace;">${d.tinNumber}</td></tr></tbody></table></div>
+        <div class="section"><div class="section-title sss-title">SSS Contribution (Circular No. 2024-006)</div>
+        <table><thead><tr><th>Monthly Salary Credit</th><th>Employee Share</th><th>Total Contribution</th></tr></thead>
+        <tbody><tr><td class="amount">₱${d.sssSalaryCredit}</td><td class="amount">₱${d.sssEmployeeShare}</td><td class="amount">₱${d.sssTotal}</td></tr></tbody></table></div>
+        <div class="section"><div class="section-title phil-title">PhilHealth Contribution (2025/2026)</div>
+        <table><thead><tr><th>Salary Basis</th><th>Employee Rate</th><th>Employee Share</th></tr></thead>
+        <tbody><tr><td class="amount">₱${d.philSalaryBasis}</td><td class="amount">${d.philEmployeeRate}%</td><td class="amount">₱${d.philEmployeeShare}</td></tr></tbody></table></div>
+        <div class="section"><div class="section-title pagibig-title">Pag-IBIG Contribution (2026)</div>
+        <table><thead><tr><th>Monthly Salary</th><th>Employee Rate</th><th>Employee Share</th></tr></thead>
+        <tbody><tr><td class="amount">₱${d.pagSalary}</td><td class="amount">${d.pagEmployeeRate !== '—' ? d.pagEmployeeRate+'%' : '—'}</td><td class="amount">₱${d.pagEmployeeShare}</td></tr></tbody></table></div>
+        </body></html>`);
+        win.document.close(); win.focus(); win.print();
+    }
 
-            <div class="profile-block">
-                <div class="field"><div class="label">Employee ID</div><div class="value" style="font-family:monospace;">${d.id}</div></div>
-                <div class="field"><div class="label">Full Name</div><div class="value">${d.name}</div></div>
-                <div class="field"><div class="label">Department</div><div class="value">${d.department}</div></div>
-                <div class="field"><div class="label">Position</div><div class="value">${d.position}</div></div>
-                <div class="field"><div class="label">Basic Salary</div><div class="value">₱${d.salary}</div></div>
-                <div class="field"><div class="label">Status</div><div class="value">${d.status}</div></div>
-            </div>
-
-            <div class="section">
-                <div class="section-title ids-title">Government ID Numbers</div>
-                <table>
-                    <thead><tr><th>SSS Number</th><th>PhilHealth Number</th><th>Pag-IBIG Number</th><th>TIN Number</th></tr></thead>
-                    <tbody>
-                        <tr>
-                            <td style="font-family:monospace;">${d.sssNumber}</td>
-                            <td style="font-family:monospace;">${d.philNumber}</td>
-                            <td style="font-family:monospace;">${d.pagNumber}</td>
-                            <td style="font-family:monospace;">${d.tinNumber}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="section">
-                <div class="section-title sss-title">SSS Contribution (Circular No. 2024-006)</div>
-                <table>
-                    <thead><tr><th>Monthly Salary Credit</th><th>Employee Share</th><th>Total Contribution</th></tr></thead>
-                    <tbody>
-                        <tr>
-                            <td class="amount">₱${d.sssSalaryCredit}</td>
-                            <td class="amount">₱${d.sssEmployeeShare}</td>
-                            <td class="amount">₱${d.sssTotal}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="section">
-                <div class="section-title phil-title">PhilHealth Contribution (2025/2026)</div>
-                <table>
-                    <thead><tr><th>Salary Basis</th><th>Employee Rate</th><th>Employee Share</th></tr></thead>
-                    <tbody>
-                        <tr>
-                            <td class="amount">₱${d.philSalaryBasis}</td>
-                            <td class="amount">${d.philEmployeeRate}%</td>
-                            <td class="amount">₱${d.philEmployeeShare}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="section">
-                <div class="section-title pagibig-title">Pag-IBIG Contribution (2026)</div>
-                <table>
-                    <thead><tr><th>Monthly Salary</th><th>Employee Rate</th><th>Employee Share</th></tr></thead>
-                    <tbody>
-                        <tr>
-                            <td class="amount">₱${d.pagSalary}</td>
-                            <td class="amount">${d.pagEmployeeRate !== '—' ? d.pagEmployeeRate + '%' : '—'}</td>
-                            <td class="amount">₱${d.pagEmployeeShare}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </body>
-        </html>
-    `);
-    win.document.close();
-    win.focus();
-    win.print();
-}
-
-function exportContributionDetailCSV() {
-    const d = employeeData;
-
-    const rows = [
-        // Employee info header block
-        ['Field', 'Value'],
-        ['Employee ID', d.id],
-        ['Full Name',   d.name],
-        ['Department',  d.department],
-        ['Position',    d.position],
-        ['Basic Salary',d.salary],
-        ['Status',      d.status],
-        [],
-        // ID numbers
-        ['SSS Number', 'PhilHealth Number', 'Pag-IBIG Number', 'TIN Number'],
-        [d.sssNumber, d.philNumber, d.pagNumber, d.tinNumber],
-        [],
-        // SSS
-        ['SSS — Monthly Salary Credit', 'SSS — Employee Share', 'SSS — Total Contribution'],
-        [d.sssSalaryCredit, d.sssEmployeeShare, d.sssTotal],
-        [],
-        // PhilHealth
-        ['PhilHealth — Salary Basis', 'PhilHealth — Employee Rate', 'PhilHealth — Employee Share'],
-        [d.philSalaryBasis, d.philEmployeeRate + '%', d.philEmployeeShare],
-        [],
-        // Pag-IBIG
-        ['Pag-IBIG — Monthly Salary', 'Pag-IBIG — Employee Rate', 'Pag-IBIG — Employee Share'],
-        [d.pagSalary, d.pagEmployeeRate !== '—' ? d.pagEmployeeRate + '%' : '—', d.pagEmployeeShare],
-    ];
-
-    const csv = rows.map(row =>
-        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
-    ).join('\n');
-
-    const filename = `contributions_${d.id}.csv`;
-    const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-}
+    function exportContributionDetailCSV() {
+        const d = employeeData;
+        const rows = [
+            ['Field','Value'],['Employee ID',d.id],['Full Name',d.name],['Department',d.department],
+            ['Position',d.position],['Basic Salary',d.salary],['Status',d.status],[],
+            ['SSS Number','PhilHealth Number','Pag-IBIG Number','TIN Number'],
+            [d.sssNumber,d.philNumber,d.pagNumber,d.tinNumber],[],
+            ['SSS — Monthly Salary Credit','SSS — Employee Share','SSS — Total Contribution'],
+            [d.sssSalaryCredit,d.sssEmployeeShare,d.sssTotal],[],
+            ['PhilHealth — Salary Basis','PhilHealth — Employee Rate','PhilHealth — Employee Share'],
+            [d.philSalaryBasis,d.philEmployeeRate+'%',d.philEmployeeShare],[],
+            ['Pag-IBIG — Monthly Salary','Pag-IBIG — Employee Rate','Pag-IBIG — Employee Share'],
+            [d.pagSalary,d.pagEmployeeRate !== '—' ? d.pagEmployeeRate+'%' : '—',d.pagEmployeeShare],
+        ];
+        const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href = url; a.download = `contributions_${d.id}.csv`; a.click();
+        URL.revokeObjectURL(url);
+    }
 </script>
 @endsection

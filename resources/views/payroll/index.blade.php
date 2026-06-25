@@ -3,19 +3,21 @@
 @section('title', 'Payroll Preview')
 @section('breadcrumb')
     <span>Manage Payroll</span>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:500;">Payroll</span>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <span class="text-white font-medium">Payroll</span>
 @endsection
+
 @section('content')
 
 @php
-    $user = auth()->user();
+    $user    = auth()->user();
     $isAdmin = $user->isAdmin();
-    $isHR = $user->isHR();
-    $color = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
-    $colorDark = $isAdmin ? '#991b1b' : ($isHR ? '#1e40af' : '#764ba2');
+    $isHR    = $user->isHR();
 
-    // Build department breakdown data for JS (all employees currently on page)
+    $avatarClass = $isAdmin ? 'from-red-600 to-red-800'
+                 : ($isHR   ? 'from-blue-600 to-blue-800'
+                            : 'from-violet-500 to-violet-700');
+
     $deptBreakdownData = [];
     foreach ($employees as $emp) {
         $p = $payrollData[$emp->id] ?? [];
@@ -25,8 +27,8 @@
             'employee_id'             => $emp->employee_id,
             'department'              => $emp->department,
             'basic_pay'               => $p['base_pay'] ?? 0,
-            'allowance_benefits' => $p['allowance_benefits'] ?? 0,
-'overtime_pay'       => $p['overtime_pay'] ?? 0,
+            'allowance_benefits'      => $p['allowance_benefits'] ?? 0,
+            'overtime_pay'            => $p['overtime_pay'] ?? 0,
             'gross_pay'               => $p['gross_pay'] ?? 0,
             'sss_contribution'        => $p['sss_contribution'] ?? 0,
             'philhealth_contribution' => $p['philhealth_contribution'] ?? 0,
@@ -41,98 +43,92 @@
     $deptLabel = request('department') ?: 'All Departments';
 @endphp
 
-{{-- ═══════════════════════════════════════════════
-     DEPARTMENT BREAKDOWN MODAL
-     ═══════════════════════════════════════════════ --}}
+{{-- Department Breakdown Modal --}}
 <div id="deptBreakdownModal"
-     style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.5); align-items:flex-start; justify-content:center; padding:20px; overflow-y:auto;">
-    <div style="background:white; border-radius:16px; width:100%; max-width:90vw; margin:auto; box-shadow:0 24px 64px rgba(0,0,0,0.2); overflow:hidden;">
-
-        {{-- Modal header --}}
-        <div style="padding:20px 28px 16px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; background:white; border-radius:16px 16px 0 0;">
+     class="hidden fixed inset-0 z-[9999] bg-black/50 items-start justify-center p-5 overflow-y-auto">
+    <div class="bg-white rounded-2xl w-full max-w-[90vw] mx-auto shadow-2xl overflow-hidden">
+        <div class="px-7 py-5 border-b border-gray-200 flex justify-between items-center">
             <div>
-                <div style="font-size:17px; font-weight:700; color:#1a1a2e; display:flex; align-items:center; gap:8px;">
-                    <i class="fas fa-layer-group" style="color:#2563eb;"></i>
+                <div class="text-base font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fas fa-layer-group text-blue-600"></i>
                     <span id="deptModalTitle">Department Breakdown</span>
                 </div>
-                <div style="font-size:12px; color:#6b7280; margin-top:3px;" id="deptModalMeta">—</div>
+                <div class="text-xs text-gray-500 mt-1" id="deptModalMeta">—</div>
             </div>
-            <button onclick="closeDeptModal()"
-                    style="background:#f3f4f6; border:none; border-radius:8px; width:32px; height:32px; cursor:pointer; font-size:16px; color:#6b7280; display:flex; align-items:center; justify-content:center;">
+            <button onclick="closeDeptModal()" class="btn btn-ghost btn-sm btn-circle">
                 <i class="fas fa-times"></i>
             </button>
         </div>
 
-        {{-- Modal table --}}
-<div style="overflow-x:auto; overflow-y:auto; max-height:50vh; padding:0 0 4px;">
-                <table id="deptBreakdownTable" style="width:100%; border-collapse:collapse; font-size:13px; min-width:800px;">
+        <div class="overflow-x-hidden overflow-y-auto max-h-[50vh]">
+            <table id="deptBreakdownTable" class="table table-hover table-fixed w-full text-xs">
+                <colgroup>
+                    <col class="w-44">  {{-- Employee --}}
+                    <col class="w-28">  {{-- Dept --}}
+                    <col class="w-24">  {{-- Basic Pay --}}
+                    <col class="w-24">  {{-- Allowance --}}
+                    <col class="w-20">  {{-- OT Pay --}}
+                    <col class="w-24">  {{-- Earnings --}}
+                    <col class="w-20">  {{-- SSS --}}
+                    <col class="w-24">  {{-- PhilHealth --}}
+                    <col class="w-20">  {{-- Pag-IBIG --}}
+                    <col class="w-16">  {{-- Tax --}}
+                    <col class="w-28">  {{-- Total Deductions --}}
+                    <col class="w-24">  {{-- Net Pay --}}
+                </colgroup>
                 <thead>
-                    <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
-                        <th style="padding:11px 16px; text-align:left; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Employee</th>
-                        <th style="padding:11px 16px; text-align:left; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Dept</th>
-                        <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Basic Pay</th>
-                                                <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Allowance</th>
-                        <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">OT Pay</th>
-                                                <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Earnings</th>
-
-
-                        <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">SSS</th>
-                        <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">PhilHealth</th>
-                        <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Pag-IBIG</th>
-                        <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Tax</th>
-                        <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Total Deductions</th>
-                        <th style="padding:11px 16px; text-align:right; color:#6b7280; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">Net Pay</th>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Dept</th>
+                        <th class="text-right">Basic Pay</th>
+                        <th class="text-right">Allowance</th>
+                        <th class="text-right">OT Pay</th>
+                        <th class="text-right">Earnings</th>
+                        <th class="text-right">SSS</th>
+                        <th class="text-right">PhilHealth</th>
+                        <th class="text-right">Pag-IBIG</th>
+                        <th class="text-right">Tax</th>
+                        <th class="text-right">Total Deductions</th>
+                        <th class="text-right">Net Pay</th>
                     </tr>
                 </thead>
-                <tbody id="deptBreakdownBody">
-                    {{-- filled by JS --}}
-                </tbody>
-                <tfoot id="deptBreakdownFoot">
-                    {{-- per-column totals row, filled by JS --}}
-                </tfoot>
+                <tbody id="deptBreakdownBody"></tbody>
+                <tfoot id="deptBreakdownFoot"></tfoot>
             </table>
-            <div id="deptBreakdownEmpty" style="display:none; padding:40px; text-align:center; color:#9ca3af;">
-                <i class="fas fa-inbox" style="font-size:28px; display:block; margin-bottom:8px;"></i>
+            <div id="deptBreakdownEmpty" class="hidden py-10 text-center text-gray-400">
+                <i class="fas fa-inbox text-3xl mb-2 block"></i>
                 No payroll data for the current filter.
             </div>
         </div>
 
-        {{-- Total Net Pay → Gross Pay summary bar --}}
-        <div id="deptGrossPayBar" style="display:none; margin:0 24px 0; padding:14px 20px; background:linear-gradient(135deg,#d1fae5,#a7f3d0); border-radius:0 0 12px 12px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-            <div style="font-size:14px; font-weight:700; color:#065f46;">
-                <i class="fas fa-money-bill-wave" style="margin-right:6px;"></i>
-                Total Gross Pay:
+        <div id="deptGrossPayBar" class="hidden mx-6 px-5 py-3 bg-emerald-100 rounded-b-xl flex justify-between items-center flex-wrap gap-3">
+            <div class="text-sm font-bold text-emerald-800">
+                <i class="fas fa-money-bill-wave mr-1"></i> Total Gross Pay:
             </div>
-            <span id="deptTotalGrossPay" style="font-size:20px; font-weight:800; color:#065f46; letter-spacing:-0.5px;">₱0.00</span>
+            <span id="deptTotalGrossPay" class="text-xl font-extrabold text-emerald-800">₱0.00</span>
         </div>
 
-        {{-- Modal footer: Print, Export CSV, Close --}}
-        <div style="padding:14px 24px; border-top:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button onclick="printPayrollTable()"
-                        style="padding:8px 18px; background:#1e40af; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+        <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center flex-wrap gap-2">
+            <div class="flex gap-2 flex-wrap">
+                <button onclick="printPayrollTable()" class="btn btn-soft btn-info btn-sm">
                     <i class="fas fa-print"></i> Print PDF
                 </button>
-                <button onclick="exportPayrollCSV()"
-                        style="padding:8px 18px; background:#065f46; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                <button onclick="exportPayrollCSV()" class="btn btn-soft btn-success btn-sm">
                     <i class="fas fa-file-csv"></i> Export CSV
                 </button>
             </div>
-            <button onclick="closeDeptModal()"
-                    style="padding:8px 20px; background:#f3f4f6; color:#374151; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer;">
-                Close
-            </button>
+            <button onclick="closeDeptModal()" class="btn btn-soft btn-sm">Close</button>
         </div>
     </div>
 </div>
 
 {{-- Header --}}
-<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+<div class="flex justify-between items-center flex-wrap gap-3 mb-6">
     <div>
-        <span class="badge" style="background:#fef3c7; color:#92400e; margin-bottom:8px;">
+        <span class="badge badge-soft badge-warning mb-2">
             <i class="fas fa-money-bill-wave"></i> Payroll Preview
         </span>
-        <p style="color:#6b7280; margin:0;">
+        <p class="text-gray-500 m-0">
             @if($isAdmin || $isHR)
                 View payroll calculations for all employees.
             @else
@@ -143,46 +139,36 @@
 </div>
 
 {{-- Filters + Table --}}
-<div class="card bg-base-100 shadow-sm" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
+<div class="card bg-base-100 shadow-sm overflow-hidden flex flex-col p-0">
 
-    {{-- Sticky header --}}
-    <div style="position:sticky; top:0; z-index:0; background:white; padding:20px 28px 0; border-radius:20px 20px 0 0;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-            <h2 class="card bg-base-100 shadow-sm-title" style="margin:0;">
+    <div class="sticky top-0 z-10 bg-white px-7 pt-5 rounded-t-2xl">
+        <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+            <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
                 <i class="fas fa-list"></i> Payroll Summary
             </h2>
-           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-    @if($isAdmin || $isHR)
-    <button onclick="openDeptModal()"
-            style="padding:8px 18px; background:#4f46e5; color:white; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
-        <i class="fas fa-layer-group"></i> Breakdown
-    </button>
-    @endif
-</div>
+            @if($isAdmin || $isHR)
+                <button onclick="openDeptModal()" class="btn btn-soft btn-primary btn-sm">
+                    <i class="fas fa-layer-group"></i> Breakdown
+                </button>
+            @endif
         </div>
 
         <form method="GET" action="{{ route('payroll.index') }}"
-              style="display:flex; flex-wrap:wrap; gap:10px; padding-bottom:16px; border-bottom:1px solid #e5e7eb;">
-
+              class="flex flex-wrap gap-2 pb-4 border-b border-gray-200">
             @if($isAdmin || $isHR)
-            <input type="text" name="search" value="{{ request('search') }}"
-                   placeholder="Search name, ID..."
-                   oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 500)"
-                   style="flex:1; min-width:160px; border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none;">
-
-            <select name="department"
-                    onchange="this.closest('form').submit()"
-                    style="border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none;">
-                <option value="">All Departments</option>
-                @foreach($departments as $dept)
-                    <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
-                @endforeach
-            </select>
+                <input type="text" name="search" value="{{ request('search') }}"
+                       placeholder="Search name, ID..."
+                       oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 500)"
+                       class="input input-bordered input-sm flex-1 min-w-40">
+                <select name="department" onchange="this.closest('form').submit()" class="select select-bordered select-sm">
+                    <option value="">All Departments</option>
+                    @foreach($departments as $dept)
+                        <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                    @endforeach
+                </select>
             @endif
-
-            <select name="payroll_period_id"
-                    onchange="this.closest('form').submit()"
-                    style="border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none; min-width:230px;">
+            <select name="payroll_period_id" onchange="this.closest('form').submit()"
+                    class="select select-bordered select-sm min-w-[230px]">
                 <option value="">Latest Cutoff</option>
                 @foreach($payrollPeriods as $period)
                     <option value="{{ $period->id }}"
@@ -192,115 +178,109 @@
                     </option>
                 @endforeach
             </select>
-
-            <button type="submit" style="display:none;"></button>
-
+            <button type="submit" class="hidden"></button>
             @if(request()->hasAny(['search', 'department', 'payroll_period_id']))
-                <a href="{{ route('payroll.index') }}"
-                   style="padding:8px 16px; background:#f3f4f6; color:#6b7280; border-radius:8px; text-decoration:none; font-size:14px;">
-                    Clear
-                </a>
+                <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-sm">Clear</a>
             @endif
         </form>
     </div>
 
-    {{-- Active cutoff banner --}}
     @if($selectedPeriod ?? null)
-    <div style="padding:10px 28px; background:#eff6ff; border-bottom:1px solid #dbeafe; font-size:13px; color:#1e40af; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Showing payroll for cutoff:</span>
-        <strong>{{ $selectedPeriod->cutoff_start->format('M d, Y') }} – {{ $selectedPeriod->cutoff_end->format('M d, Y') }}</strong>
-        <span style="padding:2px 10px; border-radius:10px; font-size:11px; font-weight:600;
-            {{ $selectedPeriod->status === 'finalized' ? 'background:#d1fae5; color:#065f46;' : 'background:#fef3c7; color:#92400e;' }}">
-            {{ ucfirst($selectedPeriod->status) }}
-        </span>
-        <span style="color:#6b7280; font-size:12px; margin-left:4px;">
-            Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}
-        </span>
-    </div>
+        <div class="px-7 py-2 bg-blue-50 border-b border-blue-100 text-blue-700 text-xs flex items-center gap-2 flex-wrap">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Showing payroll for cutoff:</span>
+            <strong>{{ $selectedPeriod->cutoff_start->format('M d, Y') }} – {{ $selectedPeriod->cutoff_end->format('M d, Y') }}</strong>
+            <span class="badge {{ $selectedPeriod->status === 'finalized' ? 'badge-soft badge-success' : 'badge-soft badge-warning' }} badge-xs">
+                {{ ucfirst($selectedPeriod->status) }}
+            </span>
+            <span class="text-gray-400 ml-1">Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}</span>
+        </div>
     @endif
 
     {{-- Desktop Table --}}
-    <div class="table-responsive style="overflow-y:auto; max-height:47vh; padding:0 28px;">
-        <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:900px;">
-            <thead style="position:sticky; top:0; z-index:5;">
-                <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
-                    @php
-                        $s   = request('sort');
-                        $d   = request('direction', 'asc');
-                        $base = array_merge(request()->except(['sort','direction','page']));
-                        function payrollSortTh(string $key, string $label, string $align, array $base, ?string $s, string $d): string {
-                            $active  = $s === $key;
-                            $nextDir = ($active && $d === 'asc') ? 'desc' : 'asc';
-                            $url     = route('payroll.index', array_merge($base, ['sort' => $key, 'direction' => $nextDir]));
-                            $color   = $active ? '#dc2626' : '#6b7280';
-                            $weight  = $active ? '700' : '600';
-                            $upCol   = ($active && $d === 'asc')  ? '#dc2626' : '#d1d5db';
-                            $dnCol   = ($active && $d === 'desc') ? '#dc2626' : '#d1d5db';
-                            return '<th style="padding:12px; text-align:' . $align . '; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap;">'
-                                 . '<a href="' . $url . '" style="display:inline-flex; align-items:center; gap:5px; color:' . $color . '; text-decoration:none; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; font-weight:' . $weight . ';">'
-                                 . $label
-                                 . '<span style="display:inline-flex; flex-direction:column; line-height:1; gap:1px;">'
-                                 . '<i class="fas fa-caret-up"   style="font-size:9px; color:' . $upCol . ';"></i>'
-                                 . '<i class="fas fa-caret-down" style="font-size:9px; color:' . $dnCol . ';"></i>'
-                                 . '</span></a></th>';
-                        }
-                    @endphp
-                    <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Employee</th>
-                    <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Department</th>
+    <div class="overflow-x-hidden overflow-y-auto max-h-[47vh] px-7 hidden md:block">
+        @php
+            $s    = request('sort');
+            $d    = request('direction', 'asc');
+            $base = array_merge(request()->except(['sort','direction','page']));
+            function payrollSortTh(string $key, string $label, string $align, array $base, ?string $s, string $d): string {
+                $active  = $s === $key;
+                $nextDir = ($active && $d === 'asc') ? 'desc' : 'asc';
+                $url     = route('payroll.index', array_merge($base, ['sort' => $key, 'direction' => $nextDir]));
+                $upCol   = ($active && $d === 'asc')  ? '#dc2626' : '#d1d5db';
+                $dnCol   = ($active && $d === 'desc') ? '#dc2626' : '#d1d5db';
+                $color   = $active ? 'text-red-600 font-bold' : 'text-gray-500 font-semibold';
+                return '<th class="text-' . $align . '"><a href="' . $url . '" class="inline-flex items-center gap-1 no-underline uppercase tracking-wider text-xs ' . $color . '">'
+                     . $label
+                     . '<span class="inline-flex flex-col leading-none gap-px">'
+                     . '<i class="fas fa-caret-up" style="font-size:9px; color:' . $upCol . ';"></i>'
+                     . '<i class="fas fa-caret-down" style="font-size:9px; color:' . $dnCol . ';"></i>'
+                     . '</span></a></th>';
+            }
+        @endphp
+        <table class="table table-hover table-fixed w-full text-sm">
+            <colgroup>
+                <col class="w-48">  {{-- Employee --}}
+                <col class="w-32">  {{-- Department --}}
+                <col class="w-28">  {{-- Basic Pay --}}
+                <col class="w-24">  {{-- Days Worked --}}
+                <col class="w-20">  {{-- OT Hrs --}}
+                <col class="w-20">  {{-- Holiday --}}
+                <col class="w-28">  {{-- Total Deductions --}}
+                <col class="w-28">  {{-- Net Pay --}}
+                <col class="w-24">  {{-- Actions --}}
+            </colgroup>
+            <thead class="sticky top-0 z-5">
+                <tr>
+                    <th>Employee</th>
+                    <th>Department</th>
                     {!! payrollSortTh('base_pay',         'Basic Pay',        'right',  $base, $s, $d) !!}
                     {!! payrollSortTh('days_worked',      'Days Worked',      'center', $base, $s, $d) !!}
                     {!! payrollSortTh('overtime_hours',   'OT Hrs',           'center', $base, $s, $d) !!}
                     {!! payrollSortTh('holiday_days',     'Holiday',          'center', $base, $s, $d) !!}
                     {!! payrollSortTh('total_deductions', 'Total Deductions', 'right',  $base, $s, $d) !!}
                     {!! payrollSortTh('net_pay',          'Net Pay',          'right',  $base, $s, $d) !!}
-                    <th style="padding:12px; text-align:center; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($employees as $employee)
                     @php $payroll = $payrollData[$employee->id] ?? []; @endphp
-                    <tr style="border-bottom:1px solid #f3f4f6;">
-                        <td style="padding:12px;">
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:700; flex-shrink:0;">
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ $avatarClass }} flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                                     {{ strtoupper(substr($employee->full_name, 0, 1)) }}
                                 </div>
-                                <div>
+                                <div class="min-w-0">
                                     <a href="{{ route('employees.show', $employee) }}"
-                                       style="font-weight:600; color:#1a1a2e; text-decoration:none;">{{ $employee->full_name }}</a>
-                                    <div style="font-size:12px; color:#6b7280; font-family:monospace;">{{ $employee->employee_id }}</div>
+                                       class="font-semibold text-gray-800 no-underline hover:text-emerald-600 truncate block">
+                                        {{ $employee->full_name }}
+                                    </a>
+                                    <div class="text-xs text-gray-500 font-mono">{{ $employee->employee_id }}</div>
                                 </div>
                             </div>
                         </td>
-                        <td style="padding:12px; color:#6b7280;">{{ $employee->department }}</td>
-                        
-                        <td style="padding:12px 16px; text-align:center; font-weight:600; color:#1a1a2e;">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
-
-                        <td style="padding:12px; text-align:center; font-weight:600; color:#1a1a2e;">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</td>
-                        <td style="padding:12px; text-align:center; font-weight:600; color:#f59e0b;">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</td>
-                        <td style="padding:12px; text-align:center; font-weight:600; color:#8b5cf6;">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</td>
-                        <td style="padding:12px; text-align:right; font-weight:600; color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
-                        <td style="padding:12px 16px; text-align:center; font-weight:600; color:#10b981;">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
-
-                        <td style="padding:12px; text-align:center;">
-                            <div style="display:flex; gap:6px; justify-content:center;">
+                        <td class="text-gray-500 truncate">{{ $employee->department }}</td>
+                        <td class="text-right font-semibold text-gray-800">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
+                        <td class="text-center font-semibold text-gray-800">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</td>
+                        <td class="text-center font-semibold text-amber-500">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</td>
+                        <td class="text-center font-semibold text-violet-500">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</td>
+                        <td class="text-right font-semibold text-red-600">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
+                        <td class="text-right font-semibold text-emerald-600">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
+                        <td class="text-center">
+                            <div class="flex gap-2 justify-center">
                                 @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
-                                    <a href="javascript:void(0)"
-                                       onclick="alert('This employee has no payroll data for the selected cutoff period.')"
-                                       style="padding:5px 10px; background:#f3f4f6; color:#9ca3af; border-radius:8px; font-size:12px; text-decoration:none; cursor:not-allowed;"
-                                       title="No payroll data">
+                                    <button class="btn btn-soft btn-sm btn-disabled" title="No payroll data">
                                         <i class="fas fa-eye"></i>
-                                    </a>
+                                    </button>
                                 @else
                                     <a href="{{ route('payroll.show', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-                                       style="padding:5px 10px; background:#dbeafe; color:#1e40af; border-radius:8px; font-size:12px; text-decoration:none;"
-                                       title="Full details">
+                                       class="btn btn-soft btn-info btn-sm" title="Full details">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-                                       style="padding:5px 10px; background:#d1fae5; color:#065f46; border-radius:8px; font-size:12px; text-decoration:none;"
-                                       title="Download payslip">
+                                       class="btn btn-soft btn-success btn-sm" title="Download payslip">
                                         <i class="fas fa-file-download"></i>
                                     </a>
                                 @endif
@@ -309,8 +289,8 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" style="padding:40px; text-align:center; color:#9ca3af;">
-                            <i class="fas fa-money-bill-wave" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+                        <td colspan="9" class="py-10 text-center text-gray-400">
+                            <i class="fas fa-money-bill-wave text-3xl mb-2 block"></i>
                             No payroll data found.
                         </td>
                     </tr>
@@ -320,139 +300,106 @@
     </div>
 
     {{-- Mobile Cards --}}
-    <div class="user-mobile-cards" style="padding:16px;">
+    <div class="md:hidden p-4 flex flex-col gap-3">
         @forelse($employees as $employee)
             @php $payroll = $payrollData[$employee->id] ?? []; @endphp
-            <div class="user-card">
-                <div class="user-card-header">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:700; flex-shrink:0;">
+            <div class="card bg-base-100 border border-gray-200 p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br {{ $avatarClass }} flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                             {{ strtoupper(substr($employee->full_name, 0, 1)) }}
                         </div>
                         <div>
-                            <div style="font-weight:600; color:#1a1a2e; font-size:14px;">
-                                <a href="{{ route('employees.show', $employee) }}"
-                                   style="color:#1a1a2e; text-decoration:none; font-weight:600;">
-                                    {{ $employee->full_name }}
-                                </a>
-                            </div>
-                            <div style="font-size:12px; color:#6b7280; font-family:monospace;">{{ $employee->employee_id }}</div>
+                            <a href="{{ route('employees.show', $employee) }}"
+                               class="font-semibold text-gray-800 no-underline text-sm hover:text-emerald-600">
+                                {{ $employee->full_name }}
+                            </a>
+                            <div class="text-xs text-gray-500 font-mono">{{ $employee->employee_id }}</div>
                         </div>
                     </div>
-                    <span style="padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; background:#fef3c7; color:#92400e;">
-                        {{ $employee->employment_status }}
-                    </span>
+                    <span class="badge badge-soft badge-warning whitespace-nowrap">{{ $employee->employment_status }}</span>
                 </div>
 
-                <div style="margin-top:10px; font-size:13px; color:#6b7280; display:flex; flex-wrap:wrap; gap:6px 16px;">
-                    <span><i class="fas fa-building" style="width:14px;"></i> {{ $employee->department }}</span>
-                    <span><i class="fas fa-briefcase" style="width:14px;"></i> {{ $employee->position }}</span>
+                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
+                    <span><i class="fas fa-building w-3.5"></i> {{ $employee->department }}</span>
+                    <span><i class="fas fa-briefcase w-3.5"></i> {{ $employee->position }}</span>
                 </div>
 
-                <div style="margin-top:12px; border-top:1px solid #f3f4f6;">
+                <div class="mt-3 border-t border-gray-100">
                     <button type="button"
-                            onclick="var d=this.nextElementSibling; var i=this.querySelector('i'); d.style.display=d.style.display==='none'?'block':'none'; i.classList.toggle('fa-chevron-down'); i.classList.toggle('fa-chevron-up');"
-                            style="width:100%; padding:10px 0; background:none; border:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:600; color:#6b7280;">
+                            onclick="var d=this.nextElementSibling; var i=this.querySelector('i'); d.classList.toggle('hidden'); i.classList.toggle('fa-chevron-down'); i.classList.toggle('fa-chevron-up');"
+                            class="w-full py-2 bg-transparent border-none cursor-pointer flex justify-between items-center text-xs font-semibold text-gray-500">
                         <span>View Payroll Breakdown</span>
-                        <i class="fas fa-chevron-down" style="font-size:11px;"></i>
+                        <i class="fas fa-chevron-down text-[11px]"></i>
                     </button>
-                    <div style="display:none; padding-bottom:4px;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                            <span style="color:#6b7280;">Days Worked:</span>
-                            <span style="font-weight:600; color:#1a1a2e;">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                            <span style="color:#6b7280;">Overtime Hours:</span>
-                            <span style="color:#f59e0b;">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                            <span style="color:#6b7280;">Holiday Days:</span>
-                            <span style="color:#8b5cf6;">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                            <span style="color:#6b7280;">Basic Pay:</span>
-                            <span style="font-weight:600; color:#1a1a2e;">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                            <span style="color:#6b7280;">Gross Pay:</span>
-                            <span style="font-weight:600; color:#1a1a2e;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                            <span style="color:#6b7280;">Allowance & Benefits:</span>
-                            <span style="color:#10b981;">+₱{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                            <span style="color:#6b7280;">SSS:</span>
-                            <span style="color:#dc2626;">-₱{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                            <span style="color:#6b7280;">PhilHealth:</span>
-                            <span style="color:#dc2626;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                            <span style="color:#6b7280;">Pag-IBIG:</span>
-                            <span style="color:#dc2626;">-₱{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                            <span style="color:#6b7280;">Tax:</span>
-                            <span style="color:#dc2626;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px; font-weight:600;">
-                            <span style="color:#6b7280;">Total Deductions:</span>
-                            <span style="color:#dc2626;">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; font-size:15px; font-weight:700; color:#10b981; padding-bottom:10px;">
+                    <div class="hidden pb-1 flex flex-col gap-2 text-xs">
+                        @foreach([
+                            ['Days Worked',          $payroll['attendance_data']['days_worked'] ?? 0,               'text-gray-800 font-semibold'],
+                            ['Overtime Hours',        $payroll['attendance_data']['overtime_hours'] ?? 0,            'text-amber-500'],
+                            ['Holiday Days',          $payroll['attendance_data']['holiday_days'] ?? 0,              'text-violet-500'],
+                            ['Basic Pay',             '₱'.number_format($payroll['base_pay'] ?? 0, 2),              'text-gray-800 font-semibold'],
+                            ['Gross Pay',             '₱'.number_format($payroll['gross_pay'] ?? 0, 2),             'text-gray-800 font-semibold'],
+                            ['Allowance & Benefits',  '+₱'.number_format($payroll['allowance_benefits'] ?? 0, 2),   'text-emerald-600'],
+                            ['SSS',                   '-₱'.number_format($payroll['sss_contribution'] ?? 0, 2),     'text-red-600'],
+                            ['PhilHealth',            '-₱'.number_format($payroll['philhealth_contribution'] ?? 0, 2), 'text-red-600'],
+                            ['Pag-IBIG',              '-₱'.number_format($payroll['pagibig_contribution'] ?? 0, 2), 'text-red-600'],
+                            ['Tax',                   '-₱'.number_format($payroll['withholding_tax'] ?? 0, 2),      'text-red-600'],
+                            ['Total Deductions',      '-₱'.number_format($payroll['total_deductions'] ?? 0, 2),     'text-red-600 font-semibold'],
+                        ] as [$label, $val, $cls])
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-500">{{ $label }}:</span>
+                                <span class="{{ $cls }}">{{ $val }}</span>
+                            </div>
+                        @endforeach
+                        <div class="flex justify-between items-center text-sm font-bold text-emerald-600 pt-1 border-t border-gray-100">
                             <span>Net Pay:</span>
                             <span>₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="user-card-meta">
+                <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
                     @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
-                        <a href="javascript:void(0)"
-                           onclick="alert('This employee has no payroll data for the selected cutoff period.')"
-                           style="padding:5px 12px; background:#f3f4f6; color:#9ca3af; border-radius:8px; font-size:12px; text-decoration:none; cursor:not-allowed;">
+                        <button class="btn btn-soft btn-sm btn-disabled">
                             <i class="fas fa-eye"></i> View Details
-                        </a>
+                        </button>
                     @else
                         <a href="{{ route('payroll.show', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-                           style="padding:5px 12px; background:#dbeafe; color:#1e40af; border-radius:8px; font-size:12px; text-decoration:none;">
+                           class="btn btn-soft btn-info btn-sm">
                             <i class="fas fa-eye"></i> View Details
                         </a>
                         <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-                           style="padding:5px 12px; background:#d1fae5; color:#065f46; border-radius:8px; font-size:12px; text-decoration:none;">
+                           class="btn btn-soft btn-success btn-sm">
                             <i class="fas fa-file-download"></i> Payslip
                         </a>
                     @endif
                 </div>
             </div>
         @empty
-            <div style="padding:40px; text-align:center; color:#9ca3af;">
-                <i class="fas fa-money-bill-wave" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+            <div class="py-10 text-center text-gray-400">
+                <i class="fas fa-money-bill-wave text-3xl mb-2 block"></i>
                 No payroll data found.
             </div>
         @endforelse
     </div>
 
-</div>
+    <div class="px-7 py-4 border-t border-gray-200">
+        {{ $employees->links() }}
+    </div>
 
-<div style="padding:16px 28px; border-top:1px solid #e5e7eb;">{{ $employees->links() }}</div>
+</div>
 
 @endsection
 
 @section('scripts')
 <script>
-// ─── Department breakdown data from PHP ───────────────────────────────────────
 const DEPT_BREAKDOWN_DATA = @json($deptBreakdownData);
 const DEPT_LABEL          = @json($deptLabel);
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 function fmt(n) {
     return '₱' + parseFloat(n || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-// ─── Department Breakdown Modal ───────────────────────────────────────────────
 function openDeptModal() {
     const data  = DEPT_BREAKDOWN_DATA;
     const body  = document.getElementById('deptBreakdownBody');
@@ -460,32 +407,26 @@ function openDeptModal() {
     const empty = document.getElementById('deptBreakdownEmpty');
     const table = document.getElementById('deptBreakdownTable');
     const bar   = document.getElementById('deptGrossPayBar');
+    const modal = document.getElementById('deptBreakdownModal');
 
     document.getElementById('deptModalTitle').textContent =
-        DEPT_LABEL !== 'All Departments'
-            ? DEPT_LABEL + ' — Payroll Breakdown'
-            : 'All Departments — Payroll Breakdown';
+        DEPT_LABEL !== 'All Departments' ? DEPT_LABEL + ' — Payroll Breakdown' : 'All Departments — Payroll Breakdown';
 
     const periodText = document.querySelector('select[name="payroll_period_id"] option:checked')?.innerText ?? 'Latest Cutoff';
     document.getElementById('deptModalMeta').textContent =
         data.length + ' employee' + (data.length !== 1 ? 's' : '') + ' · Cutoff: ' + periodText;
 
     if (!data.length) {
-        table.style.display = 'none';
-        bar.style.display   = 'none';
-        empty.style.display = 'block';
-        document.getElementById('deptBreakdownModal').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        return;
+        table.classList.add('hidden'); bar.classList.add('hidden'); empty.classList.remove('hidden');
+        modal.classList.remove('hidden'); modal.classList.add('flex');
+        document.body.style.overflow = 'hidden'; return;
     }
 
-    table.style.display = '';
-    empty.style.display = 'none';
+    table.classList.remove('hidden'); empty.classList.add('hidden');
 
-    // Accumulate totals
     let totBasic = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
 
-    body.innerHTML = data.map((emp, idx) => {
+    body.innerHTML = data.map((emp) => {
         totBasic   += parseFloat(emp.basic_pay);
         totSss     += parseFloat(emp.sss_contribution);
         totPhil    += parseFloat(emp.philhealth_contribution);
@@ -493,48 +434,36 @@ function openDeptModal() {
         totTax     += parseFloat(emp.withholding_tax);
         totDed     += parseFloat(emp.total_deductions);
         totNet     += parseFloat(emp.net_pay);
-
-        const rowBg = idx % 2 === 0 ? '' : 'background:#f9fafb;';
         return `
-            <tr style="border-bottom:1px solid #f3f4f6; ${rowBg}">
-                <td style="padding:10px 16px;">
-                    <div style="font-weight:600; color:#1a1a2e; font-size:13px;">${emp.name}</div>
-                    <div style="font-size:11px; color:#9ca3af; font-family:monospace;">${emp.employee_id}</div>
-                </td>
-                <td style="padding:10px 16px; color:#6b7280; font-size:13px;">${emp.department}</td>
-                <td style="padding:10px 16px; text-align:right; font-weight:600; color:#1a1a2e;">${fmt(emp.basic_pay)}</td>
-
-                <td style="padding:10px 16px; text-align:right; font-weight:600; color:#1a1a2e;">${fmt(emp.allowance_benefits)}</td>
-                <td style="padding:10px 16px; text-align:right; font-weight:600; color:#1a1a2e;">${fmt(emp.overtime_pay)}</td>
-                                <td style="padding:10px 16px; text-align:right; font-weight:600; color:#1a1a2e;">${fmt(emp.gross_pay)}</td>
-
-
-                <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.sss_contribution)}</td>
-                <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.philhealth_contribution)}</td>
-                <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.pagibig_contribution)}</td>
-                <td style="padding:10px 16px; text-align:right; color:#dc2626;">${fmt(emp.withholding_tax)}</td>
-                <td style="padding:10px 16px; text-align:right; font-weight:600; color:#dc2626;">${fmt(emp.total_deductions)}</td>
-                <td style="padding:10px 16px; text-align:right; font-weight:700; color:#065f46; font-size:14px;">${fmt(emp.net_pay)}</td>
+            <tr>
+                <td><div class="font-semibold text-gray-800 truncate">${emp.name}</div><div class="text-xs text-gray-400 font-mono">${emp.employee_id}</div></td>
+                <td class="text-gray-500 truncate">${emp.department}</td>
+                <td class="text-right font-semibold">${fmt(emp.basic_pay)}</td>
+                <td class="text-right">${fmt(emp.allowance_benefits)}</td>
+                <td class="text-right">${fmt(emp.overtime_pay)}</td>
+                <td class="text-right font-semibold">${fmt(emp.gross_pay)}</td>
+                <td class="text-right text-red-600">${fmt(emp.sss_contribution)}</td>
+                <td class="text-right text-red-600">${fmt(emp.philhealth_contribution)}</td>
+                <td class="text-right text-red-600">${fmt(emp.pagibig_contribution)}</td>
+                <td class="text-right text-red-600">${fmt(emp.withholding_tax)}</td>
+                <td class="text-right font-semibold text-red-600">${fmt(emp.total_deductions)}</td>
+                <td class="text-right font-bold text-emerald-700 text-sm">${fmt(emp.net_pay)}</td>
             </tr>`;
     }).join('');
 
-    // Clear tfoot — no totals row
     foot.innerHTML = '';
-
-    // Total Gross Pay bar = sum of net pays
     document.getElementById('deptTotalGrossPay').textContent = fmt(totNet);
-    bar.style.display = 'flex';
-
-    document.getElementById('deptBreakdownModal').style.display = 'flex';
+    bar.classList.remove('hidden'); bar.classList.add('flex');
+    modal.classList.remove('hidden'); modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
 }
 
 function closeDeptModal() {
-    document.getElementById('deptBreakdownModal').style.display = 'none';
+    const modal = document.getElementById('deptBreakdownModal');
+    modal.classList.add('hidden'); modal.classList.remove('flex');
     document.body.style.overflow = '';
 }
 
-// Move modal to body on load — escapes overflow containers
 document.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(document.getElementById('deptBreakdownModal'));
     document.getElementById('deptBreakdownModal').addEventListener('click', function(e) {
@@ -542,11 +471,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeDeptModal();
-});
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeDeptModal(); });
 
-// ─── Print PDF ────────────────────────────────────────────────────────────────
 function printPayrollTable() {
     const data = DEPT_BREAKDOWN_DATA;
     if (!data.length) { alert('No payroll data to print.'); return; }
@@ -554,148 +480,57 @@ function printPayrollTable() {
     const searchVal  = document.querySelector('input[name="search"]')?.value ?? '';
     const deptVal    = document.querySelector('select[name="department"]')?.value ?? '';
     const periodText = document.querySelector('select[name="payroll_period_id"] option:checked')?.innerText ?? '';
-    const filterNote = [
-        searchVal  ? `Search: "${searchVal}"` : '',
-        deptVal    ? `Department: ${deptVal}` : '',
-        periodText ? `Cutoff: ${periodText}` : ''
-    ].filter(Boolean).join(' | ') || 'All Employees';
+    const filterNote = [searchVal ? `Search: "${searchVal}"` : '', deptVal ? `Department: ${deptVal}` : '', periodText ? `Cutoff: ${periodText}` : ''].filter(Boolean).join(' | ') || 'All Employees';
 
-let totBasic = 0, totAllowance = 0, totOt = 0, totGross = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
-const headers = ['Employee', 'Dept', 'Basic Pay', 'Allowance', 'OT Pay', 'Earnings', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax', 'Total Deductions', 'Net Pay'];
+    let totBasic = 0, totAllowance = 0, totOt = 0, totGross = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
+    const headers = ['Employee', 'Dept', 'Basic Pay', 'Allowance', 'OT Pay', 'Earnings', 'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax', 'Total Deductions', 'Net Pay'];
     let rows = '';
     data.forEach(d => {
-        totBasic     += parseFloat(d.basic_pay);
-        totAllowance += parseFloat(d.allowance_benefits);
-        totOt        += parseFloat(d.overtime_pay);
-        totGross     += parseFloat(d.gross_pay);
-        totSss       += parseFloat(d.sss_contribution);
-        totPhil      += parseFloat(d.philhealth_contribution);
-        totPagibig   += parseFloat(d.pagibig_contribution);
-        totTax       += parseFloat(d.withholding_tax);
-        totDed       += parseFloat(d.total_deductions);
-        totNet       += parseFloat(d.net_pay);
-        rows += `
-            <tr>
-                <td><strong>${d.name}</strong><br><small>${d.employee_id}</small></td>
-                <td>${d.department}</td>
-                <td class="num">${fmt(d.basic_pay)}</td>
-                <td class="num">${fmt(d.allowance_benefits)}</td>
-                <td class="num">${fmt(d.overtime_pay)}</td>
-                <td class="num">${fmt(d.gross_pay)}</td>
-                <td class="num red">${fmt(d.sss_contribution)}</td>
-                <td class="num red">${fmt(d.philhealth_contribution)}</td>
-                <td class="num red">${fmt(d.pagibig_contribution)}</td>
-                <td class="num red">${fmt(d.withholding_tax)}</td>
-                <td class="num red bold">${fmt(d.total_deductions)}</td>
-                <td class="num green bold">${fmt(d.net_pay)}</td>
-            </tr>`;
-    }); 
+        totBasic += parseFloat(d.basic_pay); totAllowance += parseFloat(d.allowance_benefits);
+        totOt += parseFloat(d.overtime_pay); totGross += parseFloat(d.gross_pay);
+        totSss += parseFloat(d.sss_contribution); totPhil += parseFloat(d.philhealth_contribution);
+        totPagibig += parseFloat(d.pagibig_contribution); totTax += parseFloat(d.withholding_tax);
+        totDed += parseFloat(d.total_deductions); totNet += parseFloat(d.net_pay);
+        rows += `<tr><td><strong>${d.name}</strong><br><small>${d.employee_id}</small></td><td>${d.department}</td><td class="num">${fmt(d.basic_pay)}</td><td class="num">${fmt(d.allowance_benefits)}</td><td class="num">${fmt(d.overtime_pay)}</td><td class="num">${fmt(d.gross_pay)}</td><td class="num red">${fmt(d.sss_contribution)}</td><td class="num red">${fmt(d.philhealth_contribution)}</td><td class="num red">${fmt(d.pagibig_contribution)}</td><td class="num red">${fmt(d.withholding_tax)}</td><td class="num red bold">${fmt(d.total_deductions)}</td><td class="num green bold">${fmt(d.net_pay)}</td></tr>`;
+    });
+
     const win = window.open('', '_blank');
-    win.document.write(`
-        <!DOCTYPE html><html><head>
-        <title>Payroll Summary Report</title>
-        <style>
-            * { margin:0; padding:0; box-sizing:border-box; }
-            body { font-family:Arial,sans-serif; font-size:11px; color:#111; padding:20px; }
-            h1 { font-size:16px; color:#1a1a2e; margin-bottom:4px; }
-            .meta { font-size:11px; color:#6b7280; margin-bottom:16px; }
-            table { width:100%; border-collapse:collapse; }
-            thead th { background:#1e40af; color:white; padding:7px 8px; font-size:10px; text-transform:uppercase; letter-spacing:0.04em; text-align:left; }
-            thead th.num { text-align:right; }
-            td { padding:6px 8px; border-bottom:1px solid #e5e7eb; vertical-align:top; }
-            td.num { text-align:right; }
-            tr:nth-child(even) td { background:#f9fafb; }
-            small { color:#6b7280; font-size:10px; font-family:monospace; }
-            .red { color:#dc2626; }
-            .green { color:#065f46; }
-            .bold { font-weight:700; }
-            tfoot tr td { background:#dbeafe; font-weight:700; border-top:2px solid #93c5fd; padding:8px; }
-            tfoot tr td.num { text-align:right; }
-            .gross-bar { margin-top:12px; background:#d1fae5; border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; }
-            .gross-bar span { font-size:11px; color:#065f46; }
-            .gross-bar strong { font-size:15px; color:#065f46; }
-            @media print { body { padding:0; } }
-        </style>
-        </head><body>
-        <h1>Payroll Summary Report</h1>
-        <div class="meta">Filter: ${filterNote} &nbsp;|&nbsp; Printed: ${new Date().toLocaleString()}</div>
-        <table>
-            <thead><tr>${headers.map((h, i) => i >= 2 ? `<th class="num">${h}</th>` : `<th>${h}</th>`).join('')}</tr></thead>
-            <tbody>${rows}</tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2">Totals (${data.length} employees)</td>
-                    <td class="num">${fmt(totBasic)}</td>
-                    <td class="num">${fmt(totAllowance)}</td>
-                    <td class="num">${fmt(totOt)}</td>
-                    <td class="num">${fmt(totGross)}</td>
-                    <td class="num red">${fmt(totSss)}</td>
-                    <td class="num red">${fmt(totPhil)}</td>
-                    <td class="num red">${fmt(totPagibig)}</td>
-                    <td class="num red">${fmt(totTax)}</td>
-                    <td class="num red bold">${fmt(totDed)}</td>
-                    <td class="num green bold">${fmt(totNet)}</td>
-                </tr>
-            </tfoot>
-        </table>
-        <div class="gross-bar">
-            <span><strong>Total Gross Pay</strong> (sum of all net pays)</span>
-            <strong>${fmt(totNet)}</strong>
-        </div>
-        </body></html>`);
-    win.document.close();
-    win.focus();
-    win.print();
+    win.document.write(`<!DOCTYPE html><html><head><title>Payroll Summary Report</title>
+    <style>* { margin:0; padding:0; box-sizing:border-box; } body { font-family:Arial,sans-serif; font-size:11px; color:#111; padding:20px; }
+    h1 { font-size:16px; color:#1a1a2e; margin-bottom:4px; } .meta { font-size:11px; color:#6b7280; margin-bottom:16px; }
+    table { width:100%; border-collapse:collapse; } thead th { background:#1e40af; color:white; padding:7px 8px; font-size:10px; text-transform:uppercase; text-align:left; }
+    thead th.num { text-align:right; } td { padding:6px 8px; border-bottom:1px solid #e5e7eb; vertical-align:top; } td.num { text-align:right; }
+    tr:nth-child(even) td { background:#f9fafb; } small { color:#6b7280; font-size:10px; font-family:monospace; }
+    .red { color:#dc2626; } .green { color:#065f46; } .bold { font-weight:700; }
+    tfoot tr td { background:#dbeafe; font-weight:700; border-top:2px solid #93c5fd; padding:8px; } tfoot tr td.num { text-align:right; }
+    .gross-bar { margin-top:12px; background:#d1fae5; border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; }
+    .gross-bar span, .gross-bar strong { font-size:11px; color:#065f46; } @media print { body { padding:0; } }</style>
+    </head><body><h1>Payroll Summary Report</h1><div class="meta">Filter: ${filterNote} | Printed: ${new Date().toLocaleString()}</div>
+    <table><thead><tr>${headers.map((h,i) => i>=2?`<th class="num">${h}</th>`:`<th>${h}</th>`).join('')}</tr></thead>
+    <tbody>${rows}</tbody>
+    <tfoot><tr><td colspan="2">Totals (${data.length} employees)</td><td class="num">${fmt(totBasic)}</td><td class="num">${fmt(totAllowance)}</td><td class="num">${fmt(totOt)}</td><td class="num">${fmt(totGross)}</td><td class="num red">${fmt(totSss)}</td><td class="num red">${fmt(totPhil)}</td><td class="num red">${fmt(totPagibig)}</td><td class="num red">${fmt(totTax)}</td><td class="num red bold">${fmt(totDed)}</td><td class="num green bold">${fmt(totNet)}</td></tr></tfoot>
+    </table><div class="gross-bar"><span><strong>Total Gross Pay</strong></span><strong>${fmt(totNet)}</strong></div></body></html>`);
+    win.document.close(); win.focus(); win.print();
 }
 
-// ─── Export CSV ───────────────────────────────────────────────────────────────
 function exportPayrollCSV() {
     const data = DEPT_BREAKDOWN_DATA;
     if (!data.length) { alert('No payroll data to export.'); return; }
 
-   const headers = [
-        'Employee', 'Employee ID', 'Department',
-        'Basic Pay', 'Allowance', 'OT Pay', 'Earnings',
-        'SSS', 'PhilHealth', 'Pag-IBIG', 'Tax',
-        'Total Deductions', 'Net Pay'
-    ];
-
-    let csvRows = [headers.join(',')];
-    let totNet = 0;
-
+    const headers = ['Employee','Employee ID','Department','Basic Pay','Allowance','OT Pay','Earnings','SSS','PhilHealth','Pag-IBIG','Tax','Total Deductions','Net Pay'];
+    let csvRows = [headers.join(',')], totNet = 0;
     data.forEach(d => {
         totNet += parseFloat(d.net_pay);
-        csvRows.push([
-            `"${d.name}"`,
-            `"${d.employee_id}"`,
-            `"${d.department}"`,
-            d.basic_pay,
-            d.allowance_benefits,
-            d.overtime_pay,
-            d.gross_pay,
-            d.sss_contribution,
-            d.philhealth_contribution,
-            d.pagibig_contribution,
-            d.withholding_tax,
-            d.total_deductions,
-            d.net_pay
-        ].join(','));
+        csvRows.push([`"${d.name}"`,`"${d.employee_id}"`,`"${d.department}"`,d.basic_pay,d.allowance_benefits,d.overtime_pay,d.gross_pay,d.sss_contribution,d.philhealth_contribution,d.pagibig_contribution,d.withholding_tax,d.total_deductions,d.net_pay].join(','));
     });
-
-    // Totals row
-    csvRows.push(['', '', '"TOTALS"', '', '', '', '', '', totNet.toFixed(2)].join(','));
-    csvRows.push(['', '', '"Total Gross Pay (sum of net pays)"', '', '', '', '', '', totNet.toFixed(2)].join(','));
+    csvRows.push(['','','"TOTALS"','','','','','',totNet.toFixed(2)].join(','));
 
     const periodText = document.querySelector('select[name="payroll_period_id"] option:checked')?.innerText ?? '';
     const deptVal    = document.querySelector('select[name="department"]')?.value ?? '';
-    const periodSlug = periodText && periodText !== 'Latest Cutoff'
-        ? `_${periodText.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_')}`
-        : '';
-    const filename = deptVal
-        ? `payroll_${deptVal.replace(/\s+/g, '_')}${periodSlug}.csv`
-        : `payroll_all${periodSlug}.csv`;
+    const periodSlug = periodText && periodText !== 'Latest Cutoff' ? `_${periodText.replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_')}` : '';
+    const filename   = deptVal ? `payroll_${deptVal.replace(/\s+/g,'_')}${periodSlug}.csv` : `payroll_all${periodSlug}.csv`;
 
-    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csvRows.join('\n')], { type:'text/csv;charset=utf-8;' });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
     a.href = url; a.download = filename; a.click();

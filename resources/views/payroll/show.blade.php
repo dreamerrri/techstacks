@@ -2,98 +2,100 @@
 
 @section('title', 'Payroll Details - ' . $employee->full_name)
 @section('breadcrumb')
-    <a href="{{ route('payroll.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Payroll</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <a href="{{ route('payroll.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Payroll</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:600;">{{ $employee->full_name }}</span>
+    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline hover:text-white">Manage Payroll</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline hover:text-white">Payroll</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <span class="text-white font-semibold">{{ $employee->full_name }}</span>
 @endsection
+
 @section('content')
 
 @php
-    $user = auth()->user();
+    $user    = auth()->user();
     $isAdmin = $user->isAdmin();
-    $isHR = $user->isHR();
-    $color = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
-    $colorDark = $isAdmin ? '#991b1b' : ($isHR ? '#1e40af' : '#764ba2');
+    $isHR    = $user->isHR();
     $payroll = $payrollData ?? [];
 @endphp
 
 {{-- Top nav --}}
-<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
-    <a href="{{ route('payroll.index') }}" style="color:#9ca3af; text-decoration:none; font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:6px;">
-        <i class="fas fa-arrow-left"></i> Back to Payroll List
+<div class="flex justify-between items-center flex-wrap gap-3 mb-5">
+    <a href="{{ route('payroll.index') }}" 
+           class="text-gray-500 no-underline text-sm hover:text-emerald-600 flex items-center gap-1">
+.        <i class="fas fa-arrow-left"></i> Back to Payroll List
     </a>
     @if(($payroll['gross_pay'] ?? 0) > 0)
         <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-           style="padding:8px 18px; background:#1e40af; color:white; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+           class="btn btn-soft btn-info btn-sm">
             <i class="fas fa-file-download"></i> Download Payslip
         </a>
     @endif
 </div>
 
 {{-- Profile Header --}}
-<div class="card bg-base-100 shadow-sm" style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-    <div style="width:70px; height:70px; border-radius:50%; background:linear-gradient(135deg,{{ $color }},{{ $colorDark }}); display:flex; align-items:center; justify-content:center; color:white; font-size:28px; font-weight:700; flex-shrink:0;">
+<div class="card bg-base-100 shadow-sm p-5 flex items-center gap-5 flex-wrap mb-5">
+    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
         {{ strtoupper(substr($employee->full_name, 0, 1)) }}
     </div>
-    <div style="flex:1;">
-        <h2 style="margin:0 0 4px; font-size:22px; color:#1a1a2e; font-weight:700;">{{ $employee->full_name }}</h2>
-        <p style="margin:0; color:#6b7280;">{{ $employee->position }} — {{ $employee->department }}</p>
-        <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:6px; font-size:13px; color:#6b7280;">
-            <span><i class="fas fa-id-badge" style="width:14px;"></i> {{ $employee->employee_id }}</span>
-            <span><i class="fas fa-calendar" style="width:14px;"></i> {{ $employee->date_hired->format('M d, Y') }}</span>
-            <span><i class="fas fa-money-bill-wave" style="width:14px;"></i> {{ $employee->salary_type }} Salary</span>
+    <div class="flex-1">
+        <h2 class="text-xl font-bold text-gray-800 m-0 mb-1">{{ $employee->full_name }}</h2>
+        <p class="text-gray-500 m-0">{{ $employee->position }} — {{ $employee->department }}</p>
+        <div class="flex flex-wrap gap-3 mt-1 text-xs text-gray-500">
+            <span><i class="fas fa-id-badge w-3.5"></i> {{ $employee->employee_id }}</span>
+            <span><i class="fas fa-calendar w-3.5"></i> {{ $employee->date_hired->format('M d, Y') }}</span>
+            <span><i class="fas fa-money-bill-wave w-3.5"></i> {{ $employee->salary_type }} Salary</span>
         </div>
     </div>
-    <div>
-        <span style="display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;
-            {{ $employee->employment_status === 'Regular'      ? 'background:#d1fae5; color:#065f46;'  : '' }}
-            {{ $employee->employment_status === 'Probationary' ? 'background:#fef3c7; color:#92400e;'  : '' }}
-            {{ $employee->employment_status === 'Contractual'  ? 'background:#dbeafe; color:#1e40af;'  : '' }}
-            {{ $employee->employment_status === 'Part-time'    ? 'background:#f3f4f6; color:#374151;'  : '' }}
-        ">{{ $employee->employment_status }}</span>
-    </div>
+    @php
+        $statusClass = match($employee->employment_status) {
+            'Regular'      => 'badge-soft badge-success',
+            'Probationary' => 'badge-soft badge-warning',
+            'Contractual'  => 'badge-soft badge-info',
+            'Part-time'    => 'badge-soft badge-neutral',
+            default        => 'badge-soft',
+        };
+    @endphp
+    <span class="badge {{ $statusClass }}">{{ $employee->employment_status }}</span>
 </div>
 
 {{-- Government IDs --}}
-<div class="card bg-base-100 shadow-sm">
-    <h2 class="card bg-base-100 shadow-sm-title">
-        <i class="fas fa-id-card"></i> Government IDs
+<div class="card bg-base-100 shadow-sm p-5 mb-5">
+    <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <i class="fas fa-id-card text-red-600"></i> Government IDs
     </h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         @foreach([
-            ['SSS Number',        $employee->sss_number,       'fa-shield-alt', '#10b981', 'rgba(16,185,129,0.1)'],
-            ['PhilHealth Number', $employee->philhealth_number, 'fa-heart',      '#3b82f6', 'rgba(59,130,246,0.1)'],
-            ['Pag-IBIG Number',   $employee->pagibig_number,    'fa-home',       '#f59e0b', 'rgba(245,158,11,0.1)'],
-            ['TIN Number',        $employee->tin_number,        'fa-file-invoice','#8b5cf6','rgba(139,92,246,0.1)'],
-        ] as [$label, $value, $icon, $clr, $bg])
-        <div class="card bg-base-100 shadow-sm" style="text-align:center;">
-            <div class="aurora-stat-icon" style="color:{{ $clr }}; background:{{ $bg }};">
-                <i class="fas {{ $icon }}"></i>
+            ['SSS Number',        $employee->sss_number,        'fa-shield-alt',   'text-emerald-600', 'bg-emerald-100'],
+            ['PhilHealth Number', $employee->philhealth_number,  'fa-heart',        'text-blue-600',    'bg-blue-100'],
+            ['Pag-IBIG Number',   $employee->pagibig_number,     'fa-home',         'text-amber-500',   'bg-amber-100'],
+            ['TIN Number',        $employee->tin_number,         'fa-file-invoice', 'text-violet-600',  'bg-violet-100'],
+        ] as [$label, $value, $icon, $color, $bg])
+            <div class="card bg-base-100 shadow-sm p-4 text-center">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 {{ $color }} {{ $bg }}">
+                    <i class="fas {{ $icon }}"></i>
+                </div>
+                <div class="text-xs text-gray-400 uppercase tracking-widest font-medium mb-1">{{ $label }}</div>
+                <div class="font-bold font-mono text-gray-800 text-xs break-all">{{ $value ?? '—' }}</div>
             </div>
-            <div style="font-size:12px; color:#9ca3af; text-transform:uppercase; letter-spacing:0.07em; font-weight:500; margin-bottom:6px;">{{ $label }}</div>
-            <div style="font-weight:700; font-family:monospace; color:#1a1a2e; font-size:13px; word-break:break-all;">{{ $value ?? '—' }}</div>
-        </div>
         @endforeach
     </div>
 </div>
 
-{{-- Stat Cards Row --}}
-<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; margin-bottom:20px;">
-    <div class="card card-stat card-stat-green" style="margin-bottom:0;">
+{{-- Stat Cards --}}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+    <div class="card-stat card-stat-green">
         <div class="stat-icon-wrap"><i class="fas fa-coins"></i></div>
         <div class="stat-label">Gross Pay</div>
         <div class="stat-value">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</div>
         <div class="stat-sub">For this cutoff</div>
     </div>
-    <div class="card card-stat card-stat-red" style="margin-bottom:0;">
+    <div class="card-stat card-stat-red">
         <div class="stat-icon-wrap"><i class="fas fa-minus-circle"></i></div>
         <div class="stat-label">Total Deductions</div>
         <div class="stat-value">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</div>
         <div class="stat-sub">Gov't & Manual Deductions</div>
     </div>
-    <div class="card card-stat card-stat-net" style="margin-bottom:0;">
+    <div class="card-stat card-stat-net">
         <div class="stat-icon-wrap"><i class="fas fa-wallet"></i></div>
         <div class="stat-label">Net Pay</div>
         <div class="stat-value">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</div>
@@ -101,191 +103,128 @@
     </div>
 </div>
 
+{{-- Monthly Breakdown (2nd cutoff only) --}}
 @if($selectedPeriod && $selectedPeriod->isSecondHalfOfMonth())
-{{-- Monthly Breakdown (Only for 2nd Cutoff) --}}
-<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; margin-bottom:20px;">
-    {{-- Monthly Gross Breakdown --}}
-    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0; border-left:4px solid #1e40af; background:#eff6ff;">
-        <div style="font-size:12px; font-weight:600; color:#1e40af; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Gross Breakdown</div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
-            <span style="color:#6b7280;">1st Cutoff Gross:</span>
-            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['first_cutoff_gross_pay'] ?? 0, 2) }}</span>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
-            <span style="color:#6b7280;">2nd Cutoff Gross:</span>
-            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span>
-        </div>
-        <div style="display:flex; justify-content:space-between; padding-top:8px; border-top:1px solid #bfdbfe; font-size:15px; font-weight:700; color:#1e40af;">
-            <span>Total Monthly Gross:</span>
-            <span>₱{{ number_format($payroll['total_monthly_gross_pay'] ?? 0, 2) }}</span>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+    <div class="card bg-base-100 shadow-sm p-5 border-l-4 border-blue-600 bg-blue-50">
+        <div class="text-xs font-bold text-blue-700 uppercase tracking-wider mb-3">Monthly Gross Breakdown</div>
+        <div class="flex flex-col gap-2 text-sm">
+            <div class="flex justify-between"><span class="text-gray-500">1st Cutoff Gross:</span><span class="font-semibold text-gray-800">₱{{ number_format($payroll['first_cutoff_gross_pay'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-500">2nd Cutoff Gross:</span><span class="font-semibold text-gray-800">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between pt-2 border-t border-blue-200 font-bold text-blue-700"><span>Total Monthly Gross:</span><span>₱{{ number_format($payroll['total_monthly_gross_pay'] ?? 0, 2) }}</span></div>
         </div>
     </div>
-
-    {{-- Monthly Contributions Breakdown --}}
-    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0; border-left:4px solid #991b1b; background:#fef2f2;">
-        <div style="font-size:12px; font-weight:600; color:#991b1b; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Contributions</div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
-            <span style="color:#6b7280;">1st Cutoff Gov't:</span>
-            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['first_cutoff_contributions'] ?? 0, 2) }}</span>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
-            <span style="color:#6b7280;">2nd Cutoff Gov't:</span>
-            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['current_cutoff_contributions'] ?? 0, 2) }}</span>
-        </div>
-        <div style="display:flex; justify-content:space-between; padding-top:8px; border-top:1px solid #fecaca; font-size:15px; font-weight:700; color:#991b1b;">
-            <span>Total Monthly Gov't:</span>
-            <span>₱{{ number_format(($payroll['first_cutoff_contributions'] ?? 0) + ($payroll['current_cutoff_contributions'] ?? 0), 2) }}</span>
+    <div class="card bg-base-100 shadow-sm p-5 border-l-4 border-red-700 bg-red-50">
+        <div class="text-xs font-bold text-red-700 uppercase tracking-wider mb-3">Monthly Contributions</div>
+        <div class="flex flex-col gap-2 text-sm">
+            <div class="flex justify-between"><span class="text-gray-500">1st Cutoff Gov't:</span><span class="font-semibold text-gray-800">₱{{ number_format($payroll['first_cutoff_contributions'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-500">2nd Cutoff Gov't:</span><span class="font-semibold text-gray-800">₱{{ number_format($payroll['current_cutoff_contributions'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between pt-2 border-t border-red-200 font-bold text-red-700"><span>Total Monthly Gov't:</span><span>₱{{ number_format(($payroll['first_cutoff_contributions'] ?? 0) + ($payroll['current_cutoff_contributions'] ?? 0), 2) }}</span></div>
         </div>
     </div>
-
-    {{-- Monthly Net Pay Breakdown --}}
-    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0; border-left:4px solid #166534; background:#f0fdf4;">
-        <div style="font-size:12px; font-weight:600; color:#166534; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Monthly Net Pay Breakdown</div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
-            <span style="color:#6b7280;">1st Cutoff Net:</span>
-            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['first_cutoff_net_pay'] ?? 0, 2) }}</span>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
-            <span style="color:#6b7280;">2nd Cutoff Net:</span>
-            <span style="font-weight:600; color:#1f2937;">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</span>
-        </div>
-        <div style="display:flex; justify-content:space-between; padding-top:8px; border-top:1px solid #bbf7d0; font-size:15px; font-weight:700; color:#166534;">
-            <span>Total Monthly Net:</span>
-            <span>₱{{ number_format($payroll['total_monthly_net_pay'] ?? 0, 2) }}</span>
+    <div class="card bg-base-100 shadow-sm p-5 border-l-4 border-green-700 bg-green-50">
+        <div class="text-xs font-bold text-green-700 uppercase tracking-wider mb-3">Monthly Net Pay Breakdown</div>
+        <div class="flex flex-col gap-2 text-sm">
+            <div class="flex justify-between"><span class="text-gray-500">1st Cutoff Net:</span><span class="font-semibold text-gray-800">₱{{ number_format($payroll['first_cutoff_net_pay'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between"><span class="text-gray-500">2nd Cutoff Net:</span><span class="font-semibold text-gray-800">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between pt-2 border-t border-green-200 font-bold text-green-700"><span>Total Monthly Net:</span><span>₱{{ number_format($payroll['total_monthly_net_pay'] ?? 0, 2) }}</span></div>
         </div>
     </div>
 </div>
 @endif
 
 {{-- Detail Cards Grid --}}
-<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5">
 
     {{-- Attendance-Based Earnings --}}
-    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0;">
-        <h2 class="card bg-base-100 shadow-sm-title">
-            <i class="fas fa-clock" style="background:rgba(16,185,129,0.1); color:#10b981; padding:5px; border-radius:6px;"></i> Attendance-Based Earnings
+    <div class="card bg-base-100 shadow-sm p-5">
+        <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-md bg-emerald-100 flex items-center justify-center text-emerald-600 text-xs flex-shrink-0">
+                <i class="fas fa-clock"></i>
+            </span>
+            Attendance-Based Earnings
         </h2>
-        <table style="width:100%; border-collapse:collapse; font-size:14px;">
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:10px 0; color:#6b7280; width:60%; vertical-align:top;">
-                    Base Pay
-                    <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['regular_hours'] ?? 0 }} hrs × ₱{{ number_format($payroll['hourly_rate'] ?? 0, 2) }}/hr</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#1a1a2e; text-align:right;">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Overtime Pay
-                    <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }} OT hrs × 1.25 × ₱{{ number_format($payroll['hourly_rate'] ?? 0, 2) }}/hr</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#10b981; text-align:right;">+₱{{ number_format($payroll['overtime_pay'] ?? 0, 2) }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Night Differential
-                    <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['night_diff_hours'] ?? 0 }} ND hrs × 1.10 × ₱{{ number_format($payroll['hourly_rate'] ?? 0, 2) }}/hr</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#10b981; text-align:right;">+₱{{ number_format($payroll['night_differential_pay'] ?? 0, 2) }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Holiday Pay
-                    <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }} holiday days × 2 × ₱{{ number_format($payroll['daily_rate'] ?? 0, 2) }}/day</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#10b981; text-align:right;">+₱{{ number_format($payroll['holiday_pay'] ?? 0, 2) }}</td>
-            </tr>
-            <tr>
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Benefits
-                    <div style="font-size:12px; color:#9ca3af;">Total active benefits</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#10b981; text-align:right;">+₱{{ number_format($payroll['benefits'] ?? 0, 2) }}</td>
-            </tr>
-        </table>
-        <div style="margin-top:10px; padding-top:10px; border-top:2px solid #e5e7eb; display:flex; justify-content:space-between; font-weight:700; font-size:15px;">
-            <span style="color:#1a1a2e;">Total Earnings</span>
-            <span style="color:#10b981;">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['benefits'] ?? 0), 2) }}</span>
+        <div class="flex flex-col text-sm">
+            @foreach([
+                ['Base Pay',           $payroll['attendance_data']['regular_hours'] ?? 0 .' hrs × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['base_pay'] ?? 0, 'text-gray-800', ''],
+                ['Overtime Pay',       ($payroll['attendance_data']['overtime_hours'] ?? 0) .' OT hrs × 1.25 × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['overtime_pay'] ?? 0, 'text-emerald-600', '+'],
+                ['Night Differential', ($payroll['attendance_data']['night_diff_hours'] ?? 0) .' ND hrs × 1.10 × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['night_differential_pay'] ?? 0, 'text-emerald-600', '+'],
+                ['Holiday Pay',        ($payroll['attendance_data']['holiday_days'] ?? 0) .' holiday days × 2 × ₱'. number_format($payroll['daily_rate'] ?? 0, 2) .'/day', $payroll['holiday_pay'] ?? 0, 'text-emerald-600', '+'],
+                ['Benefits',           'Total active benefits', $payroll['benefits'] ?? 0, 'text-emerald-600', '+'],
+            ] as [$label, $sub, $val, $cls, $prefix])
+                <div class="flex justify-between items-start py-2.5 border-b border-gray-100">
+                    <div>
+                        <div class="text-gray-500">{{ $label }}</div>
+                        <div class="text-xs text-gray-400">{{ $sub }}</div>
+                    </div>
+                    <span class="font-semibold {{ $cls }} ml-4 whitespace-nowrap">{{ $prefix }}₱{{ number_format($val, 2) }}</span>
+                </div>
+            @endforeach
+        </div>
+        <div class="flex justify-between items-center mt-3 pt-3 border-t-2 border-gray-200 font-bold text-sm">
+            <span class="text-gray-800">Total Earnings</span>
+            <span class="text-emerald-600">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['benefits'] ?? 0), 2) }}</span>
         </div>
     </div>
 
     {{-- Government Contributions & Deductions --}}
-    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0;">
-        <h2 class="card bg-base-100 shadow-sm-title">
-            <i class="fas fa-landmark" style="background:rgba(37,99,235,0.1); color:#2563eb; padding:5px; border-radius:6px;"></i> Government Contributions & Deductions
+    <div class="card bg-base-100 shadow-sm p-5">
+        <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-md bg-blue-100 flex items-center justify-center text-blue-600 text-xs flex-shrink-0">
+                <i class="fas fa-landmark"></i>
+            </span>
+            Government Contributions & Deductions
         </h2>
-        <table style="width:100%; border-collapse:collapse; font-size:14px;">
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    SSS Contribution
-                    <div style="font-size:12px; color:#9ca3af;">4.5% of gross pay (capped at ₱900)</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['sss_contribution'] ?? 0, 2) }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    PhilHealth Contribution
-                    <div style="font-size:12px; color:#9ca3af;">2.25% of gross pay (capped at ₱1,500)</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['philhealth_contribution'] ?? 0, 2) }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Pag-IBIG Contribution
-                    <div style="font-size:12px; color:#9ca3af;">2% of gross pay (capped at ₱100)</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['pagibig_contribution'] ?? 0, 2) }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Late Deduction
-                    <div style="font-size:12px; color:#9ca3af;">{{ $payroll['attendance_data']['late_hours'] ?? 0 }} late hrs × ₱{{ number_format($payroll['hourly_rate'] ?? 0, 2) }}/hr</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['late_deduction'] ?? 0, 2) }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Allowances
-                    <div style="font-size:12px; color:#9ca3af;">Total active allowances</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['allowances'] ?? 0, 2) }}</td>
-            </tr>
-            <tr>
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Manual Deductions
-                    <div style="font-size:12px; color:#9ca3af;">Deductions from manual payroll attendance</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['manual_deductions'] ?? 0, 2) }}</td>
-            </tr>
-        </table>
-        <div style="margin-top:10px; padding-top:10px; border-top:2px solid #e5e7eb; display:flex; justify-content:space-between; font-weight:700; font-size:15px;">
-            <span style="color:#1a1a2e;">Net Contributions & Deductions</span>
-            <span style="color:#dc2626;">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['late_deduction'] ?? 0) + ($payroll['manual_deductions'] ?? 0) + ($payroll['allowances'] ?? 0), 2) }}</span>
+        <div class="flex flex-col text-sm">
+            @foreach([
+                ['SSS Contribution',       "4.5% of gross pay (capped at ₱900)",               $payroll['sss_contribution'] ?? 0],
+                ['PhilHealth Contribution',"2.25% of gross pay (capped at ₱1,500)",             $payroll['philhealth_contribution'] ?? 0],
+                ['Pag-IBIG Contribution',  "2% of gross pay (capped at ₱100)",                  $payroll['pagibig_contribution'] ?? 0],
+                ['Late Deduction',         ($payroll['attendance_data']['late_hours'] ?? 0) .' late hrs × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['late_deduction'] ?? 0],
+                ['Allowances',             'Total active allowances',                            $payroll['allowances'] ?? 0],
+                ['Manual Deductions',      'Deductions from manual payroll attendance',          $payroll['manual_deductions'] ?? 0],
+            ] as [$label, $sub, $val])
+                <div class="flex justify-between items-start py-2.5 border-b border-gray-100">
+                    <div>
+                        <div class="text-gray-500">{{ $label }}</div>
+                        <div class="text-xs text-gray-400">{{ $sub }}</div>
+                    </div>
+                    <span class="font-semibold text-red-600 ml-4 whitespace-nowrap">-₱{{ number_format($val, 2) }}</span>
+                </div>
+            @endforeach
+        </div>
+        <div class="flex justify-between items-center mt-3 pt-3 border-t-2 border-gray-200 font-bold text-sm">
+            <span class="text-gray-800">Net Contributions & Deductions</span>
+            <span class="text-red-600">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['late_deduction'] ?? 0) + ($payroll['manual_deductions'] ?? 0) + ($payroll['allowances'] ?? 0), 2) }}</span>
         </div>
     </div>
 
     {{-- Tax Information --}}
-    <div class="card bg-base-100 shadow-sm" style="margin-bottom:0;">
-        <h2 class="card bg-base-100 shadow-sm-title">
-            <i class="fas fa-file-invoice-dollar" style="background:rgba(220,38,38,0.1); color:#dc2626; padding:5px; border-radius:6px;"></i> Tax Information
+    <div class="card bg-base-100 shadow-sm p-5">
+        <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-md bg-red-100 flex items-center justify-center text-red-600 text-xs flex-shrink-0">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </span>
+            Tax Information
         </h2>
-        <table style="width:100%; border-collapse:collapse; font-size:14px;">
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Taxable Income
-                    <div style="font-size:12px; color:#9ca3af;">After government contributions</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#1a1a2e; text-align:right;">₱{{ number_format($payroll['taxable_income'] ?? 0, 2) }}</td>
-            </tr>
-            <tr>
-                <td style="padding:10px 0; color:#6b7280; vertical-align:top;">
-                    Withholding Tax
-                    <div style="font-size:12px; color:#9ca3af;">Based on Philippine tax brackets</div>
-                </td>
-                <td style="padding:10px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</td>
-            </tr>
-        </table>
-        <div style="margin-top:14px; padding:14px; background:#f9fafb; border-radius:10px; font-size:12px; color:#6b7280; line-height:1.8;">
-            <strong style="color:#374151;">Tax Bracket Reference:</strong><br>
+        <div class="flex flex-col text-sm">
+            <div class="flex justify-between items-start py-2.5 border-b border-gray-100">
+                <div>
+                    <div class="text-gray-500">Taxable Income</div>
+                    <div class="text-xs text-gray-400">After government contributions</div>
+                </div>
+                <span class="font-semibold text-gray-800 ml-4">₱{{ number_format($payroll['taxable_income'] ?? 0, 2) }}</span>
+            </div>
+            <div class="flex justify-between items-start py-2.5">
+                <div>
+                    <div class="text-gray-500">Withholding Tax</div>
+                    <div class="text-xs text-gray-400">Based on Philippine tax brackets</div>
+                </div>
+                <span class="font-semibold text-red-600 ml-4">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</span>
+            </div>
+        </div>
+        <div class="mt-4 p-4 bg-gray-50 rounded-xl text-xs text-gray-500 leading-relaxed">
+            <strong class="text-gray-700">Tax Bracket Reference:</strong><br>
             • ₱0 – ₱20,832: 0%<br>
             • ₱20,833 – ₱33,333: 20%<br>
             • ₱33,334 – ₱66,667: 25%<br>
@@ -295,29 +234,29 @@
         </div>
     </div>
 
-    {{-- Pay Summary (full-width) --}}
-    <div class="card bg-base-100 shadow-sm" style="grid-column:1 / -1; margin-bottom:0;">
-        <h2 class="card bg-base-100 shadow-sm-title">
-            <i class="fas fa-receipt"></i> Pay Summary
+    {{-- Pay Summary (full width) --}}
+    <div class="card bg-base-100 shadow-sm p-5 md:col-span-3">
+        <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-receipt text-red-600"></i> Pay Summary
         </h2>
-        <table style="width:100%; border-collapse:collapse; font-size:15px;">
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:12px 0; color:#6b7280;">Gross Pay</td>
-                <td style="padding:12px 0; font-weight:600; color:#1a1a2e; text-align:right;">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</td>
-            </tr>
-            <tr style="border-bottom:1px solid #f3f4f6;">
-                <td style="padding:12px 0; color:#dc2626;">Less: Government Contributions & Deductions</td>
-                <td style="padding:12px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['late_deduction'] ?? 0) + ($payroll['manual_deductions'] ?? 0), 2) }}</td>
-            </tr>
-            <tr style="border-bottom:2px solid #e5e7eb;">
-                <td style="padding:12px 0; color:#dc2626;">Less: Withholding Tax</td>
-                <td style="padding:12px 0; font-weight:600; color:#dc2626; text-align:right;">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</td>
-            </tr>
-            <tr>
-                <td style="padding:16px 0; font-weight:700; color:#1a1a2e; font-size:18px;">NET PAY</td>
-                <td style="padding:16px 0; font-weight:700; color:#10b981; font-size:24px; text-align:right;">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
-            </tr>
-        </table>
+        <div class="flex flex-col text-sm">
+            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                <span class="text-gray-500">Gross Pay</span>
+                <span class="font-semibold text-gray-800">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span>
+            </div>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                <span class="text-red-600">Less: Government Contributions & Deductions</span>
+                <span class="font-semibold text-red-600">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['late_deduction'] ?? 0) + ($payroll['manual_deductions'] ?? 0), 2) }}</span>
+            </div>
+            <div class="flex justify-between items-center py-3 border-b-2 border-gray-200">
+                <span class="text-red-600">Less: Withholding Tax</span>
+                <span class="font-semibold text-red-600">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</span>
+            </div>
+            <div class="flex justify-between items-center py-4">
+                <span class="text-xl font-bold text-gray-800">NET PAY</span>
+                <span class="text-3xl font-extrabold text-emerald-600">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</span>
+            </div>
+        </div>
     </div>
 
 </div>
