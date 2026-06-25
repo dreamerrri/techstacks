@@ -11,7 +11,7 @@
     {{-- Header --}}
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
         <div>
-            <span class="aurora-badge aurora-badge-admin" style="margin-bottom:8px;">
+            <span class="badge badge badge-soft badge-success" style="margin-bottom:8px;">
                 <i class="fas fa-users-cog"></i> User Management
             </span>
             <p style="color:#6b7280; margin:0;">Manage system accounts, roles, and access.</p>
@@ -19,29 +19,29 @@
     </div>
 
     {{-- Stats --}}
-    <div class="aurora-stats-grid" style="margin-bottom:24px;">
-        <div class="aurora-stat-card">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5" style="margin-bottom:24px;">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#dc2626; background:rgba(220,38,38,0.1);">
                 <i class="fas fa-users"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\User::count() }}</div>
             <div class="aurora-stat-label">Total Users</div>
         </div>
-        <div class="aurora-stat-card">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#991b1b; background:rgba(153,27,27,0.1);">
                 <i class="fas fa-user-shield"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\User::where('role','admin')->count() }}</div>
             <div class="aurora-stat-label">Admins</div>
         </div>
-        <div class="aurora-stat-card">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#f59e0b; background:rgba(245,158,11,0.1);">
                 <i class="fas fa-user-tie"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\User::where('role','hr')->count() }}</div>
             <div class="aurora-stat-label">HR Personnel</div>
         </div>
-        <div class="aurora-stat-card">
+        <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#10b981; background:rgba(16,185,129,0.1);">
                 <i class="fas fa-check-circle"></i>
             </div>
@@ -51,12 +51,12 @@
     </div>
 
     {{-- Filters + Table --}}
-    <div class="aurora-card" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
+    <div class="card bg-base-100 shadow-sm" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
 
         {{-- Sticky header: title + search --}}
         <div style="position:sticky; top:0; z-index:10; background:white; padding:20px 28px 0; border-radius:20px 20px 0 0;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-                <h2 class="aurora-card-title" style="margin:0; font-size:15px;">
+                <h2 class="card bg-base-100 shadow-sm-title" style="margin:0; font-size:15px;">
                     <i class="fas fa-list"></i> User Accounts
                 </h2>
             </div>
@@ -78,7 +78,7 @@
                     <option value="active"   {{ request('status') === 'active'   ? 'selected' : '' }}>Active</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                 </select>
-                <button type="submit" class="btn btn-danger btn-sm" style="padding:8px 20px; font-size:14px;">
+                <button type="submit" class="btn btn btn-error btn-sm" style="padding:8px 20px; font-size:14px;">
                     <i class="fas fa-search"></i> Search
                 </button>
                 @if(request()->hasAny(['search','role','status']))
@@ -91,7 +91,7 @@
         </div>
 
         {{-- Desktop Table --}}
-        <div class="user-table-wrapper" style="overflow-y:auto; max-height:53vh; padding:0 28px;">
+        <div class="table-responsive style="overflow-y:auto; max-height:53vh; padding:0 28px;">
             <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:600px;">
                 <thead style="position:sticky; top:0; z-index:5;">
                     <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
@@ -129,7 +129,7 @@
                                         {{ $user->name }}
                                     @endif
                                     @if($user->id === auth()->id())
-                                        <span class="aurora-badge aurora-badge-hr" style="font-size:10px; padding:2px 8px; margin:0; text-transform:none; letter-spacing:0;">You</span>
+                                        <span class="badge badge badge-soft badge-success" style="font-size:10px; padding:2px 8px; margin:0; text-transform:none; letter-spacing:0;">You</span>
                                     @endif
                                 </div>
                             </td>
@@ -153,11 +153,11 @@
                             {{-- Status --}}
                             <td style="padding:12px;">
                                 @if($user->is_active)
-                                    <span class="aurora-status aurora-status-active">
+                                    <span class="badge badge badge-soft badge-success">
                                         <i class="fas fa-check-circle"></i> Active
                                     </span>
                                 @else
-                                    <span class="aurora-status aurora-status-inactive">
+                                    <span class="badge badge badge-soft badge-error">
                                         <i class="fas fa-times-circle"></i> Inactive
                                     </span>
                                 @endif
@@ -226,7 +226,7 @@
                                         {{ $user->name }}
                                     @endif
                                     @if($user->id === auth()->id())
-                                        <span class="aurora-badge aurora-badge-hr" style="font-size:10px; padding:2px 8px; margin:0 0 0 4px; text-transform:none; letter-spacing:0; vertical-align:middle;">You</span>
+                                        <span class="badge badge badge-soft badge-success" style="font-size:10px; padding:2px 8px; margin:0 0 0 4px; text-transform:none; letter-spacing:0; vertical-align:middle;">You</span>
                                     @endif
                                 </div>
                                 <div style="font-size:12px; color:#6b7280;">{{ $user->email }}</div>
@@ -234,11 +234,11 @@
                         </div>
 
                         @if($user->is_active)
-                            <span class="aurora-status aurora-status-active" style="white-space:nowrap;">
+                            <span class="badge badge badge-soft badge-success" style="white-space:nowrap;">
                                 <i class="fas fa-check-circle"></i> Active
                             </span>
                         @else
-                            <span class="aurora-status aurora-status-inactive" style="white-space:nowrap;">
+                            <span class="badge badge badge-soft badge-error" style="white-space:nowrap;">
                                 <i class="fas fa-times-circle"></i> Inactive
                             </span>
                         @endif

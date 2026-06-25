@@ -2,73 +2,73 @@
 
 @section('title', 'Permission Details')
 @section('breadcrumb')
-    <a href="{{ route('users.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Users</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <a href="{{ route('permissions.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Permissions</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:600;">{{ $permission->name }}</span>
+    <a href="{{ route('users.index') }}" class="text-white/55 no-underline hover:text-white">Manage Users</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('permissions.index') }}" class="text-white/55 no-underline hover:text-white">Permissions</a>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <span class="text-white font-semibold">{{ $permission->name }}</span>
 @endsection
+
 @section('content')
 
-    <div style="margin-bottom:20px;">
-        <a href="{{ route('permissions.index') }}" style="color:#6b7280; text-decoration:none; font-size:14px;">
+    <div class="mb-5">
+        <a href="{{ route('permissions.index') }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
             <i class="fas fa-arrow-left"></i> Back to Permissions
         </a>
     </div>
 
     @if(session('success'))
-        <div class="aurora-status aurora-status-active" style="margin-bottom:16px; padding:12px 16px; border-radius:8px; display:block;">
+        <div class="alert alert-success mb-4">
             <i class="fas fa-check-circle"></i> {{ session('success') }}
         </div>
     @endif
 
-    <div class="aurora-card">
+    <div class="card bg-base-100 shadow-sm p-6">
 
         {{-- Header --}}
-        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
-            <div style="display:flex; align-items:center; gap:14px;">
-                <div style="width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; flex-shrink:0;">
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-xl flex-shrink-0">
                     <i class="fas fa-key"></i>
                 </div>
                 <div>
-                    <h2 style="margin:0; color:#1f2937; font-size:20px; font-weight:700;">{{ $permission->name }}</h2>
-                    <code style="font-size:12px; color:#6b7280; background:#f3f4f6; padding:2px 8px; border-radius:4px;">{{ $permission->slug }}</code>
+                    <h2 class="text-xl font-bold text-gray-800 m-0">{{ $permission->name }}</h2>
+                    <code class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{{ $permission->slug }}</code>
                 </div>
             </div>
-            <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-danger btn-sm" style="font-size:14px; padding:8px 16px;">
+            <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft btn-error btn-sm">
                 <i class="fas fa-edit"></i> Edit Permission
             </a>
         </div>
 
         {{-- Permission Information --}}
-        <div style="margin-bottom:32px;">
-            <h3 style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#9ca3af; border-bottom:2px solid #fecaca; padding-bottom:8px; margin-bottom:16px;">
-                <i class="fas fa-info-circle" style="color:#dc2626;"></i> Permission Information
+        <div class="mb-8">
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
+                <i class="fas fa-info-circle text-red-600"></i> Permission Information
             </h3>
-
-            <div class="aurora-info-list">
-                <div class="aurora-info-row">
-                    <span class="aurora-info-label">Module</span>
-                    <span class="aurora-info-value">{{ ucfirst($permission->module) }}</span>
+            <div class="flex flex-col">
+                <div class="flex justify-between items-center py-3 border-b border-base-200">
+                    <span class="text-gray-400 font-medium">Module</span>
+                    <span class="font-semibold text-gray-800">{{ ucfirst($permission->module) }}</span>
                 </div>
-                <div class="aurora-info-row">
-                    <span class="aurora-info-label">Status</span>
-                    <span class="aurora-info-value">
+                <div class="flex justify-between items-center py-3 border-b border-base-200">
+                    <span class="text-gray-400 font-medium">Status</span>
+                    <span>
                         @if($permission->is_active)
-                            <span class="aurora-status aurora-status-active"><i class="fas fa-check-circle"></i> Active</span>
+                            <span class="badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
                         @else
-                            <span class="aurora-status aurora-status-inactive"><i class="fas fa-times-circle"></i> Inactive</span>
+                            <span class="badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
                         @endif
                     </span>
                 </div>
-                <div class="aurora-info-row">
-                    <span class="aurora-info-label">Assigned to Roles</span>
-                    <span class="aurora-info-value">{{ $permission->roles->count() }}</span>
+                <div class="flex justify-between items-center py-3 {{ $permission->description ? 'border-b border-base-200' : '' }}">
+                    <span class="text-gray-400 font-medium">Assigned to Roles</span>
+                    <span class="font-semibold text-gray-800">{{ $permission->roles->count() }}</span>
                 </div>
                 @if($permission->description)
-                    <div class="aurora-info-row" style="flex-direction:column; align-items:flex-start; gap:4px;">
-                        <span class="aurora-info-label">Description</span>
-                        <span class="aurora-info-value" style="text-align:left; font-weight:400; color:#374151;">{{ $permission->description }}</span>
+                    <div class="flex flex-col gap-1 py-3">
+                        <span class="text-gray-400 font-medium">Description</span>
+                        <span class="text-gray-700 text-sm">{{ $permission->description }}</span>
                     </div>
                 @endif
             </div>
@@ -76,32 +76,31 @@
 
         {{-- Roles with this Permission --}}
         <div>
-            <h3 style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#9ca3af; border-bottom:2px solid #fecaca; padding-bottom:8px; margin-bottom:16px;">
-                <i class="fas fa-user-tag" style="color:#dc2626;"></i> Roles with this Permission ({{ $permission->roles->count() }})
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
+                <i class="fas fa-user-tag text-red-600"></i> Roles with this Permission ({{ $permission->roles->count() }})
             </h3>
 
             @if($permission->roles->count() > 0)
-                @foreach($permission->roles as $role)
-                
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid #e5e7eb; border-radius:12px; margin-bottom:8px; transition:box-shadow 0.2s ease;"
-                         onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.07)'"
-                         onmouseout="this.style.boxShadow='none'">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; flex-shrink:0;">
-                                {{ strtoupper(substr($role->name, 0, 1)) }}
+                <div class="flex flex-col gap-2">
+                    @foreach($permission->roles as $role)
+                        <div class="flex justify-between items-center p-3 border border-gray-200 rounded-xl hover:shadow-md transition-shadow">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white font-bold flex-shrink-0">
+                                    {{ strtoupper(substr($role->name, 0, 1)) }}
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800 text-sm">{{ $role->name }}</div>
+                                    <code class="text-xs text-gray-500">{{ $role->slug }}</code>
+                                </div>
                             </div>
-                            <div>
-                                <div style="font-weight:600; color:#1f2937; font-size:14px;">{{ $role->name }}</div>
-                                <code style="font-size:11px; color:#6b7280;">{{ $role->slug }}</code>
-                            </div>
+                            <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
+                                <i class="fas fa-eye"></i> View Role
+                            </a>
                         </div>
-                        <a href="{{ route('roles.show', $role) }}" class="btn btn-info btn-sm">
-                            <i class="fas fa-eye"></i> View Role
-                        </a>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             @else
-                <p style="color:#9ca3af; font-size:14px; margin:0;">No roles have this permission.</p>
+                <p class="text-gray-400 text-sm m-0">No roles have this permission.</p>
             @endif
         </div>
 
