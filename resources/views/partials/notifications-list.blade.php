@@ -1,69 +1,72 @@
-<div style="max-height:380px; overflow-y:auto;">
+<div class="max-h-96 overflow-y-auto">
     @if($notifCount > 0)
-        @foreach($notifications as $notification)
-            <a href="{{ $notification->link ?: '#' }}"
-               onclick="markAsRead({{ $notification->id }}, '{{ $notification->link ?: '#' }}'); return false;"
-               style="display:flex; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px solid #f3f4f6; text-decoration:none; background:white; transition:background 0.15s;"
-               onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background='white'">
-                <div style="width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:{{ match($notification->type) {
-                    'alert' => '#fee2e2',
-                    'error' => '#fee2e2',
-                    'warning' => '#fef3c7',
-                    'success' => '#d1fae5',
-                    'info' => '#e0f2fe',
-                    default => '#f3f4f6'
-                } }};">
-                    <i class="fas {{ match($notification->type) {
-                    'alert' => 'fa-exclamation-triangle',
-                    'error' => 'fa-times-circle',
-                    'warning' => 'fa-exclamation-circle',
-                    'success' => 'fa-check-circle',
-                    'info' => 'fa-info-circle',
-                    default => 'fa-bell'
-                } }}" style="font-size:14px; color:{{ match($notification->type) {
-                    'alert' => '#dc2626',
-                    'error' => '#dc2626',
-                    'warning' => '#d97706',
-                    'success' => '#059669',
-                    'info' => '#0891b2',
-                    default => '#6b7280'
-                } }};"></i>
+
+        @php
+            $items = [
+                ...$unassigned->map(fn($emp) => [
+                    'href'    => route('employees.edit', $emp),
+                    'bg'      => 'bg-red-100',
+                    'icon'    => 'fa-user-slash',
+                    'color'   => 'text-red-600',
+                    'title'   => $emp->full_name,
+                    'sub'     => 'Needs dept / position assignment',
+                ]),
+                ...$missingGovIds->map(fn($emp) => [
+                    'href'    => route('employees.edit', $emp),
+                    'bg'      => 'bg-amber-100',
+                    'icon'    => 'fa-id-card',
+                    'color'   => 'text-amber-600',
+                    'title'   => $emp->full_name,
+                    'sub'     => 'Missing: ' . collect(['SSS' => $emp->sss_number, 'PhilHealth' => $emp->philhealth_number, 'Pag-IBIG' => $emp->pagibig_number, 'TIN' => $emp->tin_number])->filter(fn($v) => is_null($v))->keys()->implode(', '),
+                ]),
+                ...$overduePayrolls->map(fn($period) => [
+                    'href'    => route('payroll.index'),
+                    'bg'      => 'bg-violet-100',
+                    'icon'    => 'fa-file-invoice-dollar',
+                    'color'   => 'text-violet-600',
+                    'title'   => \Carbon\Carbon::parse($period->cutoff_start)->format('M d') . ' – ' . \Carbon\Carbon::parse($period->cutoff_end)->format('M d, Y'),
+                    'sub'     => 'Due ' . \Carbon\Carbon::parse($period->payroll_date)->format('M d, Y') . ' — still draft',
+                ]),
+                ...$expiringAllowances->map(fn($allowance) => [
+                    'href'    => route('employees.show', $allowance->employee),
+                    'bg'      => 'bg-sky-100',
+                    'icon'    => 'fa-calendar-times',
+                    'color'   => 'text-sky-600',
+                    'title'   => $allowance->employee->full_name,
+                    'sub'     => '"' . $allowance->name . '" expires ' . \Carbon\Carbon::parse($allowance->end_date)->format('M d, Y'),
+                ]),
+                ...$expiringBenefits->map(fn($benefit) => [
+                    'href'    => route('employees.show', $benefit->employee),
+                    'bg'      => 'bg-emerald-100',
+                    'icon'    => 'fa-gift',
+                    'color'   => 'text-emerald-600',
+                    'title'   => $benefit->employee->full_name,
+                    'sub'     => '"' . $benefit->name . '" expires ' . \Carbon\Carbon::parse($benefit->end_date)->format('M d, Y'),
+                ]),
+            ];
+        @endphp
+
+        @foreach($items as $item)
+            <a href="{{ $item['href'] }}"
+               class="flex items-center gap-3 px-4 py-3 border-b border-gray-100 no-underline hover:bg-gray-50 transition-colors">
+                <div class="w-9 h-9 rounded-lg {{ $item['bg'] }} flex items-center justify-center flex-shrink-0">
+                    <i class="fas {{ $item['icon'] }} text-sm {{ $item['color'] }}"></i>
                 </div>
-                <div style="flex:1; min-width:0;">
-                    <div style="font-size:13px; font-weight:600; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $notification->title }}</div>
-                    <div style="font-size:11px; color:#6b7280; margin-top:1px;">{{ $notification->message }}</div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs font-semibold text-gray-900 truncate">{{ $item['title'] }}</div>
+                    <div class="text-xs text-gray-500 mt-0.5">{{ $item['sub'] }}</div>
                 </div>
-                <i class="fas fa-chevron-right" style="font-size:10px; color:#d1d5db; flex-shrink:0;"></i>
+                <i class="fas fa-chevron-right text-[10px] text-gray-300 flex-shrink-0"></i>
             </a>
         @endforeach
+
     @else
-        <div style="padding:32px 16px; text-align:center;">
-            <div style="width:44px; height:44px; border-radius:12px; background:#d1fae5; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;">
-                <i class="fas fa-check" style="font-size:18px; color:#059669;"></i>
+        <div class="py-8 px-4 text-center">
+            <div class="w-11 h-11 rounded-xl bg-emerald-100 flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-check text-lg text-emerald-600"></i>
             </div>
-            <div style="font-size:13px; font-weight:600; color:#111827; margin-bottom:4px;">All caught up</div>
-            <div style="font-size:12px; color:#9ca3af;">No pending actions right now</div>
+            <div class="text-xs font-semibold text-gray-800 mb-1">All caught up</div>
+            <div class="text-xs text-gray-400">No pending actions right now</div>
         </div>
     @endif
 </div>
-
-<script>
-function markAsRead(notificationId, link) {
-    fetch('{{ route('notifications.mark-read', ':id') }}'.replace(':id', notificationId), {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({})
-    }).then(response => {
-        if (response.ok) {
-            if (link && link !== '#') {
-                window.location.href = link;
-            } else {
-                location.reload();
-            }
-        }
-    });
-}
-</script>
