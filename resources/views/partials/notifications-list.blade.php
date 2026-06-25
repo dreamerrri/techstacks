@@ -2,7 +2,7 @@
     @if($notifCount > 0)
         @foreach($notifications as $notification)
             <a href="{{ $notification->link ?: '#' }}"
-               onclick="if('{{ $notification->link }}' !== '#') window.location.href='{{ $notification->link }}'; else markAsRead({{ $notification->id }}); return false;"
+               onclick="markAsRead({{ $notification->id }}, '{{ $notification->link ?: '#' }}'); return false;"
                style="display:flex; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px solid #f3f4f6; text-decoration:none; background:white; transition:background 0.15s;"
                onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background='white'">
                 <div style="width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:{{ match($notification->type) {
@@ -48,7 +48,7 @@
 </div>
 
 <script>
-function markAsRead(notificationId) {
+function markAsRead(notificationId, link) {
     fetch('{{ route('notifications.mark-read', ':id') }}'.replace(':id', notificationId), {
         method: 'POST',
         headers: {
@@ -58,7 +58,11 @@ function markAsRead(notificationId) {
         body: JSON.stringify({})
     }).then(response => {
         if (response.ok) {
-            location.reload();
+            if (link && link !== '#') {
+                window.location.href = link;
+            } else {
+                location.reload();
+            }
         }
     });
 }
