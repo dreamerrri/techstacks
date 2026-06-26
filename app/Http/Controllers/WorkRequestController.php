@@ -221,7 +221,6 @@ if ($admin || $hr) {
 
         // HR/Admin cannot edit employee requests
         if ($admin || $hr) {
-        if ($user->isAdmin() || $user->isHR()) {
             abort(403, 'HR/Admin cannot edit employee work requests. Use approve/reject instead.');
         }
 
