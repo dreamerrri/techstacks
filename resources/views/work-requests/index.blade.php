@@ -12,10 +12,10 @@
 
 @php
     $user = auth()->user();
-    $isAdmin = $user->isAdmin();
-    $isHR = $user->isHR();
-    $color = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
-    $colorDark = $isAdmin ? '#991b1b' : ($isHR ? '#1e40af' : '#764ba2');
+    $admin = $user->isAdmin();
+    $hr = $user->isHR();
+    $color = $admin ? '#dc2626' : ($hr ? '#2563eb' : '#667eea');
+    $colorDark = $admin ? '#991b1b' : ($hr ? '#1e40af' : '#764ba2');
 @endphp
 
 {{-- Header --}}
@@ -26,11 +26,11 @@
         </div>
         <h2 style="margin:8px 0 4px 0;">Work Requests</h2>
         <p style="color:#6b7280; margin:0;">
-            {{ $isAdmin || $isHR ? 'Manage employee work requests' : 'View and manage your work requests' }}
+            {{ $admin || $hr ? 'Manage employee work requests' : 'View and manage your work requests' }}
         </p>
     </div>
     <div style="display:flex; gap:8px;">
-        @if($isAdmin || $isHR)
+        @if($admin || $hr)
             @if($pendingCount > 0)
                 <a href="{{ route('work-requests.pending') }}"
                    style="padding:12px 20px; background:#f59e0b; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
@@ -87,7 +87,7 @@
             <thead>
                 <tr style="background:#f9fafb;">
                     <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Date</th>
-                    @if($isAdmin || $isHR)
+                    @if($admin || $hr)
                     <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Employee</th>
                     @endif
                     <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Type</th>
@@ -103,7 +103,7 @@
                     <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
                         {{ $request->created_at->format('M d, Y') }}
                     </td>
-                    @if($isAdmin || $isHR)
+                    @if($admin || $hr)
                     <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
                         {{ $request->employee->full_name }}
                     </td>
@@ -136,7 +136,7 @@
                             <i class="fas fa-eye"></i>
                         </a>
                         {{-- Only employees can edit/cancel their own pending requests --}}
-                        @if(!$isAdmin && !$isHR && $request->canBeCancelled())
+                        @if(!$admin && !$hr && $request->canBeCancelled())
                             <a href="{{ route('work-requests.edit', $request) }}"
                                style="padding:6px 12px; background:#f59e0b; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
                                 <i class="fas fa-edit"></i>
@@ -158,12 +158,18 @@
     <i class="fas fa-calendar-times" style="font-size:48px; color:#d1d5db; margin-bottom:16px;"></i>
     <h3 style="margin:0 0 8px 0; color:#6b7280;">No Work Requests Found</h3>
     <p style="color:#9ca3af; margin:0 0 24px 0;">
-        {{ $status || $type ? 'Try adjusting your filters or' : 'Get started by' }} creating a new work request.
+        @if(!$admin && !$hr)
+            {{ $status || $type ? 'Try adjusting your filters or' : 'Get started by' }} creating a new work request.
+        @else
+            No work requests match your current filters.
+        @endif
     </p>
-    <a href="{{ route('work-requests.create') }}"
-       style="padding:12px 24px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-        <i class="fas fa-plus"></i> New Request
-    </a>
+    @if(!$admin && !$hr)
+        <a href="{{ route('work-requests.create') }}"
+           style="padding:12px 24px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+            <i class="fas fa-plus"></i> New Request
+        </a>
+    @endif
 </div>
 @endif
 
