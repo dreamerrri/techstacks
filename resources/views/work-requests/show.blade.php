@@ -164,7 +164,8 @@
         @endif
         {{-- HR/Admin actions: approve/reject pending requests --}}
         @if($isAdmin || $isHR && $workRequest->canBeApproved())
-            <button onclick="approveRequest({{ $workRequest->id }})"
+        @if($workRequest->status === 'pending')
+    <button onclick="approveRequest({{ $workRequest->id }})"
                     style="padding:12px 24px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
                 <i class="fas fa-check"></i> Approve
             </button>
@@ -172,6 +173,7 @@
                     style="padding:12px 24px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
                 <i class="fas fa-times"></i> Reject
             </button>
+@endif
         @endif
     </div>
 </div>

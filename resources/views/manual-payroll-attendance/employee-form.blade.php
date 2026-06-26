@@ -266,6 +266,7 @@
 
 @endsection
 
+
 @section('scripts')
 <script>
 // Initialize global variables with default values
@@ -282,7 +283,6 @@ window.deductionsRemarksValue = '{{ $isEdit ? ($payrollInput->deductions_remarks
 window.reimbursementsValue = '{{ $isEdit ? ($payrollInput->reimbursements ?? '0') : '0' }}';
 window.reimbursementsRemarksValue = '{{ $isEdit ? ($payrollInput->reimbursements_remarks ?? '') : '' }}';
 window.isSecondHalfOfMonth = {{ $isSecondHalfOfMonth ? 'true' : 'false' }};
-
 
 function handleSaveAttendance(event) {
     event.preventDefault();
@@ -327,7 +327,7 @@ function handleSaveAttendance(event) {
             alert('Attendance saved successfully!');
             window.location.href = '{{ route('manual-payroll-attendance.period', $payrollPeriod) }}';
         } else {
-            alert('Error: ' + data.message);
+            window.notyf.error(data.message ?? 'Something went wrong.');
         }
     })
     .catch(error => {
@@ -342,7 +342,6 @@ function previewPayroll() {
     }
 
     const formData = new FormData();
-
     formData.append('payroll_period_id', form.querySelector('[name="payroll_period_id"]').value);
     formData.append('employee_id', form.querySelector('[name="employee_id"]').value);
     formData.append('daily_rate', window.dailyRateValue);
@@ -504,7 +503,6 @@ function previewPayroll() {
         alert('Error previewing payroll: ' + error.message);
     });
 }
-
-let previewTimeout;
 </script>
 @endsection
+

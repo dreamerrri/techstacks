@@ -21,17 +21,21 @@ class ManualPayrollAttendanceController extends Controller
      * GET /manual-payroll-attendance
      * Show the manual payroll attendance encoding interface
      */
-    public function index()
-    {
-        try {
-            $periods = PayrollPeriod::with('payrollInputs')->orderByDesc('cutoff_start')->get();
-        } catch (\Exception $e) {
-            // If eager loading fails, try without it
-            $periods = PayrollPeriod::orderByDesc('cutoff_start')->get();
-        }
-        
-        return view('manual-payroll-attendance.index', compact('periods'));
+ public function index()
+{
+    try {
+        $periods = PayrollPeriod::with('payrollInputs')
+            ->whereNotIn('status', ['archived'])
+            ->orderByDesc('cutoff_start')
+            ->get();
+    } catch (\Exception $e) {
+        $periods = PayrollPeriod::whereNotIn('status', ['archived'])
+            ->orderByDesc('cutoff_start')
+            ->get();
     }
+
+    return view('manual-payroll-attendance.index', compact('periods'));
+}
 
     /**
      * GET /manual-payroll-attendance/period/{payrollPeriod}

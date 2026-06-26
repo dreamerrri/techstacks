@@ -3,169 +3,166 @@
 @section('title', 'All Users')
 @section('breadcrumb')
     <span>Manage Users</span>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:500;">Users</span>
+    <i class="fas fa-chevron-right text-xs"></i>
+    <span class="text-white font-medium">Users</span>
 @endsection
-@section('content')
+
 @section('content')
 
     {{-- Header --}}
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+    <div class="flex justify-between items-center flex-wrap gap-3 mb-6">
         <div>
-            <span class="aurora-badge aurora-badge-admin" style="margin-bottom:8px;">
+            <span class="badge badge-soft badge-success mb-2">
                 <i class="fas fa-users-cog"></i> User Management
             </span>
-            <p style="color:#6b7280; margin:0;">Manage system accounts, roles, and access.</p>
+            <p class="text-gray-500 m-0">Manage system accounts, roles, and access.</p>
         </div>
     </div>
 
     {{-- Stats --}}
-    <div class="aurora-stats-grid" style="margin-bottom:24px;">
-        <div class="aurora-stat-card">
-            <div class="aurora-stat-icon" style="color:#dc2626; background:rgba(220,38,38,0.1);">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+        <div class="card bg-base-100 shadow-sm p-5 text-center">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-red-600 bg-red-100">
                 <i class="fas fa-users"></i>
             </div>
-            <div class="aurora-stat-value">{{ \App\Models\User::count() }}</div>
-            <div class="aurora-stat-label">Total Users</div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::count() }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Total Users</div>
         </div>
-        <div class="aurora-stat-card">
-            <div class="aurora-stat-icon" style="color:#991b1b; background:rgba(153,27,27,0.1);">
+        <div class="card bg-base-100 shadow-sm p-5 text-center">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-red-800 bg-red-100">
                 <i class="fas fa-user-shield"></i>
             </div>
-            <div class="aurora-stat-value">{{ \App\Models\User::where('role','admin')->count() }}</div>
-            <div class="aurora-stat-label">Admins</div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::where('role','admin')->count() }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Admins</div>
         </div>
-        <div class="aurora-stat-card">
-            <div class="aurora-stat-icon" style="color:#f59e0b; background:rgba(245,158,11,0.1);">
+        <div class="card bg-base-100 shadow-sm p-5 text-center">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-amber-600 bg-amber-100">
                 <i class="fas fa-user-tie"></i>
             </div>
-            <div class="aurora-stat-value">{{ \App\Models\User::where('role','hr')->count() }}</div>
-            <div class="aurora-stat-label">HR Personnel</div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::where('role','hr')->count() }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">HR Personnel</div>
         </div>
-        <div class="aurora-stat-card">
-            <div class="aurora-stat-icon" style="color:#10b981; background:rgba(16,185,129,0.1);">
+        <div class="card bg-base-100 shadow-sm p-5 text-center">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-emerald-600 bg-emerald-100">
                 <i class="fas fa-check-circle"></i>
             </div>
-            <div class="aurora-stat-value">{{ \App\Models\User::where('is_active', true)->count() }}</div>
-            <div class="aurora-stat-label">Active Accounts</div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::where('is_active', true)->count() }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Active Accounts</div>
         </div>
     </div>
 
     {{-- Filters + Table --}}
-    <div class="aurora-card" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
+    <div class="card bg-base-100 shadow-sm overflow-hidden flex flex-col p-0">
 
-        {{-- Sticky header: title + search --}}
-        <div style="position:sticky; top:0; z-index:0; background:white; padding:20px 28px 0; border-radius:20px 20px 0 0;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-                <h2 class="aurora-card-title" style="margin:0; font-size:15px;">
+        {{-- Card header --}}
+        <div class="sticky top-0 z-10 bg-white px-7 pt-5 rounded-t-2xl">
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
                     <i class="fas fa-list"></i> User Accounts
                 </h2>
             </div>
 
             {{-- Search & Filters --}}
             <form method="GET" action="{{ route('users.index') }}"
-                  style="display:flex; flex-wrap:wrap; gap:10px; padding-bottom:16px; border-bottom:1px solid #e5e7eb;">
+                  class="flex flex-wrap gap-2 pb-4 border-b border-gray-200">
                 <input type="text" name="search" value="{{ request('search') }}"
                        placeholder="Search name or email..."
-                       style="flex:1; min-width:160px; border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none;">
-                <select name="role" style="border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none;">
+                       class="input input-bordered input-sm flex-1 min-w-40">
+                <select name="role" class="select select-bordered select-sm">
                     <option value="">All Roles</option>
                     <option value="admin"    {{ request('role') === 'admin'    ? 'selected' : '' }}>Admin</option>
                     <option value="hr"       {{ request('role') === 'hr'       ? 'selected' : '' }}>HR</option>
                     <option value="employee" {{ request('role') === 'employee' ? 'selected' : '' }}>Employee</option>
                 </select>
-                <select name="status" style="border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:14px; outline:none;">
+                <select name="status" class="select select-bordered select-sm">
                     <option value="">All Status</option>
                     <option value="active"   {{ request('status') === 'active'   ? 'selected' : '' }}>Active</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                 </select>
-                <button type="submit" class="btn btn-danger btn-sm" style="padding:8px 20px; font-size:14px;">
+                <button type="submit" class="btn btn-soft btn-error btn-sm">
                     <i class="fas fa-search"></i> Search
                 </button>
                 @if(request()->hasAny(['search','role','status']))
-                    <a href="{{ route('users.index') }}"
-                       style="padding:8px 16px; background:#f3f4f6; color:#6b7280; border-radius:8px; text-decoration:none; font-size:14px;">
-                        Clear
-                    </a>
+                    <a href="{{ route('users.index') }}" class="btn btn-soft btn-sm">Clear</a>
                 @endif
             </form>
         </div>
 
         {{-- Desktop Table --}}
-        <div class="user-table-wrapper" style="overflow-y:auto; max-height:53vh; padding:0 28px;">
-            <table style="width:100%; border-collapse:collapse; font-size:14px; min-width:600px;">
-                <thead style="position:sticky; top:0; z-index:5;">
-                    <tr style="background:#f9fafb; border-bottom:2px solid #e5e7eb;">
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Name</th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Email</th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Role</th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Status</th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">
+        <div class="table-responsive overflow-y-auto max-h-[53vh] px-7 hidden md:block">
+            <table class="table table-hover w-full text-sm">
+                <thead class="sticky top-0 z-5">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>
                             @php
                                 $loginDir = (request('sort') === 'last_login_at' && request('direction') === 'asc') ? 'desc' : 'asc';
                                 $loginActive = request('sort') === 'last_login_at';
                             @endphp
                             <a href="{{ route('users.index', array_merge(request()->except(['sort','direction','page']), ['sort' => 'last_login_at', 'direction' => $loginDir])) }}"
-                               style="display:inline-flex; align-items:center; gap:5px; color:{{ $loginActive ? '#dc2626' : '#6b7280' }}; text-decoration:none; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; font-weight:{{ $loginActive ? '700' : '600' }};">
+                               class="inline-flex items-center gap-1 no-underline uppercase tracking-wider text-xs {{ $loginActive ? 'text-red-600 font-bold' : 'text-gray-500 font-semibold' }}">
                                 Last Login
-                                <span style="display:inline-flex; flex-direction:column; line-height:1; gap:1px;">
-                                    <i class="fas fa-caret-up"   style="font-size:9px; color:{{ ($loginActive && request('direction') === 'asc')  ? '#dc2626' : '#d1d5db' }};"></i>
-                                    <i class="fas fa-caret-down" style="font-size:9px; color:{{ ($loginActive && request('direction') === 'desc') ? '#dc2626' : '#d1d5db' }};"></i>
+                                <span class="inline-flex flex-col leading-none gap-px">
+                                    <i class="fas fa-caret-up text-[9px] {{ ($loginActive && request('direction') === 'asc') ? 'text-red-600' : 'text-gray-300' }}"></i>
+                                    <i class="fas fa-caret-down text-[9px] {{ ($loginActive && request('direction') === 'desc') ? 'text-red-600' : 'text-gray-300' }}"></i>
                                 </span>
                             </a>
                         </th>
-                        <th style="padding:12px; text-align:left; color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:0.05em;">Actions</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($users as $user)
                         @php
-                            $roleStyles = [
-                                'admin'    => 'background:#fecaca; color:#991b1b;',
-                                'hr'       => 'background:#fef3c7; color:#92400e;',
-                                'employee' => 'background:#dbeafe; color:#1e40af;',
-                            ];
+                            $roleClass = match($user->role) {
+                                'admin'    => 'badge-soft badge-error',
+                                'hr'       => 'badge-soft badge-warning',
+                                'employee' => 'badge-soft badge-info',
+                                default    => 'badge-soft',
+                            };
                         @endphp
-                        <tr style="border-bottom:1px solid #f3f4f6;">
-
+                        <tr>
                             {{-- Name --}}
-                            <td style="padding:12px; font-weight:600; color:#1a1a2e;">
-                                <div style="display:flex; align-items:center; gap:10px;">
-                                    <div style="width:32px; height:32px; border-radius:50%; overflow:hidden; flex-shrink:0;">
+                            <td class="font-semibold text-gray-800">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
                                         @if($user->profile_photo)
-<img src="{{ config('filesystems.default') === 's3'
-    ? \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24))
-    : \Illuminate\Support\Facades\Storage::url($user->profile_photo) }}"                                                alt="{{ $user->name }}"
-                                                 style="width:100%; height:100%; object-fit:cover;">
+                                            <img src="{{ config('filesystems.default') === 's3'
+                                                ? \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24))
+                                                : \Illuminate\Support\Facades\Storage::url($user->profile_photo) }}"
+                                                alt="{{ $user->name }}"
+                                                class="w-full h-full object-cover">
                                         @else
-                                            <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:13px; font-weight:700;">
+                                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-xs font-bold">
                                                 {{ strtoupper(substr($user->name, 0, 1)) }}
                                             </div>
                                         @endif
                                     </div>
                                     @if($user->employee)
-                                        <a href="{{ route('employees.show', $user->employee) }}"
-                                           style="color:#1a1a2e; text-decoration:none; font-weight:600;">
+                                        <a href="{{ route('employees.show', $user->employee) }}" class="text-gray-800 no-underline font-semibold hover:text-emerald-600">
                                             {{ $user->name }}
                                         </a>
                                     @else
                                         {{ $user->name }}
                                     @endif
                                     @if($user->id === auth()->id())
-                                        <span class="aurora-badge aurora-badge-hr" style="font-size:10px; padding:2px 8px; margin:0; text-transform:none; letter-spacing:0;">You</span>
+                                        <span class="badge badge-soft badge-success text-[10px] px-2 py-0 normal-case tracking-normal">You</span>
                                     @endif
                                 </div>
                             </td>
 
-                            <td style="padding:12px; color:#6b7280;">{{ $user->email }}</td>
+                            <td class="text-gray-500">{{ $user->email }}</td>
 
                             {{-- Role selector --}}
-                            <td style="padding:12px;">
-                                <form method="POST" action="{{ route('users.role', $user) }}" style="display:inline;">
+                            <td>
+                                <form method="POST" action="{{ route('users.role', $user) }}" class="inline">
                                     @csrf @method('PATCH')
                                     <select name="role" onchange="this.form.submit()"
                                             {{ $user->id === auth()->id() ? 'disabled' : '' }}
-                                            style="border:1px solid #e5e7eb; border-radius:20px; padding:3px 10px; font-size:12px; font-weight:600; cursor:pointer; {{ $roleStyles[$user->role] ?? '' }}">
+                                            class="select select-bordered select-xs rounded-full {{ $roleClass }}">
                                         <option value="admin"    {{ $user->role === 'admin'    ? 'selected' : '' }}>Admin</option>
                                         <option value="hr"       {{ $user->role === 'hr'       ? 'selected' : '' }}>HR</option>
                                         <option value="employee" {{ $user->role === 'employee' ? 'selected' : '' }}>Employee</option>
@@ -174,24 +171,20 @@
                             </td>
 
                             {{-- Status --}}
-                            <td style="padding:12px;">
+                            <td>
                                 @if($user->is_active)
-                                    <span class="aurora-status aurora-status-active">
-                                        <i class="fas fa-check-circle"></i> Active
-                                    </span>
+                                    <span class="badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
                                 @else
-                                    <span class="aurora-status aurora-status-inactive">
-                                        <i class="fas fa-times-circle"></i> Inactive
-                                    </span>
+                                    <span class="badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
                                 @endif
                             </td>
 
-                            <td style="padding:12px; color:#6b7280; font-size:13px;">
+                            <td class="text-gray-500 text-xs">
                                 {{ $user->last_login_at ? $user->last_login_at->format('M d, Y h:i A') : 'Never' }}
                             </td>
 
                             {{-- Toggle action --}}
-                            <td style="padding:12px;">
+                            <td>
                                 @if($user->id !== auth()->id())
                                     <form method="POST" action="{{ route('users.toggle', $user) }}"
                                           data-confirm="{{ $user->is_active ? 'Deactivate this user account?' : 'Activate this user account?' }}"
@@ -199,21 +192,20 @@
                                           data-confirm-icon="{{ $user->is_active ? 'warning' : 'question' }}"
                                           data-confirm-btn="{{ $user->is_active ? 'Yes, deactivate' : 'Yes, activate' }}">
                                         @csrf @method('PATCH')
-                                        <button style="padding:5px 10px; background:{{ $user->is_active ? '#fecaca' : '#d1fae5' }}; color:{{ $user->is_active ? '#991b1b' : '#065f46' }}; border:none; border-radius:8px; font-size:12px; cursor:pointer; font-weight:600;">
+                                        <button class="btn btn-soft btn-xs {{ $user->is_active ? 'btn-error' : 'btn-success' }}">
                                             <i class="fas {{ $user->is_active ? 'fa-ban' : 'fa-check' }}"></i>
                                             {{ $user->is_active ? 'Deactivate' : 'Activate' }}
                                         </button>
                                     </form>
                                 @else
-                                    <span style="color:#9ca3af; font-size:12px;">—</span>
+                                    <span class="text-gray-400 text-xs">—</span>
                                 @endif
                             </td>
-
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" style="padding:40px; text-align:center; color:#9ca3af;">
-                                <i class="fas fa-users" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+                            <td colspan="6" class="py-10 text-center text-gray-400">
+                                <i class="fas fa-users text-3xl mb-2 block"></i>
                                 No users found.
                             </td>
                         </tr>
@@ -223,72 +215,66 @@
         </div>
 
         {{-- Mobile Cards --}}
-        <div class="user-mobile-cards" style="padding:16px;">
+        <div class="user-mobile-cards p-4 md:hidden">
             @forelse($users as $user)
                 @php
-                    $roleStyles = [
-                        'admin'    => 'background:#fecaca; color:#991b1b;',
-                        'hr'       => 'background:#fef3c7; color:#92400e;',
-                        'employee' => 'background:#dbeafe; color:#1e40af;',
-                    ];
+                    $roleClass = match($user->role) {
+                        'admin'    => 'badge-soft badge-error',
+                        'hr'       => 'badge-soft badge-warning',
+                        'employee' => 'badge-soft badge-info',
+                        default    => 'badge-soft',
+                    };
                 @endphp
-                <div class="user-card">
-                    <div class="user-card-header">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <div style="width:38px; height:38px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-                              @if($user->profile_photo)
-<img src="{{ config('filesystems.default') === 's3'
-    ? \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24))
-    : \Illuminate\Support\Facades\Storage::url($user->profile_photo) }}"                                         alt="{{ $user->name }}"
-                                         style="width:100%; height:100%; object-fit:cover;">
+                <div class="card bg-base-100 border border-gray-200 p-4 mb-3">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                                @if($user->profile_photo)
+                                    <img src="{{ config('filesystems.default') === 's3'
+                                        ? \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24))
+                                        : \Illuminate\Support\Facades\Storage::url($user->profile_photo) }}"
+                                        alt="{{ $user->name }}"
+                                        class="w-full h-full object-cover">
                                 @else
-                                    <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:14px; font-weight:700;">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-sm font-bold">
                                         {{ strtoupper(substr($user->name, 0, 1)) }}
                                     </div>
                                 @endif
                             </div>
                             <div>
-                                <div style="font-weight:600; color:#1a1a2e; font-size:14px;">
+                                <div class="font-semibold text-gray-800 text-sm flex items-center gap-1">
                                     @if($user->employee)
-                                        <a href="{{ route('employees.show', $user->employee) }}"
-                                           style="color:#1a1a2e; text-decoration:none; font-weight:600;">
-                                            {{ $user->name }}
-                                        </a>
+                                        <a href="{{ route('employees.show', $user->employee) }}" class="text-gray-800 no-underline font-semibold">{{ $user->name }}</a>
                                     @else
                                         {{ $user->name }}
                                     @endif
                                     @if($user->id === auth()->id())
-                                        <span class="aurora-badge aurora-badge-hr" style="font-size:10px; padding:2px 8px; margin:0 0 0 4px; text-transform:none; letter-spacing:0; vertical-align:middle;">You</span>
+                                        <span class="badge badge-soft badge-success text-[10px] px-2 py-0 normal-case">You</span>
                                     @endif
                                 </div>
-                                <div style="font-size:12px; color:#6b7280;">{{ $user->email }}</div>
+                                <div class="text-xs text-gray-500">{{ $user->email }}</div>
                             </div>
                         </div>
-
                         @if($user->is_active)
-                            <span class="aurora-status aurora-status-active" style="white-space:nowrap;">
-                                <i class="fas fa-check-circle"></i> Active
-                            </span>
+                            <span class="badge badge-soft badge-success whitespace-nowrap"><i class="fas fa-check-circle"></i> Active</span>
                         @else
-                            <span class="aurora-status aurora-status-inactive" style="white-space:nowrap;">
-                                <i class="fas fa-times-circle"></i> Inactive
-                            </span>
+                            <span class="badge badge-soft badge-error whitespace-nowrap"><i class="fas fa-times-circle"></i> Inactive</span>
                         @endif
                     </div>
 
-                    <div class="user-card-meta">
-                        <form method="POST" action="{{ route('users.role', $user) }}" style="display:inline;">
+                    <div class="flex justify-between items-center flex-wrap gap-2 pt-3 border-t border-gray-100">
+                        <form method="POST" action="{{ route('users.role', $user) }}" class="inline">
                             @csrf @method('PATCH')
                             <select name="role" onchange="this.form.submit()"
                                     {{ $user->id === auth()->id() ? 'disabled' : '' }}
-                                    style="border:1px solid #e5e7eb; border-radius:20px; padding:3px 10px; font-size:12px; font-weight:600; cursor:pointer; {{ $roleStyles[$user->role] ?? '' }}">
+                                    class="select select-bordered select-xs rounded-full {{ $roleClass }}">
                                 <option value="admin"    {{ $user->role === 'admin'    ? 'selected' : '' }}>Admin</option>
                                 <option value="hr"       {{ $user->role === 'hr'       ? 'selected' : '' }}>HR</option>
                                 <option value="employee" {{ $user->role === 'employee' ? 'selected' : '' }}>Employee</option>
                             </select>
                         </form>
 
-                        <span style="font-size:11px; color:#9ca3af;">
+                        <span class="text-xs text-gray-400">
                             {{ $user->last_login_at ? $user->last_login_at->format('M d, Y h:i A') : 'Never logged in' }}
                         </span>
 
@@ -299,25 +285,29 @@
                                   data-confirm-icon="{{ $user->is_active ? 'warning' : 'question' }}"
                                   data-confirm-btn="{{ $user->is_active ? 'Yes, deactivate' : 'Yes, activate' }}">
                                 @csrf @method('PATCH')
-                                <button style="padding:5px 12px; background:{{ $user->is_active ? '#fecaca' : '#d1fae5' }}; color:{{ $user->is_active ? '#991b1b' : '#065f46' }}; border:none; border-radius:8px; font-size:12px; cursor:pointer; font-weight:600;">
+                                <button class="btn btn-soft btn-xs {{ $user->is_active ? 'btn-error' : 'btn-success' }}">
                                     <i class="fas {{ $user->is_active ? 'fa-ban' : 'fa-check' }}"></i>
                                     {{ $user->is_active ? 'Deactivate' : 'Activate' }}
                                 </button>
                             </form>
                         @else
-                            <span style="color:#9ca3af; font-size:12px;">—</span>
+                            <span class="text-gray-400 text-xs">—</span>
                         @endif
                     </div>
                 </div>
             @empty
-                <div style="padding:40px; text-align:center; color:#9ca3af;">
-                    <i class="fas fa-users" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+                <div class="py-10 text-center text-gray-400">
+                    <i class="fas fa-users text-3xl mb-2 block"></i>
                     No users found.
                 </div>
             @endforelse
         </div>
 
-        
+        {{-- Pagination --}}
+        <div class="px-7 py-4 border-t border-gray-200">
+            {{ $users->links() }}
+        </div>
+
     </div>
-<div style="padding:16px 28px; border-top:1px solid #e5e7eb;">{{ $users->links() }}</div>
+
 @endsection
