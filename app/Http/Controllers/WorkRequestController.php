@@ -74,6 +74,9 @@ if ($admin || $hr) {
      */
     public function create()
     {
+             $admin = $user->isAdmin();
+        $hr   = $user->isHR();
+
         $user = Auth::user();
         $employee = $user->employee;
 
@@ -177,6 +180,8 @@ if ($admin || $hr) {
      */
     public function show(WorkRequest $workRequest)
     {
+             $admin = $user->isAdmin();
+        $hr   = $user->isHR();
         $user = Auth::user();
         $employee = $user->employee;
 
@@ -204,6 +209,8 @@ if ($admin || $hr) {
      */
     public function edit(WorkRequest $workRequest)
     {
+             $admin = $user->isAdmin();
+        $hr   = $user->isHR();
         $user = Auth::user();
         $employee = $user->employee;
 
@@ -236,6 +243,8 @@ if ($admin || $hr) {
      */
     public function update(Request $request, WorkRequest $workRequest): JsonResponse
     {
+             $admin = $user->isAdmin();
+        $hr   = $user->isHR();
         $user = Auth::user();
         $employee = $user->employee;
 
@@ -322,6 +331,9 @@ if ($admin || $hr) {
      */
     public function destroy(WorkRequest $workRequest): JsonResponse
     {
+
+         $admin = $user->isAdmin();
+        $hr   = $user->isHR();
         $user = Auth::user();
         $employee = $user->employee;
 
@@ -365,6 +377,9 @@ if ($admin || $hr) {
      */
     public function pending()
     {
+
+         $admin = $user->isAdmin();
+        $hr   = $user->isHR();
         $user = Auth::user();
 
         if (!$user->admin() && !$user->hr()) {
@@ -385,6 +400,9 @@ if ($admin || $hr) {
      */
     public function approve(Request $request, WorkRequest $workRequest): JsonResponse
     {
+
+         $admin = $user->isAdmin();
+        $hr   = $user->isHR();
         $user = Auth::user();
 
         if (!$user->admin() && !$user->hr()) {
@@ -423,6 +441,9 @@ if ($admin || $hr) {
      */
     public function reject(Request $request, WorkRequest $workRequest): JsonResponse
     {
+
+         $admin = $user->isAdmin();
+        $hr   = $user->isHR();  
         $user = Auth::user();
 
         if (!$user->admin() && !$user->hr()) {
