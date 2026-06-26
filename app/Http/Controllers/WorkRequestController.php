@@ -1,16 +1,23 @@
-    <?php
+<?php
 
-    namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-    use App\Models\WorkRequest;
-    use App\Models\Employee;
-    use App\Models\Holiday;
-    use Illuminate\Http\JsonResponse;
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Auth;
-    use Carbon\Carbon;
+use App\Models\WorkRequest;
+use App\Models\Employee;
+use App\Models\Holiday;
+use App\Services\NotificationService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
-    class WorkRequestController extends Controller
+class WorkRequestController extends Controller
+{
+    /**
+     * GET /work-requests
+     * Show work requests (employee sees own, HR/Admin sees all)
+     */
+    public function index(Request $request)
     {
         /**
          * GET /work-requests
@@ -203,6 +210,28 @@
 
             return view('work-requests.show', compact('workRequest'));
         }
+        */
+
+        $workRequest = WorkRequest::create([
+            'employee_id' => $employee->id,
+            'request_type' => $validated['request_type'],
+            'work_date' => $validated['work_date'],
+            'start_time' => $validated['start_time'] ?? null,
+            'end_time' => $validated['end_time'] ?? null,
+            'estimated_hours' => $validated['estimated_hours'] ?? null,
+            'reason' => $validated['reason'] ?? null,
+            'status' => 'pending',
+        ]);
+
+        // Notify HR/Admin of new work request
+        NotificationService::notifyWorkRequestSubmitted($employee, $workRequest);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Work request submitted successfully.',
+            'work_request' => $workRequest,
+        ]);
+    }
 
         /**
          * GET /work-requests/{workRequest}/edit
@@ -386,7 +415,14 @@
         public function pending()
         {
 
-        $user    = Auth::user();
+        // Notify employee of cancellation
+        NotificationService::notifyWorkRequestCancelled($workRequest->employee, $workRequest);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Work request cancelled successfully.',
+        ]);
+    }
 
 
             $admin = $user->isAdmin();
@@ -447,12 +483,21 @@
             ]);
         }
 
-        /**
-         * POST /work-requests/{workRequest}/reject
-         * Reject work request (HR/Admin only)
-         */
-        public function reject(Request $request, WorkRequest $workRequest): JsonResponse
-        {
+        $workRequest->update([
+            'status' => 'approved',
+            'approved_by' => $user->id,
+            'approved_at' => now(),
+        ]);
+
+        // Notify employee of approval
+        NotificationService::notifyWorkRequestApproved($workRequest->employee, $workRequest);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Work request approved successfully.',
+            'work_request' => $workRequest,
+        ]);
+    }
 
     $user    = Auth::user();
 
@@ -485,10 +530,12 @@
                 'rejection_reason' => $validated['rejection_reason'],
             ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Work request rejected successfully.',
-                'work_request' => $workRequest,
-            ]);
-        }
+        // Notify employee of rejection
+        NotificationService::notifyWorkRequestRejected($workRequest->employee, $workRequest, $validated['rejection_reason']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Work request rejected successfully.',
+            'work_request' => $workRequest,
+        ]);
     }
