@@ -177,6 +177,8 @@
 
 @section('scripts')
 <script>
+
+
 function cancelRequest(requestId) {
     Swal.fire({
         title: 'Cancel Work Request',
@@ -211,5 +213,7 @@ function cancelRequest(requestId) {
         }
     });
 }
+
+
 </script>
 @endsection

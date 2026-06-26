@@ -253,6 +253,10 @@ function approveRequest(requestId) {
     });
 }
 
+
+
+
+
 function showRejectModal(requestId) {
     Swal.fire({
         title: 'Reject Request',
@@ -261,7 +265,7 @@ function showRejectModal(requestId) {
         inputPlaceholder: 'Please provide a reason for rejection...',
         inputAttributes: {
             maxlength: 500,
-            required: true
+            required: true,
         },
         showCancelButton: true,
         confirmButtonText: 'Reject',
@@ -272,13 +276,16 @@ function showRejectModal(requestId) {
                 Swal.showValidationMessage('Please provide a rejection reason');
             }
             return reason;
-        }
-    }).then((result) => {
+        },
+    }).then(result => {
         if (result.isConfirmed) {
             rejectRequest(requestId, result.value);
         }
     });
 }
+
+
+
 
 function rejectRequest(requestId, reason) {
     const formData = new FormData();
@@ -288,11 +295,11 @@ function rejectRequest(requestId, reason) {
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
         },
-        body: formData
+        body: formData,
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
         if (data.success) {
             sessionStorage.setItem('notyf_success', data.message);
@@ -305,5 +312,10 @@ function rejectRequest(requestId, reason) {
         window.notyf.error('Failed to reject request: ' + error.message);
     });
 }
+
+
+
+
+
 </script>
 @endsection
