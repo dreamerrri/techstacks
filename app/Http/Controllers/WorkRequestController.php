@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\WorkRequest;
 use App\Models\Employee;
 use App\Models\Holiday;
-use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -74,6 +73,8 @@ if ($admin || $hr) {
      */
     public function create()
     {
+
+
         $user = Auth::user();
         $employee = $user->employee;
 
@@ -161,9 +162,6 @@ if ($admin || $hr) {
             'status' => 'pending',
         ]);
 
-        // Notify HR/Admin of new work request
-        NotificationService::notifyWorkRequestSubmitted($employee, $workRequest);
-
         return response()->json([
             'success' => true,
             'message' => 'Work request submitted successfully.',
@@ -177,11 +175,20 @@ if ($admin || $hr) {
      */
     public function show(WorkRequest $workRequest)
     {
-        $user = Auth::user();
+
+    
+    
+        $user    = Auth::user();
+
+
+        $admin = $user->isAdmin();
+        $hr   = $user->isHR();
+
         $employee = $user->employee;
 
+
         // HR/Admin can view all work requests (no employee record needed)
-        if (!$user->isAdmin() && !$user->isHR()) {
+        if (!$admin && !$hr) {
             // Employees must have an employee record to view their own requests
             if (!$employee) {
                 abort(403, 'No employee record found for this user.');
@@ -204,10 +211,16 @@ if ($admin || $hr) {
      */
     public function edit(WorkRequest $workRequest)
     {
-        $user = Auth::user();
+ $user    = Auth::user();
+
+
+        $admin = $user->isAdmin();
+        $hr   = $user->isHR();
+
         $employee = $user->employee;
 
         // HR/Admin cannot edit employee requests
+        if ($admin || $hr) {
         if ($user->isAdmin() || $user->isHR()) {
             abort(403, 'HR/Admin cannot edit employee work requests. Use approve/reject instead.');
         }
@@ -236,11 +249,16 @@ if ($admin || $hr) {
      */
     public function update(Request $request, WorkRequest $workRequest): JsonResponse
     {
-        $user = Auth::user();
+ $user    = Auth::user();
+
+
+        $admin = $user->isAdmin();
+        $hr   = $user->isHR();
+
         $employee = $user->employee;
 
         // HR/Admin cannot update employee requests
-        if ($user->isAdmin() || $user->isHR()) {
+        if ($admin || $hr) {
             return response()->json([
                 'success' => false,
                 'message' => 'HR/Admin cannot edit employee work requests. Use approve/reject instead.',
@@ -322,7 +340,13 @@ if ($admin || $hr) {
      */
     public function destroy(WorkRequest $workRequest): JsonResponse
     {
-        $user = Auth::user();
+
+   $user    = Auth::user();
+
+
+        $admin = $user->isAdmin();
+        $hr   = $user->isHR();
+
         $employee = $user->employee;
 
         if (!$employee) {
@@ -333,7 +357,7 @@ if ($admin || $hr) {
         }
 
         // Employees can only cancel their own pending requests
-        if (!$user->isAdmin() && !$user->isHR()) {
+      if (!$admin && !$hr) {
             if ($workRequest->employee_id !== $employee->id) {
                 return response()->json([
                     'success' => false,
@@ -350,9 +374,6 @@ if ($admin || $hr) {
 
         $workRequest->update(['status' => 'cancelled']);
 
-        // Notify employee of cancellation
-        NotificationService::notifyWorkRequestCancelled($workRequest->employee, $workRequest);
-
         return response()->json([
             'success' => true,
             'message' => 'Work request cancelled successfully.',
@@ -365,9 +386,16 @@ if ($admin || $hr) {
      */
     public function pending()
     {
-        $user = Auth::user();
 
-        if (!$user->isAdmin() && !$user->isHR()) {
+       $user    = Auth::user();
+
+
+        $admin = $user->isAdmin();
+        $hr   = $user->isHR();
+
+        $employee = $user->employee;;
+
+        if (!$admin && !$hr) {
             abort(403, 'Only administrators and HR can view pending requests.');
         }
 
@@ -385,9 +413,15 @@ if ($admin || $hr) {
      */
     public function approve(Request $request, WorkRequest $workRequest): JsonResponse
     {
-        $user = Auth::user();
+ $user    = Auth::user();
 
-        if (!$user->isAdmin() && !$user->isHR()) {
+
+        $admin = $user->isAdmin();
+        $hr   = $user->isHR();
+
+        $employee = $user->employee;
+
+        if (!$admin && !$hr) {
             return response()->json([
                 'success' => false,
                 'message' => 'Only administrators and HR can approve requests.',
@@ -407,9 +441,6 @@ if ($admin || $hr) {
             'approved_at' => now(),
         ]);
 
-        // Notify employee of approval
-        NotificationService::notifyWorkRequestApproved($workRequest->employee, $workRequest);
-
         return response()->json([
             'success' => true,
             'message' => 'Work request approved successfully.',
@@ -423,9 +454,16 @@ if ($admin || $hr) {
      */
     public function reject(Request $request, WorkRequest $workRequest): JsonResponse
     {
-        $user = Auth::user();
 
-        if (!$user->isAdmin() && !$user->isHR()) {
+ $user    = Auth::user();
+
+
+        $admin = $user->isAdmin();
+        $hr   = $user->isHR();
+
+        $employee = $user->employee;
+
+        if (!$admin && !$hr) {
             return response()->json([
                 'success' => false,
                 'message' => 'Only administrators and HR can reject requests.',
@@ -447,9 +485,6 @@ if ($admin || $hr) {
             'status' => 'rejected',
             'rejection_reason' => $validated['rejection_reason'],
         ]);
-
-        // Notify employee of rejection
-        NotificationService::notifyWorkRequestRejected($workRequest->employee, $workRequest, $validated['rejection_reason']);
 
         return response()->json([
             'success' => true,
