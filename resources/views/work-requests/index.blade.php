@@ -181,36 +181,36 @@
 
 function cancelRequest(requestId) {
     Swal.fire({
-        title: 'Cancel Request?',
-        text: 'Are you sure you want to cancel this request?',
+        title: 'Cancel Work Request',
+        text: 'Are you sure you want to cancel this work request?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Yes, cancel it',
-        cancelButtonText: 'Back',
-    }).then(result => {
-        if (!result.isConfirmed) return;
-
-        fetch('{{ route('work-requests.destroy', ':id') }}'.replace(':id', requestId), {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json',
-            },
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                window.notyf.success(data.message);
-                setTimeout(() => window.location.reload(), 1500);
-            } else {
-                window.notyf.error(data.message);
-            }
-        })
-        .catch(error => {
-            window.notyf.error('Failed to cancel request: ' + error.message);
-        });
+        confirmButtonText: 'Yes, Cancel',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('{{ route('work-requests.destroy', ':id') }}'.replace(':id', requestId), {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    sessionStorage.setItem('notyf_success', data.message);
+                    window.location.reload();
+                } else {
+                    window.notyf.error(data.message ?? 'Something went wrong.');
+                }
+            })
+            .catch(error => {
+                window.notyf.error('Failed to cancel request: ' + error.message);
+            });
+        }
     });
 }
 
