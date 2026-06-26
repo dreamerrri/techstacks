@@ -73,8 +73,7 @@ if ($admin || $hr) {
      */
     public function create()
     {
-             $admin = $user->isAdmin();
-        $hr   = $user->isHR();
+
 
         $user = Auth::user();
         $employee = $user->employee;
