@@ -187,14 +187,15 @@
         </div>
 
         {{-- Attendance Records Link (full-width) --}}
-        <div class="card" style="grid-column: 1 / -1;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="card bg-base-100 shadow-sm p-5 md:col-span-2">
+            <div class="flex justify-between items-center">
                 <div>
-                    <h2 style="margin:0;"><i class="fas fa-clock" style="color:#dc2626;"></i> Attendance Records</h2>
-                    <p style="margin:4px 0 0 0; color:#6b7280; font-size:13px;">View daily time-in/time-out records and attendance history for this employee.</p>
+                    <h2 class="text-sm font-bold text-gray-800 m-0 flex items-center gap-2">
+                        <i class="fas fa-clock text-red-600"></i> Attendance Records
+                    </h2>
+                    <p class="text-gray-500 text-xs mt-1 mb-0">View daily time-in/time-out records and attendance history for this employee.</p>
                 </div>
-                <a href="{{ route('employee-attendance.show-employee', $employee) }}"
-                   style="padding:8px 16px; background:#d1fae5; color:#065f46; border-radius:6px; text-decoration:none; font-size:13px; font-weight:600;">
+                <a href="{{ route('employee-attendance.show-employee', $employee) }}" class="btn btn-soft btn-success btn-sm">
                     <i class="fas fa-eye"></i> View Attendance
                 </a>
             </div>
