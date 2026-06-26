@@ -209,12 +209,12 @@
                 </h2>
                 <div class="flex gap-2">
                     <button type="button"
-                            onclick="document.getElementById('allowanceForm').classList.remove('hidden'); document.getElementById('benefitForm').classList.add('hidden');"
+                            id="showAllowanceBtn"
                             class="btn btn-soft btn-success btn-xs">
                         <i class="fas fa-plus"></i> Add Allowance
                     </button>
                     <button type="button"
-                            onclick="document.getElementById('benefitForm').classList.remove('hidden'); document.getElementById('allowanceForm').classList.add('hidden');"
+                            id="showBenefitBtn"
                             class="btn btn-soft btn-info btn-xs">
                         <i class="fas fa-plus"></i> Add Benefit
                     </button>
@@ -296,7 +296,7 @@
             </div>
 
             {{-- Add Allowance Form --}}
-            <div id="allowanceForm" class="hidden mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+            <div id="allowanceForm" class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-200" style="display: none;">
                 <h4 class="text-sm font-bold text-emerald-800 mb-3">Add Allowance</h4>
                 <form method="POST" action="{{ route('allowances.store', $employee) }}">
                     @csrf
@@ -325,14 +325,15 @@
                         <button type="submit" class="btn btn-soft btn-success btn-sm">
                             <i class="fas fa-save"></i> Save Allowance
                         </button>
-                        <button type="button" onclick="document.getElementById('allowanceForm').classList.add('hidden');"
+                        <button type="button"
+                                id="hideAllowanceBtn"
                                 class="btn btn-soft btn-sm">Cancel</button>
                     </div>
                 </form>
             </div>
 
             {{-- Add Benefit Form --}}
-            <div id="benefitForm" class="hidden mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
+            <div id="benefitForm" class="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200" style="display: none;">
                 <h4 class="text-sm font-bold text-blue-800 mb-3">Add Benefit</h4>
                 <form method="POST" action="{{ route('benefits.store', $employee) }}">
                     @csrf
@@ -361,7 +362,8 @@
                         <button type="submit" class="btn btn-soft btn-info btn-sm">
                             <i class="fas fa-save"></i> Save Benefit
                         </button>
-                        <button type="button" onclick="document.getElementById('benefitForm').classList.add('hidden');"
+                        <button type="button"
+                                id="hideBenefitBtn"
                                 class="btn btn-soft btn-sm">Cancel</button>
                     </div>
                 </form>
@@ -372,4 +374,67 @@
 
     </div>
 
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Helper function to get visible element (similar to government contributions fix)
+    const getVisibleElement = (id) => {
+        const elements = document.querySelectorAll('[id="' + id + '"]');
+        for (let element of elements) {
+            if (element.offsetParent !== null) {
+                return element;
+            }
+        }
+        // Fallback: prefer desktop layout element
+        const desktopElement = document.querySelector('.desktop-layout [id="' + id + '"]');
+        if (desktopElement) return desktopElement;
+        return elements[0]; // Final fallback
+    };
+
+    const showAllowanceBtn = getVisibleElement('showAllowanceBtn');
+    const showBenefitBtn = getVisibleElement('showBenefitBtn');
+    const hideAllowanceBtn = getVisibleElement('hideAllowanceBtn');
+    const hideBenefitBtn = getVisibleElement('hideBenefitBtn');
+    const allowanceForm = getVisibleElement('allowanceForm');
+    const benefitForm = getVisibleElement('benefitForm');
+
+    if (showAllowanceBtn && allowanceForm && benefitForm) {
+        showAllowanceBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            allowanceForm.style.display = 'block';
+            allowanceForm.style.visibility = 'visible';
+            benefitForm.style.display = 'none';
+            benefitForm.style.visibility = 'hidden';
+        });
+    }
+
+    if (showBenefitBtn && allowanceForm && benefitForm) {
+        showBenefitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            benefitForm.style.display = 'block';
+            benefitForm.style.visibility = 'visible';
+            allowanceForm.style.display = 'none';
+            allowanceForm.style.visibility = 'hidden';
+        });
+    }
+
+    if (hideAllowanceBtn && allowanceForm) {
+        hideAllowanceBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            allowanceForm.style.display = 'none';
+            allowanceForm.style.visibility = 'hidden';
+        });
+    }
+
+    if (hideBenefitBtn && benefitForm) {
+        hideBenefitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            benefitForm.style.display = 'none';
+            benefitForm.style.visibility = 'hidden';
+        });
+    }
+});
+</script>
 @endsection
