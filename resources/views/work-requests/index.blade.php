@@ -177,45 +177,43 @@
 
 @section('scripts')
 <script>
-function cancelRequest(requestId) {
-    if (!confirm('Are you sure you want to cancel this work request?')) {
-        return;
-    }
 
-    fetch('{{ route('work-requests.destroy', ':id') }}'.replace(':id', requestId), {
-        method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Cancelled!',
-                text: data.message,
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
-                window.location.reload();
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: data.message
-            });
-        }
-    })
-    .catch(error => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to cancel request: ' + error.message
+
+function cancelRequest(requestId) {
+    Swal.fire({
+        title: 'Cancel Request?',
+        text: 'Are you sure you want to cancel this request?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, cancel it',
+        cancelButtonText: 'Back',
+    }).then(result => {
+        if (!result.isConfirmed) return;
+
+        fetch('{{ route('work-requests.destroy', ':id') }}'.replace(':id', requestId), {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.notyf.success(data.message);
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                window.notyf.error(data.message);
+            }
+        })
+        .catch(error => {
+            window.notyf.error('Failed to cancel request: ' + error.message);
         });
     });
 }
+
+
 </script>
 @endsection

@@ -183,87 +183,45 @@
 
 @section('scripts')
 <script>
-function cancelRequest(requestId) {
-    if (!confirm('Are you sure you want to cancel this work request?')) {
-        return;
-    }
-
-    fetch('{{ route('work-requests.destroy', ':id') }}'.replace(':id', requestId), {
-        method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Cancelled!',
-                text: data.message,
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
-                window.location.href = '{{ route('work-requests.index') }}';
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: data.message
-            });
-        }
-    })
-    .catch(error => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to cancel request: ' + error.message
-        });
-    });
-}
 
 function approveRequest(requestId) {
-    if (!confirm('Are you sure you want to approve this work request?')) {
-        return;
-    }
+    Swal.fire({
+        title: 'Approve Work Request?',
+        text: 'Are you sure you want to approve this work request?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, approve it',
+        cancelButtonText: 'Cancel',
+    }).then(result => {
+        if (!result.isConfirmed) return;
 
-    fetch('{{ route('work-requests.approve', ':id') }}'.replace(':id', requestId), {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Approved!',
-                text: data.message,
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
-                window.location.reload();
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: data.message
-            });
-        }
-    })
-    .catch(error => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to approve request: ' + error.message
+        fetch('{{ route('work-requests.approve', ':id') }}'.replace(':id', requestId), {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.notyf.success(data.message);
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                window.notyf.error(data.message);
+            }
+        })
+        .catch(error => {
+            window.notyf.error('Failed to approve request: ' + error.message);
         });
     });
 }
+
+
+
+
 
 function showRejectModal(requestId) {
     Swal.fire({
@@ -273,7 +231,7 @@ function showRejectModal(requestId) {
         inputPlaceholder: 'Please provide a reason for rejection...',
         inputAttributes: {
             maxlength: 500,
-            required: true
+            required: true,
         },
         showCancelButton: true,
         confirmButtonText: 'Reject',
@@ -284,13 +242,16 @@ function showRejectModal(requestId) {
                 Swal.showValidationMessage('Please provide a rejection reason');
             }
             return reason;
-        }
-    }).then((result) => {
+        },
+    }).then(result => {
         if (result.isConfirmed) {
             rejectRequest(requestId, result.value);
         }
     });
 }
+
+
+
 
 function rejectRequest(requestId, reason) {
     const formData = new FormData();
@@ -300,37 +261,65 @@ function rejectRequest(requestId, reason) {
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
         },
-        body: formData
+        body: formData,
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
         if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Rejected!',
-                text: data.message,
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
-                window.location.reload();
-            });
+            window.notyf.success(data.message);
+            setTimeout(() => window.location.reload(), 1500);
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: data.message
-            });
+            window.notyf.error(data.message);
         }
     })
     .catch(error => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to reject request: ' + error.message
+        window.notyf.error('Failed to reject request: ' + error.message);
+    });
+}
+
+
+
+
+function cancelRequest(requestId) {
+    Swal.fire({
+        title: 'Cancel Request?',
+        text: 'Are you sure you want to cancel this request?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, cancel it',
+        cancelButtonText: 'Back',
+    }).then(result => {
+        if (!result.isConfirmed) return;
+
+        fetch('{{ route('work-requests.destroy', ':id') }}'.replace(':id', requestId), {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.notyf.success(data.message);
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                window.notyf.error(data.message);
+            }
+        })
+        .catch(error => {
+            window.notyf.error('Failed to cancel request: ' + error.message);
         });
     });
 }
+
+
+
+
+
 </script>
 @endsection
