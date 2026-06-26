@@ -181,7 +181,7 @@ if ($admin || $hr) {
         $employee = $user->employee;
 
         // HR/Admin can view all work requests (no employee record needed)
-        if (!$user->admin() && !$user->hr()) {
+        if (!$user->isAdmin() && !$user->isHR()) {
             // Employees must have an employee record to view their own requests
             if (!$employee) {
                 abort(403, 'No employee record found for this user.');
@@ -208,7 +208,7 @@ if ($admin || $hr) {
         $employee = $user->employee;
 
         // HR/Admin cannot edit employee requests
-        if ($user->admin() || $user->hr()) {
+        if ($user->isAdmin() || $user->isHR()) {
             abort(403, 'HR/Admin cannot edit employee work requests. Use approve/reject instead.');
         }
 
@@ -240,7 +240,7 @@ if ($admin || $hr) {
         $employee = $user->employee;
 
         // HR/Admin cannot update employee requests
-        if ($user->admin() || $user->hr()) {
+        if ($user->isAdmin() || $user->isHR()) {
             return response()->json([
                 'success' => false,
                 'message' => 'HR/Admin cannot edit employee work requests. Use approve/reject instead.',
@@ -333,7 +333,7 @@ if ($admin || $hr) {
         }
 
         // Employees can only cancel their own pending requests
-        if (!$user->admin() && !$user->hr()) {
+        if (!$user->isAdmin() && !$user->isHR()) {
             if ($workRequest->employee_id !== $employee->id) {
                 return response()->json([
                     'success' => false,
@@ -367,7 +367,7 @@ if ($admin || $hr) {
     {
         $user = Auth::user();
 
-        if (!$user->admin() && !$user->hr()) {
+        if (!$user->isAdmin() && !$user->isHR()) {
             abort(403, 'Only administrators and HR can view pending requests.');
         }
 
@@ -387,7 +387,7 @@ if ($admin || $hr) {
     {
         $user = Auth::user();
 
-        if (!$user->admin() && !$user->hr()) {
+        if (!$user->isAdmin() && !$user->isHR()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Only administrators and HR can approve requests.',
@@ -425,7 +425,7 @@ if ($admin || $hr) {
     {
         $user = Auth::user();
 
-        if (!$user->admin() && !$user->hr()) {
+        if (!$user->isAdmin() && !$user->isHR()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Only administrators and HR can reject requests.',

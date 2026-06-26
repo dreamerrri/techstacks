@@ -475,7 +475,7 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
 
 function printPayrollTable() {
     const data = DEPT_BREAKDOWN_DATA;
-    if (!data.length) { alert('No payroll data to print.'); return; }
+    if (!data.length) { window.notyf.error('No payroll data to print.'); return; }
 
     const searchVal  = document.querySelector('input[name="search"]')?.value ?? '';
     const deptVal    = document.querySelector('select[name="department"]')?.value ?? '';
@@ -515,7 +515,7 @@ function printPayrollTable() {
 
 function exportPayrollCSV() {
     const data = DEPT_BREAKDOWN_DATA;
-    if (!data.length) { alert('No payroll data to export.'); return; }
+    if (!data.length) { window.notyf.error('No payroll data to export.'); return; }
 
     const headers = ['Employee','Employee ID','Department','Basic Pay','Allowance','OT Pay','Earnings','SSS','PhilHealth','Pag-IBIG','Tax','Total Deductions','Net Pay'];
     let csvRows = [headers.join(',')], totNet = 0;

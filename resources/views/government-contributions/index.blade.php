@@ -351,7 +351,7 @@ document.addEventListener('keydown', function (e) { if (e.key === 'Escape') clos
 
 function printContribBreakdown() {
     const data = CONTRIB_DATA;
-    if (!data.length) { alert('No data to print.'); return; }
+    if (!data.length) { window.notyf.error('No data to print.'); return; }
 
     const searchVal  = document.getElementById('search-input')?.value ?? '';
     const deptVal    = document.getElementById('department-select')?.value ?? '';
@@ -394,7 +394,7 @@ function printContribBreakdown() {
 
 function exportContribBreakdownCSV() {
     const data = CONTRIB_DATA;
-    if (!data.length) { alert('No data to export.'); return; }
+    if (!data.length) { window.notyf.error('No data to export.'); return; }
 
     const headers = ['Employee','Employee ID','Department','Basic Salary','SSS Share','PhilHealth Share','Pag-IBIG Share','Total Contributions','Status'];
     let csvRows = [headers.join(',')];
