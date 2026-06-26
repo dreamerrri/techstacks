@@ -87,11 +87,11 @@
                                style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <button onclick="approveRequest({{ $request->id }})"
+                            <button type="button" onclick="approveRequest({{ $request->id }})"
                                     style="padding:6px 12px; background:#10b981; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; margin-right:4px;">
                                 <i class="fas fa-check"></i>
                             </button>
-                            <button onclick="showRejectModal({{ $request->id }})"
+                            <button type="button" onclick="showRejectModal({{ $request->id }})"
                                     style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
                                 <i class="fas fa-times"></i>
                             </button>
@@ -121,43 +121,37 @@
 @section('scripts')
 <script>
 function approveRequest(requestId) {
-    if (!confirm('Are you sure you want to approve this work request?')) {
-        return;
-    }
-
-    fetch('{{ route('work-requests.approve', ':id') }}'.replace(':id', requestId), {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Approved!',
-                text: data.message,
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
-                window.location.reload();
+    Swal.fire({
+        title: 'Approve Work Request',
+        text: 'Are you sure you want to approve this work request?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, Approve',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('{{ route('work-requests.approve', ':id') }}'.replace(':id', requestId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    sessionStorage.setItem('notyf_success', data.message);
+                    window.location.reload();
+                } else {
+                    window.notyf.error(data.message ?? 'Something went wrong.');
+                }
+            })
+            .catch(error => {
+                window.notyf.error('Failed to approve request: ' + error.message);
             });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: data.message
-            });
         }
-    })
-    .catch(error => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to approve request: ' + error.message
-        });
     });
 }
 
@@ -203,29 +197,14 @@ function rejectRequest(requestId, reason) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Rejected!',
-                text: data.message,
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
-                window.location.reload();
-            });
+            sessionStorage.setItem('notyf_success', data.message);
+            window.location.reload();
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: data.message
-            });
+            window.notyf.error(data.message ?? 'Something went wrong.');
         }
     })
     .catch(error => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to reject request: ' + error.message
-        });
+        window.notyf.error('Failed to reject request: ' + error.message);
     });
 }
 </script>
