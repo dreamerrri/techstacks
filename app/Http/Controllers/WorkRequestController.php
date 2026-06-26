@@ -18,14 +18,20 @@ class WorkRequestController extends Controller
      */
     public function index(Request $request)
     {
-        $user = Auth::user();
+        $user    = Auth::user();
+
+
+        $admin = $user->isAdmin();
+        $hr   = $user->isHR();
+
         $employee = $user->employee;
 
         // Filter by status if provided
-        $status = $request->get('status');
-        $type = $request->get('type');
+        $status = $request->input('status');
+        $type = $request->input('type');
 
-        if ($user->isAdmin() || $user->isHR()) {
+        
+if ($admin || $hr) {
             // HR/Admin can see all work requests (no employee record needed)
             $query = WorkRequest::with(['employee', 'approvedBy']);
         } else {
@@ -49,7 +55,7 @@ class WorkRequestController extends Controller
 
         // Get pending count for HR/Admin
         $pendingCount = 0;
-        if ($user->isAdmin() || $user->isHR()) {
+        if ($admin || $hr) {
             $pendingCount = WorkRequest::pending()->count();
         }
 
@@ -171,7 +177,7 @@ class WorkRequestController extends Controller
         $employee = $user->employee;
 
         // HR/Admin can view all work requests (no employee record needed)
-        if (!$user->isAdmin() && !$user->isHR()) {
+        if (!$user->admin() && !$user->hr()) {
             // Employees must have an employee record to view their own requests
             if (!$employee) {
                 abort(403, 'No employee record found for this user.');
@@ -198,7 +204,7 @@ class WorkRequestController extends Controller
         $employee = $user->employee;
 
         // HR/Admin cannot edit employee requests
-        if ($user->isAdmin() || $user->isHR()) {
+        if ($user->admin() || $user->hr()) {
             abort(403, 'HR/Admin cannot edit employee work requests. Use approve/reject instead.');
         }
 
@@ -230,7 +236,7 @@ class WorkRequestController extends Controller
         $employee = $user->employee;
 
         // HR/Admin cannot update employee requests
-        if ($user->isAdmin() || $user->isHR()) {
+        if ($user->admin() || $user->hr()) {
             return response()->json([
                 'success' => false,
                 'message' => 'HR/Admin cannot edit employee work requests. Use approve/reject instead.',
@@ -323,7 +329,7 @@ class WorkRequestController extends Controller
         }
 
         // Employees can only cancel their own pending requests
-        if (!$user->isAdmin() && !$user->isHR()) {
+        if (!$user->admin() && !$user->hr()) {
             if ($workRequest->employee_id !== $employee->id) {
                 return response()->json([
                     'success' => false,
@@ -354,7 +360,7 @@ class WorkRequestController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->isAdmin() && !$user->isHR()) {
+        if (!$user->admin() && !$user->hr()) {
             abort(403, 'Only administrators and HR can view pending requests.');
         }
 
@@ -374,7 +380,7 @@ class WorkRequestController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->isAdmin() && !$user->isHR()) {
+        if (!$user->admin() && !$user->hr()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Only administrators and HR can approve requests.',
@@ -409,7 +415,7 @@ class WorkRequestController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->isAdmin() && !$user->isHR()) {
+        if (!$user->admin() && !$user->hr()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Only administrators and HR can reject requests.',
