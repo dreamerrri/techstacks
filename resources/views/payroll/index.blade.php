@@ -230,7 +230,7 @@
                 <col class="w-28">  {{-- Net Pay --}}
                 <col class="w-24">  {{-- Actions --}}
             </colgroup>
-            <thead class="sticky top-0 z-5">
+           <thead class="sticky top-0 z-5" style="background: white">>
                 <tr>
                     <th>Employee</th>
                     <th>Department</th>

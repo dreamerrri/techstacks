@@ -117,7 +117,7 @@
                 }
             @endphp
             <table class="table table-hover w-full text-sm">
-                <thead class="sticky top-0 z-5">
+               <thead class="sticky top-0 z-5" style="background: white"> style="background: white">
                     <tr>
                         <th>Employee ID</th>
                         <th>Full Name</th>
