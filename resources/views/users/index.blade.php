@@ -56,39 +56,65 @@
     {{-- Filters + Table --}}
     <div class="card bg-base-100 shadow-sm overflow-hidden flex flex-col p-0">
 
-        {{-- Card header --}}
-        <div class="sticky top-0 z-10 bg-white px-7 pt-5 rounded-t-2xl">
-            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-                <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
-                    <i class="icon-[ph--list-fill]"></i> User Accounts
-                </h2>
-            </div>
+ {{-- NEW --}}
+    <div class="sticky top-0 z-10 bg-white px-7 pt-5 rounded-t-2xl">
+        <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+            <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
+                <i class="icon-[ph--list-fill]"></i> User Accounts
+            </h2>
+            
+        </div>
 
-            {{-- Search & Filters --}}
-            <form method="GET" action="{{ route('users.index') }}"
-                  class="flex flex-wrap gap-2 pb-4 border-b border-gray-200">
-                <input type="text" name="search" value="{{ request('search') }}"
-                       placeholder="Search name or email..."
-                       class="input input-bordered input-sm flex-1 min-w-40">
-                <select name="role" class="select select-bordered select-sm">
-                    <option value="">All Roles</option>
+     <form id="filter-form" method="GET" action="{{ route('users.index') }}"
+      class="flex flex-col md:flex-row md:items-center gap-3 pb-4 border-b border-gray-200">
+
+    {{-- Search group --}}
+    <div class="join flex-none w-64 min-w-40">
+        <input type="text" name="search" id="search-input" value="{{ request('search') }}"
+               placeholder="Search name or email..."
+               oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
+               class="input input-bordered input-sm join-item w-full">
+        <button type="submit" class="btn btn-soft btn-error btn-sm join-item">
+            <i class="icon-[ph--magnifying-glass-fill]"></i>
+        </button>
+        
+    </div>
+
+    
+
+    {{-- Filters group --}}
+    <div class="flex flex-row gap-2 md:ml-auto">
+        <select name="role" id="role-select" 
+        onchange="this.closest('form').submit()"
+        class="select select-bordered select-sm">
+             <option value="">All Roles</option>
                     <option value="admin"    {{ request('role') === 'admin'    ? 'selected' : '' }}>Admin</option>
                     <option value="hr"       {{ request('role') === 'hr'       ? 'selected' : '' }}>HR</option>
                     <option value="employee" {{ request('role') === 'employee' ? 'selected' : '' }}>Employee</option>
-                </select>
-                <select name="status" class="select select-bordered select-sm">
-                    <option value="">All Status</option>
+        </select>
+        <select name="status" id="status-select"
+        onchange="this.closest('form').submit()" 
+        class="select select-bordered select-sm">
+         
+             <option value="">All Status</option>
                     <option value="active"   {{ request('status') === 'active'   ? 'selected' : '' }}>Active</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                </select>
-                <button type="submit" class="btn btn-soft btn-error btn-sm">
-                    <i class="icon-[ph--magnifying-glass-fill]"></i> Search
-                </button>
-                @if(request()->hasAny(['search','role','status']))
-                    <a href="{{ route('users.index') }}" class="btn btn-soft btn-sm">Clear</a>
-                @endif
-            </form>
-        </div>
+        </select>
+@if(request()->hasAny(['search','role','status']))
+<a href="{{ route('users.index') }}" class="btn btn-soft btn-sm">Clear</a>
+        @endif
+    </div>
+</form>
+   
+</div>
+
+
+
+
+
+
+
+
 
         {{-- Desktop Table --}}
         <div class="table-responsive overflow-y-auto max-h-[53vh] px-7 hidden md:block">
@@ -207,7 +233,7 @@
                     @empty
                         <tr>
                             <td colspan="6" class="py-10 text-center text-gray-400">
-                                <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
+                                <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
                                 No users found.
                             </td>
                         </tr>
@@ -299,7 +325,7 @@
                 </div>
             @empty
                 <div class="py-10 text-center text-gray-400">
-                    <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
+                    <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
                     No users found.
                 </div>
             @endforelse

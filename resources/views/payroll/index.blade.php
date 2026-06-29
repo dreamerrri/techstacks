@@ -140,7 +140,7 @@
 
 {{-- Filters + Table --}}
 <div class="card bg-base-100 shadow-sm overflow-hidden flex flex-col p-0">
-
+{{-- old--}}
     <div class="sticky top-0 z-10 bg-white px-7 pt-5 rounded-t-2xl">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
             <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
@@ -154,38 +154,53 @@
         </div>
 
         <form method="GET" action="{{ route('payroll.index') }}"
-              class="flex flex-wrap gap-2 pb-4 border-b border-gray-200">
-            @if($isAdmin || $isHR)
-                <input type="text" name="search" value="{{ request('search') }}"
-                       placeholder="Search name, ID..."
-                       oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 500)"
-                       class="input input-bordered input-sm flex-1 min-w-40">
-                <select name="department" onchange="this.closest('form').submit()" class="select select-bordered select-sm">
-                    <option value="">All Departments</option>
-                    @foreach($departments as $dept)
-                        <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
-                    @endforeach
-                </select>
-            @endif
-            <select name="payroll_period_id" onchange="this.closest('form').submit()"
-                    class="select select-bordered select-sm min-w-[230px]">
-                <option value="">Latest Cutoff</option>
-                @foreach($payrollPeriods as $period)
-                    <option value="{{ $period->id }}"
-                        {{ (string) request('payroll_period_id') === (string) $period->id ? 'selected' : '' }}>
-                        {{ $period->cutoff_start->format('M d') }} – {{ $period->cutoff_end->format('M d, Y') }}
-                        ({{ ucfirst($period->status) }})
-                    </option>
-                @endforeach
-            </select>
-            <button type="submit" class="hidden"></button>
-            @if(request()->hasAny(['search', 'department', 'payroll_period_id']))
-                <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-sm">Clear</a>
-            @endif
-        </form>
+      class="flex flex-col md:flex-row md:items-center gap-3 pb-4 border-b border-gray-200">
+ @if($isAdmin || $isHR)
+    {{-- Search group --}}
+    <div class="join flex-none w-64 min-w-40">
+        <input type="text" name="search" value="{{ request('search') }}"
+               placeholder="Search name, ID, email..."
+                oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"   {{-- Could be removed for consistency, come back later --}}
+               class="input input-bordered input-sm join-item w-full">
+               
+        <button type="submit" class="btn btn-soft btn-error btn-sm join-item">
+            <i class="icon-[ph--magnifying-glass-fill]"></i>
+        </button>
+    </div>
+  @endif
+
+   {{-- Filters group --}}
+<div class="flex flex-row gap-2 md:ml-auto">
+    @if($isAdmin || $isHR)
+        <select name="department"
+                onchange="this.closest('form').submit()"
+                class="select select-bordered select-sm">
+            <option value="">All Departments</option>
+            @foreach($departments as $dept)
+                <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+            @endforeach
+        </select>
+    @endif
+    <select name="payroll_period_id"
+            onchange="this.closest('form').submit()"  {{-- auto reloads form --}}
+            class="select select-bordered select-sm">
+        <option value="">Latest Cutoff</option>
+        @foreach($payrollPeriods as $period)
+            <option value="{{ $period->id }}"
+                {{ (string) request('payroll_period_id') === (string) $period->id ? 'selected' : '' }}>
+                {{ $period->cutoff_start->format('M d') }} – {{ $period->cutoff_end->format('M d, Y') }}
+                ({{ ucfirst($period->status) }})
+            </option>
+        @endforeach
+    </select>
+    @if(request()->hasAny(['search', 'department', 'payroll_period_id']))
+        <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-sm">Clear</a>
+    @endif
+</div>
+</form> 
     </div>
 
-    @if($selectedPeriod ?? null)
+            @if($selectedPeriod ?? null)
         <div class="px-7 py-2 bg-blue-50 border-b border-blue-100 text-blue-700 text-xs flex items-center gap-2 flex-wrap">
             <i class="icon-[ph--calendar-fill]"></i>
             <span>Showing payroll for cutoff:</span>
