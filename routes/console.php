@@ -10,3 +10,6 @@ Artisan::command('inspire', function () {
 
 // Schedule HR/Admin notification generation to run daily at 9 AM
 Schedule::command('notifications:generate-hr-admin')->dailyAt('09:00');
+
+// Schedule auto clock-out to run every hour
+Schedule::command('attendance:auto-clock-out')->hourly();
