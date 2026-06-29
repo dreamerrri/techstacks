@@ -4,9 +4,9 @@
 
 @section('breadcrumb')
     <a href="{{ route('dashboard') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Dashboard</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <a href="{{ route('work-requests.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Work Requests</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">New Request</span>
 @endsection
 

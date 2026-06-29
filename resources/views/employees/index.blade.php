@@ -3,7 +3,7 @@
 @section('title', 'Manage Employees')
 @section('breadcrumb')
     <span>Manage Employees</span>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-medium">Employees</span>
 @endsection
 
@@ -40,7 +40,7 @@
         </div>
         <div class="card bg-base-100 shadow-sm p-5 text-center">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-amber-400 bg-amber-100">
-                <i class="fas fa-clock"></i>
+                <i class="icon-[ph--clock-fill]"></i>
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\Employee::active()->where('employment_status','Probationary')->count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Probationary</div>

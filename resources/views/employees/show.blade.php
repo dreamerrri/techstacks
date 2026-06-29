@@ -2,10 +2,10 @@
 
 @section('title', $employee->full_name)
 @section('breadcrumb')
-    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline hover:text-white">Manage Employees</a>
-    <i class="fas fa-chevron-right text-xs"></i>
-    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline hover:text-white">Employees</a>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline">Manage Employees</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
+    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline">Employees</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-semibold">{{ $employee->full_name }}</span>
 @endsection
 

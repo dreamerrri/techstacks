@@ -3,9 +3,9 @@
 @section('title', 'Archived Payroll Periods')
 @section('breadcrumb')
     <span>Manage Employees</span>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <a href="{{ route('manual-payroll-attendance.index') }}" class="text-white/55 no-underline">Attendance</a>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-medium">Archived Periods</span>
 @endsection
 

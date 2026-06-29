@@ -3,9 +3,9 @@
 @section('title', 'Create Payroll Period')
 @section('breadcrumb')
     <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Employees</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <a href="{{ route('manual-payroll-attendance.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Attendance</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">Create Payroll Period</span>
 @endsection
 @section('content')

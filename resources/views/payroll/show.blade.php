@@ -2,10 +2,10 @@
 
 @section('title', 'Payroll Details - ' . $employee->full_name)
 @section('breadcrumb')
-    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline hover:text-white">Manage Payroll</a>
-    <i class="fas fa-chevron-right text-xs"></i>
-    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline hover:text-white">Payroll</a>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline">Manage Payroll</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
+    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline">Payroll</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-semibold">{{ $employee->full_name }}</span>
 @endsection
 
@@ -140,7 +140,7 @@
     <div class="card bg-base-100 shadow-sm p-5">
         <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <span class="w-7 h-7 rounded-md bg-emerald-100 flex items-center justify-center text-emerald-600 text-xs flex-shrink-0">
-                <i class="fas fa-clock"></i>
+                <i class="icon-[ph--clock-fill]"></i>
             </span>
             Attendance-Based Earnings
         </h2>

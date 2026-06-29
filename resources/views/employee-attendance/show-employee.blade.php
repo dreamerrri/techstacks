@@ -4,11 +4,11 @@
 
 @section('breadcrumb')
     <a href="{{ route('dashboard') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Dashboard</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Employees</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <a href="{{ route('employees.show', $employee) }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">{{ $employee->full_name }}</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">Attendance Records</span>
 @endsection
 
@@ -30,7 +30,7 @@
             <i class="fas fa-arrow-left"></i> Back to Employee Profile
         </a>
         <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="fas fa-clock"></i> Attendance Records
+            <i class="icon-[ph--clock-fill]"></i> Attendance Records
         </div>
         <h2 style="margin:8px 0 4px 0;">{{ $employee->full_name }}'s Attendance</h2>
         <p style="color:#6b7280; margin:0;">

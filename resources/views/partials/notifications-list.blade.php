@@ -33,7 +33,7 @@
                     <div style="font-size:13px; font-weight:600; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $notification->title }}</div>
                     <div style="font-size:11px; color:#6b7280; margin-top:1px;">{{ $notification->message }}</div>
                 </div>
-                <i class="fas fa-chevron-right" style="font-size:10px; color:#d1d5db; flex-shrink:0;"></i>
+                <i class="icon-[ph--caret-right-fill]" style="font-size:10px; color:#d1d5db; flex-shrink:0;"></i>
             </a>
         @endforeach
     @else

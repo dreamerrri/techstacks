@@ -3,9 +3,9 @@
 @section('title', 'Audit Log Detail')
 @section('breadcrumb')
     <span>Monitoring</span>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <a href="{{ route('audit-logs.index') }}" class="text-white/70 no-underline hover:text-white">Audit Logs</a>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-medium">Log #{{ $auditLog->id }}</span>
 @endsection
 

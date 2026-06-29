@@ -4,7 +4,7 @@
 
 @section('breadcrumb')
     <a href="{{ route('dashboard') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Dashboard</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">Work Requests</span>
 @endsection
 
@@ -22,7 +22,7 @@
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
     <div>
         <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="fas fa-calendar-check"></i> Work Requests
+            <i class="icon-[ph--calendar-check-fill]"></i> Work Requests
         </div>
         <h2 style="margin:8px 0 4px 0;">Work Requests</h2>
         <p style="color:#6b7280; margin:0;">
@@ -34,7 +34,7 @@
             @if($pendingCount > 0)
                 <a href="{{ route('work-requests.pending') }}"
                    style="padding:12px 20px; background:#f59e0b; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-                    <i class="fas fa-clock"></i> Pending ({{ $pendingCount }})
+                    <i class="icon-[ph--clock-fill]"></i> Pending ({{ $pendingCount }})
                 </a>
             @endif
         @else

@@ -4,7 +4,7 @@
 
 @section('breadcrumb')
     <a href="{{ route('dashboard') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Dashboard</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">My Attendance</span>
 @endsection
 
@@ -22,7 +22,7 @@
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
     <div>
         <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="fas fa-clock"></i> My Attendance
+            <i class="icon-[ph--clock-fill]"></i> My Attendance
         </div>
         <h2 style="margin:8px 0 4px 0;">Attendance Records</h2>
         <p style="color:#6b7280; margin:0;">

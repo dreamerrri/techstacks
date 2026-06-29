@@ -3,7 +3,7 @@
 @section('title', 'Payroll Preview')
 @section('breadcrumb')
     <span>Manage Payroll</span>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-medium">Payroll</span>
 @endsection
 
@@ -330,7 +330,7 @@
                             onclick="var d=this.nextElementSibling; var i=this.querySelector('i'); d.classList.toggle('hidden'); i.classList.toggle('fa-chevron-down'); i.classList.toggle('fa-chevron-up');"
                             class="w-full py-2 bg-transparent border-none cursor-pointer flex justify-between items-center text-xs font-semibold text-gray-500">
                         <span>View Payroll Breakdown</span>
-                        <i class="fas fa-chevron-down text-[11px]"></i>
+                        <i class="icon-[ph--caret-down-fill] text-[11px]"></i>
                     </button>
                     <div class="hidden pb-1 flex flex-col gap-2 text-xs">
                         @foreach([

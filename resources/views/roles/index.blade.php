@@ -3,7 +3,7 @@
 @section('title', 'Roles Management')
 @section('breadcrumb')
     <span>Manage Users</span>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-medium">Roles</span>
 @endsection
 

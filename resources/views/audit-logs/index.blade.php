@@ -3,7 +3,7 @@
 @section('title', 'Audit Logs')
 @section('breadcrumb')
     <span>Monitoring</span>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-medium">Audit Logs</span>
 @endsection
 

@@ -2,10 +2,10 @@
 
 @section('title', 'Permission Details')
 @section('breadcrumb')
-    <a href="{{ route('users.index') }}" class="text-white/55 no-underline hover:text-white">Manage Users</a>
-    <i class="fas fa-chevron-right text-xs"></i>
-    <a href="{{ route('permissions.index') }}" class="text-white/55 no-underline hover:text-white">Permissions</a>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('users.index') }}" class="text-white/55 no-underline">Manage Users</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
+    <a href="{{ route('permissions.index') }}" class="text-white/55 no-underline">Permissions</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-semibold">{{ $permission->name }}</span>
 @endsection
 

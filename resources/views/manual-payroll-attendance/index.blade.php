@@ -3,7 +3,7 @@
 @section('title', 'Manual Payroll Attendance Encoding')
 @section('breadcrumb')
     <span>Manage Employees</span>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-medium">Attendance</span>
 @endsection
 

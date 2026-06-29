@@ -2,10 +2,10 @@
 
 @section('title', 'Role Details')
 @section('breadcrumb')
-    <a href="{{ route('users.index') }}" class="text-white/55 no-underline hover:text-white">Manage Users</a>
-    <i class="fas fa-chevron-right text-xs"></i>
-    <a href="{{ route('roles.index') }}" class="text-white/55 no-underline hover:text-white">Roles</a>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('users.index') }}" class="text-white/55 no-underline">Manage Users</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
+    <a href="{{ route('roles.index') }}" class="text-white/55 no-underline">Roles</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-semibold">{{ $role->name }}</span>
 @endsection
 
