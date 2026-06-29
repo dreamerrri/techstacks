@@ -142,7 +142,7 @@
     {{-- Desktop Table --}}
     <div class="table-responsive overflow-y-auto max-h-[53vh] px-7 hidden md:block">
         <table id="contributions-table" class="table table-hover w-full text-sm">
-            <thead class="sticky top-[140px] z-5">
+            <thead class="sticky top-0 z-5">
                 <tr>
                     <th>Employee ID</th>
                     <th>Full Name</th>
