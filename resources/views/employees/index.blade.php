@@ -31,6 +31,8 @@
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ $employees->total() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Total Employees</div>
         </div>
+
+
         <div class="card bg-base-100 shadow-sm p-5 text-center">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-emerald-600 bg-emerald-100">
                 <i class="icon-[ph--check-circle-fill]"></i>
@@ -69,30 +71,46 @@
             </div>
 
             {{-- Search & Filters --}}
-            <form method="GET" action="{{ route('employees.index') }}"
-                  class="flex flex-wrap gap-2 pb-4 border-b border-gray-200">
-                <input type="text" name="search" value="{{ request('search') }}"
-                       placeholder="Search name, ID, email..."
-                       class="input input-bordered input-sm flex-1 min-w-40">
-                <select name="department" class="select select-bordered select-sm">
-                    <option value="">All Departments</option>
-                    @foreach($departments as $dept)
-                        <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
-                    @endforeach
-                </select>
-                <select name="status" class="select select-bordered select-sm">
-                    <option value="">All Status</option>
-                    @foreach(['Regular','Probationary','Contractual','Part-time'] as $s)
-                        <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
-                    @endforeach
-                </select>
-                <button type="submit" class="btn btn-soft btn-error btn-sm">
-                    <i class="icon-[ph--magnifying-glass-fill]"></i> Search
-                </button>
-                @if(request()->hasAny(['search','department','status']))
-                    <a href="{{ route('employees.index') }}" class="btn btn-soft btn-sm">Clear</a>
-                @endif
-            </form>
+<form method="GET" action="{{ route('employees.index') }}"
+      class="flex flex-col md:flex-row md:items-center gap-3 pb-4 border-b border-gray-200">
+
+    {{-- Search group --}}
+    <div class="join flex-none w-64 min-w-40">
+        <input type="text" name="search" value="{{ request('search') }}"
+               placeholder="Search name, ID, email..."
+                oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"   {{-- Could be removed for consistency, come back later --}}
+               class="input input-bordered input-sm join-item w-full">
+               
+        <button type="submit" class="btn btn-soft btn-error btn-sm join-item">
+            <i class="icon-[ph--magnifying-glass-fill]"></i>
+        </button>
+    </div>
+
+    {{-- Filters group --}}
+    <div class="flex flex-row gap-2 md:ml-auto">
+        <select name="department" 
+         onchange="this.closest('form').submit()"
+        class="select select-bordered select-sm">
+            
+            <option value="">All Departments</option>
+            @foreach($departments as $dept)
+                <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+            @endforeach
+        </select>
+        <select name="status"
+         onchange="this.closest('form').submit()"  {{-- auto reloads form --}}
+        class="select select-bordered select-sm">
+            <option value="">All Status</option>
+            @foreach(['Regular','Probationary','Contractual','Part-time'] as $s)
+                <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
+            @endforeach
+        </select>
+        @if(request()->hasAny(['search','department','status']))
+            <a href="{{ route('employees.index') }}" class="btn btn-soft btn-sm">Clear</a>
+        @endif
+    </div>
+</form>
+            
         </div>
 
         {{-- Desktop Table --}}
@@ -117,7 +135,7 @@
                 }
             @endphp
             <table class="table table-hover w-full text-sm">
-                <thead class="sticky top-0 z-5">
+               <thead class="sticky top-0 z-5" style="background: white">
                     <tr>
                         <th>Employee ID</th>
                         <th>Full Name</th>
@@ -177,7 +195,7 @@
                     @empty
                         <tr>
                             <td colspan="7" class="py-10 text-center text-gray-400">
-                                <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
+                                <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
                                 No employees found.
                             </td>
                         </tr>
@@ -250,7 +268,7 @@
                 </div>
             @empty
                 <div class="py-10 text-center text-gray-400">
-                    <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
+                    <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
                     No employees found.
                 </div>
             @endforelse

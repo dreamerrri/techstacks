@@ -119,30 +119,55 @@
             </button>
         </div>
 
-        <form id="filter-form" method="GET" action="{{ route('government-contributions.index') }}"
-              class="flex flex-wrap gap-2 pb-4 border-b border-gray-200">
-            <input type="text" name="search" id="search-input" value="{{ request('search') }}"
-                   placeholder="Search name, ID, email..."
-                   oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
-                   class="input input-bordered input-sm flex-1 min-w-40">
-            <select name="department" id="department-select"
-                    onchange="this.closest('form').submit()"
-                    class="select select-bordered select-sm">
-                <option value="">All Departments</option>
-                @foreach($departments as $dept)
-                    <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
-                @endforeach
-            </select>
-            @if(request()->hasAny(['search','department']))
-                <a href="{{ route('government-contributions.index') }}" class="btn btn-soft btn-sm">Clear</a>
-            @endif
-        </form>
+     <form id="filter-form" method="GET" action="{{ route('government-contributions.index') }}"
+      class="flex flex-col md:flex-row md:items-center gap-3 pb-4 border-b border-gray-200">
+
+    {{-- Search group --}}
+    <div class="join flex-none w-64 min-w-40">
+        <input type="text" name="search" id="search-input" value="{{ request('search') }}"
+               placeholder="Search name, ID, email..."
+               oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
+               class="input input-bordered input-sm join-item w-full">
+        <button type="submit" class="btn btn-soft btn-error btn-sm join-item">
+            <i class="icon-[ph--magnifying-glass-fill]"></i>
+        </button>
+        
     </div>
+
+    
+
+    {{-- Filters group --}}
+    <div class="flex flex-row gap-2 md:ml-auto">
+        <select name="department" id="department-select" 
+        onchange="this.closest('form').submit()"
+        class="select select-bordered select-sm">
+            <option value="">All Departments</option>
+            @foreach($departments as $dept)
+                <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+            @endforeach
+        </select>
+        <select name="status" id="status-select"
+        onchange="this.closest('form').submit()" 
+        class="select select-bordered select-sm">
+            <option value="">All Status</option>
+            @foreach(['Regular','Probationary','Contractual','Part-time'] as $s)
+                <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
+            @endforeach
+        </select>
+        @if(request()->hasAny(['search','department','status']))
+<a href="{{ route('government-contributions.index') }}" class="btn btn-soft btn-sm">Clear</a>
+        @endif
+    </div>
+</form>
+   
+</div>
+
+
 
     {{-- Desktop Table --}}
     <div class="table-responsive overflow-y-auto max-h-[53vh] px-7 hidden md:block">
         <table id="contributions-table" class="table table-hover w-full text-sm">
-            <thead class="sticky top-0 z-5">
+           <thead class="sticky top-0 z-5" style="background: white">
                 <tr>
                     <th>Employee ID</th>
                     <th>Full Name</th>
@@ -184,7 +209,7 @@
                 @empty
                     <tr>
                         <td colspan="6" class="py-10 text-center text-gray-400">
-                            <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
+                            <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
                             No employees found.
                         </td>
                     </tr>
@@ -245,7 +270,7 @@
             </div>
         @empty
             <div class="py-10 text-center text-gray-400">
-                <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
+                <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
                 No employees found.
             </div>
         @endforelse
