@@ -22,7 +22,7 @@
         </a>
     </div>
 
-    {{-- Stats --}}
+    {{-- Stat --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
         <div class="card bg-base-100 shadow-sm p-5 text-center">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-red-600 bg-red-100">
