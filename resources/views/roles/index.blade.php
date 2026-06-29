@@ -17,18 +17,6 @@
         </a>
     </div>
 
-    {{-- Flash messages --}}
-    @if(session('success'))
-        <div class="alert alert-success mb-4">
-            <i class="fas fa-check-circle"></i> {{ session('success') }}
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-error mb-4">
-            <i class="fas fa-times-circle"></i> {{ session('error') }}
-        </div>
-    @endif
-
     <div class="card bg-base-100 shadow-sm overflow-hidden p-0">
 
         {{-- Desktop Table --}}

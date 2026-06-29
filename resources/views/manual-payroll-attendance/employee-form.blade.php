@@ -324,14 +324,14 @@ function handleSaveAttendance(event) {
     })
     .then(data => {
         if(data.success) {
-            alert('Attendance saved successfully!');
+            window.notyf.success('Attendance saved successfully!');
             window.location.href = '{{ route('manual-payroll-attendance.period', $payrollPeriod) }}';
         } else {
             window.notyf.error(data.message ?? 'Something went wrong.');
         }
     })
     .catch(error => {
-        alert('Error saving attendance: ' + error.message);
+        window.notyf.error('Error saving attendance: ' + error.message);
     });
 }
 
@@ -493,14 +493,14 @@ function previewPayroll() {
                     `;
                 });
             } else {
-                alert('Missing gross_pay or net_pay in response');
+                window.notyf.error('Missing gross_pay or net_pay in response');
             }
         } else {
-            alert('Preview failed: ' + (data.message || 'Unknown error'));
+            window.notyf.error('Preview failed: ' + (data.message || 'Unknown error'));
         }
     })
     .catch(error => {
-        alert('Error previewing payroll: ' + error.message);
+        window.notyf.error('Error previewing payroll: ' + error.message);
     });
 }
 </script>

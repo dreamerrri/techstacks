@@ -141,12 +141,23 @@ class NotificationService
 
     public static function notifyWorkRequestSubmitted($employee, $workRequest): void
     {
+        // Notify HR/Admin
         Notification::createForHrAdmin([
             'title' => 'New Work Request Submitted',
             'message' => "{$employee->full_name} submitted a {$workRequest->request_type} request for " . Carbon::parse($workRequest->work_date)->format('M d, Y'),
             'type' => 'info',
             'link' => route('work-requests.pending', [], false),
             'data' => ['work_request_id' => $workRequest->id, 'employee_id' => $employee->id],
+        ]);
+
+        // Notify employee (confirmation)
+        Notification::createForEmployee([
+            'title' => 'Work Request Submitted',
+            'message' => "Your {$workRequest->request_type} request for " . Carbon::parse($workRequest->work_date)->format('M d, Y') . " has been submitted and is pending approval",
+            'type' => 'success',
+            'link' => route('work-requests.index', [], false),
+            'user_id' => $employee->user_id,
+            'data' => ['work_request_id' => $workRequest->id],
         ]);
     }
 
