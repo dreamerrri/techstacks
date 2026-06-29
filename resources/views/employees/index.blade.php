@@ -13,12 +13,12 @@
     <div class="flex justify-between items-center flex-wrap gap-3 mb-6">
         <div>
             <span class="badge badge-soft badge-success mb-2">
-                <i class="fas fa-user-tie"></i> Employee Management
+                <i class="icon-[ph--user-fill]"></i> Employee Management
             </span>
             <p class="text-gray-500 m-0">Manage all employee records in the system.</p>
         </div>
         <a href="{{ route('employees.create') }}" class="btn btn-soft btn-error whitespace-nowrap">
-            <i class="fas fa-user-plus"></i> Add Employee
+            <i class="icon-[ph--user-fill]-plus"></i> Add Employee
         </a>
     </div>
 
@@ -26,14 +26,14 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
         <div class="card bg-base-100 shadow-sm p-5 text-center">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-red-600 bg-red-100">
-                <i class="fas fa-users"></i>
+                <i class="icon-[ph--user-fill]s"></i>
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ $employees->total() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Total Employees</div>
         </div>
         <div class="card bg-base-100 shadow-sm p-5 text-center">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-emerald-600 bg-emerald-100">
-                <i class="fas fa-check-circle"></i>
+                <i class="icon-[ph--check-circle-fill]"></i>
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\Employee::active()->where('employment_status','Regular')->count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Regular</div>
@@ -47,7 +47,7 @@
         </div>
         <div class="card bg-base-100 shadow-sm p-5 text-center">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-gray-500 bg-gray-100">
-                <i class="fas fa-archive"></i>
+                <i class="icon-[ph--archive-fill]"></i>
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\Employee::archived()->count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Archived</div>
@@ -61,10 +61,10 @@
         <div class="sticky top-0 z-10 bg-white px-6 pt-5 rounded-t-2xl">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                 <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
-                    <i class="fas fa-list"></i> Employee List
+                    <i class="icon-[ph--list-fill]"></i> Employee List
                 </h2>
                 <a href="{{ route('employees.archived') }}" class="text-gray-500 text-xs no-underline hover:text-emerald-600">
-                    <i class="fas fa-archive"></i> View Archived
+                    <i class="icon-[ph--archive-fill]"></i> View Archived
                 </a>
             </div>
 
@@ -87,7 +87,7 @@
                     @endforeach
                 </select>
                 <button type="submit" class="btn btn-soft btn-error btn-sm">
-                    <i class="fas fa-search"></i> Search
+                    <i class="icon-[ph--magnifying-glass-fill]"></i> Search
                 </button>
                 @if(request()->hasAny(['search','department','status']))
                     <a href="{{ route('employees.index') }}" class="btn btn-soft btn-sm">Clear</a>
@@ -111,8 +111,8 @@
                     return '<th><a href="' . $url . '" class="inline-flex items-center gap-1 no-underline uppercase tracking-wider text-xs ' . $color . '">'
                          . $label
                          . '<span class="inline-flex flex-col leading-none gap-px">'
-                         . '<i class="fas fa-caret-up" style="font-size:9px; color:' . $upCol . ';"></i>'
-                         . '<i class="fas fa-caret-down" style="font-size:9px; color:' . $dnCol . ';"></i>'
+                         . '<i class="icon-[ph--caret-up-fill]" style="font-size:9px; color:' . $upCol . ';"></i>'
+                         . '<i class="icon-[ph--caret-down-fill]" style="font-size:9px; color:' . $dnCol . ';"></i>'
                          . '</span></a></th>';
                 }
             @endphp
@@ -156,10 +156,10 @@
                             <td>
                                 <div class="flex gap-2">
                                     <a href="{{ route('employees.show', $employee) }}" class="btn btn-soft btn-info btn-sm">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="icon-[ph--eye-fill]"></i>
                                     </a>
                                     <a href="{{ route('employees.edit', $employee) }}" class="btn btn-soft btn-warning btn-sm">
-                                        <i class="fas fa-edit"></i>
+                                        <i class="icon-[ph--pencil-fill]"></i>
                                     </a>
                                     <form method="POST" action="{{ route('employees.archive', $employee) }}"
                                           data-confirm="This employee will be moved to the archive."
@@ -168,7 +168,7 @@
                                           data-confirm-btn="Yes, archive">
                                         @csrf @method('PATCH')
                                         <button class="btn btn-soft btn-error btn-sm">
-                                            <i class="fas fa-archive"></i>
+                                            <i class="icon-[ph--archive-fill]"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -177,7 +177,7 @@
                     @empty
                         <tr>
                             <td colspan="7" class="py-10 text-center text-gray-400">
-                                <i class="fas fa-users text-3xl mb-2 block"></i>
+                                <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
                                 No employees found.
                             </td>
                         </tr>
@@ -224,17 +224,17 @@
                     </div>
 
                     <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
-                        <span><i class="fas fa-building w-3.5"></i> {{ $employee->department }}</span>
-                        <span><i class="fas fa-briefcase w-3.5"></i> {{ $employee->position }}</span>
-                        <span><i class="fas fa-calendar w-3.5"></i> {{ $employee->date_hired->format('M d, Y') }}</span>
+                        <span><i class="icon-[ph--buildings-fill] w-3.5"></i> {{ $employee->department }}</span>
+                        <span><i class="icon-[ph--briefcase-fill] w-3.5"></i> {{ $employee->position }}</span>
+                        <span><i class=" icon-[ph--calendar-fill] w-3.5"></i> {{ $employee->date_hired->format('M d, Y') }}</span>
                     </div>
 
                     <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
                         <a href="{{ route('employees.show', $employee) }}" class="btn btn-soft btn-info btn-sm">
-                            <i class="fas fa-eye"></i> View
+                            <i class="icon-[ph--eye-fill]"></i> View
                         </a>
                         <a href="{{ route('employees.edit', $employee) }}" class="btn btn-soft btn-warning btn-sm">
-                            <i class="fas fa-edit"></i> Edit
+                            <i class="icon-[ph--pencil-fill]"></i> Edit
                         </a>
                         <form method="POST" action="{{ route('employees.archive', $employee) }}"
                               data-confirm="This employee will be moved to the archive."
@@ -243,14 +243,14 @@
                               data-confirm-btn="Yes, archive">
                             @csrf @method('PATCH')
                             <button class="btn btn-soft btn-error btn-sm">
-                                <i class="fas fa-archive"></i> Archive
+                                <i class="icon-[ph--archive-fill]"></i> Archive
                             </button>
                         </form>
                     </div>
                 </div>
             @empty
                 <div class="py-10 text-center text-gray-400">
-                    <i class="fas fa-users text-3xl mb-2 block"></i>
+                    <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
                     No employees found.
                 </div>
             @endforelse

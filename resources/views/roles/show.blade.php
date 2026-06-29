@@ -13,18 +13,18 @@
 
     <div class="mb-5">
         <a href="{{ route('roles.index') }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
-            <i class="fas fa-arrow-left"></i> Back to Roles
+            <i class="icon-[ph--arrow-left-fill]"></i> Back to Roles
         </a>
     </div>
 
     @if(session('success'))
         <div class="alert alert-success mb-4">
-            <i class="fas fa-check-circle"></i> {{ session('success') }}
+            <i class="icon-[ph--check-circle-fill]"></i> {{ session('success') }}
         </div>
     @endif
     @if(session('error'))
         <div class="alert alert-error mb-4">
-            <i class="fas fa-times-circle"></i> {{ session('error') }}
+            <i class="icon-[ph--x-circle-fill]"></i> {{ session('error') }}
         </div>
     @endif
 
@@ -42,14 +42,14 @@
                 </div>
             </div>
             <a href="{{ route('roles.edit', $role) }}" class="btn btn-soft btn-error btn-sm">
-                <i class="fas fa-edit"></i> Edit Role
+                <i class="icon-[ph--pencil-fill]"></i> Edit Role
             </a>
         </div>
 
         {{-- Role Information --}}
         <div class="mb-8">
             <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="fas fa-user-tag text-red-600"></i> Role Information
+                <i class="icon-[ph--user-fill]-tag text-red-600"></i> Role Information
             </h3>
             <div class="flex flex-col">
                 <div class="flex justify-between items-center py-3 border-b border-base-200">
@@ -60,9 +60,9 @@
                     <span class="text-gray-400 font-medium">Status</span>
                     <span>
                         @if($role->is_active)
-                            <span class="badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
+                            <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
                         @else
-                            <span class="badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
+                            <span class="badge badge-soft badge-error"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
                         @endif
                     </span>
                 </div>
@@ -80,7 +80,7 @@
         {{-- Permissions --}}
         <div class="mb-8">
             <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="fas fa-key text-red-600"></i> Permissions ({{ $role->permissions->count() }})
+                <i class="icon-[ph--key-fill] text-red-600"></i> Permissions ({{ $role->permissions->count() }})
             </h3>
             @if($role->permissions->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -91,7 +91,7 @@
                             </div>
                             @foreach($modulePerms as $permission)
                                 <div class="flex items-center gap-2 text-xs text-gray-700 mb-1.5">
-                                    <i class="fas fa-check-circle text-emerald-500 text-[11px] flex-shrink-0"></i>
+                                    <i class="icon-[ph--check-circle-fill] text-emerald-500 text-[11px] flex-shrink-0"></i>
                                     {{ $permission->name }}
                                 </div>
                             @endforeach
@@ -106,7 +106,7 @@
         {{-- Assigned Users --}}
         <div>
             <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="fas fa-users text-red-600"></i> Assigned Users ({{ $role->users->count() }})
+                <i class="icon-[ph--user-fill]s text-red-600"></i> Assigned Users ({{ $role->users->count() }})
             </h3>
 
             @if($availableUsers->count() > 0)
@@ -119,7 +119,7 @@
                         @endforeach
                     </select>
                     <button type="submit" class="btn btn-soft btn-error btn-sm">
-                        <i class="fas fa-user-plus"></i> Assign User
+                        <i class="icon-[ph--user-fill]-plus"></i> Assign User
                     </button>
                 </form>
             @endif
@@ -145,7 +145,7 @@
                                       data-confirm-btn="Yes, remove">
                                     @csrf @method('DELETE')
                                     <button class="btn btn-soft btn-error btn-sm">
-                                        <i class="fas fa-user-minus"></i> Remove
+                                        <i class="icon-[ph--user-fill]-minus"></i> Remove
                                     </button>
                                 </form>
                             @endif

@@ -50,13 +50,13 @@
         <div class="px-7 py-5 border-b border-gray-200 flex justify-between items-center">
             <div>
                 <div class="text-base font-bold text-gray-800 flex items-center gap-2">
-                    <i class="fas fa-layer-group text-blue-600"></i>
+                    <i class="icon-[ph--stack-fill] text-blue-600"></i>
                     <span id="deptModalTitle">Department Breakdown</span>
                 </div>
                 <div class="text-xs text-gray-500 mt-1" id="deptModalMeta">—</div>
             </div>
             <button onclick="closeDeptModal()" class="btn btn-ghost btn-sm btn-circle">
-                <i class="fas fa-times"></i>
+                <i class="icon-[ph--x-fill]"></i>
             </button>
         </div>
 
@@ -96,14 +96,14 @@
                 <tfoot id="deptBreakdownFoot"></tfoot>
             </table>
             <div id="deptBreakdownEmpty" class="hidden py-10 text-center text-gray-400">
-                <i class="fas fa-inbox text-3xl mb-2 block"></i>
+                <i class="icon-[ph--tray-fill] text-3xl mb-2 block"></i>
                 No payroll data for the current filter.
             </div>
         </div>
 
         <div id="deptGrossPayBar" class="hidden mx-6 px-5 py-3 bg-emerald-100 rounded-b-xl flex justify-between items-center flex-wrap gap-3">
             <div class="text-sm font-bold text-emerald-800">
-                <i class="fas fa-money-bill-wave mr-1"></i> Total Gross Pay:
+                <i class="icon-[ph--money-fill] mr-1"></i> Total Gross Pay:
             </div>
             <span id="deptTotalGrossPay" class="text-xl font-extrabold text-emerald-800">₱0.00</span>
         </div>
@@ -111,10 +111,10 @@
         <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center flex-wrap gap-2">
             <div class="flex gap-2 flex-wrap">
                 <button onclick="printPayrollTable()" class="btn btn-soft btn-info btn-sm">
-                    <i class="fas fa-print"></i> Print PDF
+                    <i class="icon-[ph--printer-fill]"></i> Print PDF
                 </button>
                 <button onclick="exportPayrollCSV()" class="btn btn-soft btn-success btn-sm">
-                    <i class="fas fa-file-csv"></i> Export CSV
+                    <i class="icon-[ph--file-csv-fill]"></i> Export CSV
                 </button>
             </div>
             <button onclick="closeDeptModal()" class="btn btn-soft btn-sm">Close</button>
@@ -126,7 +126,7 @@
 <div class="flex justify-between items-center flex-wrap gap-3 mb-6">
     <div>
         <span class="badge badge-soft badge-warning mb-2">
-            <i class="fas fa-money-bill-wave"></i> Payroll Preview
+            <i class="icon-[ph--money-fill]"></i> Payroll Preview
         </span>
         <p class="text-gray-500 m-0">
             @if($isAdmin || $isHR)
@@ -144,11 +144,11 @@
     <div class="sticky top-0 z-10 bg-white px-7 pt-5 rounded-t-2xl">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
             <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
-                <i class="fas fa-list"></i> Payroll Summary
+                <i class="icon-[ph--list-fill]"></i> Payroll Summary
             </h2>
             @if($isAdmin || $isHR)
                 <button onclick="openDeptModal()" class="btn btn-soft btn-primary btn-sm">
-                    <i class="fas fa-layer-group"></i> Breakdown
+                    <i class="icon-[ph--stack-fill]"></i> Breakdown
                 </button>
             @endif
         </div>
@@ -187,7 +187,7 @@
 
     @if($selectedPeriod ?? null)
         <div class="px-7 py-2 bg-blue-50 border-b border-blue-100 text-blue-700 text-xs flex items-center gap-2 flex-wrap">
-            <i class="fas fa-calendar-alt"></i>
+            <i class="icon-[ph--calendar-fill]"></i>
             <span>Showing payroll for cutoff:</span>
             <strong>{{ $selectedPeriod->cutoff_start->format('M d, Y') }} – {{ $selectedPeriod->cutoff_end->format('M d, Y') }}</strong>
             <span class="badge {{ $selectedPeriod->status === 'finalized' ? 'badge-soft badge-success' : 'badge-soft badge-warning' }} badge-xs">
@@ -213,8 +213,8 @@
                 return '<th class="text-' . $align . '"><a href="' . $url . '" class="inline-flex items-center gap-1 no-underline uppercase tracking-wider text-xs ' . $color . '">'
                      . $label
                      . '<span class="inline-flex flex-col leading-none gap-px">'
-                     . '<i class="fas fa-caret-up" style="font-size:9px; color:' . $upCol . ';"></i>'
-                     . '<i class="fas fa-caret-down" style="font-size:9px; color:' . $dnCol . ';"></i>'
+                     . '<i class="icon-[ph--caret-up-fill]" style="font-size:9px; color:' . $upCol . ';"></i>'
+                     . '<i class="icon-[ph--caret-down-fill]" style="font-size:9px; color:' . $dnCol . ';"></i>'
                      . '</span></a></th>';
             }
         @endphp
@@ -272,16 +272,16 @@
                             <div class="flex gap-2 justify-center">
                                 @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
                                     <button class="btn btn-soft btn-sm btn-disabled" title="No payroll data">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="icon-[ph--eye-fill]"></i>
                                     </button>
                                 @else
                                     <a href="{{ route('payroll.show', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
                                        class="btn btn-soft btn-info btn-sm" title="Full details">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="icon-[ph--eye-fill]"></i>
                                     </a>
                                     <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
                                        class="btn btn-soft btn-success btn-sm" title="Download payslip">
-                                        <i class="fas fa-file-download"></i>
+                                        <i class="icon-[ph--file-arrow-down-fill]"></i>
                                     </a>
                                 @endif
                             </div>
@@ -290,7 +290,7 @@
                 @empty
                     <tr>
                         <td colspan="9" class="py-10 text-center text-gray-400">
-                            <i class="fas fa-money-bill-wave text-3xl mb-2 block"></i>
+                            <i class="icon-[ph--money-fill] text-3xl mb-2 block"></i>
                             No payroll data found.
                         </td>
                     </tr>
@@ -321,8 +321,8 @@
                 </div>
 
                 <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
-                    <span><i class="fas fa-building w-3.5"></i> {{ $employee->department }}</span>
-                    <span><i class="fas fa-briefcase w-3.5"></i> {{ $employee->position }}</span>
+                    <span><i class="icon-[ph--buildings-fill] w-3.5"></i> {{ $employee->department }}</span>
+                    <span><i class="icon-[ph--briefcase-fill] w-3.5"></i> {{ $employee->position }}</span>
                 </div>
 
                 <div class="mt-3 border-t border-gray-100">
@@ -361,23 +361,23 @@
                 <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
                     @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
                         <button class="btn btn-soft btn-sm btn-disabled">
-                            <i class="fas fa-eye"></i> View Details
+                            <i class="icon-[ph--eye-fill]"></i> View Details
                         </button>
                     @else
                         <a href="{{ route('payroll.show', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
                            class="btn btn-soft btn-info btn-sm">
-                            <i class="fas fa-eye"></i> View Details
+                            <i class="icon-[ph--eye-fill]"></i> View Details
                         </a>
                         <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
                            class="btn btn-soft btn-success btn-sm">
-                            <i class="fas fa-file-download"></i> Payslip
+                            <i class="icon-[ph--file-arrow-down-fill]"></i> Payslip
                         </a>
                     @endif
                 </div>
             </div>
         @empty
             <div class="py-10 text-center text-gray-400">
-                <i class="fas fa-money-bill-wave text-3xl mb-2 block"></i>
+                <i class="icon-[ph--money-fill] text-3xl mb-2 block"></i>
                 No payroll data found.
             </div>
         @endforelse

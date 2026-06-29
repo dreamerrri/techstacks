@@ -33,7 +33,7 @@
     <div style="display:flex; gap:8px;">
         <a href="{{ route('work-requests.index') }}"
            style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-            <i class="fas fa-list"></i> All Requests
+            <i class="icon-[ph--list-fill]"></i> All Requests
         </a>
     </div>
 </div>
@@ -85,15 +85,15 @@
                         <td style="padding:12px 16px; text-align:center;">
                             <a href="{{ route('work-requests.show', $request) }}"
                                style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
-                                <i class="fas fa-eye"></i>
+                                <i class="icon-[ph--eye-fill]"></i>
                             </a>
                             <button type="button" onclick="approveRequest({{ $request->id }})"
                                     style="padding:6px 12px; background:#10b981; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; margin-right:4px;">
-                                <i class="fas fa-check"></i>
+                                <i class="icon-[ph--check-fill]"></i>
                             </button>
                             <button type="button" onclick="showRejectModal({{ $request->id }})"
                                     style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-                                <i class="fas fa-times"></i>
+                                <i class="icon-[ph--x-fill]"></i>
                             </button>
                         </td>
                     </tr>
@@ -104,14 +104,14 @@
     </div>
 @else
     <div class="card" style="padding:48px; text-align:center;">
-        <i class="fas fa-check-circle" style="font-size:48px; color:#10b981; margin-bottom:16px;"></i>
+        <i class="icon-[ph--check-circle-fill]" style="font-size:48px; color:#10b981; margin-bottom:16px;"></i>
         <h3 style="margin:0 0 8px 0; color:#6b7280;">All Caught Up!</h3>
         <p style="color:#9ca3af; margin:0 0 24px 0;">
             There are no pending work requests to review.
         </p>
         <a href="{{ route('work-requests.index') }}"
            style="padding:12px 24px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-            <i class="fas fa-list"></i> View All Requests
+            <i class="icon-[ph--list-fill]"></i> View All Requests
         </a>
     </div>
 @endif

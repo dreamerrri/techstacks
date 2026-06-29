@@ -15,14 +15,14 @@
     <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
         <a href="{{ route('government-contributions.index') }}"
            class="text-gray-500 no-underline text-sm hover:text-emerald-600 flex items-center gap-1">
-            <i class="fas fa-arrow-left"></i> Back to Government Contributions
+            <i class="icon-[ph--arrow-left-fill]"></i> Back to Government Contributions
         </a>
         <div class="flex gap-2">
             <button onclick="printContributionDetail()" class="btn btn-soft btn-info btn-sm">
-                <i class="fas fa-print"></i> Print
+                <i class="icon-[ph--printer-fill]"></i> Print
             </button>
             <button onclick="exportContributionDetailCSV()" class="btn btn-soft btn-success btn-sm">
-                <i class="fas fa-file-csv"></i> Export CSV
+                <i class="icon-[ph--file-csv-fill]"></i> Export CSV
             </button>
         </div>
     </div>
@@ -60,7 +60,7 @@
     {{-- Government Contributions --}}
     <div class="card bg-base-100 shadow-sm p-6">
         <h2 class="text-sm font-bold text-gray-800 mb-5 flex items-center gap-2">
-            <i class="fas fa-id-card text-red-600"></i> Government Contributions
+            <i class="icon-[ph--identification-card-fill] text-red-600"></i> Government Contributions
         </h2>
 
         {{-- ID Numbers Grid --}}
@@ -84,7 +84,7 @@
         {{-- SSS --}}
         <div class="mt-4 p-5 bg-blue-50 rounded-2xl border border-blue-200">
             <h4 class="text-xs font-bold text-blue-800 uppercase tracking-widest mb-4">
-                <i class="fas fa-calculator"></i> SSS Contribution (Circular No. 2024-006)
+                <i class="icon-[ph--calculator-fill]"></i> SSS Contribution (Circular No. 2024-006)
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white p-4 rounded-xl shadow-sm">
@@ -108,7 +108,7 @@
         {{-- PhilHealth --}}
         <div class="mt-4 p-5 bg-emerald-50 rounded-2xl border border-emerald-200">
             <h4 class="text-xs font-bold text-emerald-800 uppercase tracking-widest mb-4">
-                <i class="fas fa-heartbeat"></i> PhilHealth Contribution (2025/2026)
+                <i class="icon-[ph--heartbeat-fill]"></i> PhilHealth Contribution (2025/2026)
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white p-4 rounded-xl shadow-sm">
@@ -132,7 +132,7 @@
         {{-- Pag-IBIG --}}
         <div class="mt-4 p-5 bg-amber-50 rounded-2xl border border-amber-200">
             <h4 class="text-xs font-bold text-amber-800 uppercase tracking-widest mb-4">
-                <i class="fas fa-home"></i> Pag-IBIG Contribution (2026)
+                <i class="icon-[ph--house-fill]"></i> Pag-IBIG Contribution (2026)
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white p-4 rounded-xl shadow-sm">
@@ -158,7 +158,7 @@
         {{-- Save Button --}}
         <div class="mt-6 text-right">
             <button onclick="saveCustomContributions()" class="btn btn-soft btn-error">
-                <i class="fas fa-save"></i> Save Custom Contributions
+                <i class="icon-[ph--floppy-disk-fill]"></i> Save Custom Contributions
             </button>
         </div>
 

@@ -23,7 +23,7 @@
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
     <div>
         <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="fas fa-edit"></i> Edit Request
+            <i class="icon-[ph--pencil-fill]"></i> Edit Request
         </div>
         <h2 style="margin:8px 0 4px 0;">Edit Work Request #{{ $workRequest->id }}</h2>
         <p style="color:#6b7280; margin:0;">
@@ -32,7 +32,7 @@
     </div>
     <a href="{{ route('work-requests.show', $workRequest) }}"
        style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-        <i class="fas fa-arrow-left"></i> Back to Request
+        <i class="icon-[ph--arrow-left-fill]"></i> Back to Request
     </a>
 </div>
 
@@ -108,7 +108,7 @@
         <div style="display:flex; gap:12px;">
             <button type="submit"
                     style="padding:12px 32px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">
-                <i class="fas fa-save"></i> Update Request
+                <i class="icon-[ph--floppy-disk-fill]"></i> Update Request
             </button>
             <a href="{{ route('work-requests.show', $workRequest) }}"
                style="padding:12px 32px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center;">
@@ -122,7 +122,7 @@
 @if($upcomingHolidays->count() > 0)
 <div class="card" style="padding:24px; margin-top:24px;">
     <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-        <i class="fas fa-calendar-alt" style="color:#6b7280;"></i> Upcoming Holidays
+        <i class="icon-[ph--calendar-fill]" style="color:#6b7280;"></i> Upcoming Holidays
     </h3>
     <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:12px;">
         @foreach($upcomingHolidays as $holiday)

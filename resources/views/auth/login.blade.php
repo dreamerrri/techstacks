@@ -38,14 +38,14 @@
 
                 @if ($errors->any())
                     <div class="alert alert-error">
-                        <i class="fas fa-exclamation-circle"></i>
+                        <i class="icon-[ph--warning-circle-fill]"></i>
                         {{ $errors->first() }}
                     </div>
                 @endif
 
                 @if (session('success'))
                     <div class="alert alert-success">
-                        <i class="fas fa-check-circle"></i>
+                        <i class="icon-[ph--check-circle-fill]"></i>
                         {{ session('success') }}
                     </div>
                 @endif
@@ -56,7 +56,7 @@
                     {{-- Email --}}
                     <div class="form-group">
                         <label for="email">
-                            <i class="fas fa-envelope"></i> Email Address
+                            <i class="icon-[ph--envelope-fill]"></i> Email Address
                         </label>
                         <input
                             type="email"
@@ -68,7 +68,7 @@
                         >
                         @error('email')
                             <div class="error-message">
-                                <i class="fas fa-times-circle"></i>
+                                <i class="icon-[ph--x-circle-fill]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
@@ -77,7 +77,7 @@
                     {{-- Password with show/hide toggle --}}
                     <div class="form-group">
                         <label for="password">
-                            <i class="fas fa-lock"></i> Password
+                            <i class="icon-[ph--lock-fill]"></i> Password
                         </label>
                         <div style="position: relative;">
                             <input
@@ -91,12 +91,12 @@
                             <button type="button" onclick="togglePassword()"
                                     style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
                                            background:none; border:none; cursor:pointer; color:#6b7280; padding:0;">
-                                <i class="fas fa-eye" id="eyeIcon"></i>
+                                <i class="icon-[ph--eye-fill]" id="eyeIcon"></i>
                             </button>
                         </div>
                         @error('password')
                             <div class="error-message">
-                                <i class="fas fa-times-circle"></i>
+                                <i class="icon-[ph--x-circle-fill]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
@@ -112,7 +112,7 @@
 
                     {{-- Submit --}}
                     <button type="submit" class="login-btn" id="loginBtn">
-                        <i class="fas fa-sign-in-alt" id="loginIcon"></i>
+                        <i class="icon-[ph--sign-in-fill]" id="loginIcon"></i>
                         <span id="loginText">Sign In</span>
                     </button>
                 </form>
@@ -147,7 +147,7 @@
             const icon = document.getElementById('loginIcon');
             const text = document.getElementById('loginText');
             btn.disabled     = true;
-            icon.className   = 'fas fa-spinner fa-spin';
+icon.className = 'icon-[ph--spinner-fill] spin';
             text.textContent = ' Signing in...';
         });
     </script>

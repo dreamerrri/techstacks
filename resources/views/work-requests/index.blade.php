@@ -40,7 +40,7 @@
         @else
             <a href="{{ route('work-requests.create') }}"
                style="padding:12px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-                <i class="fas fa-plus"></i> New Request
+                <i class="icon-[ph--plus-fill]"></i> New Request
             </a>
         @endif
     </div>
@@ -70,7 +70,7 @@
         </div>
         <div style="margin-top:20px;">
             <button type="submit" style="padding:8px 16px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">
-                <i class="fas fa-filter"></i> Filter
+                <i class="iicon-[ph--funnel-fill]"></i> Filter
             </button>
             <a href="{{ route('work-requests.index') }}" style="padding:8px 16px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-block; margin-left:8px;">
                 Clear
@@ -133,17 +133,17 @@
                     <td style="padding:12px 16px; text-align:center;">
                         <a href="{{ route('work-requests.show', $request) }}"
                            style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
-                            <i class="fas fa-eye"></i>
+                            <i class="icon-[ph--eye-fill]"></i>
                         </a>
                         {{-- Only employees can edit/cancel their own pending requests --}}
                         @if(!$admin && !$hr && $request->canBeCancelled())
                             <a href="{{ route('work-requests.edit', $request) }}"
                                style="padding:6px 12px; background:#f59e0b; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
-                                <i class="fas fa-edit"></i>
+                                <i class="icon-[ph--pencil-fill]"></i>
                             </a>
                             <button onclick="cancelRequest({{ $request->id }})"
                                     style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-                                <i class="fas fa-times"></i>
+                                <i class="icon-[ph--x-fill]"></i>
                             </button>
                         @endif
                     </td>
@@ -155,7 +155,7 @@
 </div>
 @else
 <div class="card" style="padding:48px; text-align:center;">
-    <i class="fas fa-calendar-times" style="font-size:48px; color:#d1d5db; margin-bottom:16px;"></i>
+    <i class="icon-[ph--calendar-x-fill]" style="font-size:48px; color:#d1d5db; margin-bottom:16px;"></i>
     <h3 style="margin:0 0 8px 0; color:#6b7280;">No Work Requests Found</h3>
     <p style="color:#9ca3af; margin:0 0 24px 0;">
         @if(!$admin && !$hr)
@@ -167,7 +167,7 @@
     @if(!$admin && !$hr)
         <a href="{{ route('work-requests.create') }}"
            style="padding:12px 24px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-            <i class="fas fa-plus"></i> New Request
+            <i class="icon-[ph--plus-fill]"></i> New Request
         </a>
     @endif
 </div>

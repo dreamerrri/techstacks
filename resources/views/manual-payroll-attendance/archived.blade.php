@@ -21,10 +21,10 @@
     <div>
         <a href="{{ route('manual-payroll-attendance.index') }}"
            class="text-gray-500 text-sm no-underline inline-flex items-center gap-1 mb-2">
-            <i class="fas fa-arrow-left"></i> Back to Attendance
+            <i class="icon-[ph--arrow-left-fill]"></i> Back to Attendance
         </a>
         <span class="badge badge-soft badge-neutral mb-2 block w-fit">
-            <i class="fas fa-archive"></i> Archived Payroll Periods
+            <i class="icon-[ph--archive-fill]"></i> Archived Payroll Periods
         </span>
         <p class="text-gray-500 m-0">Archived periods are read-only and can be restored if needed.</p>
     </div>
@@ -73,7 +73,7 @@
                         @if($isAdmin)
                             <button onclick="confirmRestore({{ $period->id }}, '{{ $period->period_label }}', '{{ route('payroll-periods.restore', $period) }}')"
                                     class="btn btn-soft btn-success btn-sm w-full">
-                                <i class="fas fa-undo"></i> Restore
+                                <i class="icon-[ph--arrow-counter-clockwise-fill]"></i> Restore
                             </button>
                         @endif
                     </div>
@@ -82,7 +82,7 @@
         </div>
     @else
         <div class="py-16 px-6 text-center">
-            <i class="fas fa-archive text-5xl text-gray-300 mb-4 block"></i>
+            <i class="icon-[ph--archive-fill] text-5xl text-gray-300 mb-4 block"></i>
             <h3 class="text-gray-500 m-0 mb-2">No Archived Periods</h3>
             <p class="text-gray-400 m-0">Archived payroll periods will appear here.</p>
         </div>

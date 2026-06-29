@@ -13,7 +13,7 @@
     <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
         <h2 class="text-xl font-bold text-gray-800 m-0">Permissions Management</h2>
         <a href="{{ route('permissions.create') }}" class="btn btn-soft btn-error btn-sm">
-            <i class="fas fa-plus"></i> Create Permission
+            <i class="icon-[ph--plus-fill]"></i> Create Permission
         </a>
     </div>
 
@@ -55,18 +55,18 @@
                                     <td class="text-gray-500">{{ $permission->roles->count() }}</td>
                                     <td>
                                         @if($permission->is_active)
-                                            <span class="badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
+                                            <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
                                         @else
-                                            <span class="badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
+                                            <span class="badge badge-soft badge-error"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
                                         @endif
                                     </td>
                                     <td>
                                         <div class="flex gap-2 items-center">
                                             <a href="{{ route('permissions.show', $permission) }}" class="btn btn-soft btn-info btn-sm">
-                                                <i class="fas fa-eye"></i>
+                                                <i class="icon-[ph--eye-fill]"></i>
                                             </a>
                                             <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft btn-warning btn-sm">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="icon-[ph--pencil-fill]"></i>
                                             </a>
                                             @if($permission->roles->count() == 0)
                                                 <form method="POST" action="{{ route('permissions.destroy', $permission) }}"
@@ -76,7 +76,7 @@
                                                       data-confirm-btn="Yes, delete">
                                                     @csrf @method('DELETE')
                                                     <button class="btn btn-soft btn-error btn-sm">
-                                                        <i class="fas fa-trash"></i>
+                                                        <i class="icon-[ph--trash-fill]"></i>
                                                     </button>
                                                 </form>
                                             @endif
@@ -95,7 +95,7 @@
                             <div class="flex justify-between items-start mb-2">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white flex-shrink-0">
-                                        <i class="fas fa-key text-xs"></i>
+                                        <i class="icon-[ph--key-fill] text-xs"></i>
                                     </div>
                                     <div>
                                         <div class="font-semibold text-gray-800 text-sm">{{ $permission->name }}</div>
@@ -103,14 +103,14 @@
                                     </div>
                                 </div>
                                 @if($permission->is_active)
-                                    <span class="badge badge-soft badge-success whitespace-nowrap"><i class="fas fa-check-circle"></i> Active</span>
+                                    <span class="badge badge-soft badge-success whitespace-nowrap"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
                                 @else
-                                    <span class="badge badge-soft badge-error whitespace-nowrap"><i class="fas fa-times-circle"></i> Inactive</span>
+                                    <span class="badge badge-soft badge-error whitespace-nowrap"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
                                 @endif
                             </div>
 
                             <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
-                                <span><i class="fas fa-user-tag w-3.5"></i> {{ $permission->roles->count() }} roles</span>
+                                <span><i class="icon-[ph--user-fill]-tag w-3.5"></i> {{ $permission->roles->count() }} roles</span>
                             </div>
 
                             @if($permission->description)
@@ -119,10 +119,10 @@
 
                             <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
                                 <a href="{{ route('permissions.show', $permission) }}" class="btn btn-soft btn-info btn-sm">
-                                    <i class="fas fa-eye"></i> View
+                                    <i class="icon-[ph--eye-fill]"></i> View
                                 </a>
                                 <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
+                                    <i class="icon-[ph--pencil-fill]"></i> Edit
                                 </a>
                                 @if($permission->roles->count() == 0)
                                     <form method="POST" action="{{ route('permissions.destroy', $permission) }}"
@@ -132,7 +132,7 @@
                                           data-confirm-btn="Yes, delete">
                                         @csrf @method('DELETE')
                                         <button class="btn btn-soft btn-error btn-sm">
-                                            <i class="fas fa-trash"></i> Delete
+                                            <i class="icon-[ph--trash-fill]"></i> Delete
                                         </button>
                                     </form>
                                 @endif

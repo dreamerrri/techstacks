@@ -37,10 +37,10 @@
     <div>
         <a href="{{ route('employee-attendance.index') }}"
            style="color:#6b7280; text-decoration:none; font-size:14px; display:inline-flex; align-items:center; gap:6px; margin-bottom:8px;">
-            <i class="fas fa-arrow-left"></i> Back to Attendance
+            <i class="icon-[ph--arrow-left-fill]"></i> Back to Attendance
         </a>
         <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="fas fa-plus"></i> Add Attendance
+            <i class="icon-[ph--plus-fill]"></i> Add Attendance
         </div>
         <h2 style="margin:8px 0 4px 0;">Record Attendance</h2>
         <p style="color:#6b7280; margin:0;">
@@ -87,11 +87,11 @@
         <div style="display:flex; gap:12px; margin-bottom:24px;">
             <button type="button" id="clockInBtn" onclick="clockIn()" {{ $todayAttendance && $todayAttendance->time_in ? 'disabled' : '' }}
                     style="flex:1; padding:14px 20px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-size:15px; font-weight:600; {{ $todayAttendance && $todayAttendance->time_in ? 'opacity:0.5;' : '' }}">
-                <i class="fas fa-sign-in-alt"></i> {{ $todayAttendance && $todayAttendance->time_in ? 'Clocked In' : 'Clock In' }}
+                <i class="icon-[ph--sign-in-fill]"></i> {{ $todayAttendance && $todayAttendance->time_in ? 'Clocked In' : 'Clock In' }}
             </button>
             <button type="button" id="clockOutBtn" onclick="clockOut()" {{ $todayAttendance && $todayAttendance->time_out ? 'disabled' : ($todayAttendance && $todayAttendance->time_in ? '' : 'disabled') }}
                     style="flex:1; padding:14px 20px; background:#f59e0b; color:white; border:none; border-radius:6px; cursor:pointer; font-size:15px; font-weight:600; {{ $todayAttendance && $todayAttendance->time_out ? 'opacity:0.5;' : ($todayAttendance && $todayAttendance->time_in ? '' : 'opacity:0.5;') }}">
-                <i class="fas fa-sign-out-alt"></i> {{ $todayAttendance && $todayAttendance->time_out ? 'Clocked Out' : 'Clock Out' }}
+                <i class="icon-[ph--sign-out-fill]"></i> {{ $todayAttendance && $todayAttendance->time_out ? 'Clocked Out' : 'Clock Out' }}
             </button>
         </div>
 
@@ -107,7 +107,7 @@
         @endphp
         <div style="margin-bottom:24px; display:flex; align-items:center; gap:8px;">
             <div class="clock-icon-wrapper" style="position:relative; display:inline-block; padding:5px;">
-                <i class="fas fa-clock" style="font-size:28px; color:#f59e0b; cursor:help;"></i>
+                <i class="icon-[ph--clock-fill]" style="font-size:28px; color:#f59e0b; cursor:help;"></i>
                 <div class="clock-tooltip" style="position:absolute; z-index:1000; bottom:140%; left:0; width:280px; background:#1f2937; color:white; text-align:center; border-radius:8px; padding:12px; font-size:13px; pointer-events:none; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
                     <div style="font-weight:600; margin-bottom:6px;">Expected Clock Out Time</div>
                     <div style="font-size:14px; margin-bottom:4px;"><strong>{{ $expectedTimeOut12Hour }}</strong></div>
@@ -130,7 +130,7 @@
 
         <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:16px; margin-bottom:24px;">
             <div style="font-size:13px; font-weight:600; color:#166534; margin-bottom:8px;">
-                <i class="fas fa-info-circle"></i> Computation Rules
+                <i class="icon-[ph--info-fill]"></i> Computation Rules
             </div>
             <ul style="margin:0; padding-left:20px; font-size:13px; color:#166534;">
                 <li>Less than 4 hours = 0 days</li>
@@ -139,14 +139,14 @@
                 <li>1 hour break is automatically deducted for shifts > 4 hours</li>
             </ul>
             <div id="hoursDisplay" style="margin-top:12px; padding-top:12px; border-top:1px solid #bbf7d0; font-size:14px; font-weight:600; color:#166534; display:none;">
-                <i class="fas fa-calculator"></i> Rendered Hours: <span id="renderedHoursValue">0.00</span> hrs
+                <i class="icon-[ph--calculator-fill]"></i> Rendered Hours: <span id="renderedHoursValue">0.00</span> hrs
             </div>
         </div>
 
         <div style="display:flex; gap:12px;">
             <button type="submit" id="saveAttendanceBtn"
                     style="flex:1; padding:12px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">
-                <i class="fas fa-save"></i> Save Attendance
+                <i class="icon-[ph--floppy-disk-fill]"></i> Save Attendance
             </button>
             <a href="{{ route('employee-attendance.index') }}"
                style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; text-decoration:none; text-align:center;">
@@ -204,7 +204,7 @@ function clockIn() {
     if (clockInBtn) {
         clockInBtn.disabled = true;
         clockInBtn.style.opacity = '0.5';
-        clockInBtn.innerHTML = '<i class="fas fa-check"></i> Clocked In';
+        clockInBtn.innerHTML = '<i class="icon-[ph--check-fill]"></i> Clocked In';
     }
     if (clockOutBtn) {
         clockOutBtn.disabled = false;
@@ -232,7 +232,7 @@ function clockOut() {
     if (clockOutBtn) {
         clockOutBtn.disabled = true;
         clockOutBtn.style.opacity = '0.5';
-        clockOutBtn.innerHTML = '<i class="fas fa-check"></i> Clocked Out';
+        clockOutBtn.innerHTML = '<i class="icon-[ph--check-fill]"></i> Clocked Out';
     }
 
     // Compute rendered hours

@@ -46,13 +46,13 @@
         <div class="px-7 py-5 border-b border-gray-200 flex justify-between items-center">
             <div>
                 <div class="text-base font-bold text-gray-800 flex items-center gap-2">
-                    <i class="fas fa-layer-group text-red-600"></i>
+                    <i class="icon-[ph--stack-fill] text-red-600"></i>
                     <span id="contribModalTitle">Contribution Breakdown</span>
                 </div>
                 <div class="text-xs text-gray-500 mt-1" id="contribModalMeta">—</div>
             </div>
             <button onclick="closeContribModal()" class="btn btn-ghost btn-sm btn-circle">
-                <i class="fas fa-times"></i>
+                <i class="icon-[ph--x-fill]"></i>
             </button>
         </div>
 
@@ -75,7 +75,7 @@
                 <tfoot id="contribBreakdownFoot"></tfoot>
             </table>
             <div id="contribBreakdownEmpty" class="hidden py-10 text-center text-gray-400">
-                <i class="fas fa-inbox text-3xl mb-2 block"></i>
+                <i class="icon-[ph--tray-fill] text-3xl mb-2 block"></i>
                 No contribution data for the current filter.
             </div>
         </div>
@@ -84,10 +84,10 @@
         <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center flex-wrap gap-2">
             <div class="flex gap-2 flex-wrap">
                 <button onclick="printContribBreakdown()" class="btn btn-soft btn-info btn-sm">
-                    <i class="fas fa-print"></i> Print PDF
+                    <i class="icon-[ph--printer-fill]"></i> Print PDF
                 </button>
                 <button onclick="exportContribBreakdownCSV()" class="btn btn-soft btn-success btn-sm">
-                    <i class="fas fa-file-csv"></i> Export CSV
+                    <i class="icon-[ph--file-csv-fill]"></i> Export CSV
                 </button>
             </div>
             <button onclick="closeContribModal()" class="btn btn-soft btn-sm">Close</button>
@@ -99,7 +99,7 @@
 <div class="flex justify-between items-center flex-wrap gap-3 mb-6">
     <div>
         <span class="badge badge-soft badge-success mb-2">
-            <i class="fas fa-id-card"></i> Government Contributions
+            <i class="icon-[ph--identification-card-fill]"></i> Government Contributions
         </span>
         <p class="text-gray-500 m-0">View and manage employee government contribution rates.</p>
     </div>
@@ -112,10 +112,10 @@
     <div class="sticky top-0 z-10 bg-white px-7 pt-5 rounded-t-2xl">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
             <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
-                <i class="fas fa-list"></i> Employee List
+                <i class="icon-[ph--list-fill]"></i> Employee List
             </h2>
             <button onclick="openContribModal()" class="btn btn-soft btn-error btn-sm">
-                <i class="fas fa-layer-group"></i> Breakdown
+                <i class="icon-[ph--stack-fill]"></i> Breakdown
             </button>
         </div>
 
@@ -177,14 +177,14 @@
                         <td>
                             <a href="{{ route('government-contributions.show', $employee) }}"
                                class="btn btn-soft btn-info btn-sm">
-                                <i class="fas fa-eye"></i>
+                                <i class="icon-[ph--eye-fill]"></i>
                             </a>
                         </td>
                     </tr>
                 @empty
                     <tr>
                         <td colspan="6" class="py-10 text-center text-gray-400">
-                            <i class="fas fa-users text-3xl mb-2 block"></i>
+                            <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
                             No employees found.
                         </td>
                     </tr>
@@ -231,21 +231,21 @@
                 </div>
 
                 <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
-                    <span><i class="fas fa-building w-3.5"></i> {{ $employee->department }}</span>
-                    <span><i class="fas fa-briefcase w-3.5"></i> {{ $employee->position }}</span>
-                    <span><i class="fas fa-money-bill-wave w-3.5"></i> ₱{{ number_format($employee->basic_salary, 2) }}</span>
+                    <span><i class="icon-[ph--buildings-fill] w-3.5"></i> {{ $employee->department }}</span>
+                    <span><i class="icon-[ph--briefcase-fill] w-3.5"></i> {{ $employee->position }}</span>
+                    <span><i class="icon-[ph--money-fill] w-3.5"></i> ₱{{ number_format($employee->basic_salary, 2) }}</span>
                 </div>
 
                 <div class="mt-3 pt-3 border-t border-gray-100">
                     <a href="{{ route('government-contributions.show', $employee) }}"
                        class="btn btn-soft btn-info btn-sm">
-                        <i class="fas fa-eye"></i> View Contributions
+                        <i class="icon-[ph--eye-fill]"></i> View Contributions
                     </a>
                 </div>
             </div>
         @empty
             <div class="py-10 text-center text-gray-400">
-                <i class="fas fa-users text-3xl mb-2 block"></i>
+                <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
                 No employees found.
             </div>
         @endforelse

@@ -13,7 +13,7 @@
 
     <div class="mb-6">
         <span class="badge badge-soft badge-success mb-2">
-            <i class="fas fa-history"></i> Audit Log Detail
+            <i class="icon-[ph--clock-counter-clockwise-fill]"></i> Audit Log Detail
         </span>
         <p class="text-gray-500 m-0">Detailed view of a single audit log entry.</p>
     </div>
@@ -68,7 +68,7 @@
 
         <div class="px-5 py-4 border-t border-gray-100">
             <a href="{{ route('audit-logs.index') }}" class="btn btn-soft btn-sm">
-                <i class="fas fa-arrow-left"></i> Back to Audit Logs
+                <i class="icon-[ph--arrow-left-fill]"></i> Back to Audit Logs
             </a>
         </div>
     </div>

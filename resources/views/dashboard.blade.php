@@ -17,11 +17,11 @@
 {{-- Role access badge --}}
 @if($isAdmin)
     <span class="badge badge-soft badge-success mb-4">
-        <i class="fas fa-shield-alt"></i> Administrator Access
+        <i class="icon-[ph--shield-check-fill]"></i> Administrator Access
     </span>
 @elseif($isHR)
     <span class="badge badge-soft badge-success mb-4">
-        <i class="fas fa-user-tie"></i> HR Department Access
+        <i class="icon-[ph--user-fill]"></i> HR Department Access
     </span>
 @endif
 
@@ -34,49 +34,197 @@
 
 {{-- Stats --}}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
-    @foreach($stats as $stat)
-        @if(!empty($stat['route']))
-            <a href="{{ $stat['route'] }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
-        @else
-            <div class="card bg-base-100 shadow-sm p-5 text-center">
-        @endif
+
+    @if($isAdmin)
+        <a href="{{ route('users.index') }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
-                 style="color: {{ $stat['color'] }}; background: {{ $stat['color'] }}1a;">
-                <i class="fas {{ $stat['icon'] }}"></i>
+                 style="color: #dc2626; background: #dc262620;">
+                <i class="icon-[ph--users-fill]"></i>
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $stat['value'] }}</div>
-            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">{{ $stat['label'] }}</div>
-        @if(!empty($stat['route']))
-            </a>
-        @else
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $counts['total_users'] }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Total Users</div>
+        </a>
+
+        <a href="{{ route('users.index') }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                 style="color: #991b1b; background: #991b1b20;">
+                <i class="icon-[ph--shield-check-fill]"></i>
             </div>
-        @endif
-    @endforeach
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $counts['admin_users'] }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Admin Users</div>
+        </a>
+
+        <a href="{{ route('users.index') }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                 style="color: #fbbf24; background: #fbbf2420;">
+                <i class="icon-[ph--user-fill]"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $counts['hr_users'] }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">HR Personnel</div>
+        </a>
+
+        <a href="{{ route('users.index') }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                 style="color: #10b981; background: #10b98120;">
+                <i class="icon-[ph--check-circle-fill]"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $counts['active_users'] }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Active Accounts</div>
+        </a>
+
+    @elseif($isHR)
+        <a href="{{ route('employees.index') }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                 style="color: #2563eb; background: #2563eb20;">
+                <i class="icon-[ph--users-fill]"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $counts['total_employees'] }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Total Employees</div>
+        </a>
+
+        <div class="card bg-base-100 shadow-sm p-5 text-center">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                 style="color: #1e40af; background: #1e40af20;">
+                <i class="icon-[ph--calendar-check-fill]"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $counts['regular'] }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Regular</div>
+        </div>
+
+        <div class="card bg-base-100 shadow-sm p-5 text-center">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                 style="color: #fbbf24; background: #fbbf2420;">
+                <i class="icon-[ph--clock-fill]"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $counts['probationary'] }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Probationary</div>
+        </div>
+
+        <div class="card bg-base-100 shadow-sm p-5 text-center">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                 style="color: #6b7280; background: #6b728020;">
+                <i class="icon-[ph--archive-fill]"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $counts['archived'] }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Archived</div>
+        </div>
+
+    @else
+        {{-- Employee stats pulled from their own record --}}
+        <div class="card bg-base-100 shadow-sm p-5 text-center">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                 style="color: #667eea; background: #667eea20;">
+                <i class="icon-[ph--buildings-fill]"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $user->employee?->department ?? '—' }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Department</div>
+        </div>
+
+        <div class="card bg-base-100 shadow-sm p-5 text-center">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                 style="color: #764ba2; background: #764ba220;">
+                <i class="icon-[ph--identification-badge-fill]"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $user->employee?->position ?? '—' }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Position</div>
+        </div>
+
+        <div class="card bg-base-100 shadow-sm p-5 text-center">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                 style="color: #fbbf24; background: #fbbf2420;">
+                <i class="icon-[ph--briefcase-fill]"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $user->employee?->employment_status ?? '—' }}</div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Employment Status</div>
+        </div>
+
+        <div class="card bg-base-100 shadow-sm p-5 text-center">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                 style="color: #10b981; background: #10b98120;">
+                <i class="icon-[ph--calendar-fill]"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800 mb-1">
+                {{ $user->employee?->date_hired ? \Carbon\Carbon::parse($user->employee->date_hired)->format('M d, Y') : '—' }}
+            </div>
+            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Date Hired</div>
+        </div>
+    @endif
+
 </div>
 
 {{-- Quick Actions --}}
 <div class="card bg-base-100 shadow-sm p-6 mb-5">
     <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4 flex items-center gap-2">
-        <i class="fas fa-bolt"></i>
+        <i class="icon-[ph--lightning-fill]"></i>
         @if($isAdmin) Administrative Actions
         @elseif($isHR) HR Actions
         @else Quick Actions
         @endif
     </h2>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        @foreach($actions as $action)
-            <a href="{{ $action['route'] }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="fas {{ $action['icon'] }} text-2xl"></i>
-                <span>{{ $action['label'] }}</span>
+
+        @if($isAdmin)
+            <a href="{{ route('employees.create') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--user-plus-fill] text-2xl"></i>
+                <span>Create Users</span>
             </a>
-        @endforeach
+            <a href="{{ route('roles.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--lock-key-fill] text-2xl"></i>
+                <span>Manage Roles</span>
+            </a>
+            <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--database-fill] text-2xl"></i>
+                <span>System Backup</span>
+            </a>
+            <a href="{{ route('audit-logs.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--clock-counter-clockwise-fill] text-2xl"></i>
+                <span>View Logs</span>
+            </a>
+
+        @elseif($isHR)
+            <a href="{{ route('employees.create') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--user-plus-fill] text-2xl"></i>
+                <span>Add Employee</span>
+            </a>
+            <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--calculator-fill] text-2xl"></i>
+                <span>Payroll</span>
+            </a>
+            <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--tray-fill] text-2xl"></i>
+                <span>Leave Requests</span>
+            </a>
+            <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--file-pdf-fill] text-2xl"></i>
+                <span>Reports</span>
+            </a>
+
+        @else
+            <a href="{{ route('profile.show') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--user-fill] text-2xl"></i>
+                <span>My Profile</span>
+            </a>
+            <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--receipt-fill] text-2xl"></i>
+                <span>Payslips</span>
+            </a>
+            <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--calendar-x-fill] text-2xl"></i>
+                <span>Leave Request</span>
+            </a>
+            <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+                <i class="icon-[ph--clock-fill] text-2xl"></i>
+                <span>Attendance</span>
+            </a>
+        @endif
+
     </div>
 </div>
 
 {{-- System Information --}}
 <div class="card bg-base-100 shadow-sm p-6">
     <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4 flex items-center gap-2">
-        <i class="fas fa-id-badge"></i>
+        <i class="icon-[ph--identification-badge-fill]"></i>
         System Information
     </h2>
     <div class="flex flex-col">
@@ -102,11 +250,11 @@
             <span class="font-semibold text-gray-800 text-right">
                 @if($user->is_active)
                     <span class="badge badge-soft badge-success">
-                        <i class="fas fa-check-circle"></i> Active
+                        <i class="icon-[ph--check-circle-fill]"></i> Active
                     </span>
                 @else
                     <span class="badge badge-soft badge-error">
-                        <i class="fas fa-times-circle"></i> Inactive
+                        <i class="icon-[ph--x-circle-fill]"></i> Inactive
                     </span>
                 @endif
             </span>

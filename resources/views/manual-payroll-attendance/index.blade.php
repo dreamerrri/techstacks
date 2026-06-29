@@ -19,7 +19,7 @@
 <div class="flex justify-between items-center flex-wrap gap-3 mb-6">
     <div>
         <span class="badge badge-soft badge-info mb-2">
-            <i class="fas fa-keyboard"></i> Manual Payroll Attendance Encoding
+            <i class="icon-[ph--keyboard-fill]"></i> Manual Payroll Attendance Encoding
         </span>
         <p class="text-gray-500 m-0">
             Manually encode attendance totals, overtime, allowances, and deductions for payroll processing.
@@ -29,12 +29,12 @@
     <div class="flex items-center gap-2">
         @if($isAdmin)
             <a href="{{ route('payroll-periods.archived') }}" class="btn btn-soft btn-neutral whitespace-nowrap">
-                <i class="fas fa-archive"></i> Archived
+                <i class="icon-[ph--archive-fill]"></i> Archived
             </a>
         @endif
         @if($isAdmin || $isHR)
             <a href="{{ route('payroll-periods.create') }}" class="btn btn-soft btn-error whitespace-nowrap">
-                <i class="fas fa-plus"></i> Create Payroll Period
+                <i class="icon-[ph--plus-fill]"></i> Create Payroll Period
             </a>
         @endif
     </div>
@@ -77,7 +77,7 @@
                                     @if($isAdmin)
                                     <button onclick="event.stopPropagation(); confirmDelete({{ $period->id }}, '{{ $period->period_label }}', '{{ route('payroll-periods.archive', $period) }}')"
         class="btn btn-soft btn-error btn-xs">
-    <i class="fas fa-trash"></i>
+    <i class="icon-[ph--trash-fill]"></i>
 </button>
                                     @endif
                                 </div>
@@ -100,12 +100,12 @@
         </div>
     @else
         <div class="py-16 px-6 text-center">
-            <i class="fas fa-calendar-alt text-5xl text-gray-300 mb-4 block"></i>
+            <i class="icon-[ph--calendar-fill] text-5xl text-gray-300 mb-4 block"></i>
             <h3 class="text-gray-500 m-0 mb-2">No Payroll Periods Found</h3>
             <p class="text-gray-400 m-0">Create a payroll period to start encoding attendance.</p>
             @if($isAdmin || $isHR)
                 <a href="{{ route('payroll-periods.create') }}" class="btn btn-soft btn-error mt-4">
-                    <i class="fas fa-plus"></i> Create Payroll Period
+                    <i class="icon-[ph--plus-fill]"></i> Create Payroll Period
                 </a>
             @endif
         </div>
