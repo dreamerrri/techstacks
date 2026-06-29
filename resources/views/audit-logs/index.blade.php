@@ -3,7 +3,7 @@
 @section('title', 'Audit Logs')
 @section('breadcrumb')
     <span>Monitoring</span>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-medium">Audit Logs</span>
 @endsection
 
@@ -13,7 +13,7 @@
     <div class="flex justify-between items-center flex-wrap gap-3 mb-6">
         <div>
             <span class="badge badge-soft badge-success mb-2">
-                <i class="fas fa-history"></i> Audit Logs
+                <i class="icon-[ph--clock-counter-clockwise-fill]"></i> Audit Logs
             </span>
             <p class="text-gray-500 m-0">Track and review all system activity and changes.</p>
         </div>
@@ -22,7 +22,7 @@
     {{-- Filters --}}
     <div class="card bg-base-100 shadow-sm p-5 mb-5">
         <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4 flex items-center gap-2">
-            <i class="fas fa-filter"></i> Filters
+            <i class="iicon-[ph--funnel-fill]"></i> Filters
         </h2>
         <form method="GET" action="{{ route('audit-logs.index') }}">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 items-end">
@@ -56,7 +56,7 @@
                 </div>
                 <div class="flex gap-2 md:col-span-4">
                     <button type="submit" class="btn btn-soft btn-error btn-sm">
-                        <i class="fas fa-filter"></i> Filter
+                        <i class="iicon-[ph--funnel-fill]"></i> Filter
                     </button>
                     <a href="{{ route('audit-logs.index') }}" class="btn btn-soft btn-sm">Clear</a>
                 </div>
@@ -107,14 +107,14 @@
                             <td class="text-gray-500 font-mono text-xs">{{ $log->ip_address ?? '—' }}</td>
                             <td>
                                 <a href="{{ route('audit-logs.show', $log) }}" class="btn btn-soft btn-info btn-sm">
-                                    <i class="fas fa-eye"></i>
+                                    <i class="icon-[ph--eye-fill]"></i>
                                 </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="7" class="py-10 text-center text-gray-400">
-                                <i class="fas fa-history text-3xl mb-2 block"></i>
+                                <i class="icon-[ph--clock-counter-clockwise-fill] text-3xl mb-2 block"></i>
                                 No audit logs found.
                             </td>
                         </tr>
@@ -151,21 +151,21 @@
                     </div>
 
                     <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
-                        <span><i class="fas fa-cube w-3.5"></i> {{ ucfirst($log->module) }}</span>
-                        <span><i class="fas fa-network-wired w-3.5"></i> {{ $log->ip_address ?? '—' }}</span>
+                        <span><i class="icon-[ph--cube-fill] w-3.5"></i> {{ ucfirst($log->module) }}</span>
+                        <span><i class="icon-[ph--graph-fill] w-3.5"></i> {{ $log->ip_address ?? '—' }}</span>
                     </div>
 
                     <div class="text-xs text-gray-400 mt-1">{{ $log->description }}</div>
 
                     <div class="mt-3 pt-3 border-t border-gray-100">
                         <a href="{{ route('audit-logs.show', $log) }}" class="btn btn-soft btn-info btn-sm">
-                            <i class="fas fa-eye"></i> View Details
+                            <i class="icon-[ph--eye-fill]"></i> View Details
                         </a>
                     </div>
                 </div>
             @empty
                 <div class="py-10 text-center text-gray-400">
-                    <i class="fas fa-history text-3xl mb-2 block"></i>
+                    <i class="icon-[ph--clock-counter-clockwise-fill] text-3xl mb-2 block"></i>
                     No audit logs found.
                 </div>
             @endforelse

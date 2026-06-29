@@ -4,7 +4,7 @@
 
 @section('breadcrumb')
     <a href="{{ route('dashboard') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Dashboard</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">My Attendance</span>
 @endsection
 
@@ -22,7 +22,7 @@
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
     <div>
         <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="fas fa-clock"></i> My Attendance
+            <i class="icon-[ph--clock-fill]"></i> My Attendance
         </div>
         <h2 style="margin:8px 0 4px 0;">Attendance Records</h2>
         <p style="color:#6b7280; margin:0;">
@@ -32,11 +32,11 @@
     <div style="display:flex; gap:8px;">
         <a href="{{ route('employee-attendance.create', ['new' => 'true']) }}"
            style="padding:12px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-            <i class="fas fa-plus"></i> Add New Attendance
+            <i class="icon-[ph--plus-fill]"></i> Add New Attendance
         </a>
         <a href="{{ route('employee-attendance.create') }}"
            style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-            <i class="fas fa-edit"></i> Edit Today's Attendance
+            <i class="icon-[ph--pencil-fill]"></i> Edit Today's Attendance
         </a>
     </div>
 </div>
@@ -45,7 +45,7 @@
 @if($currentPeriod)
 <div class="card" style="padding:24px; margin-bottom:24px;">
     <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-        <i class="fas fa-calendar-alt" style="color:#6b7280;"></i> Current Payroll Period
+        <i class="icon-[ph--calendar-fill]" style="color:#6b7280;"></i> Current Payroll Period
     </h3>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
         <div style="padding:16px; background:#f9fafb; border-radius:8px; border-left:4px solid #3b82f6;">
@@ -113,11 +113,11 @@
                     <td style="padding:12px 16px; text-align:center;">
                         <a href="{{ route('employee-attendance.create') }}"
                            style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
-                            <i class="fas fa-edit"></i>
+                            <i class="icon-[ph--pencil-fill]"></i>
                         </a>
                         <button onclick="deleteAttendance({{ $attendance->id }})"
                                 style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-                            <i class="fas fa-trash"></i>
+                            <i class="icon-[ph--trash-fill]"></i>
                         </button>
                     </td>
                 </tr>

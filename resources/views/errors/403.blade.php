@@ -88,16 +88,16 @@
 <body>
     <div class="error-container">
         <div class="error-icon">
-            <i class="fas fa-lock"></i>
+            <i class="icon-[ph--lock-fill]"></i>
         </div>
         <h1>Access Denied</h1>
         <p>You do not have permission to access this page. Your current role does not grant you access to this resource. Please contact your administrator if you believe this is an error.</p>
         <div class="flex gap-2">
             <a href="/dashboard" class="btn btn btn-primary">
-                <i class="fas fa-home"></i> Go to Dashboard
+                <i class="icon-[ph--house-fill]"></i> Go to Dashboard
             </a>
             <a href="/logout" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();" class="btn btn btn-secondary">
-                <i class="fas fa-sign-out-alt"></i> Logout
+                <i class="icon-[ph--sign-out-fill]"></i> Logout
             </a>
         </div>
     </div>

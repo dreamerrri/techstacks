@@ -4,9 +4,9 @@
 
 @section('breadcrumb')
     <a href="{{ route('dashboard') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Dashboard</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <a href="{{ route('work-requests.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Work Requests</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">Request Details</span>
 @endsection
 
@@ -23,7 +23,7 @@
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
     <div>
         <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="fas fa-file-alt"></i> Request Details
+            <i class="icon-[ph--file-fill]"></i> Request Details
         </div>
         <h2 style="margin:8px 0 4px 0;">Work Request #{{ $workRequest->id }}</h2>
         <p style="color:#6b7280; margin:0;">
@@ -32,7 +32,7 @@
     </div>
     <a href="{{ route('work-requests.index') }}"
        style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-        <i class="fas fa-arrow-left"></i> Back to Requests
+        <i class="icon-[ph--arrow-left-fill]"></i> Back to Requests
     </a>
 </div>
 
@@ -79,7 +79,7 @@
     @if($isAdmin || $isHR)
     <div class="card" style="padding:24px;">
         <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-            <i class="fas fa-user" style="color:#6b7280;"></i> Employee
+            <i class="icon-[ph--user-fill]" style="color:#6b7280;"></i> Employee
         </h3>
         <div style="font-size:14px; font-weight:600; color:#1f2937;">
             {{ $workRequest->employee->full_name }}
@@ -96,7 +96,7 @@
     {{-- Request Type --}}
     <div class="card" style="padding:24px;">
         <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-            <i class="fas fa-tag" style="color:#6b7280;"></i> Request Type
+            <i class="icon-[ph--tag-fill]" style="color:#6b7280;"></i> Request Type
         </h3>
         <span style="padding:6px 12px; border-radius:12px; font-size:14px; font-weight:600; display:inline-block;
             {{ $workRequest->request_type === 'weekend' ? 'background:#dbeafe; color:#1e40af;' : 
@@ -108,7 +108,7 @@
     {{-- Work Date --}}
     <div class="card" style="padding:24px;">
         <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-            <i class="fas fa-calendar" style="color:#6b7280;"></i> Work Date
+            <i class=" icon-[ph--calendar-fill]" style="color:#6b7280;"></i> Work Date
         </h3>
         <div style="font-size:14px; font-weight:600; color:#1f2937;">
             {{ $workRequest->work_date->format('l, F d, Y') }}
@@ -119,7 +119,7 @@
     @if($workRequest->start_time || $workRequest->end_time)
     <div class="card" style="padding:24px;">
         <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-            <i class="fas fa-clock" style="color:#6b7280;"></i> Time Range
+            <i class="icon-[ph--clock-fill]" style="color:#6b7280;"></i> Time Range
         </h3>
         <div style="font-size:14px; font-weight:600; color:#1f2937;">
             {{ $workRequest->start_time ? $workRequest->start_time : 'Not specified' }}
@@ -138,7 +138,7 @@
 @if($workRequest->reason)
 <div class="card" style="padding:24px; margin-bottom:24px;">
     <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-        <i class="fas fa-comment-alt" style="color:#6b7280;"></i> Reason
+        <i class="icon-[ph--chat-text-fill]" style="color:#6b7280;"></i> Reason
     </h3>
     <div style="font-size:14px; color:#374151; line-height:1.6; white-space:pre-wrap;">
         {{ $workRequest->reason }}
@@ -155,11 +155,11 @@
         @if(!$isAdmin && !$isHR && $workRequest->canBeCancelled())
             <a href="{{ route('work-requests.edit', $workRequest) }}"
                style="padding:12px 24px; background:#f59e0b; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-                <i class="fas fa-edit"></i> Edit Request
+                <i class="icon-[ph--pencil-fill]"></i> Edit Request
             </a>
             <button onclick="cancelRequest({{ $workRequest->id }})"
                     style="padding:12px 24px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
-                <i class="fas fa-times"></i> Cancel Request
+                <i class="icon-[ph--x-fill]"></i> Cancel Request
             </button>
         @endif
         {{-- HR/Admin actions: approve/reject pending requests --}}
@@ -167,11 +167,11 @@
         @if($workRequest->status === 'pending')
     <button onclick="approveRequest({{ $workRequest->id }})"
                     style="padding:12px 24px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
-                <i class="fas fa-check"></i> Approve
+                <i class="icon-[ph--check-fill]"></i> Approve
             </button>
             <button onclick="showRejectModal({{ $workRequest->id }})"
                     style="padding:12px 24px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
-                <i class="fas fa-times"></i> Reject
+                <i class="icon-[ph--x-fill]"></i> Reject
             </button>
 @endif
         @endif

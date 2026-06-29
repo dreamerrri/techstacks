@@ -3,7 +3,7 @@
 @section('title', 'Roles Management')
 @section('breadcrumb')
     <span>Manage Users</span>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-medium">Roles</span>
 @endsection
 
@@ -13,7 +13,7 @@
     <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
         <h2 class="text-xl font-bold text-gray-800 m-0">Roles Management</h2>
         <a href="{{ route('roles.create') }}" class="btn btn-soft btn-error btn-sm">
-            <i class="fas fa-plus"></i> Create Role
+            <i class="icon-[ph--plus-fill]"></i> Create Role
         </a>
     </div>
 
@@ -43,18 +43,18 @@
                             <td class="text-gray-500">{{ $role->permissions->count() }}</td>
                             <td>
                                 @if($role->is_active)
-                                    <span class="badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
+                                    <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
                                 @else
-                                    <span class="badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
+                                    <span class="badge badge-soft badge-error"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
                                 @endif
                             </td>
                             <td>
                                 <div class="flex gap-2 items-center">
                                     <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="icon-[ph--eye-fill]"></i>
                                     </a>
                                     <a href="{{ route('roles.edit', $role) }}" class="btn btn-soft btn-warning btn-sm">
-                                        <i class="fas fa-edit"></i>
+                                        <i class="icon-[ph--pencil-fill]"></i>
                                     </a>
                                     @if($role->users_count == 0)
                                         <form method="POST" action="{{ route('roles.destroy', $role) }}"
@@ -64,7 +64,7 @@
                                               data-confirm-btn="Yes, delete">
                                             @csrf @method('DELETE')
                                             <button class="btn btn-soft btn-error btn-sm">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="icon-[ph--trash-fill]"></i>
                                             </button>
                                         </form>
                                     @endif
@@ -74,7 +74,7 @@
                     @empty
                         <tr>
                             <td colspan="7" class="py-10 text-center text-gray-400">
-                                <i class="fas fa-user-tag text-3xl mb-2 block"></i>
+                                <i class="icon-[ph--user-fill]-tag text-3xl mb-2 block"></i>
                                 No roles found.
                             </td>
                         </tr>
@@ -98,15 +98,15 @@
                             </div>
                         </div>
                         @if($role->is_active)
-                            <span class="badge badge-soft badge-success whitespace-nowrap"><i class="fas fa-check-circle"></i> Active</span>
+                            <span class="badge badge-soft badge-success whitespace-nowrap"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
                         @else
-                            <span class="badge badge-soft badge-error whitespace-nowrap"><i class="fas fa-times-circle"></i> Inactive</span>
+                            <span class="badge badge-soft badge-error whitespace-nowrap"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
                         @endif
                     </div>
 
                     <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
-                        <span><i class="fas fa-users w-3.5"></i> {{ $role->users_count }} users</span>
-                        <span><i class="fas fa-key w-3.5"></i> {{ $role->permissions->count() }} permissions</span>
+                        <span><i class="icon-[ph--user-fill]s w-3.5"></i> {{ $role->users_count }} users</span>
+                        <span><i class="icon-[ph--key-fill] w-3.5"></i> {{ $role->permissions->count() }} permissions</span>
                     </div>
 
                     @if($role->description)
@@ -115,10 +115,10 @@
 
                     <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
                         <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
-                            <i class="fas fa-eye"></i> View
+                            <i class="icon-[ph--eye-fill]"></i> View
                         </a>
                         <a href="{{ route('roles.edit', $role) }}" class="btn btn-soft btn-warning btn-sm">
-                            <i class="fas fa-edit"></i> Edit
+                            <i class="icon-[ph--pencil-fill]"></i> Edit
                         </a>
                         @if($role->users_count == 0)
                             <form method="POST" action="{{ route('roles.destroy', $role) }}"
@@ -128,7 +128,7 @@
                                   data-confirm-btn="Yes, delete">
                                 @csrf @method('DELETE')
                                 <button class="btn btn-soft btn-error btn-sm">
-                                    <i class="fas fa-trash"></i> Delete
+                                    <i class="icon-[ph--trash-fill]"></i> Delete
                                 </button>
                             </form>
                         @endif
@@ -136,7 +136,7 @@
                 </div>
             @empty
                 <div class="py-10 text-center text-gray-400">
-                    <i class="fas fa-user-tag text-3xl mb-2 block"></i>
+                    <i class="icon-[ph--user-fill]-tag text-3xl mb-2 block"></i>
                     No roles found.
                 </div>
             @endforelse

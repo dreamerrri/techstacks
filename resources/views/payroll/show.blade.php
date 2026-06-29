@@ -2,10 +2,10 @@
 
 @section('title', 'Payroll Details - ' . $employee->full_name)
 @section('breadcrumb')
-    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline hover:text-white">Manage Payroll</a>
-    <i class="fas fa-chevron-right text-xs"></i>
-    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline hover:text-white">Payroll</a>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline">Manage Payroll</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
+    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline">Payroll</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-semibold">{{ $employee->full_name }}</span>
 @endsection
 
@@ -22,12 +22,12 @@
 <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
     <a href="{{ route('payroll.index') }}" 
            class="text-gray-500 no-underline text-sm hover:text-emerald-600 flex items-center gap-1">
-.        <i class="fas fa-arrow-left"></i> Back to Payroll List
+.        <i class="icon-[ph--arrow-left-fill]"></i> Back to Payroll List
     </a>
     @if(($payroll['gross_pay'] ?? 0) > 0)
         <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
            class="btn btn-soft btn-info btn-sm">
-            <i class="fas fa-file-download"></i> Download Payslip
+            <i class="icon-[ph--file-arrow-down-fill]"></i> Download Payslip
         </a>
     @endif
 </div>
@@ -41,9 +41,9 @@
         <h2 class="text-xl font-bold text-gray-800 m-0 mb-1">{{ $employee->full_name }}</h2>
         <p class="text-gray-500 m-0">{{ $employee->position }} — {{ $employee->department }}</p>
         <div class="flex flex-wrap gap-3 mt-1 text-xs text-gray-500">
-            <span><i class="fas fa-id-badge w-3.5"></i> {{ $employee->employee_id }}</span>
-            <span><i class="fas fa-calendar w-3.5"></i> {{ $employee->date_hired->format('M d, Y') }}</span>
-            <span><i class="fas fa-money-bill-wave w-3.5"></i> {{ $employee->salary_type }} Salary</span>
+            <span><i class="icon-[ph--identification-badge-fill] w-3.5"></i> {{ $employee->employee_id }}</span>
+            <span><i class=" icon-[ph--calendar-fill] w-3.5"></i> {{ $employee->date_hired->format('M d, Y') }}</span>
+            <span><i class="icon-[ph--money-fill] w-3.5"></i> {{ $employee->salary_type }} Salary</span>
         </div>
     </div>
     @php
@@ -61,7 +61,7 @@
 {{-- Government IDs --}}
 <div class="card bg-base-100 shadow-sm p-5 mb-5">
     <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
-        <i class="fas fa-id-card text-red-600"></i> Government IDs
+        <i class="icon-[ph--identification-card-fill] text-red-600"></i> Government IDs
     </h2>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         @foreach([
@@ -84,19 +84,19 @@
 {{-- Stat Cards --}}
 <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
     <div class="card-stat card-stat-green">
-        <div class="stat-icon-wrap"><i class="fas fa-coins"></i></div>
+        <div class="stat-icon-wrap"><i class="icon-[ph--coins-fill]"></i></div>
         <div class="stat-label">Gross Pay</div>
         <div class="stat-value">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</div>
         <div class="stat-sub">For this cutoff</div>
     </div>
     <div class="card-stat card-stat-red">
-        <div class="stat-icon-wrap"><i class="fas fa-minus-circle"></i></div>
+        <div class="stat-icon-wrap"><i class="icon-[ph--minus-circle-fill]"></i></div>
         <div class="stat-label">Total Deductions</div>
         <div class="stat-value">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</div>
         <div class="stat-sub">Gov't & Manual Deductions</div>
     </div>
     <div class="card-stat card-stat-net">
-        <div class="stat-icon-wrap"><i class="fas fa-wallet"></i></div>
+        <div class="stat-icon-wrap"><i class="icon-[ph--wallet-fill]"></i></div>
         <div class="stat-label">Net Pay</div>
         <div class="stat-value">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</div>
         <div class="stat-sub">Take-home for this cutoff</div>
@@ -140,7 +140,7 @@
     <div class="card bg-base-100 shadow-sm p-5">
         <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <span class="w-7 h-7 rounded-md bg-emerald-100 flex items-center justify-center text-emerald-600 text-xs flex-shrink-0">
-                <i class="fas fa-clock"></i>
+                <i class="icon-[ph--clock-fill]"></i>
             </span>
             Attendance-Based Earnings
         </h2>
@@ -171,7 +171,7 @@
     <div class="card bg-base-100 shadow-sm p-5">
         <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <span class="w-7 h-7 rounded-md bg-blue-100 flex items-center justify-center text-blue-600 text-xs flex-shrink-0">
-                <i class="fas fa-landmark"></i>
+                <i class="icon-[ph--bank-fill]"></i>
             </span>
             Government Contributions & Deductions
         </h2>
@@ -203,7 +203,7 @@
     <div class="card bg-base-100 shadow-sm p-5">
         <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <span class="w-7 h-7 rounded-md bg-red-100 flex items-center justify-center text-red-600 text-xs flex-shrink-0">
-                <i class="fas fa-file-invoice-dollar"></i>
+                <i class="icon-[ph--file-text-fill]"></i>
             </span>
             Tax Information
         </h2>
@@ -237,7 +237,7 @@
     {{-- Pay Summary (full width) --}}
     <div class="card bg-base-100 shadow-sm p-5 md:col-span-3">
         <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <i class="fas fa-receipt text-red-600"></i> Pay Summary
+            <i class="icon-[ph--receipt-fill] text-red-600"></i> Pay Summary
         </h2>
         <div class="flex flex-col text-sm">
             <div class="flex justify-between items-center py-3 border-b border-gray-100">

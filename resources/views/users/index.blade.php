@@ -3,7 +3,7 @@
 @section('title', 'All Users')
 @section('breadcrumb')
     <span>Manage Users</span>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-medium">Users</span>
 @endsection
 
@@ -13,7 +13,7 @@
     <div class="flex justify-between items-center flex-wrap gap-3 mb-6">
         <div>
             <span class="badge badge-soft badge-success mb-2">
-                <i class="fas fa-users-cog"></i> User Management
+                <i class="icon-[ph--user-fill]s-cog"></i> User Management
             </span>
             <p class="text-gray-500 m-0">Manage system accounts, roles, and access.</p>
         </div>
@@ -23,28 +23,30 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
         <div class="card bg-base-100 shadow-sm p-5 text-center">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-red-600 bg-red-100">
-                <i class="fas fa-users"></i>
+                                <i class="icon-[ph--users-fill]"></i>
+
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Total Users</div>
         </div>
         <div class="card bg-base-100 shadow-sm p-5 text-center">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-red-800 bg-red-100">
-                <i class="fas fa-user-shield"></i>
+                                <i class="icon-[ph--shield-check-fill]"></i>
+
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::where('role','admin')->count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Admins</div>
         </div>
         <div class="card bg-base-100 shadow-sm p-5 text-center">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-amber-600 bg-amber-100">
-                <i class="fas fa-user-tie"></i>
+                <i class="icon-[ph--user-fill]"></i>
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::where('role','hr')->count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">HR Personnel</div>
         </div>
         <div class="card bg-base-100 shadow-sm p-5 text-center">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-emerald-600 bg-emerald-100">
-                <i class="fas fa-check-circle"></i>
+                <i class="icon-[ph--check-circle-fill]"></i>
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::where('is_active', true)->count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Active Accounts</div>
@@ -58,7 +60,7 @@
         <div class="sticky top-0 z-10 bg-white px-7 pt-5 rounded-t-2xl">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                 <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
-                    <i class="fas fa-list"></i> User Accounts
+                    <i class="icon-[ph--list-fill]"></i> User Accounts
                 </h2>
             </div>
 
@@ -80,7 +82,7 @@
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                 </select>
                 <button type="submit" class="btn btn-soft btn-error btn-sm">
-                    <i class="fas fa-search"></i> Search
+                    <i class="icon-[ph--magnifying-glass-fill]"></i> Search
                 </button>
                 @if(request()->hasAny(['search','role','status']))
                     <a href="{{ route('users.index') }}" class="btn btn-soft btn-sm">Clear</a>
@@ -106,8 +108,8 @@
                                class="inline-flex items-center gap-1 no-underline uppercase tracking-wider text-xs {{ $loginActive ? 'text-red-600 font-bold' : 'text-gray-500 font-semibold' }}">
                                 Last Login
                                 <span class="inline-flex flex-col leading-none gap-px">
-                                    <i class="fas fa-caret-up text-[9px] {{ ($loginActive && request('direction') === 'asc') ? 'text-red-600' : 'text-gray-300' }}"></i>
-                                    <i class="fas fa-caret-down text-[9px] {{ ($loginActive && request('direction') === 'desc') ? 'text-red-600' : 'text-gray-300' }}"></i>
+                                    <i class="icon-[ph--caret-up-fill] text-[9px] {{ ($loginActive && request('direction') === 'asc') ? 'text-red-600' : 'text-gray-300' }}"></i>
+                                    <i class="icon-[ph--caret-down-fill] text-[9px] {{ ($loginActive && request('direction') === 'desc') ? 'text-red-600' : 'text-gray-300' }}"></i>
                                 </span>
                             </a>
                         </th>
@@ -173,9 +175,9 @@
                             {{-- Status --}}
                             <td>
                                 @if($user->is_active)
-                                    <span class="badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
+                                    <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
                                 @else
-                                    <span class="badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
+                                    <span class="badge badge-soft badge-error"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
                                 @endif
                             </td>
 
@@ -205,7 +207,7 @@
                     @empty
                         <tr>
                             <td colspan="6" class="py-10 text-center text-gray-400">
-                                <i class="fas fa-users text-3xl mb-2 block"></i>
+                                <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
                                 No users found.
                             </td>
                         </tr>
@@ -256,9 +258,9 @@
                             </div>
                         </div>
                         @if($user->is_active)
-                            <span class="badge badge-soft badge-success whitespace-nowrap"><i class="fas fa-check-circle"></i> Active</span>
+                            <span class="badge badge-soft badge-success whitespace-nowrap"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
                         @else
-                            <span class="badge badge-soft badge-error whitespace-nowrap"><i class="fas fa-times-circle"></i> Inactive</span>
+                            <span class="badge badge-soft badge-error whitespace-nowrap"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
                         @endif
                     </div>
 
@@ -297,7 +299,7 @@
                 </div>
             @empty
                 <div class="py-10 text-center text-gray-400">
-                    <i class="fas fa-users text-3xl mb-2 block"></i>
+                    <i class="icon-[ph--user-fill]s text-3xl mb-2 block"></i>
                     No users found.
                 </div>
             @endforelse

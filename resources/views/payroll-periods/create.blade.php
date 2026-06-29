@@ -3,9 +3,9 @@
 @section('title', 'Create Payroll Period')
 @section('breadcrumb')
     <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Employees</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <a href="{{ route('manual-payroll-attendance.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Attendance</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">Create Payroll Period</span>
 @endsection
 @section('content')
@@ -22,10 +22,10 @@
     <div>
         <a href="{{ route('manual-payroll-attendance.index') }}"
            style="color:#6b7280; text-decoration:none; font-size:14px; display:inline-flex; align-items:center; gap:6px; margin-bottom:8px;">
-            <i class="fas fa-arrow-left"></i> Back to Payroll Periods
+            <i class="icon-[ph--arrow-left-fill]"></i> Back to Payroll Periods
         </a>
         <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="fas fa-calendar-plus"></i> Create Payroll Period
+            <i class=" icon-[ph--calendar-fill]-plus"></i> Create Payroll Period
         </div>
         <h2 style="margin:8px 0 4px 0;">New Payroll Period</h2>
         <p style="color:#6b7280; margin:0;">Pick a start date — end date and pay date are computed automatically</p>
@@ -84,7 +84,7 @@
             <div id="period_summary"
                  style="display:none; background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:14px 16px; margin-bottom:24px;">
                 <p style="margin:0 0 6px 0; font-size:13px; font-weight:600; color:#0369a1;">
-                    <i class="fas fa-info-circle"></i> Period Summary
+                    <i class="icon-[ph--info-fill]"></i> Period Summary
                 </p>
                 <p id="summary_text" style="margin:0; font-size:13px; color:#0c4a6e; line-height:1.6;"></p>
             </div>
@@ -96,7 +96,7 @@
             <div style="display:flex; gap:12px;">
                 <button type="submit" id="submit_btn" disabled
                         style="flex:1; padding:12px 20px; background:#9ca3af; color:white; border:none; border-radius:6px; cursor:not-allowed; font-size:14px; font-weight:600; transition:background 0.2s;">
-                    <i class="fas fa-save"></i> Create Payroll Period
+                    <i class="icon-[ph--floppy-disk-fill]"></i> Create Payroll Period
                 </button>
                 <a href="{{ route('manual-payroll-attendance.index') }}"
                    style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; font-size:14px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">

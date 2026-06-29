@@ -1,7 +1,7 @@
 {{-- Personal Information --}}
 <div class="mb-8">
     <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
-        <i class="fas fa-user text-red-600"></i> Personal Information
+        <i class="icon-[ph--user-fill] text-red-600"></i> Personal Information
     </h3>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
@@ -98,7 +98,7 @@
 {{-- Employment Details --}}
 <div class="mb-8">
     <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
-        <i class="fas fa-briefcase text-red-600"></i> Employment Details
+        <i class="icon-[ph--briefcase-fill] text-red-600"></i> Employment Details
     </h3>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
@@ -175,10 +175,10 @@
 {{-- Government Contributions --}}
 <div class="mb-4">
     <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-2">
-        <i class="fas fa-id-card text-red-600"></i> Government Contributions
+        <i class="icon-[ph--identification-card-fill] text-red-600"></i> Government Contributions
     </h3>
     <p class="text-xs text-gray-400 mb-4">
-        <i class="fas fa-info-circle"></i> These fields are optional but must follow the correct format if provided.
+        <i class="icon-[ph--info-fill]"></i> These fields are optional but must follow the correct format if provided.
     </p>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 

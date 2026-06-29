@@ -2,10 +2,10 @@
 
 @section('title', 'Archived Employees')
 @section('breadcrumb')
-    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline hover:text-white">Manage Employees</a>
-    <i class="fas fa-chevron-right text-xs"></i>
-    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline hover:text-white">Employees</a>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline">Manage Employees</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
+    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline">Employees</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-semibold">Archived Employees</span>
 @endsection
 
@@ -14,10 +14,10 @@
     <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
         <div class="flex items-center gap-3 flex-wrap">
             <a href="{{ route('employees.index') }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
-                <i class="fas fa-arrow-left"></i> Back
+                <i class="icon-[ph--arrow-left-fill]"></i> Back
             </a>
             <h2 class="text-lg font-bold text-gray-800 m-0 flex items-center gap-2">
-                <i class="fas fa-archive"></i> Archived Employees
+                <i class="icon-[ph--archive-fill]"></i> Archived Employees
             </h2>
         </div>
     </div>
@@ -51,7 +51,7 @@
                                       data-confirm-btn="Yes, restore">
                                     @csrf @method('PATCH')
                                     <button class="btn btn-soft btn-success btn-sm">
-                                        <i class="fas fa-undo"></i> Restore
+                                        <i class="icon-[ph--arrow-counter-clockwise-fill]"></i> Restore
                                     </button>
                                 </form>
                             </td>
@@ -59,7 +59,7 @@
                     @empty
                         <tr>
                             <td colspan="5" class="py-10 text-center text-gray-400">
-                                <i class="fas fa-archive text-3xl mb-2 block"></i>
+                                <i class="icon-[ph--archive-fill] text-3xl mb-2 block"></i>
                                 No archived employees.
                             </td>
                         </tr>
@@ -86,8 +86,8 @@
                     </div>
 
                     <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
-                        <span><i class="fas fa-building w-3.5"></i> {{ $employee->department }}</span>
-                        <span><i class="fas fa-briefcase w-3.5"></i> {{ $employee->position }}</span>
+                        <span><i class="icon-[ph--buildings-fill] w-3.5"></i> {{ $employee->department }}</span>
+                        <span><i class="icon-[ph--briefcase-fill] w-3.5"></i> {{ $employee->position }}</span>
                     </div>
 
                     <div class="mt-3 pt-3 border-t border-gray-100">
@@ -98,14 +98,14 @@
                               data-confirm-btn="Yes, restore">
                             @csrf @method('PATCH')
                             <button class="btn btn-soft btn-success btn-sm">
-                                <i class="fas fa-undo"></i> Restore
+                                <i class="icon-[ph--arrow-counter-clockwise-fill]"></i> Restore
                             </button>
                         </form>
                     </div>
                 </div>
             @empty
                 <div class="py-10 text-center text-gray-400">
-                    <i class="fas fa-archive text-3xl mb-2 block"></i>
+                    <i class="icon-[ph--archive-fill] text-3xl mb-2 block"></i>
                     No archived employees.
                 </div>
             @endforelse

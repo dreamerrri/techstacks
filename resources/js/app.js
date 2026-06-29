@@ -14,12 +14,12 @@ window.notyf = new Notyf({
         {
             type: 'warning',
             background: 'var(--color-warning)',
-            icon: { className: 'fas fa-exclamation-triangle', tagName: 'i', color: 'white' },
+            icon: { className: 'icon-[ph--warning-fill]', tagName: 'i', color: 'white' },
         },
         {
             type: 'info',
             background: 'var(--color-info)',
-            icon: { className: 'fas fa-info-circle', tagName: 'i', color: 'white' },
+            icon: { className: 'icon-[ph--info-fill]', tagName: 'i', color: 'white' },
         },
     ],
 });

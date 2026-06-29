@@ -38,7 +38,7 @@
 
                 @if ($errors->any())
                     <div class="alert alert-error">
-                        <i class="fas fa-exclamation-circle"></i>
+                        <i class="icon-[ph--warning-circle-fill]"></i>
                         {{ $errors->first() }}
                     </div>
                 @endif
@@ -48,7 +48,7 @@
 
                     <div class="form-group">
                         <label for="name">
-                            <i class="fas fa-user"></i> Full Name
+                            <i class="icon-[ph--user-fill]"></i> Full Name
                         </label>
                         <input
                             type="text"
@@ -60,7 +60,7 @@
                         >
                         @error('name')
                             <div class="error-message">
-                                <i class="fas fa-times-circle"></i>
+                                <i class="icon-[ph--x-circle-fill]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
@@ -68,7 +68,7 @@
 
                     <div class="form-group">
                         <label for="email">
-                            <i class="fas fa-envelope"></i> Email Address
+                            <i class="icon-[ph--envelope-fill]"></i> Email Address
                         </label>
                         <input
                             type="email"
@@ -80,7 +80,7 @@
                         >
                         @error('email')
                             <div class="error-message">
-                                <i class="fas fa-times-circle"></i>
+                                <i class="icon-[ph--x-circle-fill]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
@@ -88,7 +88,7 @@
 
                     <div class="form-group">
                         <label for="password">
-                            <i class="fas fa-lock"></i> Password
+                            <i class="icon-[ph--lock-fill]"></i> Password
                         </label>
                         <input
                             type="password"
@@ -108,30 +108,30 @@
 
                         <div class="password-requirements" id="passwordRequirements">
                             <div class="requirement" id="req-length">
-                                <i class="fas fa-circle"></i>
+                                <i class="icon-[ph--circle-fill]"></i>
                                 <span>At least 8 characters</span>
                             </div>
                             <div class="requirement" id="req-upper">
-                                <i class="fas fa-circle"></i>
+                                <i class="icon-[ph--circle-fill]"></i>
                                 <span>One uppercase letter (A-Z)</span>
                             </div>
                             <div class="requirement" id="req-lower">
-                                <i class="fas fa-circle"></i>
+                                <i class="icon-[ph--circle-fill]"></i>
                                 <span>One lowercase letter (a-z)</span>
                             </div>
                             <div class="requirement" id="req-number">
-                                <i class="fas fa-circle"></i>
+                                <i class="icon-[ph--circle-fill]"></i>
                                 <span>One number (0-9)</span>
                             </div>
                             <div class="requirement" id="req-special">
-                                <i class="fas fa-circle"></i>
+                                <i class="icon-[ph--circle-fill]"></i>
                                 <span>One special character (!@#$%^&*)</span>
                             </div>
                         </div>
 
                         @error('password')
                             <div class="error-message">
-                                <i class="fas fa-times-circle"></i>
+                                <i class="icon-[ph--x-circle-fill]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
@@ -139,7 +139,7 @@
 
                     <div class="form-group">
                         <label for="password_confirmation">
-                            <i class="fas fa-lock"></i> Confirm Password
+                            <i class="icon-[ph--lock-fill]"></i> Confirm Password
                         </label>
                         <input
                             type="password"
@@ -151,14 +151,14 @@
                         >
                         @error('password_confirmation')
                             <div class="error-message">
-                                <i class="fas fa-times-circle"></i>
+                                <i class="icon-[ph--x-circle-fill]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
 
                     <button type="submit" class="register-btn" id="registerBtn">
-                        <i class="fas fa-user-plus"></i> Create Account
+                        <i class="icon-[ph--user-fill]-plus"></i> Create Account
                     </button>
                 </form>
 

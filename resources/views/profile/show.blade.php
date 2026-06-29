@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Storage;
             </div>
             <label for="photo-file-input"
                    class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center cursor-pointer shadow-sm">
-                <i class="fas fa-camera text-[10px] text-gray-700"></i>
+                <i class="icon-[ph--camera-fill] text-[10px] text-gray-700"></i>
             </label>
             <input type="file" id="photo-file-input" accept="image/*" class="hidden">
         </div>
@@ -70,7 +70,7 @@ use Illuminate\Support\Facades\Storage;
     <div class="card bg-base-100 shadow-sm p-6 md:col-span-2">
         <h2 class="text-sm font-bold text-gray-800 mb-5 flex items-center gap-2">
             <span class="w-7 h-7 rounded-md bg-red-100 flex items-center justify-center text-red-600 text-xs flex-shrink-0">
-                <i class="fas fa-user-cog"></i>
+                <i class="icon-[ph--user-fill]-cog"></i>
             </span>
             Account Settings
         </h2>
@@ -117,7 +117,7 @@ use Illuminate\Support\Facades\Storage;
             </div>
 
             <button type="submit" class="btn btn-soft btn-error">
-                <i class="fas fa-save"></i> Save Changes
+                <i class="icon-[ph--floppy-disk-fill]"></i> Save Changes
             </button>
         </form>
     </div>
@@ -128,7 +128,7 @@ use Illuminate\Support\Facades\Storage;
     <div class="card bg-base-100 shadow-sm p-6 md:col-span-2">
         <h2 class="text-sm font-bold text-gray-800 mb-5 flex items-center gap-2">
             <span class="w-7 h-7 rounded-md bg-blue-100 flex items-center justify-center text-blue-600 text-xs flex-shrink-0">
-                <i class="fas fa-id-card"></i>
+                <i class="icon-[ph--identification-card-fill]"></i>
             </span>
             Personal Information
         </h2>
@@ -189,7 +189,7 @@ use Illuminate\Support\Facades\Storage;
                 </div>
             </div>
             <button type="submit" class="btn btn-soft btn-info">
-                <i class="fas fa-save"></i> Save Personal Info
+                <i class="icon-[ph--floppy-disk-fill]"></i> Save Personal Info
             </button>
         </form>
     </div>
@@ -198,7 +198,7 @@ use Illuminate\Support\Facades\Storage;
     <div class="card bg-base-100 shadow-sm p-5">
         <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <span class="w-7 h-7 rounded-md bg-emerald-100 flex items-center justify-center text-emerald-600 text-xs flex-shrink-0">
-                <i class="fas fa-briefcase"></i>
+                <i class="icon-[ph--briefcase-fill]"></i>
             </span>
             Employment Information
         </h2>
@@ -217,7 +217,7 @@ use Illuminate\Support\Facades\Storage;
             @endforeach
         </div>
         <div class="mt-3 px-3 py-2 bg-gray-50 rounded-lg text-xs text-gray-400">
-            <i class="fas fa-info-circle"></i> Employment details can only be changed by HR.
+            <i class="icon-[ph--info-fill]"></i> Employment details can only be changed by HR.
         </div>
     </div>
 
@@ -225,7 +225,7 @@ use Illuminate\Support\Facades\Storage;
     <div class="card bg-base-100 shadow-sm p-5">
         <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <span class="w-7 h-7 rounded-md bg-gray-100 flex items-center justify-center text-gray-500 text-xs flex-shrink-0">
-                <i class="fas fa-shield-alt"></i>
+                <i class="icon-[ph--shield-check-fill]"></i>
             </span>
             Account Info
         </h2>
@@ -253,7 +253,7 @@ use Illuminate\Support\Facades\Storage;
     <div class="card bg-base-100 shadow-sm p-5 md:col-span-2">
         <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <span class="w-7 h-7 rounded-md bg-red-100 flex items-center justify-center text-red-600 text-xs flex-shrink-0">
-                <i class="fas fa-landmark"></i>
+                <i class="icon-[ph--bank-fill]"></i>
             </span>
             Government IDs
         </h2>
@@ -281,7 +281,7 @@ use Illuminate\Support\Facades\Storage;
     <div class="card bg-base-100 shadow-sm p-5 md:col-span-2">
         <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <span class="w-7 h-7 rounded-md bg-gray-100 flex items-center justify-center text-gray-500 text-xs flex-shrink-0">
-                <i class="fas fa-shield-alt"></i>
+                <i class="icon-[ph--shield-check-fill]"></i>
             </span>
             Account Info
         </h2>

@@ -132,131 +132,23 @@ class AuthController extends Controller
     /**
      * Dashboard — single route, role-scoped data.
      */
-    public function dashboard()
-    {
-        $user = Auth::user();
+   public function dashboard()
+{
+    $user = Auth::user();
 
-        // --- Admin: sees user/system-level stats ---
-        if ($user->role === 'admin') {
-            $stats = [
-                [
-                    'label' => 'Total Users',
-                    'value' => User::count(),
-                    'icon'  => 'fa-users',
-                    'color' => '#dc2626',
+    $counts = [
+        'total_users'    => User::count(),
+        'admin_users'    => User::where('role', 'admin')->count(),
+        'hr_users'       => User::where('role', 'hr')->count(),
+        'active_users'   => User::where('is_active', true)->count(),
+        'total_employees'=> Employee::where('is_archived', false)->count(),
+        'regular'        => Employee::where('employment_status', 'Regular')->where('is_archived', false)->count(),
+        'probationary'   => Employee::where('employment_status', 'Probationary')->where('is_archived', false)->count(),
+        'archived'       => Employee::where('is_archived', true)->count(),
+    ];
 
-                    'route' => route('users.index')
-                ],
-                [
-                    'label' => 'Admin Users',
-                    'value' => User::where('role', 'admin')->count(),
-                    'icon'  => 'fa-user-shield',
-                    'color' => '#991b1b',
-
-                    'route' => route('users.index')
-                ],
-                [
-                    'label' => 'HR Personnel',
-                    'value' => User::where('role', 'hr')->count(),
-                    'icon'  => 'fa-user-tie',
-                    'color' => '#fbbf24',
-
-                    'route' => route('users.index')
-                ],
-                [
-                    'label' => 'Active Accounts',
-                    'value' => User::where('is_active', true)->count(),
-                    'icon'  => 'fa-check-circle',
-                    'color' => '#10b981',
-
-                    'route' => route('users.index') //very redundant but keeps the UI consistent with the other stats cards
-                ],
-            ];
-
-$actions = [
-    ['label' => 'Create Users', 'icon' => 'fa-user-plus',  'route' => route('employees.create')],
-    ['label' => 'Manage Roles',    'icon' => 'fa-user-tag',   'route' => route('roles.index')],
-    ['label' => 'System Backup',   'icon' => 'fa-database',   'route' => '#'],
-    ['label' => 'View Logs',       'icon' => 'fa-history',    'route' => route('audit-logs.index')],
-];
-        }
-
-        // --- HR: sees employee/HR-level stats ---
-        elseif ($user->role === 'hr') {
-            $stats = [
-                [
-                    'label' => 'Total Employees',
-                    'value' => Employee::where('is_archived', false)->count(),
-                    'icon'  => 'fa-users',
-                    'color' => '#2563eb',
-                ],
-                [
-                    'label' => 'Regular',
-                    'value' => Employee::where('employment_status', 'Regular')->where('is_archived', false)->count(),
-                    'icon'  => 'fa-calendar-check',
-                    'color' => '#1e40af',
-                ],
-                [
-                    'label' => 'Probationary',
-                    'value' => Employee::where('employment_status', 'Probationary')->where('is_archived', false)->count(),
-                    'icon'  => 'fa-clipboard-list',
-                    'color' => '#fbbf24',
-                ],
-                [
-                    'label' => 'Archived',
-                    'value' => Employee::where('is_archived', true)->count(),
-                    'icon'  => 'fa-archive',
-                    'color' => '#6b7280',
-                ],
-            ];
-
-            $actions = [
-    ['label' => 'Add Employee',  'icon' => 'fa-user-plus',           'route' => route('employees.create')],
-    ['label' => 'Payroll',       'icon' => 'fa-calculator',          'route' => route('payroll.index')],
-    ['label' => 'Leave Requests','icon' => 'fa-inbox',               'route' => '#'],
-    ['label' => 'Reports',       'icon' => 'fa-file-pdf',            'route' => '#'],
-];
-        }
-
-        // --- Employee: sees only their own context ---
-        else {
-            $stats = [
-                [
-                    'label' => 'Department',
-                    'value' => $user->employee?->department ?? '—',
-                    'icon'  => 'fa-building',
-                    'color' => '#667eea',
-                ],
-                [
-                    'label' => 'Position',
-                    'value' => Employee::where('email', $user->email)->value('position') ?? '—',
-                    'icon'  => 'fa-id-badge',
-                    'color' => '#764ba2',
-                ],
-                [
-                    'label' => 'Employment Status',
-                    'value' => Employee::where('email', $user->email)->value('employment_status') ?? '—',
-                    'icon'  => 'fa-briefcase',
-                    'color' => '#fbbf24',
-                ],
-                [
-                    'label' => 'Date Hired',
-                    'value' => optional(Employee::where('email', $user->email)->value('date_hired'))->format('M d, Y') ?? '—',
-                    'icon'  => 'fa-calendar',
-                    'color' => '#10b981',
-                ],
-            ];
-
-            $actions = [
-    ['label' => 'My Profile',    'icon' => 'fa-user',                'route' => route('profile.show')],
-    ['label' => 'Payslips',      'icon' => 'fa-file-invoice-dollar', 'route' => route('payroll.index')],
-    ['label' => 'Leave Request', 'icon' => 'fa-calendar-times',      'route' => '#'],
-    ['label' => 'Attendance',    'icon' => 'fa-clock',               'route' => '#'],
-];
-        }
-
-        return view('dashboard', compact('user', 'stats', 'actions'));
-    }
+    return view('dashboard', compact('user', 'counts'));
+}
 
     // -----------------------------------------------------------------------
     // API (JWT)

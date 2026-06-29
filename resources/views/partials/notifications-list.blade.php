@@ -33,13 +33,13 @@
                     <div style="font-size:13px; font-weight:600; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $notification->title }}</div>
                     <div style="font-size:11px; color:#6b7280; margin-top:1px;">{{ $notification->message }}</div>
                 </div>
-                <i class="fas fa-chevron-right" style="font-size:10px; color:#d1d5db; flex-shrink:0;"></i>
+                <i class="icon-[ph--caret-right-fill]" style="font-size:10px; color:#d1d5db; flex-shrink:0;"></i>
             </a>
         @endforeach
     @else
         <div style="padding:32px 16px; text-align:center;">
             <div style="width:44px; height:44px; border-radius:12px; background:#d1fae5; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;">
-                <i class="fas fa-check" style="font-size:18px; color:#059669;"></i>
+                <i class="icon-[ph--check-fill]" style="font-size:18px; color:#059669;"></i>
             </div>
             <div style="font-size:13px; font-weight:600; color:#111827; margin-bottom:4px;">All caught up</div>
             <div style="font-size:12px; color:#9ca3af;">No pending actions right now</div>

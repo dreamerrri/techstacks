@@ -2,10 +2,10 @@
 
 @section('title', 'Permission Details')
 @section('breadcrumb')
-    <a href="{{ route('users.index') }}" class="text-white/55 no-underline hover:text-white">Manage Users</a>
-    <i class="fas fa-chevron-right text-xs"></i>
-    <a href="{{ route('permissions.index') }}" class="text-white/55 no-underline hover:text-white">Permissions</a>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('users.index') }}" class="text-white/55 no-underline">Manage Users</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
+    <a href="{{ route('permissions.index') }}" class="text-white/55 no-underline">Permissions</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-semibold">{{ $permission->name }}</span>
 @endsection
 
@@ -13,13 +13,13 @@
 
     <div class="mb-5">
         <a href="{{ route('permissions.index') }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
-            <i class="fas fa-arrow-left"></i> Back to Permissions
+            <i class="icon-[ph--arrow-left-fill]"></i> Back to Permissions
         </a>
     </div>
 
     @if(session('success'))
         <div class="alert alert-success mb-4">
-            <i class="fas fa-check-circle"></i> {{ session('success') }}
+            <i class="icon-[ph--check-circle-fill]"></i> {{ session('success') }}
         </div>
     @endif
 
@@ -29,7 +29,7 @@
         <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
             <div class="flex items-center gap-4">
                 <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-xl flex-shrink-0">
-                    <i class="fas fa-key"></i>
+                    <i class="icon-[ph--key-fill]"></i>
                 </div>
                 <div>
                     <h2 class="text-xl font-bold text-gray-800 m-0">{{ $permission->name }}</h2>
@@ -37,14 +37,14 @@
                 </div>
             </div>
             <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft btn-error btn-sm">
-                <i class="fas fa-edit"></i> Edit Permission
+                <i class="icon-[ph--pencil-fill]"></i> Edit Permission
             </a>
         </div>
 
         {{-- Permission Information --}}
         <div class="mb-8">
             <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="fas fa-info-circle text-red-600"></i> Permission Information
+                <i class="icon-[ph--info-fill] text-red-600"></i> Permission Information
             </h3>
             <div class="flex flex-col">
                 <div class="flex justify-between items-center py-3 border-b border-base-200">
@@ -55,9 +55,9 @@
                     <span class="text-gray-400 font-medium">Status</span>
                     <span>
                         @if($permission->is_active)
-                            <span class="badge badge-soft badge-success"><i class="fas fa-check-circle"></i> Active</span>
+                            <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
                         @else
-                            <span class="badge badge-soft badge-error"><i class="fas fa-times-circle"></i> Inactive</span>
+                            <span class="badge badge-soft badge-error"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
                         @endif
                     </span>
                 </div>
@@ -77,7 +77,7 @@
         {{-- Roles with this Permission --}}
         <div>
             <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="fas fa-user-tag text-red-600"></i> Roles with this Permission ({{ $permission->roles->count() }})
+                <i class="icon-[ph--user-fill]-tag text-red-600"></i> Roles with this Permission ({{ $permission->roles->count() }})
             </h3>
 
             @if($permission->roles->count() > 0)
@@ -94,7 +94,7 @@
                                 </div>
                             </div>
                             <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
-                                <i class="fas fa-eye"></i> View Role
+                                <i class="icon-[ph--eye-fill]"></i> View Role
                             </a>
                         </div>
                     @endforeach

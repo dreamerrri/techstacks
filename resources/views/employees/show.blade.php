@@ -2,10 +2,10 @@
 
 @section('title', $employee->full_name)
 @section('breadcrumb')
-    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline hover:text-white">Manage Employees</a>
-    <i class="fas fa-chevron-right text-xs"></i>
-    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline hover:text-white">Employees</a>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline">Manage Employees</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
+    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline">Employees</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-semibold">{{ $employee->full_name }}</span>
 @endsection
 
@@ -14,11 +14,11 @@
     {{-- Top nav --}}
     <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
         <a href="{{ route('employees.index') }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
-            <i class="fas fa-arrow-left"></i> Back to Employee List
+            <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee List
         </a>
         <div class="flex gap-2 flex-wrap">
             <a href="{{ route('employees.edit', $employee) }}" class="btn btn-soft btn-warning btn-sm">
-                <i class="fas fa-edit"></i> Edit
+                <i class="icon-[ph--pencil-fill]"></i> Edit
             </a>
             <form method="POST" action="{{ route('employees.archive', $employee) }}"
                   data-confirm="This employee will be moved to the archive."
@@ -27,7 +27,7 @@
                   data-confirm-btn="Yes, archive">
                 @csrf @method('PATCH')
                 <button class="btn btn-soft btn-error btn-sm">
-                    <i class="fas fa-archive"></i> Archive
+                    <i class="icon-[ph--archive-fill]"></i> Archive
                 </button>
             </form>
         </div>
@@ -68,7 +68,7 @@
         {{-- Personal Info --}}
         <div class="card bg-base-100 shadow-sm p-5">
             <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <i class="fas fa-user text-red-600"></i> Personal Information
+                <i class="icon-[ph--user-fill] text-red-600"></i> Personal Information
             </h2>
             <div class="flex flex-col text-sm">
                 @foreach([
@@ -91,7 +91,7 @@
         {{-- Employment Details --}}
         <div class="card bg-base-100 shadow-sm p-5">
             <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <i class="fas fa-briefcase text-red-600"></i> Employment Details
+                <i class="icon-[ph--briefcase-fill] text-red-600"></i> Employment Details
             </h2>
             <div class="flex flex-col text-sm">
                 @foreach([
@@ -126,18 +126,18 @@
             @endphp
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-sm font-bold text-gray-800 m-0 flex items-center gap-2">
-                    <i class="fas fa-clock text-red-600"></i> Payroll Input Summary
+                    <i class="icon-[ph--clock-fill] text-red-600"></i> Payroll Input Summary
                 </h2>
                 @if(auth()->user()->isAdmin() || auth()->user()->isHR())
                     @if($payrollInput)
                         <a href="{{ route('manual-payroll-attendance.employee-form', [$payrollInput->payrollPeriod, $employee]) }}"
                            class="btn btn-soft btn-info btn-xs">
-                            <i class="fas fa-edit"></i> Edit
+                            <i class="icon-[ph--pencil-fill]"></i> Edit
                         </a>
                     @else
                         <a href="{{ route('manual-payroll-attendance.index') }}"
                            class="btn btn-soft btn-success btn-xs">
-                            <i class="fas fa-plus"></i> Add Payroll Input
+                            <i class="icon-[ph--plus-fill]"></i> Add Payroll Input
                         </a>
                     @endif
                 @endif
@@ -160,12 +160,12 @@
                 </div>
                 @if($payrollInput && $period)
                     <div class="mt-4 px-4 py-2 bg-blue-50 rounded-lg text-xs text-blue-700 text-center">
-                        <i class="fas fa-info-circle"></i>
+                        <i class="icon-[ph--info-fill]"></i>
                         Showing payroll input for period: {{ $period->cutoff_start->format('M d') }} - {{ $period->cutoff_end->format('M d, Y') }}
                     </div>
                 @else
                     <div class="mt-4 px-4 py-2 bg-amber-50 rounded-lg text-xs text-amber-700 text-center">
-                        <i class="fas fa-info-circle"></i> No payroll input data found
+                        <i class="icon-[ph--info-fill]"></i> No payroll input data found
                     </div>
                 @endif
             </div>
@@ -176,12 +176,12 @@
             <div class="flex justify-between items-center">
                 <div>
                     <h2 class="text-sm font-bold text-gray-800 m-0 flex items-center gap-2">
-                        <i class="fas fa-id-card text-red-600"></i> Government Contributions
+                        <i class="icon-[ph--identification-card-fill] text-red-600"></i> Government Contributions
                     </h2>
                     <p class="text-gray-500 text-xs mt-1 mb-0">View and manage government contribution rates for this employee.</p>
                 </div>
                 <a href="{{ route('government-contributions.show', $employee) }}" class="btn btn-soft btn-info btn-sm">
-                    <i class="fas fa-eye"></i> View Contributions
+                    <i class="icon-[ph--eye-fill]"></i> View Contributions
                 </a>
             </div>
         </div>
@@ -206,18 +206,18 @@
         <div class="card bg-base-100 shadow-sm p-5 md:col-span-2">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-sm font-bold text-gray-800 m-0 flex items-center gap-2">
-                    <i class="fas fa-gift text-red-600"></i> Allowances & Benefits
+                    <i class="icon-[ph--gift-fill] text-red-600"></i> Allowances & Benefits
                 </h2>
                 <div class="flex gap-2">
                     <button type="button"
                             id="showAllowanceBtn"
                             class="btn btn-soft btn-success btn-xs">
-                        <i class="fas fa-plus"></i> Add Allowance
+                        <i class="icon-[ph--plus-fill]"></i> Add Allowance
                     </button>
                     <button type="button"
                             id="showBenefitBtn"
                             class="btn btn-soft btn-info btn-xs">
-                        <i class="fas fa-plus"></i> Add Benefit
+                        <i class="icon-[ph--plus-fill]"></i> Add Benefit
                     </button>
                 </div>
             </div>
@@ -246,7 +246,7 @@
                                               data-confirm-btn="Yes, delete it">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="btn btn-soft btn-error btn-xs">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="icon-[ph--trash-fill]"></i>
                                             </button>
                                         </form>
                                     </div>
@@ -283,7 +283,7 @@
                                               data-confirm-btn="Yes, delete it">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="btn btn-soft btn-error btn-xs">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="icon-[ph--trash-fill]"></i>
                                             </button>
                                         </form>
                                     </div>
@@ -324,7 +324,7 @@
                     </div>
                     <div class="flex gap-2">
                         <button type="submit" class="btn btn-soft btn-success btn-sm">
-                            <i class="fas fa-save"></i> Save Allowance
+                            <i class="icon-[ph--floppy-disk-fill]"></i> Save Allowance
                         </button>
                         <button type="button"
                                 id="hideAllowanceBtn"
@@ -361,7 +361,7 @@
                     </div>
                     <div class="flex gap-2">
                         <button type="submit" class="btn btn-soft btn-info btn-sm">
-                            <i class="fas fa-save"></i> Save Benefit
+                            <i class="icon-[ph--floppy-disk-fill]"></i> Save Benefit
                         </button>
                         <button type="button"
                                 id="hideBenefitBtn"

@@ -3,11 +3,11 @@
 @section('title', 'Encode Attendance - ' . ($employee->first_name ?? 'Employee') . ' ' . ($employee->last_name ?? ''))
 @section('breadcrumb')
     <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Employees</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <a href="{{ route('manual-payroll-attendance.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Attendance</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <a href="{{ route('manual-payroll-attendance.period', $payrollPeriod) }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Attendance Encoding</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">{{ $employee->full_name }}</span>
 @endsection
 @section('content')
@@ -27,10 +27,10 @@
     <div>
         <a href="{{ route('manual-payroll-attendance.period', $payrollPeriod) }}"
            style="color:#6b7280; text-decoration:none; font-size:14px; display:inline-flex; align-items:center; gap:6px; margin-bottom:8px;">
-            <i class="fas fa-arrow-left"></i> Back to Period
+            <i class="icon-[ph--arrow-left-fill]"></i> Back to Period
         </a>
         <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="fas fa-user-edit"></i> {{ $isEdit ? 'Edit' : 'Encode' }} Attendance
+            <i class="icon-[ph--user-fill]-edit"></i> {{ $isEdit ? 'Edit' : 'Encode' }} Attendance
         </div>
         <h2 style="margin:8px 0 4px 0;">
             {{ $employee->first_name ?? 'Employee' }} {{ $employee->last_name ?? '' }}
@@ -66,7 +66,7 @@
             @if($approvedRequests->count() > 0)
             <div style="margin-bottom:24px; padding:16px; background:#ecfdf5; border:1px solid #10b981; border-radius:8px;">
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                    <i class="fas fa-calendar-check" style="color:#10b981;"></i>
+                    <i class=" icon-[ph--calendar-fill]-check" style="color:#10b981;"></i>
                     <span style="font-weight:600; color:#065f46;">Approved Work Requests ({{ $approvedRequests->count() }})</span>
                 </div>
                 <div style="font-size:13px; color:#064e3b;">
@@ -236,11 +236,11 @@
             <div style="display:flex; gap:12px;">
                 <button type="submit" id="saveAttendanceBtn" onclick="handleSaveAttendance(event)"
                         style="flex:1; padding:12px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; pointer-events:auto !important; z-index:1000 !important;">
-                    <i class="fas fa-save"></i> {{ $isEdit ? 'Update' : 'Save' }} Attendance
+                    <i class="icon-[ph--floppy-disk-fill]"></i> {{ $isEdit ? 'Update' : 'Save' }} Attendance
                 </button>
                 <button type="button" id="previewBtn" onclick="previewPayroll(); return false;"
                         style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px;">
-                    <i class="fas fa-calculator"></i> Preview
+                    <i class="icon-[ph--calculator-fill]"></i> Preview
                 </button>
             </div>
         </form>
@@ -250,13 +250,13 @@
     <div class="card" style="padding:0; overflow:hidden; height:fit-content;">
         <div style="padding:20px 25px; border-bottom:1px solid #e5e7eb; background:#f9fafb;">
             <h3 style="margin:0; display:flex; align-items:center; gap:8px;">
-                <i class="fas fa-receipt" style="color:#6b7280;"></i> Payroll Preview
+                <i class="icon-[ph--receipt-fill]" style="color:#6b7280;"></i> Payroll Preview
             </h3>
         </div>
 
         <div style="padding:25px;" id="previewPanel">
             <div style="text-align:center; padding:40px 20px; color:#9ca3af;">
-                <i class="fas fa-calculator" style="font-size:32px; margin-bottom:12px; display:block;"></i>
+                <i class="icon-[ph--calculator-fill]" style="font-size:32px; margin-bottom:12px; display:block;"></i>
                 <p style="margin:0; font-size:14px;">Click "Preview" to see payroll computation</p>
             </div>
         </div>

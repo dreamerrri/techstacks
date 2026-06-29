@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 @import 'tailwindcss';
 @plugin '@iconify/tailwind4';
 @plugin 'flyonui';
@@ -11,6 +12,11 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+body {
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
 .notyf__toast {
     display: block !important;
     opacity: 1 !important;
@@ -186,6 +192,57 @@
     font-weight: 600;
     border-radius: 8px;
 }
+.tech:hover{
+      color: rgb(73, 255, 188);
+}
+.techicon:hover svg{
+      color: rgb(73, 255, 188);
+}
+.techicon{
+    transition: color 0.2s ease;
+}
+.topbar-breadcrumb a:hover,
+.topbar-breadcrumb span:hover {
+    color: rgb(73, 255, 188);
+    cursor: pointer;
+}
+.topbar-breadcrumb span {
+    transition: color 0.2s ease;
+}
+.topbar-breadcrumb a {
+    text-decoration: none;
+}
+.topbar-breadcrumb i{ 
+    margin-top:1px ; /* nakakainis eh mataas ang caret or chevron */
+    font-size: 15px;
+}
+
+@keyframes bell-shake {
+    0%   { transform: rotate(0deg); }
+    15%  { transform: rotate(15deg); }
+    30%  { transform: rotate(-15deg); }
+    45%  { transform: rotate(10deg); }
+    60%  { transform: rotate(-10deg); }
+    75%  { transform: rotate(5deg); }
+    90%  { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
+}
+
+#notifBtn:hover i {
+    color: rgb(73, 255, 188);
+    animation: bell-shake 0.5s ease infinite; /*remove infinite*/
+    display: inline-block; /* required — transform doesn't work on inline elements */
+}
+
+.profile-group:hover .user-name,
+.profile-group:hover .user-role {
+    color: rgb(73, 255, 188) !important;
+}
+
+.user-name, .user-role {
+    transition: color 0.2s ease;
+}
+
 .sidebar-admin .nav-item.nav-sub-item.active,
 .sidebar-hr    .nav-item.nav-sub-item.active,
 .sidebar-user  .nav-item.nav-sub-item.active {
@@ -262,6 +319,7 @@
     width: auto !important;
 }
 .nav-dropdown.open .nav-chevron { transform: rotate(-180deg); }
+
 .nav-dropdown-menu {
     max-height: 0;
     overflow: hidden;
@@ -486,7 +544,7 @@
     z-index: 1;
 }
 .overlay-minified .sidebar-toggle-row { justify-content: center; padding: 0 0 10px; }
-
+.overlay-minified #sidebar-toggle i { transform: rotate(180deg); }
 #sidebar-toggle {
     background: rgba(255,255,255,0.08);
     border: none;
@@ -501,6 +559,9 @@
     justify-content: center;
     flex-shrink: 0;
     transition: background 0.2s, color 0.2s;
+}
+#sidebar-toggle i {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 #sidebar-toggle:hover {
     background: rgba(255,255,255,0.16);

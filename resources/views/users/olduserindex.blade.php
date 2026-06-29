@@ -3,7 +3,7 @@
 @section('title', 'All Users')
 @section('breadcrumb')
     <span>Manage Users</span>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:500;">Users</span>
 @endsection
 @section('content')
@@ -12,7 +12,7 @@
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
         <div>
             <span class="badge badge badge-soft badge-success" style="margin-bottom:8px;">
-                <i class="fas fa-users-cog"></i> User Management
+                <i class="icon-[ph--user-fill]s-cog"></i> User Management
             </span>
             <p style="color:#6b7280; margin:0;">Manage system accounts, roles, and access.</p>
         </div>
@@ -22,28 +22,28 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5" style="margin-bottom:24px;">
         <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#dc2626; background:rgba(220,38,38,0.1);">
-                <i class="fas fa-users"></i>
+                <i class="icon-[ph--user-fill]s"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\User::count() }}</div>
             <div class="aurora-stat-label">Total Users</div>
         </div>
         <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#991b1b; background:rgba(153,27,27,0.1);">
-                <i class="fas fa-user-shield"></i>
+                <i class="icon-[ph--user-fill]-shield"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\User::where('role','admin')->count() }}</div>
             <div class="aurora-stat-label">Admins</div>
         </div>
         <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#f59e0b; background:rgba(245,158,11,0.1);">
-                <i class="fas fa-user-tie"></i>
+                <i class="icon-[ph--user-fill]"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\User::where('role','hr')->count() }}</div>
             <div class="aurora-stat-label">HR Personnel</div>
         </div>
         <div class="card bg-base-100 shadow-sm">
             <div class="aurora-stat-icon" style="color:#10b981; background:rgba(16,185,129,0.1);">
-                <i class="fas fa-check-circle"></i>
+                <i class="icon-[ph--check-circle-fill]"></i>
             </div>
             <div class="aurora-stat-value">{{ \App\Models\User::where('is_active', true)->count() }}</div>
             <div class="aurora-stat-label">Active Accounts</div>
@@ -57,7 +57,7 @@
         <div style="position:sticky; top:0; z-index:10; background:white; padding:20px 28px 0; border-radius:20px 20px 0 0;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
                 <h2 class="card bg-base-100 shadow-sm-title" style="margin:0; font-size:15px;">
-                    <i class="fas fa-list"></i> User Accounts
+                    <i class="icon-[ph--list-fill]"></i> User Accounts
                 </h2>
             </div>
 
@@ -79,7 +79,7 @@
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                 </select>
                 <button type="submit" class="btn btn btn-error btn-sm" style="padding:8px 20px; font-size:14px;">
-                    <i class="fas fa-search"></i> Search
+                    <i class="icon-[ph--magnifying-glass-fill]"></i> Search
                 </button>
                 @if(request()->hasAny(['search','role','status']))
                     <a href="{{ route('users.index') }}"
@@ -154,11 +154,11 @@
                             <td style="padding:12px;">
                                 @if($user->is_active)
                                     <span class="badge badge badge-soft badge-success">
-                                        <i class="fas fa-check-circle"></i> Active
+                                        <i class="icon-[ph--check-circle-fill]"></i> Active
                                     </span>
                                 @else
                                     <span class="badge badge badge-soft badge-error">
-                                        <i class="fas fa-times-circle"></i> Inactive
+                                        <i class="icon-[ph--x-circle-fill]"></i> Inactive
                                     </span>
                                 @endif
                             </td>
@@ -190,7 +190,7 @@
                     @empty
                         <tr>
                             <td colspan="6" style="padding:40px; text-align:center; color:#9ca3af;">
-                                <i class="fas fa-users" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+                                <i class="icon-[ph--user-fill]s" style="font-size:32px; margin-bottom:10px; display:block;"></i>
                                 No users found.
                             </td>
                         </tr>
@@ -235,11 +235,11 @@
 
                         @if($user->is_active)
                             <span class="badge badge badge-soft badge-success" style="white-space:nowrap;">
-                                <i class="fas fa-check-circle"></i> Active
+                                <i class="icon-[ph--check-circle-fill]"></i> Active
                             </span>
                         @else
                             <span class="badge badge badge-soft badge-error" style="white-space:nowrap;">
-                                <i class="fas fa-times-circle"></i> Inactive
+                                <i class="icon-[ph--x-circle-fill]"></i> Inactive
                             </span>
                         @endif
                     </div>
@@ -279,7 +279,7 @@
                 </div>
             @empty
                 <div style="padding:40px; text-align:center; color:#9ca3af;">
-                    <i class="fas fa-users" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+                    <i class="icon-[ph--user-fill]s" style="font-size:32px; margin-bottom:10px; display:block;"></i>
                     No users found.
                 </div>
             @endforelse

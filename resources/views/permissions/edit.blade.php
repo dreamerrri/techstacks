@@ -2,10 +2,10 @@
 
 @section('title', 'Edit Permission')
 @section('breadcrumb')
-    <a href="{{ route('users.index') }}" class="text-white/55 no-underline hover:text-white">Manage Users</a>
-    <i class="fas fa-chevron-right text-xs"></i>
-    <a href="{{ route('permissions.index') }}" class="text-white/55 no-underline hover:text-white">Permissions</a>
-    <i class="fas fa-chevron-right text-xs"></i>
+    <a href="{{ route('users.index') }}" class="text-white/55 no-underline">Manage Users</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
+    <a href="{{ route('permissions.index') }}" class="text-white/55 no-underline">Permissions</a>
+    <i class="icon-[ph--caret-right-fill] text-xs"></i>
     <span class="text-white font-semibold">Edit {{ $permission->name }}</span>
 @endsection
 
@@ -13,13 +13,13 @@
 
     <div class="mb-5">
         <a href="{{ route('permissions.show', $permission) }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
-            <i class="fas fa-arrow-left"></i> Back to Permission
+            <i class="icon-[ph--arrow-left-fill]"></i> Back to Permission
         </a>
     </div>
 
     <div class="card bg-base-100 shadow-sm p-6">
         <h2 class="text-base font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <i class="fas fa-edit text-red-600"></i> Edit — {{ $permission->name }}
+            <i class="icon-[ph--pencil-fill] text-red-600"></i> Edit — {{ $permission->name }}
         </h2>
 
         <form method="POST" action="{{ route('permissions.update', $permission) }}">
@@ -27,7 +27,7 @@
 
             <div class="mb-8">
                 <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
-                    <i class="fas fa-info-circle text-red-600"></i> Permission Details
+                    <i class="icon-[ph--info-fill] text-red-600"></i> Permission Details
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -79,7 +79,7 @@
 
             <div class="flex gap-3 flex-wrap pt-4 border-t border-gray-100">
                 <button type="submit" class="btn btn-soft btn-error">
-                    <i class="fas fa-save"></i> Update Permission
+                    <i class="icon-[ph--floppy-disk-fill]"></i> Update Permission
                 </button>
                 <a href="{{ route('permissions.show', $permission) }}" class="btn btn-soft">Cancel</a>
             </div>

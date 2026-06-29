@@ -3,9 +3,9 @@
 @section('title', 'Encode Attendance - ' . ($payrollPeriod->cutoff_start ? $payrollPeriod->cutoff_start->format('M d') : 'N/A') . ' to ' . ($payrollPeriod->cutoff_end ? $payrollPeriod->cutoff_end->format('M d, Y') : 'N/A'))
 @section('breadcrumb')
     <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Employees</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <a href="{{ route('manual-payroll-attendance.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Attendance</a>
-    <i class="fas fa-chevron-right" style="font-size:11px;"></i>
+    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">Attendance Encoding</span>
 @endsection
 @section('content')
@@ -23,10 +23,10 @@
     <div>
         <a href="{{ route('manual-payroll-attendance.index') }}"
            style="color:#6b7280; text-decoration:none; font-size:14px; display:inline-flex; align-items:center; gap:6px; margin-bottom:8px;">
-            <i class="fas fa-arrow-left"></i> Back to Periods
+            <i class="icon-[ph--arrow-left-fill]"></i> Back to Periods
         </a>
         <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="fas fa-calendar-alt"></i> Payroll Period
+            <i class="icon-[ph--calendar-fill]"></i> Payroll Period
         </div>
         <h2 style="margin:8px 0 4px 0;">
             {{ $payrollPeriod->cutoff_start ? $payrollPeriod->cutoff_start->format('F d') : 'N/A' }} - {{ $payrollPeriod->cutoff_end ? $payrollPeriod->cutoff_end->format('F d, Y') : 'N/A' }}
@@ -41,12 +41,12 @@
         @if($payrollPeriod->isDraft() && $payrollPeriod->payrollInputs && $payrollPeriod->payrollInputs->count() > 0)
         <button onclick="finalizePayroll()"
                 style="padding:10px 20px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; display:inline-flex; align-items:center; gap:8px;">
-            <i class="fas fa-check-circle"></i> Finalize Payroll
+            <i class="icon-[ph--check-circle-fill]"></i> Finalize Payroll
         </button>
         @endif
         <button onclick="loadPeriodSummary()"
                 style="padding:10px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; display:inline-flex; align-items:center; gap:8px;">
-            <i class="fas fa-sync"></i> Refresh Summary
+            <i class="icon-[ph--arrows-clockwise-fill]"></i> Refresh Summary
         </button>
     </div>
     @endif
@@ -121,7 +121,7 @@
                         @if($payrollPeriod->isDraft())
                         <a href="{{ route('manual-payroll-attendance.employee-form', [$payrollPeriod, $input->employee]) }}"
                            style="padding:6px 12px; background:#dbeafe; color:#1e40af; border-radius:5px; font-size:12px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-                            <i class="fas fa-edit"></i> Edit
+                            <i class="icon-[ph--pencil-fill]"></i> Edit
                         </a>
                         @else
                         <span style="color:#9ca3af; font-size:12px;">Finalized</span>
@@ -135,7 +135,7 @@
     </div>
     @else
     <div style="padding:40px 25px; text-align:center; color:#9ca3af;">
-        <i class="fas fa-clipboard-list" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+        <i class="icon-[ph--clipboard-text-fill]" style="font-size:32px; margin-bottom:10px; display:block;"></i>
         No employees encoded yet for this period.
     </div>
     @endif
@@ -188,7 +188,7 @@
             </div>
             <button onclick="clearFilters()"
                     style="padding:10px 16px; background:#6b7280; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px;">
-                <i class="fas fa-times"></i> Clear
+                <i class="icon-[ph--x-fill]"></i> Clear
             </button>
         </div>
         <div style="margin-top:8px; font-size:13px; color:#6b7280;">
@@ -217,14 +217,14 @@
                 </div>
                 <a href="{{ route('manual-payroll-attendance.employee-form', [$payrollPeriod, $employee]) }}"
                    style="padding:6px 12px; background:{{ $color }}; color:white; border-radius:5px; font-size:12px; text-decoration:none;">
-                    <i class="fas fa-keyboard"></i> Encode
+                    <i class="icon-[ph--keyboard-fill]"></i> Encode
                 </a>
             </div>
             @endif
             @endforeach
         </div>
         <div id="noResults" style="display:none; padding:40px; text-align:center; color:#9ca3af;">
-            <i class="fas fa-search" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+            <i class="icon-[ph--magnifying-glass-fill]" style="font-size:32px; margin-bottom:10px; display:block;"></i>
             No employees match your filters.
         </div>
     </div>
