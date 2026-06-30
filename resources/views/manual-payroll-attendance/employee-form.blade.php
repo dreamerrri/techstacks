@@ -168,7 +168,9 @@
                 @php
                     $totalAllowances = $employee->activeAllowances->sum('amount');
                     $totalBenefits = $employee->activeBenefits->sum('amount');
-                    $totalAllowancesAndBenefits = $totalAllowances + $totalBenefits;
+                    $totalAllowancesAndBenefits = round(($totalAllowances + $totalBenefits) / 2, 2);
+                    $totalAllowancesPerCutoff = round($totalAllowances / 2, 2);
+                    $totalBenefitsPerCutoff = round($totalBenefits / 2, 2);
                 @endphp
                 
                 <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; padding:16px;">
@@ -180,7 +182,7 @@
                                         <div style="font-weight:600; color:#1f2937; font-size:13px;">{{ $allowance->name }}</div>
                                         <div style="color:#6b7280; font-size:11px;">{{ $allowance->type }}</div>
                                     </div>
-                                    <div style="font-weight:700; color:#10b981; font-size:14px;">₱{{ number_format($allowance->amount, 2) }}</div>
+                                    <div style="font-weight:700; color:#10b981; font-size:14px;">₱{{ number_format(round($allowance->amount / 2, 2), 2) }}</div>
                                 </div>
                             @endforeach
                             @foreach($employee->activeBenefits as $benefit)
@@ -189,12 +191,12 @@
                                         <div style="font-weight:600; color:#1f2937; font-size:13px;">{{ $benefit->name }}</div>
                                         <div style="color:#6b7280; font-size:11px;">{{ $benefit->type }}</div>
                                     </div>
-                                    <div style="font-weight:700; color:#3b82f6; font-size:14px;">₱{{ number_format($benefit->amount, 2) }}</div>
+                                    <div style="font-weight:700; color:#3b82f6; font-size:14px;">₱{{ number_format(round($benefit->amount / 2, 2), 2) }}</div>
                                 </div>
                             @endforeach
                         </div>
                         <div style="padding-top:12px; border-top:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:600; color:#374151; font-size:14px;">Total Allowances & Benefits:</span>
+                            <span style="font-weight:600; color:#374151; font-size:14px;">Total Allowances & Benefits (per cutoff):</span>
                             <span style="font-weight:700; color:#10b981; font-size:16px;">₱{{ number_format($totalAllowancesAndBenefits, 2) }}</span>
                         </div>
                     @else

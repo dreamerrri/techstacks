@@ -100,7 +100,7 @@ class ManualPayrollAttendanceController extends Controller
                             'late_hours' => 0,
                             'holiday_days' => $holidayDays,
                             'night_differential_hours' => 0,
-                            'allowances' => $employee->activeAllowances->sum('amount') + $employee->activeBenefits->sum('amount'),
+                            'allowances' => round(($employee->activeAllowances->sum('amount') + $employee->activeBenefits->sum('amount')) / 2, 2),
                             'deductions' => 0,
                             'deductions_remarks' => '',
                             'reimbursements' => 0,
@@ -313,15 +313,15 @@ class ManualPayrollAttendanceController extends Controller
             $totalMonthlyGross = $firstCutoffGrossPay + $secondCutoffGrossPay;
             $totalMonthlyContributions = $totalContributions * 2; // Since contributions are halved per cutoff
             
-            // Only use current cutoff allowances for withholding tax calculation
-            // Allowances are advance paychecks and should not be doubled across cutoffs
-            $currentCutoffAllowances = $validated['allowances'] ?? 0;
+            // Use total monthly allowances for withholding tax calculation
+            // Since allowances are divided by 2 per cutoff, multiply by 2 to get total monthly
+            $totalMonthlyAllowances = ($validated['allowances'] ?? 0) * 2;
 
-            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);
+            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
             \Log::info('Withholding tax result in ManualPayrollAttendanceController', [
                 'total_monthly_gross' => $totalMonthlyGross,
                 'total_monthly_contributions' => $totalMonthlyContributions,
-                'current_cutoff_allowances' => $currentCutoffAllowances,
+                'total_monthly_allowances' => $totalMonthlyAllowances,
                 'withholding_tax' => $withholdingTax
             ]);
         }
