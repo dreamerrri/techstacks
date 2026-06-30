@@ -161,9 +161,9 @@
         <input type="text" name="search" value="{{ request('search') }}"
                placeholder="Search name, ID, email..."
                 oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"   {{-- Could be removed for consistency, come back later --}}
-               class="input input-bordered input-sm join-item w-full">
+               class="input input-bordered input-sm join-item w-full border-gray-300">
                
-        <button type="submit" class="btn btn-soft btn-error btn-sm join-item">
+        <button type="submit" class="btn btn-outline btn-sm join-item border-gray-300">
             <i class="icon-[ph--magnifying-glass-fill]"></i>
         </button>
     </div>
@@ -233,7 +233,7 @@
                      . '</span></a></th>';
             }
         @endphp
-        <table class="table table-hover table-fixed w-full text-sm">
+        <table class="table table-hover table-fixed w-full text-sm table-borderless">
             <colgroup>
                 <col class="w-48">  {{-- Employee --}}
                 <col class="w-32">  {{-- Department --}}
@@ -261,7 +261,7 @@
             <tbody>
                 @forelse($employees as $employee)
                     @php $payroll = $payrollData[$employee->id] ?? []; @endphp
-                    <tr>
+                    <tr class="row-hover">
                         <td>
                             <div class="flex items-center gap-2">
                                 <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ $avatarClass }} flex items-center justify-center text-white text-xs font-bold flex-shrink-0">

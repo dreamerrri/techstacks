@@ -78,13 +78,13 @@
       class="flex flex-col md:flex-row md:items-center gap-3 pb-4 border-b border-gray-200">
 
     {{-- Search group --}}
-    <div class="join flex-none w-64 min-w-40">
+    <div class="join flex-none w-64 min-w-40 ">
         <input type="text" name="search" value="{{ request('search') }}"
                placeholder="Search name, ID, email..."
                 oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"   {{-- Could be removed for consistency, come back later --}}
-               class="input input-bordered input-sm join-item w-full">
+               class="input input-bordered input-sm join-item w-full border-gray-300">
                
-        <button type="submit" class="btn btn-soft btn-error btn-sm join-item">
+        <button type="submit" class="btn btn-outline btn-sm join-item border-gray-300">
             <i class="icon-[ph--magnifying-glass-fill]"></i>
         </button>
     </div>
@@ -137,9 +137,9 @@
                          . '</span></a></th>';
                 }
             @endphp
-            <table class="table table-hover w-full text-sm">
+            <table class="table table-hover w-full text-sm table-borderless ">
                <thead class="sticky top-0 z-5" style="background: white">
-                    <tr>
+                    <tr class="">
                         <th>Employee ID</th>
                         <th>Full Name</th>
                         <th>Department</th>
@@ -160,7 +160,7 @@
                                 default        => 'badge-soft',
                             };
                         @endphp
-                        <tr>
+                        <tr class="row-hover ">
                             <td class="font-mono text-gray-500">{{ $employee->employee_id }}</td>
                             <td>
                                 <a href="{{ route('employees.show', $employee) }}"
