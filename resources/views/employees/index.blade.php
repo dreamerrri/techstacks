@@ -24,7 +24,7 @@
 
     {{-- Stat --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
-        <div class="card bg-base-100 shadow-sm p-5 text-center">
+        <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-red-600 bg-red-100">
                 <i class="icon-[ph--user-fill]"></i>
             </div>
@@ -33,28 +33,31 @@
         </div>
 
 
-        <div class="card bg-base-100 shadow-sm p-5 text-center">
+        <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-emerald-600 bg-emerald-100">
                 <i class="icon-[ph--check-circle-fill]"></i>
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\Employee::active()->where('employment_status','Regular')->count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Regular</div>
         </div>
-        <div class="card bg-base-100 shadow-sm p-5 text-center">
+        <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-amber-400 bg-amber-100">
                 <i class="icon-[ph--clock-fill]"></i>
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\Employee::active()->where('employment_status','Probationary')->count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Probationary</div>
         </div>
-        <div class="card bg-base-100 shadow-sm p-5 text-center">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-gray-500 bg-gray-100">
+         <a href="{{ route('employees.archived') }}"class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
+              <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-gray-500 bg-gray-100">
                 <i class="icon-[ph--archive-fill]"></i>
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\Employee::archived()->count() }}</div>
+           
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Archived</div>
+         </a>
+          
         </div>
-    </div>
+    
 
     {{-- Filters + Table --}}
     <div class="card bg-base-100 shadow-sm overflow-hidden flex flex-col p-0">

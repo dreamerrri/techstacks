@@ -192,15 +192,36 @@ body {
     font-weight: 600;
     border-radius: 8px;
 }
-.tech:hover{
-      color: rgb(73, 255, 188);
+@keyframes techIconFlare {
+  0% {
+    -webkit-mask-image: linear-gradient(60deg, #000 25%, rgba(0,0,0,.4) 50%, #000 75%);
+    mask-image: linear-gradient(60deg, #000 25%, rgba(0,0,0,.4) 50%, #000 75%);
+    -webkit-mask-size: 400%;
+    mask-size: 400%;
+    -webkit-mask-position: 0 center;
+    mask-position: 0 center;
+  }
+  to {
+    -webkit-mask-image: linear-gradient(60deg, #000 25%, rgba(0,0,0,.4) 50%, #000 75%);
+    mask-image: linear-gradient(60deg, #000 25%, rgba(0,0,0,.4) 50%, #000 75%);
+    -webkit-mask-size: 400%;
+    mask-size: 400%;
+    -webkit-mask-position: 100% center;
+    mask-position: 100% center;
+  }
 }
-.techicon:hover svg{
-      color: rgb(73, 255, 188);
+
+.techicon:hover svg {
+  animation: techIconFlare 1.8s ease-in-out infinite alternate;
 }
-.techicon{
-    transition: color 0.2s ease;
+.tech:hover {
+   animation: techIconFlare 1.8s ease-in-out infinite alternate;    
 }
+
+.techicon {
+  transition: color 0.2s ease;
+}
+
 .topbar-breadcrumb a:hover,
 .topbar-breadcrumb span:hover {
     color: rgb(73, 255, 188);
@@ -411,7 +432,16 @@ body {
 
 .topbar-admin, .bg-admin .topbar,
 .topbar-hr,    .bg-hr .topbar,
-.topbar-user,  .bg-user .topbar { background: #23806a; }
+    .topbar-user,  .bg-user .topbar { background: linear-gradient(
+  to right,
+  #266859 0%,    /* saturated */
+  #257462 25%,   /* lighter */
+  #247865 50%,   /* transition */
+  #247c67 75%,   /* brighter */
+  #23806a 100%   /* final */
+);}
+
+
 
 .bg-admin .topbar h2, .bg-hr .topbar h2, .bg-user .topbar h2,
 .topbar-admin h2, .topbar-hr h2, .topbar-user h2 { color: white !important; }
@@ -546,12 +576,10 @@ body {
 .overlay-minified .sidebar-toggle-row { justify-content: center; padding: 0 0 10px; }
 .overlay-minified #sidebar-toggle i { transform: rotate(180deg); }
 #sidebar-toggle {
-    background: rgba(255,255,255,0.08);
     border: none;
-    border-radius: 6px;
     color: rgba(255,255,255,0.75);
     cursor: pointer;
-    font-size: 14px;
+    font-size: 20px;
     width: 30px;
     height: 30px;
     display: flex;
@@ -564,7 +592,7 @@ body {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 #sidebar-toggle:hover {
-    background: rgba(255,255,255,0.16);
+  
     color: #6ee7b7;
 }
 .overlay-minified .sidebar::before { width: 0; opacity: 0; }
