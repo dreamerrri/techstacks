@@ -209,7 +209,7 @@
         <div class="topbar desktop-topbar topbar-{{ $role }}" style="grid-column: 1 / -1; grid-row: 1;">
 
             <a class="techicon" href="{{ route('dashboard') }}" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:white;">
-                <svg  fill="currentColor" height="1.6em" viewBox="0 0 1813 1441" width="1.6em" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0; opacity:0.95;">
+                <svg  fill="currentColor" height="2em" viewBox="0 0 1813 1441" width="2em" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0; opacity:0.95;">
                     <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fill-rule="evenodd"></path>
                     <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fill-rule="evenodd"></path>
                 </svg>

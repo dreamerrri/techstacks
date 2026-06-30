@@ -21,7 +21,7 @@
 
     {{-- Stats --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
-        <div class="card bg-base-100 shadow-sm p-5 text-center">
+        <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-red-600 bg-red-100">
                                 <i class="icon-[ph--users-fill]"></i>
 
@@ -29,7 +29,7 @@
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Total Users</div>
         </div>
-        <div class="card bg-base-100 shadow-sm p-5 text-center">
+        <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-red-800 bg-red-100">
                                 <i class="icon-[ph--shield-check-fill]"></i>
 
@@ -37,14 +37,14 @@
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::where('role','admin')->count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Admins</div>
         </div>
-        <div class="card bg-base-100 shadow-sm p-5 text-center">
+        <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-amber-600 bg-amber-100">
                 <i class="icon-[ph--user-fill]"></i>
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::where('role','hr')->count() }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">HR Personnel</div>
         </div>
-        <div class="card bg-base-100 shadow-sm p-5 text-center">
+        <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-emerald-600 bg-emerald-100">
                 <i class="icon-[ph--check-circle-fill]"></i>
             </div>
