@@ -52,6 +52,7 @@
                 <option value="weekend">Weekend Work</option>
                 <option value="holiday">Holiday Work</option>
                 <option value="overtime">Overtime</option>
+                <option value="half_day">Half Day</option>
             </select>
             <p style="font-size:12px; color:#6b7280; margin-top:4px;">
                 Choose the type of work you're requesting

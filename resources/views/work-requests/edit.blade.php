@@ -53,6 +53,7 @@
                 <option value="weekend" {{ $workRequest->request_type === 'weekend' ? 'selected' : '' }}>Weekend Work</option>
                 <option value="holiday" {{ $workRequest->request_type === 'holiday' ? 'selected' : '' }}>Holiday Work</option>
                 <option value="overtime" {{ $workRequest->request_type === 'overtime' ? 'selected' : '' }}>Overtime</option>
+                <option value="half_day" {{ $workRequest->request_type === 'half_day' ? 'selected' : '' }}>Half Day</option>
             </select>
         </div>
 

@@ -106,7 +106,7 @@ if ($admin || $hr) {
         }
 
         $validated = $request->validate([
-            'request_type' => 'required|in:weekend,holiday,overtime',
+            'request_type' => 'required|in:weekend,holiday,overtime,half_day',
             'work_date' => 'required|date|after_or_equal:today',
             'estimated_hours' => 'nullable|numeric|min:0|max:24',
             'reason' => 'nullable|string|max:500',
@@ -290,7 +290,7 @@ if ($admin || $hr) {
         }
 
         $validated = $request->validate([
-            'request_type' => 'required|in:weekend,holiday,overtime',
+            'request_type' => 'required|in:weekend,holiday,overtime,half_day',
             'work_date' => 'required|date|after_or_equal:today',
             'estimated_hours' => 'nullable|numeric|min:0|max:24',
             'reason' => 'nullable|string|max:500',

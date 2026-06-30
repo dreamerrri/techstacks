@@ -77,7 +77,7 @@
             </div>
             <div>
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Time Out</label>
-                <input type="time" name="time_out"
+                <input type="time" name="time_out" readonly
                        value="{{ $todayAttendance && $todayAttendance->time_out ? (is_string($todayAttendance->time_out) ? substr($todayAttendance->time_out, 0, 5) : $todayAttendance->time_out->format('H:i')) : '' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; background:#f9fafb;">
                 <p style="color:#6b7280; font-size:12px; margin-top:4px;">Auto-set when you clock out</p>

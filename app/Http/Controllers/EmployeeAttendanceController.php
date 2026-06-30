@@ -20,7 +20,11 @@ class EmployeeAttendanceController extends Controller
         $user = Auth::user();
         $employee = $user->employee;
 
+        // Admin/HR without employee record should be redirected to manual payroll attendance
         if (!$employee) {
+            if ($user->isAdmin() || $user->isHR()) {
+                return redirect()->route('manual-payroll-attendance.index');
+            }
             abort(403, 'No employee record found for this user.');
         }
 
@@ -70,7 +74,11 @@ class EmployeeAttendanceController extends Controller
         $user = Auth::user();
         $employee = $user->employee;
 
+        // Admin/HR without employee record should be redirected to manual payroll attendance
         if (!$employee) {
+            if ($user->isAdmin() || $user->isHR()) {
+                return redirect()->route('manual-payroll-attendance.index');
+            }
             abort(403, 'No employee record found for this user.');
         }
 
@@ -122,6 +130,16 @@ class EmployeeAttendanceController extends Controller
             ->first();
 
         if ($existingAttendance) {
+            // Prevent employees from changing time_out if already clocked out
+            if ($existingAttendance->time_out && !$user->isAdmin() && !$user->isHR()) {
+                if ($validated['time_out'] && $validated['time_out'] !== $existingAttendance->time_out) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'You cannot change your clock out time after clocking out. Contact HR/Admin for assistance.',
+                    ], 403);
+                }
+            }
+
             $existingAttendance->update([
                 'time_in' => $validated['time_in'] ?? null,
                 'time_out' => $validated['time_out'] ?? null,
