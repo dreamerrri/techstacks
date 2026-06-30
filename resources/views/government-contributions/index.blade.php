@@ -127,8 +127,9 @@
         <input type="text" name="search" id="search-input" value="{{ request('search') }}"
                placeholder="Search name, ID, email..."
                oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
-               class="input input-bordered input-sm join-item w-full">
-        <button type="submit" class="btn btn-soft btn-error btn-sm join-item">
+               class="input input-bordered input-sm join-item w-full border-gray-300">
+               
+        <button type="submit" class="btn btn-outline btn-sm join-item border-gray-300">
             <i class="icon-[ph--magnifying-glass-fill]"></i>
         </button>
         
@@ -166,7 +167,7 @@
 
     {{-- Desktop Table --}}
     <div class="table-responsive overflow-y-auto max-h-[53vh] px-7 hidden md:block">
-        <table id="contributions-table" class="table table-hover w-full text-sm">
+        <table id="contributions-table" class="table table-hover w-full text-sm table-borderless">
            <thead class="sticky top-0 z-5" style="background: white">
                 <tr>
                     <th>Employee ID</th>
@@ -188,7 +189,7 @@
                             default        => 'badge-soft',
                         };
                     @endphp
-                    <tr>
+                    <tr class="row-hover">
                         <td class="font-mono text-gray-500">{{ $employee->employee_id }}</td>
                         <td class="font-semibold text-gray-800">
                             <a href="{{ route('government-contributions.show', $employee) }}"
