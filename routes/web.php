@@ -191,6 +191,8 @@ Route::middleware('permission:manage.payroll.periods')->prefix('payroll-periods'
         Route::get('/', [NotificationController::class, 'index'])->name('index');
         Route::post('/{notification}/mark-read', [NotificationController::class, 'markAsRead'])->name('mark-read');
         Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::post('/{notification}/mark-resolved', [NotificationController::class, 'markAsResolved'])->name('mark-resolved');
+        Route::post('/mark-all-resolved', [NotificationController::class, 'markAllAsResolved'])->name('mark-all-resolved');
         Route::post('/generate-hr-admin', [NotificationController::class, 'generateHrAdminNotifications'])->name('generate-hr-admin');
     });
 
