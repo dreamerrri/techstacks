@@ -191,13 +191,13 @@
             const password = this.value;
 
             if (!password) {
-                passwordStrength.style.display     = 'none';
-                passwordRequirements.style.display = 'none';
+                passwordStrength.classList.remove('is-visible');
+                passwordRequirements.classList.remove('is-visible');
                 return;
             }
 
-            passwordStrength.style.display     = 'block';
-            passwordRequirements.style.display = 'block';
+            passwordStrength.classList.add('is-visible');
+            passwordRequirements.classList.add('is-visible');
 
             let strength = 0;
             let metRequirements = 0;

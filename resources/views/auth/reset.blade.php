@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
-    <title>HR Management System - Login</title>
+    <title>Reset Password - HR Management System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    @vite(['resources/css/login.css', 'resources/js/app.js'])
+    @vite(['resources/css/reset.css', 'resources/js/app.js'])
 </head>
 <body>
     <div class="auth-layout">
 
-        <!-- Left: gradient panel with 3D logo -->
+         <!-- Left: gradient panel with 3D logo -->
         <div class="auth-image-panel">
             <div class="auth-image-overlay"></div>
             <div class="auth-image-content">
@@ -32,8 +32,8 @@
             <div class="auth-form-inner">
 
                 <div class="form-header">
-                    <h3>Welcome Back</h3>
-                    <p>Sign in to access your dashboard</p>
+                    <h3>Reset Password</h3>
+                    <p>Enter your email to reset your password</p>
                 </div>
 
                 @if ($errors->any())
@@ -43,17 +43,9 @@
                     </div>
                 @endif
 
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        <i class="icon-[ph--check-circle-fill]"></i>
-                        {{ session('success') }}
-                    </div>
-                @endif
+<form method="POST" action="{{ route('password.reset.submit') }}">
+                        @csrf
 
-                <form method="POST" action="{{ route('login') }}" novalidate id="loginForm">
-                    @csrf
-
-                    {{-- Email --}}
                     <div class="form-group">
                         <label for="email">
                             <i class="icon-[ph--envelope-fill]"></i> Email Address
@@ -62,7 +54,7 @@
                             type="email"
                             id="email"
                             name="email"
-                            placeholder="admin@company.com"
+                            placeholder="john@company.com"
                             value="{{ old('email') }}"
                             required
                         >
@@ -74,54 +66,15 @@
                         @enderror
                     </div>
 
-                    {{-- Password with show/hide toggle --}}
-                    <div class="form-group">
-                        <label for="password">
-                            <i class="icon-[ph--lock-fill]"></i> Password
-                        </label>
-                        <div style="position: relative;">
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                placeholder="••••••••"
-                                required
-                                style="width: 100%; padding-right: 45px;"
-                            >
-                            <button type="button" onclick="togglePassword()"
-                                    style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
-                                           background:none; border:none; cursor:pointer; color:#6b7280; padding:0;">
-                                <i class="icon-[ph--eye-fill]" id="eyeIcon"></i>
-                            </button>
-                        </div>
-                        @error('password')
-                            <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
 
-                    {{-- Remember Me --}}
-                    <div class="remember-forgot">
-                        <label>
-                            <input type="checkbox" name="remember"> Remember me
-                        </label>
-                        <a href="{{ route('reset') }}">Forgot password?</a>
-                    </div>
-
-                    {{-- Submit --}}
-                    <button type="submit" class="login-btn" id="loginBtn">
-                        <i class="icon-[ph--sign-in-fill]" id="loginIcon"></i>
-                        <span id="loginText">Sign In</span>
-                    </button>
+                 
+  <button type="submit" class="reset-btn" id="resetBtn">
+        <i class="icon-[ph--arrow-clockwise]"></i> Reset Password
+    </button>
                 </form>
 
                 <div class="auth-footer-link">
-                    <p>
-                        Don't have an account?
-                        <a href="{{ route('register') }}">Register here</a>
-                    </p>
+                    <p>Already have an account? <a href="{{ route('login') }}">Login here</a></p>
                 </div>
 
             </div>
@@ -129,30 +82,9 @@
 
     </div>
 
-    <script>
-        function togglePassword() {
-            const input = document.getElementById('password');
-            const icon  = document.getElementById('eyeIcon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
-        }
 
-        document.getElementById('loginForm').addEventListener('submit', function () {
-            const btn  = document.getElementById('loginBtn');
-            const icon = document.getElementById('loginIcon');
-            const text = document.getElementById('loginText');
-            btn.disabled     = true;
-icon.className = 'icon-[ph--spinner-fill] spin';
-            text.textContent = ' Signing in...';
-        });
-    </script>
 
-    <!-- Three.js 3D Logo -->
+       <!-- Three.js 3D Logo -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -208,6 +140,5 @@ icon.className = 'icon-[ph--spinner-fill] spin';
             animate();
         })();
     </script>
-
 </body>
 </html>
