@@ -116,6 +116,12 @@ if ($admin || $hr) {
         $validated['start_time'] = $request->input('start_time');
         $validated['end_time'] = $request->input('end_time');
 
+        // Calculate overtime hours for overtime requests
+        $calculatedOvertimeHours = null;
+        if ($validated['request_type'] === 'overtime' && !empty($validated['start_time']) && !empty($validated['end_time'])) {
+            $calculatedOvertimeHours = $this->calculateOvertimeHours($validated['start_time'], $validated['end_time']);
+        }
+
         // Check if there's already a pending request for this date
         $existingRequest = WorkRequest::where('employee_id', $employee->id)
             ->where('work_date', $validated['work_date'])
@@ -159,6 +165,7 @@ if ($admin || $hr) {
             'start_time' => $validated['start_time'] ?? null,
             'end_time' => $validated['end_time'] ?? null,
             'estimated_hours' => $validated['estimated_hours'] ?? null,
+            'calculated_overtime_hours' => $calculatedOvertimeHours,
             'reason' => $validated['reason'] ?? null,
             'status' => 'pending',
         ]);
@@ -300,6 +307,12 @@ if ($admin || $hr) {
         $validated['start_time'] = $request->input('start_time');
         $validated['end_time'] = $request->input('end_time');
 
+        // Calculate overtime hours for overtime requests
+        $calculatedOvertimeHours = null;
+        if ($validated['request_type'] === 'overtime' && !empty($validated['start_time']) && !empty($validated['end_time'])) {
+            $calculatedOvertimeHours = $this->calculateOvertimeHours($validated['start_time'], $validated['end_time']);
+        }
+
         // Validate based on request type (optional validation - HR can review during approval)
         // Commented out for now to allow requests even if holidays aren't set up in system
         /*
@@ -327,6 +340,7 @@ if ($admin || $hr) {
             'start_time' => $validated['start_time'] ?? null,
             'end_time' => $validated['end_time'] ?? null,
             'estimated_hours' => $validated['estimated_hours'] ?? null,
+            'calculated_overtime_hours' => $calculatedOvertimeHours,
             'reason' => $validated['reason'] ?? null,
         ]);
 
@@ -503,5 +517,43 @@ if ($admin || $hr) {
             'message' => 'Work request rejected successfully.',
             'work_request' => $workRequest,
         ]);
+    }
+
+    /**
+     * Calculate overtime hours from start and end time
+     * Overtime = total hours worked - 8 regular hours
+     * Handles overnight shifts (e.g., 22:00 to 02:00)
+     */
+    private function calculateOvertimeHours(string $startTime, string $endTime): ?float
+    {
+        if (empty($startTime) || empty($endTime)) {
+            return null;
+        }
+
+        $startParts = explode(':', $startTime);
+        $endParts = explode(':', $endTime);
+
+        $startMinutes = intval($startParts[0]) * 60 + intval($startParts[1]);
+        $endMinutes = intval($endParts[0]) * 60 + intval($endParts[1]);
+
+        $totalMinutes = $endMinutes - $startMinutes;
+
+        // Handle overnight work (e.g., 22:00 to 02:00)
+        if ($totalMinutes < 0) {
+            $totalMinutes += 24 * 60;
+        }
+
+        $totalHours = $totalMinutes / 60;
+
+        // Overtime is hours worked beyond regular 8 hours
+        $regularHours = 8;
+        $overtimeHours = $totalHours - $regularHours;
+
+        if ($overtimeHours < 0) {
+            $overtimeHours = 0;
+        }
+
+        // Round to 2 decimal places
+        return round($overtimeHours, 2);
     }
 }

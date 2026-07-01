@@ -75,7 +75,10 @@
                         <span style="font-weight:600;">{{ ucfirst($request->request_type) }}</span>
                         <span style="color:#6b7280;">|</span>
                         <span>{{ $request->work_date->format('M d, Y') }}</span>
-                        @if($request->estimated_hours)
+                        @if($request->request_type === 'overtime' && $request->calculated_overtime_hours)
+                        <span style="color:#6b7280;">|</span>
+                        <span>{{ number_format($request->calculated_overtime_hours, 1) }} OT hrs</span>
+                        @elseif($request->estimated_hours)
                         <span style="color:#6b7280;">|</span>
                         <span>{{ number_format($request->estimated_hours, 1) }} hrs</span>
                         @endif

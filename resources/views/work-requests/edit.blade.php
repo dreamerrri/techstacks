@@ -93,6 +93,12 @@
             <input type="number" name="estimated_hours" id="estimated_hours" min="0" max="24" step="0.5"
                    value="{{ $workRequest->estimated_hours }}"
                    style="width:100%; padding:12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;">
+            <div id="overtime_hours_display" style="display:none; margin-top:8px; padding:8px 12px; background:#dbeafe; border-radius:6px; border-left:4px solid #2563eb;">
+                <span style="font-size:13px; font-weight:600; color:#1e40af;">
+                    <i class="icon-[ph--clock-fill]" style="margin-right:4px;"></i>
+                    Approximate Overtime Hours: <span id="calculated_overtime_hours">0</span>
+                </span>
+            </div>
         </div>
 
         {{-- Reason --}}
@@ -161,10 +167,81 @@ document.addEventListener('DOMContentLoaded', function() {
         const form = getVisibleForm(forms);
         
         if (form) {
+            const requestType = form.querySelector('#request_type');
+            const startTime = form.querySelector('#start_time');
+            const endTime = form.querySelector('#end_time');
+            const estimatedHours = form.querySelector('#estimated_hours');
+            const overtimeDisplay = form.querySelector('#overtime_hours_display');
+            const calculatedOvertime = form.querySelector('#calculated_overtime_hours');
+            
+            // Function to calculate overtime hours
+            const calculateOvertime = () => {
+                if (requestType.value !== 'overtime') {
+                    overtimeDisplay.style.display = 'none';
+                    return;
+                }
+                
+                const start = startTime.value;
+                const end = endTime.value;
+                
+                if (start && end) {
+                    const startParts = start.split(':');
+                    const endParts = end.split(':');
+                    
+                    const startMinutes = parseInt(startParts[0]) * 60 + parseInt(startParts[1]);
+                    const endMinutes = parseInt(endParts[0]) * 60 + parseInt(endParts[1]);
+                    
+                    let totalMinutes = endMinutes - startMinutes;
+                    
+                    // Handle overnight work (e.g., 22:00 to 02:00)
+                    if (totalMinutes < 0) {
+                        totalMinutes += 24 * 60;
+                    }
+                    
+                    const totalHours = totalMinutes / 60;
+                    
+                    // Overtime is hours worked beyond regular 8 hours
+                    const regularHours = 8;
+                    let overtimeHours = totalHours - regularHours;
+                    
+                    if (overtimeHours < 0) {
+                        overtimeHours = 0;
+                    }
+                    
+                    // Round to 1 decimal place
+                    overtimeHours = Math.round(overtimeHours * 10) / 10;
+                    
+                    calculatedOvertime.textContent = overtimeHours.toFixed(1);
+                    overtimeDisplay.style.display = 'block';
+                    
+                    // Auto-fill estimated hours with overtime hours if empty
+                    if (estimatedHours.value === '' || parseFloat(estimatedHours.value) === 0) {
+                        estimatedHours.value = overtimeHours.toFixed(1);
+                    }
+                } else {
+                    overtimeDisplay.style.display = 'none';
+                }
+            };
+            
+            // Listen for changes
+            requestType.addEventListener('change', calculateOvertime);
+            startTime.addEventListener('change', calculateOvertime);
+            endTime.addEventListener('change', calculateOvertime);
+            
+            // Calculate on load if overtime is already selected
+            if (requestType.value === 'overtime') {
+                calculateOvertime();
+            }
+            
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 const formData = new FormData(this);
+                
+                // Add calculated overtime hours if overtime is selected
+                if (requestType.value === 'overtime' && startTime.value && endTime.value) {
+                    formData.append('calculated_overtime_hours', calculatedOvertime.textContent);
+                }
                 
                 fetch('{{ route('work-requests.update', $workRequest) }}', {
                     method: 'POST',

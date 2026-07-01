@@ -82,7 +82,7 @@ class ManualPayrollAttendanceController extends Controller
 
                     // Calculate special work from approved requests
                     $weekendsWorked = $approvedRequests->where('request_type', 'weekend')->count();
-                    $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('estimated_hours');
+                    $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('calculated_overtime_hours');
                     $holidayDays = $approvedRequests->where('request_type', 'holiday')->count();
 
                     // Only create if there are computed days or special work
@@ -167,7 +167,7 @@ class ManualPayrollAttendanceController extends Controller
 
         // Calculate special work from approved requests
         $weekendsWorked = $approvedRequests->where('request_type', 'weekend')->count();
-        $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('estimated_hours');
+        $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('calculated_overtime_hours');
         $holidayDays = $approvedRequests->where('request_type', 'holiday')->count();
 
         // If payroll input exists, use approved request values as defaults (don't save to DB)
