@@ -129,6 +129,10 @@
                         {{ $attendance->remarks ?? '-' }}
                     </td>
                     <td style="padding:12px 16px; text-align:center;">
+                        <button onclick="editAttendance({{ $attendance->id }}, '{{ $attendance->date->format('Y-m-d') }}', '{{ $attendance->time_in ?? '' }}', '{{ $attendance->time_out ?? '' }}', '{{ $attendance->remarks ?? '' }}')"
+                                style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; margin-right:4px;">
+                            <i class="icon-[ph--pencil-fill]"></i>
+                        </button>
                         <button onclick="deleteAttendance({{ $attendance->id }})"
                                 style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
                             <i class="icon-[ph--trash-fill]"></i>
@@ -164,6 +168,7 @@
                     <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Time Out</th>
                     <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Rendered Hours</th>
                     <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Computed Days</th>
+                    <th style="padding:12px 16px; text-align:center; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -184,6 +189,16 @@
                     <td style="padding:12px 16px; font-size:14px; color:#1f2937; font-weight:600;">
                         {{ number_format($attendance->computed_days, 2) }} days
                     </td>
+                    <td style="padding:12px 16px; text-align:center;">
+                        <button onclick="editAttendance({{ $attendance->id }}, '{{ $attendance->date->format('Y-m-d') }}', '{{ $attendance->time_in ?? '' }}', '{{ $attendance->time_out ?? '' }}', '{{ $attendance->remarks ?? '' }}')"
+                                style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; margin-right:4px;">
+                            <i class="icon-[ph--pencil-fill]"></i>
+                        </button>
+                        <button onclick="deleteAttendance({{ $attendance->id }})"
+                                style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
+                            <i class="icon-[ph--trash-fill]"></i>
+                        </button>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -196,6 +211,90 @@
 
 @section('scripts')
 <script>
+
+    function editAttendance(attendanceId, date, timeIn, timeOut, remarks) {
+        Swal.fire({
+            title: 'Edit Attendance',
+            html: `
+                <div style="text-align:left; margin-bottom:15px;">
+                    <label style="display:block; font-weight:600; margin-bottom:5px; font-size:13px;">Date</label>
+                    <input id="editDate" type="date" value="${date}" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; margin-bottom:10px;">
+                    
+                    <label style="display:block; font-weight:600; margin-bottom:5px; font-size:13px;">Time In</label>
+                    <input id="editTimeIn" type="time" value="${timeIn}" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; margin-bottom:10px;">
+                    
+                    <label style="display:block; font-weight:600; margin-bottom:5px; font-size:13px;">Time Out</label>
+                    <input id="editTimeOut" type="time" value="${timeOut}" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; margin-bottom:10px;">
+                    
+                    <label style="display:block; font-weight:600; margin-bottom:5px; font-size:13px;">Remarks</label>
+                    <input id="editRemarks" type="text" value="${remarks}" placeholder="Optional notes" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;">
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: '#3b82f6',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Save Changes',
+            cancelButtonText: 'Cancel',
+            preConfirm: () => {
+                // Format time to H:i (remove seconds if present)
+                const formatTime = (timeValue) => {
+                    if (!timeValue) return '';
+                    // If time has seconds, remove them
+                    if (timeValue.includes(':') && timeValue.split(':').length === 3) {
+                        return timeValue.substring(0, 5); // Take only HH:MM
+                    }
+                    return timeValue;
+                };
+
+                return {
+                    date: document.getElementById('editDate').value,
+                    time_in: formatTime(document.getElementById('editTimeIn').value),
+                    time_out: formatTime(document.getElementById('editTimeOut').value),
+                    remarks: document.getElementById('editRemarks').value,
+                };
+            }
+        }).then(result => {
+            if (!result.isConfirmed) return;
+
+            const formData = new FormData();
+            formData.append('date', result.value.date);
+            
+            // Only append time_in if it has a non-empty value
+            if (result.value.time_in && result.value.time_in.trim() !== '') {
+                formData.append('time_in', result.value.time_in);
+            }
+            
+            // Only append time_out if it has a non-empty value
+            if (result.value.time_out && result.value.time_out.trim() !== '') {
+                formData.append('time_out', result.value.time_out);
+            }
+            
+            formData.append('remarks', result.value.remarks);
+            formData.append('_method', 'PUT');
+            formData.append('_token', '{{ csrf_token() }}');
+
+            fetch('{{ route('employee-attendance.update', ':id') }}'.replace(':id', attendanceId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.notyf.success(data.message);
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    window.notyf.error(data.message);
+                }
+            })
+            .catch(error => {
+                window.notyf.error('Failed to update attendance: ' + error.message);
+            });
+        });
+    }
 
     function deleteAttendance(attendanceId) {
     Swal.fire({

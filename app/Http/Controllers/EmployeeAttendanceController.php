@@ -217,6 +217,134 @@ class EmployeeAttendanceController extends Controller
     }
 
     /**
+     * PUT /employee-attendance/{attendance}
+     * Update attendance record (admin/HR only)
+     */
+    public function update(Request $request, Attendance $attendance): JsonResponse
+    {
+        $user = Auth::user();
+
+        // Only admin and HR can update attendance records
+        if (!$user->isAdmin() && !$user->isHR()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only administrators and HR can update attendance records.',
+            ], 403);
+        }
+
+        // Log incoming request for debugging
+        \Log::info('Attendance update request', [
+            'all' => $request->all(),
+            'time_in' => $request->input('time_in'),
+            'time_out' => $request->input('time_out'),
+        ]);
+
+        $validated = $request->validate([
+            'date' => 'required|date',
+            'remarks' => 'nullable|string|max:255',
+        ]);
+
+        // Handle time_in separately
+        $timeIn = $request->input('time_in');
+        if ($timeIn !== null && trim($timeIn) !== '') {
+            try {
+                Carbon::createFromFormat('H:i', $timeIn);
+                $validated['time_in'] = $timeIn;
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'The time in field must match the format H:i.',
+                ], 422);
+            }
+        } else {
+            $validated['time_in'] = null;
+        }
+
+        // Handle time_out separately
+        $timeOut = $request->input('time_out');
+        if ($timeOut !== null && trim($timeOut) !== '') {
+            try {
+                Carbon::createFromFormat('H:i', $timeOut);
+                $validated['time_out'] = $timeOut;
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'The time out field must match the format H:i.',
+                ], 422);
+            }
+        } else {
+            $validated['time_out'] = null;
+        }
+
+        // Auto-clock-out if exceeding 9 hours
+        $autoClockOutApplied = false;
+        
+        if (!empty($validated['time_in']) && !empty($validated['time_out'])) {
+            $timeIn = Carbon::createFromFormat('H:i', $validated['time_in']);
+            $timeOut = Carbon::createFromFormat('H:i', $validated['time_out']);
+            
+            // Calculate total minutes
+            $totalMinutes = $timeOut->diffInMinutes($timeIn);
+            if ($totalMinutes < 0) {
+                $totalMinutes = abs($totalMinutes);
+            }
+            
+            // Convert to hours and apply break logic (1 hour break for shifts > 4 hours)
+            $hours = $totalMinutes / 60;
+            if ($hours > 4) {
+                $hours -= 1;
+            }
+            
+            // If exceeding 9 hours, auto-clock-out at 9 hours
+            if ($hours > 9) {
+                // Calculate the time_out that would result in exactly 9 hours
+                // 9 hours + 1 hour break = 10 hours total from time_in
+                $maxTimeOut = $timeIn->copy()->addHours(10);
+                $validated['time_out'] = $maxTimeOut->format('H:i');
+                $autoClockOutApplied = true;
+                
+                \Log::info('Auto clock-out applied (HR/Admin edit): exceeded 9 hours', [
+                    'original_time_out' => $timeOut->format('H:i'),
+                    'auto_time_out' => $validated['time_out'],
+                    'attendance_id' => $attendance->id,
+                    'employee_id' => $attendance->employee_id,
+                    'date' => $validated['date'],
+                    'edited_by' => $user->id,
+                ]);
+            }
+        }
+
+        $attendance->update([
+            'date' => $validated['date'],
+            'time_in' => $validated['time_in'],
+            'time_out' => $validated['time_out'],
+            'remarks' => $validated['remarks'],
+        ]);
+
+        // Log the updated attendance
+        \Log::info('Attendance updated by HR/Admin', [
+            'id' => $attendance->id,
+            'time_in' => $attendance->time_in,
+            'time_out' => $attendance->time_out,
+            'rendered_hours' => $attendance->rendered_hours,
+            'computed_days' => $attendance->computed_days,
+            'edited_by' => $user->id,
+        ]);
+
+        $message = 'Attendance updated successfully.';
+        if ($autoClockOutApplied) {
+            $message = 'Attendance updated successfully. Auto clock-out applied (exceeded 9 hours).';
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'attendance' => $attendance,
+            'auto_clock_out_applied' => $autoClockOutApplied,
+        ]);
+    }
+
+    /**
      * DELETE /employee-attendance/{attendance}
      * Delete attendance record (only admin/HR)
      */
