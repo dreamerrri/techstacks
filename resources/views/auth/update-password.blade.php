@@ -49,18 +49,76 @@
     <input type="hidden" name="token" value="{{ $token }}">
     <input type="hidden" name="email" value="{{ $email }}">
 
-    <div class="form-group">
-        <label for="password">New Password</label>
-        <input type="password" id="password" name="password" required>
-        @error('password')
-            <div class="error-message">{{ $message }}</div>
-        @enderror
-    </div>
+       <div class="form-group">
+                        <label for="password">
+                            <i class="icon-[ph--lock-fill]"></i> Password
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="••••••••"
+                            required
+                            autocomplete="new-password"
+                        >
 
-    <div class="form-group">
-        <label for="password_confirmation">Confirm New Password</label>
-        <input type="password" id="password_confirmation" name="password_confirmation" required>
-    </div>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-meter">
+                                <div class="strength-bar" id="strengthBar"></div>
+                            </div>
+                            <div class="strength-text" id="strengthText">Password Strength: Weak</div>
+                        </div>
+
+                        <div class="password-requirements" id="passwordRequirements">
+                            <div class="requirement" id="req-length">
+                                <i class="icon-[ph--circle-fill]"></i>
+                                <span>At least 8 characters</span>
+                            </div>
+                            <div class="requirement" id="req-upper">
+                                <i class="icon-[ph--circle-fill]"></i>
+                                <span>One uppercase letter (A-Z)</span>
+                            </div>
+                            <div class="requirement" id="req-lower">
+                                <i class="icon-[ph--circle-fill]"></i>
+                                <span>One lowercase letter (a-z)</span>
+                            </div>
+                            <div class="requirement" id="req-number">
+                                <i class="icon-[ph--circle-fill]"></i>
+                                <span>One number (0-9)</span>
+                            </div>
+                            <div class="requirement" id="req-special">
+                                <i class="icon-[ph--circle-fill]"></i>
+                                <span>One special character (!@#$%^&*)</span>
+                            </div>
+                        </div>
+
+                        @error('password')
+                            <div class="error-message">
+                                <i class="icon-[ph--x-circle-fill]"></i>
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password_confirmation">
+                            <i class="icon-[ph--lock-fill]"></i> Confirm Password
+                        </label>
+                        <input
+                            type="password"
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            placeholder="••••••••"
+                            required
+                            autocomplete="new-password"
+                        >
+                        @error('password_confirmation')
+                            <div class="error-message">
+                                <i class="icon-[ph--x-circle-fill]"></i>
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
 
   
     <button type="submit" class="reset-btn" id="resetBtn">
@@ -77,7 +135,65 @@
 
     </div>
 
+    <script>
+        const passwordInput        = document.getElementById('password');
+        const passwordStrength     = document.getElementById('passwordStrength');
+        const strengthBar          = document.getElementById('strengthBar');
+        const strengthText         = document.getElementById('strengthText');
+        const passwordRequirements = document.getElementById('passwordRequirements');
+        const registerBtn          = document.getElementById('registerBtn');
 
+        const requirements = {
+            length:  /^.{8,}$/,
+            upper:   /[A-Z]/,
+            lower:   /[a-z]/,
+            number:  /[0-9]/,
+            special: /[!@#$%^&*()_+\-=\[\]{};:'",.< >?\/\\|`~]/,
+        };
+
+        passwordInput.addEventListener('input', function () {
+            const password = this.value;
+
+            if (!password) {
+                passwordStrength.classList.remove('is-visible');
+                passwordRequirements.classList.remove('is-visible');
+                return;
+            }
+
+            passwordStrength.classList.add('is-visible');
+            passwordRequirements.classList.add('is-visible');
+
+            let strength = 0;
+            let metRequirements = 0;
+
+            const checks = ['length', 'upper', 'lower', 'number', 'special'];
+            checks.forEach(key => {
+                const el = document.getElementById('req-' + key);
+                if (requirements[key].test(password)) {
+                    strength += 20;
+                    metRequirements++;
+                    el.classList.add('met');
+                } else {
+                    el.classList.remove('met');
+                }
+            });
+
+            let level = 'weak';
+            if (strength >= 80)      level = 'strong';
+            else if (strength >= 60) level = 'good';
+            else if (strength >= 40) level = 'fair';
+
+            strengthBar.className  = 'strength-bar ' + level;
+            strengthText.className = 'strength-text ' + level;
+            strengthText.textContent = `Password Strength: ${level.charAt(0).toUpperCase() + level.slice(1)} (${metRequirements}/5 requirements met)`;
+
+            registerBtn.disabled = strength < 80;
+        });
+
+        if (passwordInput.value) {
+            passwordInput.dispatchEvent(new Event('input'));
+        }
+    </script>
 
        <!-- Three.js 3D Logo -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
