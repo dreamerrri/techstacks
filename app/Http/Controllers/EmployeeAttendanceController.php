@@ -8,6 +8,7 @@ use App\Models\PayrollPeriod;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class EmployeeAttendanceController extends Controller
 {
@@ -116,6 +117,43 @@ class EmployeeAttendanceController extends Controller
             'remarks' => 'nullable|string|max:255',
         ]);
 
+        // Auto-clock-out if exceeding 9 hours
+        $autoClockOutApplied = false;
+        $originalTimeOut = $validated['time_out'] ?? null;
+        
+        if (!empty($validated['time_in']) && !empty($validated['time_out'])) {
+            $timeIn = Carbon::createFromFormat('H:i', $validated['time_in']);
+            $timeOut = Carbon::createFromFormat('H:i', $validated['time_out']);
+            
+            // Calculate total minutes
+            $totalMinutes = $timeOut->diffInMinutes($timeIn);
+            if ($totalMinutes < 0) {
+                $totalMinutes = abs($totalMinutes);
+            }
+            
+            // Convert to hours and apply break logic (1 hour break for shifts > 4 hours)
+            $hours = $totalMinutes / 60;
+            if ($hours > 4) {
+                $hours -= 1;
+            }
+            
+            // If exceeding 9 hours, auto-clock-out at 9 hours
+            if ($hours > 9) {
+                // Calculate the time_out that would result in exactly 9 hours
+                // 9 hours + 1 hour break = 10 hours total from time_in
+                $maxTimeOut = $timeIn->copy()->addHours(10);
+                $validated['time_out'] = $maxTimeOut->format('H:i');
+                $autoClockOutApplied = true;
+                
+                \Log::info('Auto clock-out applied: exceeded 9 hours', [
+                    'original_time_out' => $timeOut->format('H:i'),
+                    'auto_time_out' => $validated['time_out'],
+                    'employee_id' => $employee->id,
+                    'date' => $validated['date'],
+                ]);
+            }
+        }
+
         // Log the received data for debugging
         \Log::info('Attendance save attempt', [
             'time_in' => $validated['time_in'] ?? 'null',
@@ -165,10 +203,16 @@ class EmployeeAttendanceController extends Controller
             'computed_days' => $attendance->computed_days,
         ]);
 
+        $message = 'Attendance recorded successfully.';
+        if ($autoClockOutApplied) {
+            $message = 'Attendance recorded successfully. Auto clock-out applied (exceeded 9 hours).';
+        }
+
         return response()->json([
             'success' => true,
-            'message' => 'Attendance recorded successfully.',
+            'message' => $message,
             'attendance' => $attendance,
+            'auto_clock_out_applied' => $autoClockOutApplied,
         ]);
     }
 

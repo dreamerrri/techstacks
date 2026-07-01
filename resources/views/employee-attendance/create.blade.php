@@ -143,6 +143,15 @@
             </div>
         </div>
 
+        <div style="background:#fef3c7; border:1px solid #fcd34d; border-radius:6px; padding:16px; margin-bottom:24px;">
+            <div style="font-size:13px; font-weight:600; color:#92400e; margin-bottom:8px;">
+                <i class="icon-[ph--warning-fill]"></i> Auto Clock-Out
+            </div>
+            <p style="margin:0; font-size:13px; color:#92400e;">
+                Attendance will automatically clock out at 9 hours (including 1-hour break). Any time beyond 9 hours will not be recorded.
+            </p>
+        </div>
+
         <div style="display:flex; gap:12px;">
             <button type="submit" id="saveAttendanceBtn"
                     style="flex:1; padding:12px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">
