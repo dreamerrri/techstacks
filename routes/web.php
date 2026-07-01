@@ -35,6 +35,21 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/register',  [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+
+
+     Route::get('/reset',  [AuthController::class, 'showReset'])->name('reset');
+   
+
+    Route::post('/password/reset/send', [AuthController::class, 'sendResetEmail'])
+    ->name('password.reset.submit');
+
+    
+     Route::get('/updatePassword',  [AuthController::class, 'showUpdatePassword'])->name('updatePassword');
+
+       Route::post('/password/update/send', [AuthController::class, 'updatePassword'])
+    ->name('password.update.submit');
+
+    
 });
 
 // Protected Routes

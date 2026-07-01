@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Employee;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\PasswordResetRequest;
 use App\Services\PasswordValidator;
 use App\Services\JWTTokenService;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Traits\LogsAudit;
+use Illuminate\Support\Facades\Password;
 
 
 class AuthController extends Controller
@@ -27,6 +29,40 @@ class AuthController extends Controller
     {
         return view('auth.register');
     }
+
+    public function showReset()
+    {
+        return view('auth.reset');
+    }
+  public function showUpdatePassword(Request $request)
+{
+    return view('auth.update-password', [
+        'token' => $request->query('token'),
+        'email' => $request->query('email'),
+    ]);
+}
+
+public function updatePassword(Request $request)
+{
+    $request->validate([
+        'token'    => 'required',
+        'email'    => 'required|email',
+        'password' => 'required|min:8|confirmed',
+    ]);
+
+    $status = Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function (User $user, string $password) {
+            $user->forceFill([
+                'password' => Hash::make($password),
+            ])->save();
+        }
+    );
+
+    return $status === Password::PASSWORD_RESET
+        ? redirect()->route('login')->with('success', __($status))
+        : back()->withErrors(['email' => __($status)]);
+}
 
     /**
      * Handle login — all roles land on the same /dashboard route.
@@ -128,6 +164,18 @@ class AuthController extends Controller
 
        return redirect()->route('login')->with('success', 'Registration successful! Please log in.');
     }
+
+
+  public function sendResetEmail(Request $request)
+{
+    $request->validate(['email' => 'required|email']);
+
+    $status = Password::sendResetLink($request->only('email'));
+
+    return $status === Password::RESET_LINK_SENT
+        ? back()->with('success', __($status))
+        : back()->withErrors(['email' => __($status)]);
+}
 
     /**
      * Dashboard — single route, role-scoped data.

@@ -93,7 +93,7 @@ body {
 
 /* Inner form container */
 .auth-form-inner {
-    margin-top: 60px;
+  
   
     width: 100%;
     max-width: 400px;
@@ -295,7 +295,7 @@ body {
 }
 
 /* ── Submit button ── */
-.register-btn {
+.reset-btn {
     width: 100%;
     padding: 12px;
     background: #00c896;
@@ -308,17 +308,17 @@ body {
     transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
-.register-btn:hover {
+.reset-btn:hover {
     background: #00b386;
     transform: translateY(-2px);
     box-shadow: 0 5px 20px rgba(0, 200, 150, 0.35);
 }
 
-.register-btn:active {
+.reset-btn:active {
     transform: translateY(0);
 }
 
-.register-btn:disabled {
+.reset-btn:disabled {
     opacity: 0.7;
     cursor: not-allowed;
     transform: none;

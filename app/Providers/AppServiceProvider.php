@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Notifications\Messages\MailMessage;
 use App\Models\{Employee, Attendance, PayrollPeriod, PayrollInput, Allowance, Benefit, User, Role};
 use App\Observers\{EmployeeObserver, AttendanceObserver, PayrollPeriodObserver, PayrollInputObserver, AllowanceObserver, BenefitObserver, UserObserver, RoleObserver};
 
@@ -32,5 +34,26 @@ class AppServiceProvider extends ServiceProvider
         Benefit::observe(BenefitObserver::class);
         User::observe(UserObserver::class);
         Role::observe(RoleObserver::class);
-    }
+    
+
+
+ 
+    ResetPassword::toMailUsing(function ($notifiable, $token) {
+        $resetUrl = url(route('updatePassword', [
+    'token' => $token,
+    'email' => $notifiable->getEmailForPasswordReset(),
+], false));
+
+        return (new MailMessage)
+            ->subject('Reset Your LogiPay Password')
+            ->view('emails.reset-password', [
+                'resetUrl' => $resetUrl,
+                'email'    => $notifiable->getEmailForPasswordReset(),
+                'name'     => $notifiable->name ?? null,
+                'expireMinutes' => config('auth.passwords.users.expire', 60),
+            ]);
+    });
 }
+}
+
+

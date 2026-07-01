@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
-    <title>Register - HR Management System</title>
+    <title>Reset Password - HR Management System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    @vite(['resources/css/register.css', 'resources/js/app.js'])
+    @vite(['resources/css/reset.css', 'resources/js/app.js'])
 </head>
 <body>
     <div class="auth-layout">
@@ -32,8 +32,8 @@
             <div class="auth-form-inner">
 
                 <div class="form-header">
-                    <h3>Create Account</h3>
-                    <p>Join our HR Management System</p>
+                    <h3>Update Password</h3>
+                    <p>Enter your new password</p>
                 </div>
 
                 @if ($errors->any())
@@ -43,50 +43,13 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('register') }}" id="registerForm" novalidate>
-                    @csrf
+<form method="POST" action="{{ route('password.update.submit') }}">
+    @csrf
 
-                    <div class="form-group">
-                        <label for="name">
-                            <i class="icon-[ph--user-fill]"></i> Full Name
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            placeholder="John Doe"
-                            value="{{ old('name') }}"
-                            required
-                        >
-                        @error('name')
-                            <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
+    <input type="hidden" name="token" value="{{ $token }}">
+    <input type="hidden" name="email" value="{{ $email }}">
 
-                    <div class="form-group">
-                        <label for="email">
-                            <i class="icon-[ph--envelope-fill]"></i> Email Address
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="john@company.com"
-                            value="{{ old('email') }}"
-                            required
-                        >
-                        @error('email')
-                            <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
+       <div class="form-group">
                         <label for="password">
                             <i class="icon-[ph--lock-fill]"></i> Password
                         </label>
@@ -157,10 +120,11 @@
                         @enderror
                     </div>
 
-                    <button type="submit" class="register-btn" id="registerBtn">
-                        <i class="icon-[ph--user-fill]-plus"></i> Create Account
-                    </button>
-                </form>
+  
+    <button type="submit" class="reset-btn" id="resetBtn">
+        <i class="icon-[ph--arrow-clockwise]"></i> Update Password
+    </button>
+</form>
 
                 <div class="auth-footer-link">
                     <p>Already have an account? <a href="{{ route('login') }}">Login here</a></p>
