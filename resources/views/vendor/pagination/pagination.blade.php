@@ -1,10 +1,23 @@
+   <div class="flex items-center justify-between">
+   
+   <p class="text-sm text-gray-500 mt-2">
+    Showing {{ $paginator->firstItem() }} to {{ $paginator->lastItem() }} of {{ $paginator->total() }} results
+</p>
 @if ($paginator->hasPages())
-    <nav class="flex items-center gap-x-1">
+
+    <nav class="flex items-center justify-end gap-x-1">
+        
         {{-- Previous --}}
         @if ($paginator->onFirstPage())
-            <button type="button" class="btn btn-soft btn-disabled" disabled>Previous</button>
+            <button type="button" class="btn btn-soft btn-disabled" disabled>    
+                <span class="icon-[tabler--chevron-left] size-5 rtl:rotate-180" disabled></span>
+            </button>
+
+  </button>
         @else
-            <a href="{{ $paginator->previousPageUrl() }}" class="btn btn-soft">Previous</a>
+            <a href="{{ $paginator->previousPageUrl() }}" class="btn btn-soft">
+                <span class="icon-[tabler--chevron-left] size-5 rtl:rotate-180" disabled></span>
+            </a>
         @endif
 
         {{-- Page Numbers --}}
@@ -17,7 +30,7 @@
                 @if (is_array($element))
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
-                            <button type="button" class="btn btn-soft btn-square btn-primary" aria-current="page">{{ $page }}</button>
+                            <button type="button" class="btn btn-soft btn-square btn-success bg-success/20" aria-current="page">{{ $page }}</button>
                         @else
                             <a href="{{ $url }}" class="btn btn-soft btn-square">{{ $page }}</a>
                         @endif
@@ -28,14 +41,19 @@
 
         {{-- Next --}}
         @if ($paginator->hasMorePages())
-            <a href="{{ $paginator->nextPageUrl() }}" class="btn btn-soft">Next</a>
+
+
+            <a href="{{ $paginator->nextPageUrl() }}" class="btn btn-soft">    
+                <span class="icon-[tabler--chevron-right] size-5 rtl:rotate-180"></span>
+</a>
         @else
-            <button type="button" class="btn btn-soft btn-disabled" disabled>Next</button>
+            <button type="button" class="btn btn-soft btn-disabled" disabled>    
+                <span class="icon-[tabler--chevron-right] size-5 rtl:rotate-180"></span>
+</button>
         @endif
     </nav>
 
-    <p class="text-sm text-gray-500 mt-2">
-    Showing {{ $paginator->firstItem() }} to {{ $paginator->lastItem() }} of {{ $paginator->total() }} results
-</p>
+
 @endif
 
+</div>
