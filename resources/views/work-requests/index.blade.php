@@ -70,7 +70,7 @@
         </div>
         <div style="margin-top:20px;">
             <button type="submit" style="padding:8px 16px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">
-                <i class="iicon-[ph--funnel-fill]"></i> Filter
+                <i class="icon-[ph--funnel-fill]"></i> Filter
             </button>
             <a href="{{ route('work-requests.index') }}" style="padding:8px 16px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-block; margin-left:8px;">
                 Clear
@@ -84,8 +84,8 @@
 <div class="card" style="padding:0; overflow:hidden;">
     <div style="overflow-x:auto;">
         <table style="width:100%; border-collapse:collapse;">
-            <thead>
-                <tr style="background:#f9fafb;">
+             <thead class="bg-success/20">
+                <tr >
                     <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Date</th>
                     @if($admin || $hr)
                     <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Employee</th>
@@ -97,59 +97,59 @@
                     <th style="padding:12px 16px; text-align:center; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach($workRequests as $request)
-                <tr style="border-bottom:1px solid #e5e7eb;">
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                        {{ $request->created_at->format('M d, Y') }}
-                    </td>
-                    @if($admin || $hr)
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                        {{ $request->employee->full_name }}
-                    </td>
-                    @endif
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                        <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600; 
-                            {{ $request->request_type === 'weekend' ? 'background:#dbeafe; color:#1e40af;' : 
-                               ($request->request_type === 'holiday' ? 'background:#fef3c7; color:#92400e;' : 'background:#e0e7ff; color:#3730a3;') }}">
-                            {{ ucfirst($request->request_type) }}
-                        </span>
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                        {{ $request->work_date->format('M d, Y') }}
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#6b7280;">
-                        {{ $request->start_time ? $request->start_time : '-' }} 
-                        @if($request->end_time) - {{ $request->end_time }}@endif
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px;">
-                        <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600;
-                            {{ $request->status === 'pending' ? 'background:#fef3c7; color:#92400e;' :
-                               ($request->status === 'approved' ? 'background:#d1fae5; color:#065f46;' :
-                               ($request->status === 'rejected' ? 'background:#fee2e2; color:#991b1b;' : 'background:#f3f4f6; color:#374151;')) }}">
-                            {{ ucfirst($request->status) }}
-                        </span>
-                    </td>
-                    <td style="padding:12px 16px; text-align:center;">
-                        <a href="{{ route('work-requests.show', $request) }}"
-                           style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
-                            <i class="icon-[ph--eye-fill]"></i>
-                        </a>
-                        {{-- Only employees can edit/cancel their own pending requests --}}
-                        @if(!$admin && !$hr && $request->canBeCancelled())
-                            <a href="{{ route('work-requests.edit', $request) }}"
-                               style="padding:6px 12px; background:#f59e0b; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
-                                <i class="icon-[ph--pencil-fill]"></i>
-                            </a>
-                            <button onclick="cancelRequest({{ $request->id }})"
-                                    style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-                                <i class="icon-[ph--x-fill]"></i>
-                            </button>
+                <tbody>
+                    @foreach($workRequests as $request)
+                    <tr class="row-hover" style="border-bottom:1px solid #e5e7eb;">
+                        <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
+                            {{ $request->created_at->format('M d, Y') }}
+                        </td>
+                        @if($admin || $hr)
+                        <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
+                            {{ $request->employee->full_name }}
+                        </td>
                         @endif
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
+                        <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
+                            <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600; 
+                                {{ $request->request_type === 'weekend' ? 'background:#dbeafe; color:#1e40af;' : 
+                                ($request->request_type === 'holiday' ? 'background:#fef3c7; color:#92400e;' : 'background:#e0e7ff; color:#3730a3;') }}">
+                                {{ ucfirst($request->request_type) }}
+                            </span>
+                        </td>
+                        <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
+                            {{ $request->work_date->format('M d, Y') }}
+                        </td>
+                        <td style="padding:12px 16px; font-size:14px; color:#6b7280;">
+                            {{ $request->start_time ? $request->start_time : '-' }} 
+                            @if($request->end_time) - {{ $request->end_time }}@endif
+                        </td>
+                        <td style="padding:12px 16px; font-size:14px;">
+                            <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600;
+                                {{ $request->status === 'pending' ? 'background:#fef3c7; color:#92400e;' :
+                                ($request->status === 'approved' ? 'background:#d1fae5; color:#065f46;' :
+                                ($request->status === 'rejected' ? 'background:#fee2e2; color:#991b1b;' : 'background:#f3f4f6; color:#374151;')) }}">
+                                {{ ucfirst($request->status) }}
+                            </span>
+                        </td>
+                        <td style="padding:12px 16px; text-align:center;">
+                            <a href="{{ route('work-requests.show', $request) }}"
+                            style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
+                                <i class="icon-[ph--eye-fill]"></i>
+                            </a>
+                            {{-- Only employees can edit/cancel their own pending requests --}}
+                            @if(!$admin && !$hr && $request->canBeCancelled())
+                                <a href="{{ route('work-requests.edit', $request) }}"
+                                style="padding:6px 12px; background:#f59e0b; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
+                                    <i class="icon-[ph--pencil-fill]"></i>
+                                </a>
+                                <button onclick="cancelRequest({{ $request->id }})"
+                                        style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
+                                    <i class="icon-[ph--x-fill]"></i>
+                                </button>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
         </table>
     </div>
 </div>

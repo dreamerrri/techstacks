@@ -20,10 +20,10 @@
     <div class="card bg-base-100 shadow-sm overflow-hidden p-0">
 
         {{-- Desktop Table --}}
-        <div class="table-responsive hidden md:block">
+        <div class="table-responsive hidden md:block ">
             <table class="table table-hover w-full text-sm">
                 <thead>
-                    <tr>
+                    <tr class="bg-success/20">
                         <th>Name</th>
                         <th>Slug</th>
                         <th>Description</th>
@@ -35,7 +35,7 @@
                 </thead>
                 <tbody>
                     @forelse($roles as $role)
-                        <tr>
+                        <tr class="row-hover">
                             <td class="font-semibold text-gray-800">{{ $role->name }}</td>
                             <td><code class="bg-gray-100 text-red-600 text-xs px-1.5 py-0.5 rounded">{{ $role->slug }}</code></td>
                             <td class="text-gray-500">{{ $role->description ?? '—' }}</td>
