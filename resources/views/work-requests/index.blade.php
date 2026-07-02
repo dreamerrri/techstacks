@@ -191,7 +191,7 @@ function cancelRequest(requestId) {
         cancelButtonText: 'Cancel'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('{{ route('work-requests.destroy', ':id') }}'.replace(':id', requestId), {
+            fetch(`{{ route('work-requests.destroy') }}/${requestId}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
