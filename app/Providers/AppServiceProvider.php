@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Mail\Transport\MailtrapApiTransport;
-use Illuminate\Support\Facades\Mail;    
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\Models\{Employee, Attendance, PayrollPeriod, PayrollInput, Allowance, Benefit, User, Role};
@@ -23,18 +21,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
     
-
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
         }
-
-        Mail::extend('mailtrap-api', function (array $config = []) {
-        return new MailtrapApiTransport(
-            apiToken: $config['api_token'],
-            host: $config['host'],
-            inboxId: $config['inbox_id'] ?? null,
-        );
-    });
 
 
         Employee::observe(EmployeeObserver::class);
