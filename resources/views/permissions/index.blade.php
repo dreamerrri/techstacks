@@ -110,7 +110,7 @@
                             </div>
 
                             <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
-                                <span><i class="icon-[ph--user-fill]-tag w-3.5"></i> {{ $permission->roles->count() }} roles</span>
+                                <span><i class="icon-[ph--user-tag-fill] w-3.5"></i>{{ $permission->roles->count() }} roles</span>
                             </div>
 
                             @if($permission->description)

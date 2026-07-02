@@ -171,11 +171,18 @@
             @endforelse
         </div>
 
-        {{-- Pagination --}}
+        {{-- Pagination 
         <div class="px-7 py-4 border-t border-gray-200">
             {{ $logs->links() }}
-        </div>
+        </div>--}}
 
+        <nav class="flex items-center gap-x-1">
+  <button type="button" class="btn btn-text">Previous</button>
+  <div class="flex items-center gap-x-1">
+    {{ $logs->links() }}
+  </div>
+  <button type="button" class="btn btn-text">Next</button>
+</nav>
     </div>
 
 @endsection

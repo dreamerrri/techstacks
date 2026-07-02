@@ -65,6 +65,16 @@ body {
     font-size: 18px !important;
 }
 
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.back-link:hover {
+    transform: translateX(-4px);
+}
 /* ── Dropdowns: no-flash pre-open state ── */
 [data-dropdown-open-users] .nav-dropdown:nth-of-type(1) .nav-dropdown-menu,
 [data-dropdown-open-settings] .nav-dropdown:nth-of-type(2) .nav-dropdown-menu {
