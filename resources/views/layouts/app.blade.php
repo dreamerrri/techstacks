@@ -169,7 +169,7 @@
                 <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
                     <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
                 </a>
-                <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="icon-[ph--calendar-check-fill]"></i><span>Work Requests</span></a>
+                <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span></a>
                 <a href="{{ route('payroll.index') }}"
                 class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                     <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
@@ -343,7 +343,7 @@
                             </a>
                             <a href="{{ route('work-requests.index') }}"
                             class="nav-item nav-sub-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--calendar-check-fill]"></i><span>Work Requests</span>
+                                <i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span>
                             </a>
                         </div>
                     </div>
@@ -399,7 +399,7 @@
                             </a>
                             <a href="{{ route('work-requests.index') }}"
                             class="nav-item nav-sub-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--calendar-check-fill]"></i><span>Work Requests</span>
+                                <i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span>
                             </a>
                         </div>
                     </div>
@@ -444,7 +444,7 @@
                     <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                         <i class="icon-[ph--receipt-fill]"></i><span>My Payslip</span>
                     </a>
-                    <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="icon-[ph--calendar-check-fill]"></i><span>Work Requests</span></a>
+                    <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span></a>
                     <a href="{{ route('employee-attendance.index') }}" class="nav-item {{ request()->routeIs('employee-attendance.*') ? 'active' : '' }}"><i class="icon-[ph--clock-fill]"></i><span>Attendance</span></a>
                 @endif
             </nav>
