@@ -21,20 +21,52 @@ class ManualPayrollAttendanceController extends Controller
      * GET /manual-payroll-attendance
      * Show the manual payroll attendance encoding interface
      */
- public function index()
+ public function index(Request $request)
 {
+    $query = PayrollPeriod::whereNotIn('status', ['archived']);
+
+    // Apply year filter
+    if ($request->filled('year')) {
+        $query->whereYear('cutoff_start', $request->year);
+    }
+
+    // Apply month filter
+    if ($request->filled('month')) {
+        $query->whereMonth('cutoff_start', $request->month);
+    }
+
+    // Apply phase filter
+    if ($request->filled('phase')) {
+        if ($request->phase == '1') {
+            $query->whereDay('cutoff_start', '<=', 15);
+        } elseif ($request->phase == '2') {
+            $query->whereDay('cutoff_start', '>', 15);
+        }
+    }
+
     try {
-        $periods = PayrollPeriod::with('payrollInputs')
-            ->whereNotIn('status', ['archived'])
+        $periods = $query->with('payrollInputs')
             ->orderByDesc('cutoff_start')
             ->get();
     } catch (\Exception $e) {
-        $periods = PayrollPeriod::whereNotIn('status', ['archived'])
-            ->orderByDesc('cutoff_start')
+        $periods = $query->orderByDesc('cutoff_start')
             ->get();
     }
 
-    return view('manual-payroll-attendance.index', compact('periods'));
+    // Get available years, months for filters
+    $availableYears = PayrollPeriod::whereNotIn('status', ['archived'])
+        ->selectRaw('DISTINCT YEAR(cutoff_start) as year')
+        ->orderByDesc('year')
+        ->pluck('year')
+        ->toArray();
+
+    $availableMonths = PayrollPeriod::whereNotIn('status', ['archived'])
+        ->selectRaw('DISTINCT MONTH(cutoff_start) as month')
+        ->orderBy('month')
+        ->pluck('month')
+        ->toArray();
+
+    return view('manual-payroll-attendance.index', compact('periods', 'availableYears', 'availableMonths'));
 }
 
     /**
