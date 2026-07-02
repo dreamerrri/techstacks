@@ -59,7 +59,7 @@
             ->latest()
             ->limit(50)
             ->get();
-        $notifCount = $notifications->count();
+        $notifCount = \App\Models\Notification::forCurrentUser()->unread()->count();
     @endphp
 
         {{-- ═══════════════════════════════════════
