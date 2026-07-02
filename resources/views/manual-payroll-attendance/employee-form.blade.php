@@ -389,15 +389,15 @@ function previewPayroll() {
                                 <span style="font-weight:600; color:#1f2937;">₱${previewData.basic_salary ? previewData.basic_salary.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                <span style="color:#6b7280;">Weekend Pay:</span>
+                                <span style="color:#6b7280;">Weekend Rate:</span>
                                 <span style="color:#10b981;">+₱${previewData.weekend_pay ? previewData.weekend_pay.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                <span style="color:#6b7280;">Overtime Pay:</span>
+                                <span style="color:#6b7280;">Overtime Rate:</span>
                                 <span style="color:#10b981;">+₱${previewData.overtime_pay ? previewData.overtime_pay.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                <span style="color:#6b7280;">Holiday Pay:</span>
+                                <span style="color:#6b7280;">Holiday Rate:</span>
                                 <span style="color:#10b981;">+₱${previewData.holiday_pay ? previewData.holiday_pay.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
