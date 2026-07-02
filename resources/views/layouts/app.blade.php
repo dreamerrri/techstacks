@@ -496,7 +496,8 @@
 
     {{-- Flash toasts --}}
     @if(session('success') || session('error') || session('warning') || session('info'))
-    <script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
         @if(session('success'))
             window.notyf?.success(@json(session('success')));
         @endif
@@ -509,8 +510,9 @@
         @if(session('info'))
             window.notyf?.open({ type: 'info', message: @json(session('info')) });
         @endif
-    </script>
-    @endif
+    });
+</script>
+@endif
 
     {{-- SweetAlert2 for confirm dialogs only --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

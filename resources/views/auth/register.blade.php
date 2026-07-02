@@ -158,7 +158,7 @@
                     </div>
 
                     <button type="submit" class="register-btn" id="registerBtn">
-                        <i class="icon-[ph--user-fill]-plus"></i> Create Account
+                        <i class="icon-[ph--user-plus-fill]"></i> Create Account
                     </button>
                 </form>
 

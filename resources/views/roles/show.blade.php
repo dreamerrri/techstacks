@@ -12,7 +12,7 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('roles.index') }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
+        <a href="{{ route('roles.index') }}" class="back-link text-gray-500 no-underline text-sm hover:text-emerald-600">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Roles
         </a>
     </div>
@@ -49,7 +49,7 @@
         {{-- Role Information --}}
         <div class="mb-8">
             <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="icon-[ph--user-fill]-tag text-red-600"></i> Role Information
+                <i class="icon-[ph--user-fill] text-red-600"></i> Role Information
             </h3>
             <div class="flex flex-col">
                 <div class="flex justify-between items-center py-3 border-b border-base-200">
@@ -106,20 +106,20 @@
         {{-- Assigned Users --}}
         <div>
             <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="icon-[ph--user-fill]s text-red-600"></i> Assigned Users ({{ $role->users->count() }})
+                <i class="icon-[ph--user-fill] text-red-600"></i> Assigned Users ({{ $role->users->count() }})
             </h3>
 
             @if($availableUsers->count() > 0)
                 <form method="POST" action="{{ route('roles.assign.user', $role) }}" class="flex gap-2 items-center flex-wrap mb-5">
                     @csrf
-                    <select name="user_id" required class="select select-bordered select-sm flex-1 min-w-48">
+                    <select name="user_id" required class="select select-bordered  select-sm flex-1 min-w-48">
                         <option value="">Select a user to assign...</option>
                         @foreach($availableUsers as $user)
                             <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
                         @endforeach
                     </select>
                     <button type="submit" class="btn btn-soft btn-error btn-sm">
-                        <i class="icon-[ph--user-fill]-plus"></i> Assign User
+                        <i class="icon-[ph--user-plus-fill]"></i> Assign User
                     </button>
                 </form>
             @endif
@@ -145,7 +145,7 @@
                                       data-confirm-btn="Yes, remove">
                                     @csrf @method('DELETE')
                                     <button class="btn btn-soft btn-error btn-sm">
-                                        <i class="icon-[ph--user-fill]-minus"></i> Remove
+                                        <i class="icon-[ph--user-minus-fill]"></i> Remove
                                     </button>
                                 </form>
                             @endif

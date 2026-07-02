@@ -13,7 +13,7 @@
 
     <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
         <div class="flex items-center gap-3 flex-wrap">
-            <a href="{{ route('employees.index') }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
+            <a href="{{ route('employees.index') }}" class="back-link text-gray-500 no-underline text-sm hover:text-emerald-600">
                 <i class="icon-[ph--arrow-left-fill]"></i> Back
             </a>
             <h2 class="text-lg font-bold text-gray-800 m-0 flex items-center gap-2">
