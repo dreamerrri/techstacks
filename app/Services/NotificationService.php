@@ -23,7 +23,7 @@ class NotificationService
         foreach ($unassigned as $emp) {
             $existing = Notification::where('type', 'unassigned_employee')
                 ->where('data->employee_id', $emp->id)
-                ->where('is_read', false)
+                ->where('is_resolved', false)
                 ->first();
 
             if (!$existing) {
@@ -54,7 +54,7 @@ class NotificationService
 
             $existing = Notification::where('type', 'missing_gov_ids')
                 ->where('data->employee_id', $emp->id)
-                ->where('is_read', false)
+                ->where('is_resolved', false)
                 ->first();
 
             if (!$existing) {
@@ -76,7 +76,7 @@ class NotificationService
         foreach ($overduePayrolls as $period) {
             $existing = Notification::where('type', 'overdue_payroll')
                 ->where('data->payroll_period_id', $period->id)
-                ->where('is_read', false)
+                ->where('is_resolved', false)
                 ->first();
 
             if (!$existing) {
@@ -100,7 +100,7 @@ class NotificationService
         foreach ($expiringAllowances as $allowance) {
             $existing = Notification::where('type', 'expiring_allowance')
                 ->where('data->allowance_id', $allowance->id)
-                ->where('is_read', false)
+                ->where('is_resolved', false)
                 ->first();
 
             if (!$existing) {
@@ -124,7 +124,7 @@ class NotificationService
         foreach ($expiringBenefits as $benefit) {
             $existing = Notification::where('type', 'expiring_benefit')
                 ->where('data->benefit_id', $benefit->id)
-                ->where('is_read', false)
+                ->where('is_resolved', false)
                 ->first();
 
             if (!$existing) {

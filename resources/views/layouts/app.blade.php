@@ -51,8 +51,15 @@
         }
 
         // Get notifications for current user based on role
-        $notifications = \App\Models\Notification::forCurrentUser()->unread()->latest()->limit(50)->get();
-        $notifCount = $notifications->count();
+        $notifications = \App\Models\Notification::forCurrentUser()
+            ->where(function($q) {
+                $q->where('is_read', false)
+                  ->orWhere('is_resolved', false);
+            })
+            ->latest()
+            ->limit(50)
+            ->get();
+        $notifCount = \App\Models\Notification::forCurrentUser()->unread()->count();
     @endphp
 
         {{-- ═══════════════════════════════════════
@@ -84,7 +91,7 @@
                             style="background:none; border:none; cursor:pointer; color:white; font-size:18px; position:relative; padding:4px;">
                         <i class="icon-[ph--bell-fill]"></i>
                         @if($notifCount > 0)
-                            <span style="position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">
+                            <span id="notifCountMobile" style="position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">
                                 {{ $notifCount > 9 ? '9+' : $notifCount }}
                             </span>
                         @endif
@@ -236,7 +243,7 @@
                             style="cursor:pointer; color:white; font-size:20px; z-index:1001; pointer-events:auto; margin-top:7px;">
                 <i class="icon-[fluent--alert-24-filled]"></i>
                         @if($notifCount > 0)
-                            <span style="position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">
+                            <span id="notifCountDesktop" style="position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">
                                 {{ $notifCount > 9 ? '9+' : $notifCount }}
                             </span>
                         @endif
