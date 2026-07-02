@@ -121,7 +121,7 @@
         <div class="table-responsive overflow-y-auto max-h-[53vh] px-7 hidden md:block table-borderless">
             <table class="table table-hover w-full text-sm">
                <thead class="sticky top-0 z-5" style="background: white">
-                    <tr>
+                    <tr class="bg-success/20">
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
@@ -333,9 +333,9 @@
         </div>
 
         {{-- Pagination --}}
-        <div class="px-7 py-4 border-t border-gray-200">
-            {{ $users->links() }}
-        </div>
+        <div class="px-6 py-4 border-t border-gray-200">
+    {{ $users->links('vendor.pagination.pagination') }}
+</div>
 
     </div>
 

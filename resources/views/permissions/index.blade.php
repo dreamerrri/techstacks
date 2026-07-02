@@ -37,7 +37,7 @@
                 <div class="table-responsive hidden md:block">
                     <table class="table table-hover w-full text-sm">
                         <thead>
-                            <tr>
+                           <tr class="bg-success/20">
                                 <th>Name</th>
                                 <th>Slug</th>
                                 <th>Description</th>
@@ -48,7 +48,7 @@
                         </thead>
                         <tbody>
                             @foreach($modulePermissions as $permission)
-                                <tr>
+                                <tr class="row-hover">
                                     <td class="font-semibold text-gray-800">{{ $permission->name }}</td>
                                     <td><code class="bg-gray-100 text-red-600 text-xs px-1.5 py-0.5 rounded">{{ $permission->slug }}</code></td>
                                     <td class="text-gray-500">{{ $permission->description ?? '—' }}</td>

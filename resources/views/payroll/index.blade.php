@@ -167,7 +167,20 @@
             <i class="icon-[ph--magnifying-glass-fill]"></i>
         </button>
     </div>
+    
   @endif
+          @if($selectedPeriod ?? null)
+        <div class="px-7 py-2 text-blue-700">
+            <i class="icon-[ph--calendar-fill]"></i>
+            <span>Showing payroll for cutoff:</span>
+            <strong>{{ $selectedPeriod->cutoff_start->format('M d, Y') }} – {{ $selectedPeriod->cutoff_end->format('M d, Y') }}</strong>
+            <span class="badge {{ $selectedPeriod->status === 'finalized' ? 'badge-soft badge-success' : 'badge-soft badge-warning' }} badge-xs">
+                {{ ucfirst($selectedPeriod->status) }}
+            </span>
+            <span class="text-gray-400 ml-1">Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}</span>
+        </div>
+    @endif
+
 
    {{-- Filters group --}}
 <div class="flex flex-row gap-2 md:ml-auto">
@@ -200,17 +213,7 @@
 </form> 
     </div>
 
-            @if($selectedPeriod ?? null)
-        <div class="px-7 py-2 bg-blue-50 border-b border-blue-100 text-blue-700 text-xs flex items-center gap-2 flex-wrap">
-            <i class="icon-[ph--calendar-fill]"></i>
-            <span>Showing payroll for cutoff:</span>
-            <strong>{{ $selectedPeriod->cutoff_start->format('M d, Y') }} – {{ $selectedPeriod->cutoff_end->format('M d, Y') }}</strong>
-            <span class="badge {{ $selectedPeriod->status === 'finalized' ? 'badge-soft badge-success' : 'badge-soft badge-warning' }} badge-xs">
-                {{ ucfirst($selectedPeriod->status) }}
-            </span>
-            <span class="text-gray-400 ml-1">Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}</span>
-        </div>
-    @endif
+  
 
     {{-- Desktop Table --}}
     <div class="overflow-x-hidden overflow-y-auto max-h-[47vh] px-7 hidden md:block">
@@ -246,7 +249,7 @@
                 <col class="w-24">  {{-- Actions --}}
             </colgroup>
            <thead class="sticky top-0 z-5" style="background: white">
-                <tr>
+               <tr class="bg-success/20">
                     <th>Employee</th>
                     <th>Department</th>
                     {!! payrollSortTh('base_pay',         'Basic Pay',        'right',  $base, $s, $d) !!}
@@ -398,9 +401,10 @@
         @endforelse
     </div>
 
-    <div class="px-7 py-4 border-t border-gray-200">
-        {{ $employees->links() }}
-    </div>
+   {{-- Pagination --}}
+      <div class="px-6 py-4 border-t border-gray-200">
+    {{ $employees->links('vendor.pagination.pagination') }}
+</div>
 
 </div>
 

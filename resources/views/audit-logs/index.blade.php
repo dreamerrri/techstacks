@@ -22,7 +22,7 @@
     {{-- Filters --}}
     <div class="card bg-base-100 shadow-sm p-5 mb-5">
         <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4 flex items-center gap-2">
-            <i class="iicon-[ph--funnel-fill]"></i> Filters
+            <i class="icon-[ph--funnel-fill]"></i> Filters
         </h2>
         <form method="GET" action="{{ route('audit-logs.index') }}">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 items-end">
@@ -56,7 +56,7 @@
                 </div>
                 <div class="flex gap-2 md:col-span-4">
                     <button type="submit" class="btn btn-soft btn-error btn-sm">
-                        <i class="iicon-[ph--funnel-fill]"></i> Filter
+                        <i class="icon-[ph--funnel-fill]"></i> Filter
                     </button>
                     <a href="{{ route('audit-logs.index') }}" class="btn btn-soft btn-sm">Clear</a>
                 </div>
@@ -71,7 +71,7 @@
         <div class="table-responsive hidden md:block">
             <table class="table table-hover w-full text-sm">
                 <thead>
-                    <tr>
+                    <tr class="bg-success/20">
                         <th>Date/Time</th>
                         <th>User</th>
                         <th>Action</th>
@@ -93,7 +93,7 @@
                                 default  => 'badge-soft',
                             };
                         @endphp
-                        <tr>
+                        <tr class="row-hover">
                             <td class="text-gray-500 text-xs whitespace-nowrap">
                                 {{ $log->created_at->format('M d, Y') }}<br>
                                 {{ $log->created_at->format('h:i:s A') }}
@@ -176,13 +176,8 @@
             {{ $logs->links() }}
         </div>--}}
 
-        <nav class="flex items-center gap-x-1">
-  <button type="button" class="btn btn-text">Previous</button>
-  <div class="flex items-center gap-x-1">
-    {{ $logs->links() }}
-  </div>
-  <button type="button" class="btn btn-text">Next</button>
-</nav>
-    </div>
-
+<div class="px-6 py-4 border-t border-gray-200">
+    {{ $logs->links('vendor.pagination.pagination') }}
+</div>
+</div>
 @endsection
