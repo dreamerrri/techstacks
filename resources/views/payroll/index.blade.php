@@ -401,9 +401,10 @@
         @endforelse
     </div>
 
-    <div class="px-7 py-4 border-t border-gray-200">
-        {{ $employees->links() }}
-    </div>
+   {{-- Pagination --}}
+      <div class="px-6 py-4 border-t border-gray-200">
+    {{ $employees->links('vendor.pagination.pagination') }}
+</div>
 
 </div>
 
