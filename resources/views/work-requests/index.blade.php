@@ -141,10 +141,10 @@
                                 style="padding:6px 12px; background:#f59e0b; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
                                     <i class="icon-[ph--pencil-fill]"></i>
                                 </a>
-                                <button onclick="cancelRequest({{ $request->id }})"
-                                        style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-                                    <i class="icon-[ph--x-fill]"></i>
-                                </button>
+                               <button onclick="cancelRequest({{ $request->id }}, '{{ route('work-requests.destroy', $request) }}')"
+        style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
+    <i class="icon-[ph--x-fill]"></i>
+</button>
                             @endif
                         </td>
                     </tr>
@@ -179,7 +179,7 @@
 <script>
 
 
-function cancelRequest(requestId) {
+function cancelRequest(requestId, url) {
     Swal.fire({
         title: 'Cancel Work Request',
         text: 'Are you sure you want to cancel this work request?',
@@ -188,10 +188,10 @@ function cancelRequest(requestId) {
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#6b7280',
         confirmButtonText: 'Yes, Cancel',
-        cancelButtonText: 'Cancel'
+        cancelButtonText: 'Keep it'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('{{ route('work-requests.destroy', ':id') }}'.replace(':id', requestId), {
+            fetch(url, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -213,7 +213,6 @@ function cancelRequest(requestId) {
         }
     });
 }
-
 
 </script>
 @endsection
