@@ -12,7 +12,7 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('roles.index') }}" class="text-gray-500 no-underline text-sm hover:text-emerald-600">
+        <a href="{{ route('roles.index') }}" class="back-link text-gray-500 no-underline text-sm hover:text-emerald-600">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Roles
         </a>
     </div>

@@ -18,7 +18,7 @@
             <p class="text-gray-500 m-0">Manage all employee records in the system.</p>
         </div>
         <a href="{{ route('employees.create') }}" class="btn btn-soft btn-error whitespace-nowrap">
-            <i class="icon-[ph--user-fill]-plus"></i> Add Employee
+            <i class="icon-[ph--user-plus-fill]"></i> Add Employee
         </a>
     </div>
 

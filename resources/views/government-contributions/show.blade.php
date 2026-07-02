@@ -14,7 +14,7 @@
     {{-- Top nav --}}
     <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
         <a href="{{ route('government-contributions.index') }}"
-           class="text-gray-500 no-underline text-sm hover:text-emerald-600 flex items-center gap-1">
+           class="back-link text-gray-500 no-underline text-sm hover:text-emerald-600 flex items-center gap-1">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Government Contributions
         </a>
         <div class="flex gap-2">
