@@ -66,7 +66,7 @@
         <div class="sticky top-0 z-10 bg-white px-6 pt-5 rounded-t-2xl">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                 <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
-                    <i class="icon-[ph--list-fill]"></i> Employee List
+                    <x-dot-loader /> Employee List
                 </h2>
                 <a href="{{ route('employees.archived') }}" class="text-gray-500 text-xs no-underline hover:text-emerald-600">
                     <i class="icon-[ph--archive-fill]"></i> View Archived
@@ -75,7 +75,7 @@
 
             {{-- Search & Filters --}}
 <form method="GET" action="{{ route('employees.index') }}"
-      class="flex flex-col md:flex-row md:items-center gap-3 pb-4 border-b border-gray-200">
+      class="flex flex-col md:flex-row md:items-center gap-3 pb-4 ">
 
     {{-- Search group --}}
     <div class="join flex-none w-64 min-w-40 ">
@@ -117,7 +117,7 @@
         </div>
 
         {{-- Desktop Table --}}
-        <div class="table-responsive overflow-y-auto max-h-[53vh] px-6 hidden md:block">
+        <div class="table-responsive overflow-y-auto max-h-[53vh] hidden md:block">
             @php
                 $s    = request('sort');
                 $d    = request('direction', 'asc');

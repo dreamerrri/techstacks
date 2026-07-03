@@ -10,6 +10,7 @@
 @section('content')
 
     {{-- Header --}}
+    
     <div class="flex justify-between items-center flex-wrap gap-3 mb-6">
         <div>
             <span class="badge badge-soft badge-success mb-2">
@@ -60,13 +61,13 @@
     <div class="sticky top-0 z-10 bg-white px-7 pt-5 rounded-t-2xl">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
             <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
-                <i class="icon-[ph--list-fill]"></i> User Accounts
+               <x-dot-loader /> User Accounts
             </h2>
             
         </div>
 
      <form id="filter-form" method="GET" action="{{ route('users.index') }}"
-      class="flex flex-col md:flex-row md:items-center gap-3 pb-4 border-b border-gray-200">
+      class="flex flex-col md:flex-row md:items-center gap-3 pb-4">
 
     {{-- Search group --}}
     <div class="join flex-none w-64 min-w-40">
@@ -118,7 +119,7 @@
 
 
         {{-- Desktop Table --}}
-        <div class="table-responsive overflow-y-auto max-h-[53vh] px-7 hidden md:block table-borderless">
+        <div class="table-responsive overflow-y-auto max-h-[53vh] hidden md:block table-borderless">
             <table class="table table-hover w-full text-sm">
                <thead class="sticky top-0 z-5" style="background: white">
                     <tr class="bg-success/20">
