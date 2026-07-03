@@ -9,16 +9,7 @@
 
 @section('content')
 
-    {{-- Header --}}
-    
-    <div class="flex justify-between items-center flex-wrap gap-3 mb-6">
-        <div>
-            <span class="badge badge-soft badge-success mb-2">
-                <i class="icon-[ph--user-fill]s-cog"></i> User Management
-            </span>
-            <p class="text-gray-500 m-0">Manage system accounts, roles, and access.</p>
-        </div>
-    </div>
+
 
     {{-- Stats --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
@@ -62,6 +53,18 @@
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
             <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
                <x-dot-loader /> User Accounts
+
+
+                               <div class="tooltip [--placement:right]">
+    <span class="tooltip-toggle cursor-pointer text-gray-400 hover:text-gray-600" aria-label="More info">
+        <i class="icon-[ph--info-fill]"></i>
+    </span>
+    <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
+        <span class="tooltip-body  bg-success/67 shadow-md rounded-lg px-3 py-2 text-xs normal-case">
+           Manage system accounts, roles, and access.
+        </span>
+    </span>
+</div>
             </h2>
             
         </div>
@@ -122,7 +125,7 @@
         <div class="table-responsive overflow-y-auto max-h-[53vh] hidden md:block table-borderless">
             <table class="table table-hover w-full text-sm">
                <thead class="sticky top-0 z-5" style="background: white">
-                    <tr class="bg-success/20">
+                   <tr class="bg-success/67 shadow-md text-white">
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
@@ -133,11 +136,11 @@
                                 $loginActive = request('sort') === 'last_login_at';
                             @endphp
                             <a href="{{ route('users.index', array_merge(request()->except(['sort','direction','page']), ['sort' => 'last_login_at', 'direction' => $loginDir])) }}"
-                               class="inline-flex items-center gap-1 no-underline uppercase tracking-wider text-xs {{ $loginActive ? 'text-red-600 font-bold' : 'text-gray-500 font-semibold' }}">
+                               class="inline-flex items-center gap-1 no-underline uppercase tracking-wider {{ $loginActive ? 'text-white' : 'text-white' }}">
                                 Last Login
-                                <span class="inline-flex flex-col leading-none gap-px">
-                                    <i class="icon-[ph--caret-up-fill] text-[9px] {{ ($loginActive && request('direction') === 'asc') ? 'text-red-600' : 'text-gray-300' }}"></i>
-                                    <i class="icon-[ph--caret-down-fill] text-[9px] {{ ($loginActive && request('direction') === 'desc') ? 'text-red-600' : 'text-gray-300' }}"></i>
+                                <span class="inline-flex flex-col leading-none">
+                                    <i class="icon-[ph--caret-up-fill] text-[9px] {{ ($loginActive && request('direction') === 'asc') ? 'text-red-600' : 'text-white' }}"></i>
+                                    <i class="icon-[ph--caret-down-fill] text-[9px] {{ ($loginActive && request('direction') === 'desc') ? 'text-red-600' : 'text-white' }}"></i>
                                 </span>
                             </a>
                         </th>

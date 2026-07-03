@@ -122,29 +122,36 @@
     </div>
 </div>
 
-{{-- Header --}}
-<div class="flex justify-between items-center flex-wrap gap-3 mb-6">
-    <div>
-        <span class="badge badge-soft badge-warning mb-2">
-            <i class="icon-[ph--money-fill]"></i> Payroll Preview
-        </span>
-        <p class="text-gray-500 m-0">
-            @if($isAdmin || $isHR)
-                View payroll calculations for all employees.
-            @else
-                View your payroll calculation.
-            @endif
-        </p>
-    </div>
-</div>
+
 
 {{-- Filters + Table --}}
-<div class="card bg-base-100 shadow-sm overflow-hidden flex flex-col p-0">
+<div class="card bg-base-100 shadow-sm  flex flex-col p-0">
 
     <div class="sticky top-0 z-10 bg-white px-7 pt-5 rounded-t-2xl">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
             <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
                 <x-dot-loader /> Payroll Summary
+        
+
+                
+
+
+<div class="tooltip [--placement:right]">
+    <span class="tooltip-toggle cursor-pointer text-gray-400 hover:text-gray-600" aria-label="More info">
+        <i class="icon-[ph--info-fill]"></i>
+    </span>
+    <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
+        <span class="tooltip-body  bg-success/67 shadow-md rounded-lg px-3 py-2 text-xs normal-case">
+             @if($isAdmin || $isHR)
+                View payroll calculations for all employees.
+            @else
+                View your payroll calculation.
+            @endif
+        </span>
+    </span>
+</div>
+
+
             </h2>
             @if($isAdmin || $isHR)
                 <button onclick="openDeptModal()" class="btn btn-soft btn-error btn-sm">
@@ -169,73 +176,84 @@
     </div>
     
   @endif
-          @if($selectedPeriod ?? null)
-        <div class="px-7 py-2 text-blue-700">
-            <i class="icon-[ph--calendar-fill]"></i>
-            <span>Showing payroll for cutoff:</span>
-            <strong>{{ $selectedPeriod->cutoff_start->format('M d, Y') }} – {{ $selectedPeriod->cutoff_end->format('M d, Y') }}</strong>
-            <span class="badge {{ $selectedPeriod->status === 'finalized' ? 'badge-soft badge-success' : 'badge-soft badge-warning' }} badge-xs">
-                {{ ucfirst($selectedPeriod->status) }}
-            </span>
-            <span class="text-gray-400 ml-1">Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}</span>
-        </div>
-    @endif
 
+  
+@if($selectedPeriod ?? null)
+    <div class="text-blue-700 flex items-center gap-2 flex-wrap text-sm">
+        <i class="icon-[ph--calendar-fill]"></i>
+
+        <strong>
+            {{ $selectedPeriod->cutoff_start->format('M d, Y') }}
+            –
+            {{ $selectedPeriod->cutoff_end->format('M d, Y') }}
+        </strong>
+
+        <span class="badge {{ $selectedPeriod->status === 'finalized' ? 'badge-soft badge-success' : 'badge-soft badge-warning' }} badge-sm">
+            {{ ucfirst($selectedPeriod->status) }}
+        </span>
+
+        <span class="text-gray-400">|</span>
+
+        <span class="text-red-400 text-sm">
+            <strong>Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}</strong>
+            
+        </span>
+    </div>
+@endif
+   
 
    {{-- Filters group --}}
-<div class="flex flex-row gap-2 md:ml-auto">
-    @if($isAdmin || $isHR)
-        <select name="department"
-                onchange="this.closest('form').submit()"
-                class="select select-bordered select-sm">
-            <option value="">All Departments</option>
-            @foreach($departments as $dept)
-                <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+    <div class="flex flex-row gap-2 md:ml-auto">
+        @if($isAdmin || $isHR)
+            <select name="department"
+                    onchange="this.closest('form').submit()"
+                    class="select select-bordered select-sm w-35">
+                <option value="">All Departments</option>
+                @foreach($departments as $dept)
+                    <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                @endforeach
+            </select>
+        @endif
+        <select name="payroll_period_id"
+                onchange="this.closest('form').submit()"  {{-- auto reloads form --}}
+                class="select select-bordered select-sm w-40">
+            <option value="">Latest Cutoff</option>
+            @foreach($payrollPeriods as $period)
+                <option value="{{ $period->id }}"
+                    {{ (string) request('payroll_period_id') === (string) $period->id ? 'selected' : '' }}>
+                    {{ $period->cutoff_start->format('M d') }} – {{ $period->cutoff_end->format('M d, Y') }}
+                    ({{ ucfirst($period->status) }})
+                </option>
             @endforeach
         </select>
-    @endif
-    <select name="payroll_period_id"
-            onchange="this.closest('form').submit()"  {{-- auto reloads form --}}
-            class="select select-bordered select-sm">
-        <option value="">Latest Cutoff</option>
-        @foreach($payrollPeriods as $period)
-            <option value="{{ $period->id }}"
-                {{ (string) request('payroll_period_id') === (string) $period->id ? 'selected' : '' }}>
-                {{ $period->cutoff_start->format('M d') }} – {{ $period->cutoff_end->format('M d, Y') }}
-                ({{ ucfirst($period->status) }})
-            </option>
-        @endforeach
-    </select>
-    @if(request()->hasAny(['search', 'department', 'payroll_period_id']))
-        <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-sm">Clear</a>
-    @endif
-</div>
+        @if(request()->hasAny(['search', 'department', 'payroll_period_id']))
+            <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-sm">Clear</a>
+        @endif
+    </div>
 </form> 
     </div>
-
   
 
     {{-- Desktop Table --}}
     <div class="overflow-x-hidden overflow-y-auto max-h-[47vh]  hidden md:block">
-        @php
-            $s    = request('sort');
-            $d    = request('direction', 'asc');
-            $base = array_merge(request()->except(['sort','direction','page']));
-            function payrollSortTh(string $key, string $label, string $align, array $base, ?string $s, string $d): string {
-                $active  = $s === $key;
-                $nextDir = ($active && $d === 'asc') ? 'desc' : 'asc';
-                $url     = route('payroll.index', array_merge($base, ['sort' => $key, 'direction' => $nextDir]));
-                $upCol   = ($active && $d === 'asc')  ? '#dc2626' : '#d1d5db';
-                $dnCol   = ($active && $d === 'desc') ? '#dc2626' : '#d1d5db';
-                $color   = $active ? 'text-red-600 font-bold' : 'text-gray-500 font-semibold';
-                return '<th class="text-' . $align . '"><a href="' . $url . '" class="inline-flex items-center gap-1 no-underline uppercase tracking-wider text-xs ' . $color . '">'
-                     . $label
-                     . '<span class="inline-flex flex-col leading-none gap-px">'
-                     . '<i class="icon-[ph--caret-up-fill]" style="font-size:9px; color:' . $upCol . ';"></i>'
-                     . '<i class="icon-[ph--caret-down-fill]" style="font-size:9px; color:' . $dnCol . ';"></i>'
-                     . '</span></a></th>';
-            }
-        @endphp
+       @php
+    $s    = request('sort');
+    $d    = request('direction', 'asc');
+    $base = array_merge(request()->except(['sort','direction','page']));
+    function payrollSortTh(string $key, string $label, string $align, array $base, ?string $s, string $d): string {
+        $active  = $s === $key;
+        $nextDir = ($active && $d === 'asc') ? 'desc' : 'asc';
+        $url     = route('payroll.index', array_merge($base, ['sort' => $key, 'direction' => $nextDir]));
+        $upCol   = ($active && $d === 'asc')  ? 'text-red-600' : 'text-white';
+        $dnCol   = ($active && $d === 'desc') ? 'text-red-600' : 'text-white';
+        return '<th class="text-' . $align . '"><a href="' . $url . '" class="inline-flex items-center gap-1 tracking-wider text-white">'
+             . $label
+             . '<span class="inline-flex flex-col leading-none">'
+             . '<i class="icon-[ph--caret-up-fill] text-[9px] ' . $upCol . '"></i>'
+             . '<i class="icon-[ph--caret-down-fill] text-[9px] ' . $dnCol . '"></i>'
+             . '</span></a></th>';
+    }
+@endphp
         <table class="table table-hover table-fixed w-full text-sm table-borderless">
             <colgroup>
                 <col class="w-48">  {{-- Employee --}}
@@ -249,7 +267,7 @@
                 <col class="w-24">  {{-- Actions --}}
             </colgroup>
            <thead class="sticky top-0 z-5" style="background: white">
-               <tr class="bg-success/20">
+               <tr class="bg-success/67 shadow-md text-white">
                     <th>Employee</th>
                     <th>Department</th>
                     {!! payrollSortTh('base_pay',         'Basic Pay',        'right',  $base, $s, $d) !!}
@@ -324,7 +342,7 @@
             <div class="card bg-base-100 border border-gray-200 p-4">
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br {{ $avatarClass }} flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                        <div class="w-10 h-10 rounded-full bg-linear-to-br {{ $avatarClass }} flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                             {{ strtoupper(substr($employee->full_name, 0, 1)) }}
                         </div>
                         <div>
@@ -350,7 +368,8 @@
                         <span>View Payroll Breakdown</span>
                         <i class="icon-[ph--caret-down-fill] text-[11px]"></i>
                     </button>
-                    <div class="hidden pb-1 flex flex-col gap-2 text-xs">
+
+                    <div class=" pb-1 flex flex-col gap-2 text-xs">
                         @foreach([
                             ['Days Worked',          $payroll['attendance_data']['days_worked'] ?? 0,               'text-gray-800 font-semibold'],
                             ['Overtime Hours',        $payroll['attendance_data']['overtime_hours'] ?? 0,            'text-amber-500'],

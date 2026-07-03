@@ -1,0 +1,11 @@
+/*
+ * FlyonUI complete setup — DO NOT split these lines across files.
+ * All three are required together or components silently half-work:
+ *   1. @plugin        → static component classes (btn, card, badge, tooltip, etc.)
+ *   2. @import variants.css → custom variants for JS-driven state (tooltip-shown:, dropdown-open:, etc.)
+ *   3. @source flyonui.js   → lets Tailwind see classes FlyonUI's JS injects at runtime,
+ *                              needed since node_modules is gitignored
+ */
+@plugin 'flyonui';
+@import 'flyonui/variants.css';
+@source '../../node_modules/flyonui/flyonui.js';
