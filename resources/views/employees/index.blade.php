@@ -66,7 +66,7 @@
         <div class="sticky top-0 z-10 bg-white px-6 pt-5 rounded-t-2xl">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                 <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
-                    <i class="icon-[ph--list-fill]"></i> Employee List
+                    <x-dot-loader /> Employee List
                 </h2>
                 <a href="{{ route('employees.archived') }}" class="text-gray-500 text-xs no-underline hover:text-emerald-600">
                     <i class="icon-[ph--archive-fill]"></i> View Archived
