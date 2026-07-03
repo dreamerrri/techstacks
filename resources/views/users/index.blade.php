@@ -66,7 +66,7 @@
         </div>
 
      <form id="filter-form" method="GET" action="{{ route('users.index') }}"
-      class="flex flex-col md:flex-row md:items-center gap-3 pb-4 border-b border-gray-200">
+      class="flex flex-col md:flex-row md:items-center gap-3 pb-4">
 
     {{-- Search group --}}
     <div class="join flex-none w-64 min-w-40">
@@ -118,7 +118,7 @@
 
 
         {{-- Desktop Table --}}
-        <div class="table-responsive overflow-y-auto max-h-[53vh] px-7 hidden md:block table-borderless">
+        <div class="table-responsive overflow-y-auto max-h-[53vh] hidden md:block table-borderless">
             <table class="table table-hover w-full text-sm">
                <thead class="sticky top-0 z-5" style="background: white">
                     <tr class="bg-success/20">
