@@ -9,18 +9,6 @@
 
 @section('content')
 
-    {{-- Header --}}
-    <div class="flex justify-between items-center flex-wrap gap-3 mb-6">
-        <div>
-            <span class="badge badge-soft badge-success mb-2">
-                <i class="icon-[ph--user-fill]"></i> Employee Management
-            </span>
-            <p class="text-gray-500 m-0">Manage all employee records in the system.</p>
-        </div>
-        <a href="{{ route('employees.create') }}" class="btn btn-soft btn-error whitespace-nowrap">
-            <i class="icon-[ph--user-plus-fill]"></i> Add Employee
-        </a>
-    </div>
 
     {{-- Stat --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
@@ -67,7 +55,19 @@
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                 <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
                     <x-dot-loader /> Employee List
+                    
+                <div class="tooltip [--placement:right]">
+    <span class="tooltip-toggle cursor-pointer text-gray-400 hover:text-gray-600" aria-label="More info">
+        <i class="icon-[ph--info-fill]"></i>
+    </span>
+    <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
+        <span class="tooltip-body  bg-success/67 shadow-md rounded-lg px-3 py-2 text-xs normal-case">
+           Manage all employee records in the system.
+        </span>
+    </span>
+</div>
                 </h2>
+
                 <a href="{{ route('employees.archived') }}" class="text-gray-500 text-xs no-underline hover:text-emerald-600">
                     <i class="icon-[ph--archive-fill]"></i> View Archived
                 </a>
@@ -118,28 +118,28 @@
 
         {{-- Desktop Table --}}
         <div class="table-responsive overflow-y-auto max-h-[53vh] hidden md:block">
-            @php
-                $s    = request('sort');
-                $d    = request('direction', 'asc');
-                $base = request()->except(['sort', 'direction', 'page']);
-                function empSortTh(string $key, string $label, array $base, ?string $s, string $d): string {
-                    $active  = $s === $key;
-                    $nextDir = ($active && $d === 'asc') ? 'desc' : 'asc';
-                    $url     = route('employees.index', array_merge($base, ['sort' => $key, 'direction' => $nextDir]));
-                    $upCol   = ($active && $d === 'asc')  ? '#dc2626' : '#d1d5db';
-                    $dnCol   = ($active && $d === 'desc') ? '#dc2626' : '#d1d5db';
-                    $color   = $active ? 'text-red-600 font-bold' : 'text-gray-500 font-semibold';
-                    return '<th><a href="' . $url . '" class="inline-flex items-center gap-1 no-underline uppercase tracking-wider text-xs ' . $color . '">'
-                         . $label
-                         . '<span class="inline-flex flex-col leading-none gap-px">'
-                         . '<i class="icon-[ph--caret-up-fill]" style="font-size:9px; color:' . $upCol . ';"></i>'
-                         . '<i class="icon-[ph--caret-down-fill]" style="font-size:9px; color:' . $dnCol . ';"></i>'
-                         . '</span></a></th>';
-                }
-            @endphp
+          @php
+    $s    = request('sort');
+    $d    = request('direction', 'asc');
+    $base = request()->except(['sort', 'direction', 'page']);
+    function empSortTh(string $key, string $label, array $base, ?string $s, string $d): string {
+        $active  = $s === $key;
+        $nextDir = ($active && $d === 'asc') ? 'desc' : 'asc';
+        $url     = route('employees.index', array_merge($base, ['sort' => $key, 'direction' => $nextDir]));
+        $upCol   = ($active && $d === 'asc')  ? 'text-red-600' : 'text-white';
+        $dnCol   = ($active && $d === 'desc') ? 'text-red-600' : 'text-white';
+        $color   = $active ? 'text-red-600' : 'text-white';
+        return '<th><a href="' . $url . '" class="inline-flex items-center gap-1 no-underline uppercase tracking-wider text-white ' . $color . '">'
+             . $label
+             . '<span class="inline-flex flex-col leading-none">'
+             . '<i class="icon-[ph--caret-up-fill] text-[9px] ' . $upCol . '"></i>'
+             . '<i class="icon-[ph--caret-down-fill] text-[9px] ' . $dnCol . '"></i>'
+             . '</span></a></th>';
+    }
+@endphp
             <table class="table table-hover w-full text-sm table-borderless ">
                <thead class="sticky top-0 z-5" style="background: white">
-                    <tr class="bg-success/20">
+                    <tr class="bg-success/67 shadow-md text-white">
                         <th>Employee ID</th>
                         <th>Full Name</th>
                         <th>Department</th>

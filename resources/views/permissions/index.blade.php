@@ -15,6 +15,8 @@
         <a href="{{ route('permissions.create') }}" class="btn btn-soft btn-error btn-sm">
             <i class="icon-[ph--plus-fill]"></i> Create Permission
         </a>
+
+        
     </div>
 
     @foreach($permissions as $module => $modulePermissions)
@@ -22,7 +24,7 @@
 
             {{-- Module header --}}
             <div class="flex items-center gap-3 mb-3">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                <div class="w-8 h-8 rounded-full bg-linear-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                     {{ strtoupper(substr($module, 0, 1)) }}
                 </div>
                 <h3 class="text-base font-bold text-gray-800 m-0">{{ ucfirst($module) }}</h3>

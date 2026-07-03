@@ -95,15 +95,7 @@
     </div>
 </div>
 
-{{-- Header --}}
-<div class="flex justify-between items-center flex-wrap gap-3 mb-6">
-    <div>
-        <span class="badge badge-soft badge-success mb-2">
-            <i class="icon-[ph--identification-card-fill]"></i> Government Contributions
-        </span>
-        <p class="text-gray-500 m-0">View and manage employee government contribution rates.</p>
-    </div>
-</div>
+
 
 {{-- Filters + Table --}}
 <div class="card bg-base-100 shadow-sm overflow-hidden flex flex-col p-0">
@@ -113,6 +105,21 @@
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
             <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
                 <x-dot-loader /> Employee List
+
+<div class="tooltip [--placement:right]">
+    <span class="tooltip-toggle cursor-pointer text-gray-400 hover:text-gray-600" aria-label="More info">
+        <i class="icon-[ph--info-fill]"></i>
+    </span>
+    <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
+        <span class="tooltip-body  bg-success/67 shadow-md rounded-lg px-3 py-2 text-xs normal-case">
+     
+                View and manage employee government contribution rates.
+            
+         
+        </span>
+    </span>
+</div>
+
             </h2>
             <button onclick="openContribModal()" class="btn btn-soft btn-error btn-sm">
                 <i class="icon-[ph--stack-fill]"></i> Breakdown
@@ -169,7 +176,7 @@
     <div class="table-responsive overflow-y-auto max-h-[53vh] hidden md:block">
         <table id="contributions-table" class="table table-hover w-full text-sm table-borderless">
            <thead class="sticky top-0 z-5" style="background: white">
-                <tr class="bg-success/20">
+               <tr class="bg-success/67 shadow-md text-white">
                     <th>Employee ID</th>
                     <th>Full Name</th>
                     <th>Department</th>
