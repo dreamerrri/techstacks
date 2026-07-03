@@ -63,35 +63,35 @@
         <div class="overflow-x-hidden overflow-y-auto max-h-[50vh]">
             <table id="deptBreakdownTable" class="table table-hover table-fixed w-full text-xs">
                 <colgroup>
-                    <col class="w-44">  {{-- Employee --}}
-                    <col class="w-28">  {{-- Dept --}}
-                    <col class="w-24">  {{-- Basic Pay --}}
-                    <col class="w-24">  {{-- Allowance --}}
-                    <col class="w-20">  {{-- OT Pay --}}
-                    <col class="w-24">  {{-- Earnings --}}
-                    <col class="w-20">  {{-- SSS --}}
-                    <col class="w-24">  {{-- PhilHealth --}}
-                    <col class="w-20">  {{-- Pag-IBIG --}}
-                    <col class="w-16">  {{-- Tax --}}
-                    <col class="w-28">  {{-- Total Deductions --}}
-                    <col class="w-24">  {{-- Net Pay --}}
-                </colgroup>
+    <col class="w-40">  {{-- Employee --}}
+    <col class="w-24">  {{-- Dept --}}
+    <col class="w-24">  {{-- Basic Pay --}}
+    <col class="w-20">  {{-- Allowance --}}
+    <col class="w-20">  {{-- OT Pay --}}
+    <col class="w-24">  {{-- Earnings --}}
+    <col class="w-20">  {{-- SSS --}}
+    <col class="w-24">  {{-- PhilHealth --}}
+    <col class="w-20">  {{-- Pag-IBIG --}}
+    <col class="w-16">  {{-- Tax --}}
+    <col class="w-32">  {{-- Total Deductions --}}
+    <col class="w-24">  {{-- Net Pay --}}
+</colgroup>
                 <thead>
-                    <tr>
-                        <th>Employee</th>
-                        <th>Dept</th>
-                        <th class="text-right">Basic Pay</th>
-                        <th class="text-right">Allowance</th>
-                        <th class="text-right">OT Pay</th>
-                        <th class="text-right">Earnings</th>
-                        <th class="text-right">SSS</th>
-                        <th class="text-right">PhilHealth</th>
-                        <th class="text-right">Pag-IBIG</th>
-                        <th class="text-right">Tax</th>
-                        <th class="text-right">Total Deductions</th>
-                        <th class="text-right">Net Pay</th>
-                    </tr>
-                </thead>
+    <tr class="whitespace-nowrap">
+        <th>Employee</th>
+        <th>Dept</th>
+        <th class="text-right">Basic Pay</th>
+        <th class="text-right">Allowance</th>
+        <th class="text-right">OT Pay</th>
+        <th class="text-right">Earnings</th>
+        <th class="text-right">SSS</th>
+        <th class="text-right">PhilHealth</th>
+        <th class="text-right">Pag-IBIG</th>
+        <th class="text-right">Tax</th>
+        <th class="text-right">Total Deductions</th>
+        <th class="text-right">Net Pay</th>
+    </tr>
+</thead>
                 <tbody id="deptBreakdownBody"></tbody>
                 <tfoot id="deptBreakdownFoot"></tfoot>
             </table>
@@ -101,7 +101,7 @@
             </div>
         </div>
 
-        <div id="deptGrossPayBar" class="hidden mx-6 px-5 py-3 bg-emerald-100 rounded-b-xl flex justify-between items-center flex-wrap gap-3">
+        <div id="deptGrossPayBar" class=" mx-6 px-5 py-3 bg-emerald-100 rounded-b-xl flex justify-between items-center flex-wrap gap-3">
             <div class="text-sm font-bold text-emerald-800">
                 <i class="icon-[ph--money-fill] mr-1"></i> Total Gross Pay:
             </div>
@@ -256,28 +256,28 @@
 @endphp
         <table class="table table-hover table-fixed w-full text-sm table-borderless">
             <colgroup>
-                <col class="w-48">  {{-- Employee --}}
-                <col class="w-32">  {{-- Department --}}
-                <col class="w-28">  {{-- Basic Pay --}}
-                <col class="w-24">  {{-- Days Worked --}}
-                <col class="w-20">  {{-- OT Hrs --}}
-                <col class="w-20">  {{-- Holiday --}}
-                <col class="w-28">  {{-- Total Deductions --}}
-                <col class="w-28">  {{-- Net Pay --}}
-                <col class="w-24">  {{-- Actions --}}
-            </colgroup>
+    <col class="w-44">  {{-- Employee --}}
+    <col class="w-28">  {{-- Department --}}
+    <col class="w-24">  {{-- Basic Pay --}}
+    <col class="w-28">  {{-- Days Worked --}}
+    <col class="w-20">  {{-- OT Hrs --}}
+    <col class="w-20">  {{-- Holiday --}}
+    <col class="w-32">  {{-- Total Deductions --}}
+    <col class="w-28">  {{-- Net Pay --}}
+    <col class="w-20">  {{-- Actions --}}
+</colgroup>
            <thead class="sticky top-0 z-5" style="background: white">
-               <tr class="bg-success/67 shadow-md text-white">
-                    <th>Employee</th>
-                    <th>Department</th>
-                    {!! payrollSortTh('base_pay',         'Basic Pay',        'right',  $base, $s, $d) !!}
-                    {!! payrollSortTh('days_worked',      'Days Worked',      'center', $base, $s, $d) !!}
-                    {!! payrollSortTh('overtime_hours',   'OT Hrs',           'center', $base, $s, $d) !!}
-                    {!! payrollSortTh('holiday_days',     'Holiday',          'center', $base, $s, $d) !!}
-                    {!! payrollSortTh('total_deductions', 'Total Deductions', 'right',  $base, $s, $d) !!}
-                    {!! payrollSortTh('net_pay',          'Net Pay',          'right',  $base, $s, $d) !!}
-                    <th class="text-center">Actions</th>
-                </tr>
+               <tr class="bg-success/67 shadow-md text-white text-xs">
+    <th>Employee</th>
+    <th>Department</th>
+    {!! payrollSortTh('base_pay',         'Basic Pay',        'right',  $base, $s, $d) !!}
+    {!! payrollSortTh('days_worked',      'Days Worked',      'center', $base, $s, $d) !!}
+    {!! payrollSortTh('overtime_hours',   'OT Hrs',           'center', $base, $s, $d) !!}
+    {!! payrollSortTh('holiday_days',     'Holiday',          'center', $base, $s, $d) !!}
+    {!! payrollSortTh('total_deductions', 'Total Deductions', 'right',  $base, $s, $d) !!}
+    {!! payrollSortTh('net_pay',          'Net Pay',          'right',  $base, $s, $d) !!}
+    <th class="text-center">Actions</th>
+</tr>
             </thead>
             <tbody>
                 @forelse($employees as $employee)
