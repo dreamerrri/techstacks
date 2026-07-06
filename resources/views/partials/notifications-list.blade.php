@@ -13,21 +13,21 @@
                     'info' => '#e0f2fe',
                     default => '#f3f4f6'
                 } }};">
-                    <i class="fas {{ match($notification->type) {
-                    'alert' => 'fa-exclamation-triangle',
-                    'error' => 'fa-times-circle',
-                    'warning' => 'fa-exclamation-circle',
-                    'success' => 'fa-check-circle',
-                    'info' => 'fa-info-circle',
-                    default => 'fa-bell'
-                } }}" style="font-size:14px; color:{{ match($notification->type) {
-                    'alert' => '#dc2626',
-                    'error' => '#dc2626',
-                    'warning' => '#d97706',
-                    'success' => '#059669',
-                    'info' => '#0891b2',
-                    default => '#6b7280'
-                } }};"></i>
+                    <i class="{{ match($notification->type) {
+    'alert' => 'icon-[ph--warning-fill]',
+    'error' => 'icon-[ph--x-circle-fill]',
+    'warning' => 'icon-[ph--warning-circle-fill]',
+    'success' => 'icon-[ph--check-circle-fill]',
+    'info' => 'icon-[ph--info-fill]',
+    default => 'icon-[ph--bell-fill]'
+} }}" style="font-size:14px; color:{{ match($notification->type) {
+    'alert' => '#dc2626',
+    'error' => '#dc2626',
+    'warning' => '#d97706',
+    'success' => '#059669',
+    'info' => '#0891b2',
+    default => '#6b7280'
+} }};"></i>
                 </div>
                 <div style="flex:1; min-width:0;">
                     <div style="font-size:13px; font-weight:600; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $notification->title }}</div>

@@ -24,15 +24,15 @@
         <div class="flex items-center gap-x-1">
             @foreach ($elements as $element)
                 @if (is_string($element))
-                    <button type="button" class="btn btn-soft btn-square btn-disabled" disabled>{{ $element }}</button>
+                    <button type="button" class="text-sm btn btn-soft btn-square btn-disabled" disabled>{{ $element }}</button>
                 @endif
 
                 @if (is_array($element))
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
-                            <button type="button" class="btn btn-soft btn-square btn-success bg-success/20" aria-current="page">{{ $page }}</button>
+                            <button type="button" class="text-sm btn btn-soft btn-square btn-success bg-success/67 text-white" aria-current="page">{{ $page }}</button>
                         @else
-                            <a href="{{ $url }}" class="btn btn-soft btn-square">{{ $page }}</a>
+                            <a href="{{ $url }}" class="text-sm btn btn-soft btn-square">{{ $page }}</a>
                         @endif
                     @endforeach
                 @endif

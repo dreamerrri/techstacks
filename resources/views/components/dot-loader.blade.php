@@ -67,7 +67,7 @@
     'size' => '10px',
     'color' => 'currentColor',
     'color1' => '#A8E6CF',
-    'color2' => '#F8C8DC',
+    'color2' => '#FFEDA3',
     'color3' => '#2D3748',
     'gap' => '14px',
     'radius' => '12px',
@@ -194,67 +194,96 @@
 
     <script>
         (function () {
-            if (window.DotLoader) return; // guard against duplicate init
+    if (window.DotLoader) return; // guard against duplicate init
 
-            var ACTIVE = 'is-active';
-            var pending = 0;
+    var ACTIVE = 'is-active';
+    var VISIBLE = 'is-visible';
+    var STORAGE_KEY = 'dot-loader:navigating';
+    var MIN_VISIBLE_MS = 400; // don't let the morph blip by unnoticed
 
-            function nodes() {
-                return document.querySelectorAll('.dot-loader');
-            }
+    var pending = 0;
+    var activatedAt = 0;
 
-            function overlays() {
-                return document.querySelectorAll('.dot-loader-overlay');
-            }
+    function nodes() {
+        return document.querySelectorAll('.dot-loader');
+    }
 
-            function paint() {
-                var isOn = pending > 0;
-                nodes().forEach(function (el) { el.classList.toggle(ACTIVE, isOn); });
-                overlays().forEach(function (el) { el.classList.toggle('is-visible', isOn); });
-            }
+    function overlays() {
+        return document.querySelectorAll('.dot-loader-overlay');
+    }
 
-            function start() {
-                pending++;
-                paint();
-            }
+    function paint(isOn) {
+        nodes().forEach(function (el) { el.classList.toggle(ACTIVE, isOn); });
+        overlays().forEach(function (el) { el.classList.toggle(VISIBLE, isOn); });
+    }
 
-            function stop(force) {
-                pending = force ? 0 : Math.max(0, pending - 1);
-                paint();
-            }
+    function start() {
+        pending++;
+        if (pending === 1) activatedAt = Date.now();
+        paint(true);
+    }
 
-            window.DotLoader = { start: start, stop: stop };
+    function finishStop(force) {
+        pending = force ? 0 : Math.max(0, pending - 1);
+        if (pending === 0) paint(false);
+    }
 
-            // Full page reload / navigation away from this page
-            window.addEventListener('beforeunload', function () { start(); });
+    function stop(force) {
+        var elapsed = Date.now() - activatedAt;
+        var wait = Math.max(0, MIN_VISIBLE_MS - elapsed);
+        if (wait === 0) {
+            finishStop(force);
+        } else {
+            setTimeout(function () { finishStop(force); }, wait);
+        }
+    }
 
-            // Normal (non-AJAX) form submits
-            document.addEventListener('submit', function (e) {
-                if (e.defaultPrevented) return;
-                start();
-            }, true);
+    window.DotLoader = { start: start, stop: stop };
 
-            // fetch()
-            var nativeFetch = window.fetch;
-            if (nativeFetch) {
-                window.fetch = function () {
-                    start();
-                    return nativeFetch.apply(this, arguments).finally(function () { stop(); });
-                };
-            }
+    // Arriving mid-navigation: resume the spinner instantly (no morph-in)
+    // so it reads as continuous across the reload, then let it morph back
+    // to resting dots once this page is actually ready.
+    if (sessionStorage.getItem(STORAGE_KEY)) {
+        sessionStorage.removeItem(STORAGE_KEY);
+        pending = 1;
+        activatedAt = Date.now();
+        paint(true);
+        window.addEventListener('load', function () { stop(true); });
+    }
 
-            // XMLHttpRequest (covers jQuery $.ajax too)
-            var nativeOpen = XMLHttpRequest.prototype.open;
-            XMLHttpRequest.prototype.open = function () {
-                this.addEventListener('loadstart', function () { start(); });
-                this.addEventListener('loadend', function () { stop(); });
-                return nativeOpen.apply(this, arguments);
-            };
+    // Full page reload / navigation away from this page
+    window.addEventListener('beforeunload', function () {
+        sessionStorage.setItem(STORAGE_KEY, '1');
+        start();
+    });
 
-            // Livewire v3 (no-op if Livewire isn't present)
-            document.addEventListener('livewire:navigating', function () { start(); });
-            document.addEventListener('livewire:navigated', function () { stop(true); });
-        })();
+    // Normal (non-AJAX) form submits
+    document.addEventListener('submit', function (e) {
+        if (e.defaultPrevented) return;
+        start();
+    }, true);
+
+    // fetch()
+    var nativeFetch = window.fetch;
+    if (nativeFetch) {
+        window.fetch = function () {
+            start();
+            return nativeFetch.apply(this, arguments).finally(function () { stop(); });
+        };
+    }
+
+    // XMLHttpRequest (covers jQuery $.ajax too)
+    var nativeOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function () {
+        this.addEventListener('loadstart', function () { start(); });
+        this.addEventListener('loadend', function () { stop(); });
+        return nativeOpen.apply(this, arguments);
+    };
+
+    // Livewire v3 (no-op if Livewire isn't present)
+    document.addEventListener('livewire:navigating', function () { start(); });
+    document.addEventListener('livewire:navigated', function () { stop(true); });
+})();
     </script>
     @endpush
 @endonce

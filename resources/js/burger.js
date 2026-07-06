@@ -15,7 +15,7 @@ export function initBurger() {
         e.stopPropagation();
         const opening = !dropdown.classList.contains('open');
         opening ? dropdown.classList.add('open') : close();
-        icon.className = opening ? 'icon-[ph--x-fill]' : 'icon-[ph--list-fill]';
+        icon.className = opening ? 'icon-[ph--x]' : 'icon-[ph--list-fill]';
         burger.setAttribute('aria-expanded', String(opening));
     });
 
