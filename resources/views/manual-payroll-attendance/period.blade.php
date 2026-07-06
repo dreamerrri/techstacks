@@ -188,7 +188,7 @@
             </div>
             <button onclick="clearFilters()"
                     style="padding:10px 16px; background:#6b7280; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px;">
-                <i class="icon-[ph--x-fill]"></i> Clear
+                <i class="icon-[ph--x]"></i> Clear
             </button>
         </div>
         <div style="margin-top:8px; font-size:13px; color:#6b7280;">

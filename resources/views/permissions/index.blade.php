@@ -39,7 +39,7 @@
                 <div class="table-responsive hidden md:block">
                     <table class="table table-hover w-full text-sm">
                         <thead>
-                           <tr class="bg-success/20">
+                           <tr class="bg-success/67 text-white">
                                 <th>Name</th>
                                 <th>Slug</th>
                                 <th>Description</th>

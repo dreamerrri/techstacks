@@ -40,7 +40,7 @@
 {{-- Contribution Breakdown Modal --}}
 <div id="contribBreakdownModal"
      class="hidden fixed inset-0 z-[9999] bg-black/50 items-start justify-center p-5 overflow-y-auto">
-    <div class="bg-white rounded-2xl w-full max-w-[90vw] mx-auto shadow-2xl overflow-hidden">
+    <div class="bg-white rounded-2xl w-full max-w-[90vw]  mx-auto shadow-2xl overflow-hidden">
 
         {{-- Modal header --}}
         <div class="px-7 py-5 border-b border-gray-200 flex justify-between items-center">
@@ -51,15 +51,16 @@
                 </div>
                 <div class="text-xs text-gray-500 mt-1" id="contribModalMeta">—</div>
             </div>
-            <button onclick="closeContribModal()" class="btn btn-ghost btn-sm btn-circle">
-                <i class="icon-[ph--x-fill]"></i>
+            <button onclick="closeContribModal()" class="btn btn-error btn-sm btn-circle">
+                <i class="icon-[ph--x]"></i>
             </button>
         </div>
 
         {{-- Modal table --}}
-        <div class="overflow-x-auto overflow-y-auto max-h-[50vh]">
+      <div class="overflow-x-auto overflow-y-auto max-h-[70vh]">
             <table id="contribBreakdownTable" class="table table-hover w-full text-xs min-w-[900px]">
-                <thead>
+                <thead class="bg-success/67 shadow-md text-white text-xs">
+
                     <tr>
                         <th>Employee</th>
                         <th>Dept</th>
@@ -74,10 +75,12 @@
                 <tbody id="contribBreakdownBody"></tbody>
                 <tfoot id="contribBreakdownFoot"></tfoot>
             </table>
-            <div id="contribBreakdownEmpty" class="hidden py-10 text-center text-gray-400">
-                <i class="icon-[ph--tray-fill] text-3xl mb-2 block"></i>
-                No contribution data for the current filter.
-            </div>
+           
+
+            <div id="contribBreakdownEmpty" class="py-10 text-gray-400 flex flex-col items-center justify-center gap-2 w-full">
+    <i class="icon-[ph--tray-fill] text-3xl"></i>
+    <span>No contribution data for the current filter.</span>
+</div>
         </div>
 
         {{-- Modal footer --}}
@@ -90,7 +93,6 @@
                     <i class="icon-[ph--file-csv-fill]"></i> Export CSV
                 </button>
             </div>
-            <button onclick="closeContribModal()" class="btn btn-soft btn-sm">Close</button>
         </div>
     </div>
 </div>
@@ -207,20 +209,22 @@
                         <td class="text-gray-500">{{ $employee->department }}</td>
                         <td class="text-gray-500">{{ $employee->position }}</td>
                         <td><span class="badge {{ $statusClass }}">{{ $employee->employment_status }}</span></td>
-                        <td>
-                            <a href="{{ route('government-contributions.show', $employee) }}"
-                               class="btn btn-soft btn-info btn-sm">
-                                <i class="icon-[ph--eye-fill]"></i>
-                            </a>
-                        </td>
+                        <td class="text-center">
+    <a href="{{ route('government-contributions.show', $employee) }}"
+       class="btn btn-soft btn-info btn-sm">
+        <i class="icon-[ph--eye-fill]"></i>
+    </a>
+</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="py-10 text-center text-gray-400">
-                            <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
-                            No employees found.
-                        </td>
-                    </tr>
+    <td colspan="6" class="py-10 text-gray-400">
+        <div class="flex flex-col items-center">
+            <i class="icon-[ph--user-fill] text-3xl mb-2"></i>
+            <span>No employees found.</span>
+        </div>
+    </td>
+</tr>
                 @endforelse
             </tbody>
         </table>
@@ -313,8 +317,8 @@ function openContribModal() {
 
     document.getElementById('contribModalTitle').textContent =
         DEPT_LABEL !== 'All Departments'
-            ? DEPT_LABEL + ' — Contribution Breakdown'
-            : 'All Departments — Contribution Breakdown';
+            ? DEPT_LABEL + ' '
+            : 'All Departments';
 
     document.getElementById('contribModalMeta').textContent =
         data.length + ' employee' + (data.length !== 1 ? 's' : '') + ' on this page';
@@ -348,7 +352,7 @@ function openContribModal() {
         }[emp.status] ?? 'badge-soft';
 
         return `
-            <tr>
+             <tr class="row-hover">
                 <td><div class="font-semibold text-gray-800"><a href="${emp.show_url}" class="text-gray-800 no-underline hover:text-emerald-600">${emp.name}</a></div><div class="text-xs text-gray-400 font-mono">${emp.id}</div></td>
                 <td class="text-gray-500">${emp.department}</td>
                 <td class="text-right font-semibold">₱${emp.salary}</td>

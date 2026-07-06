@@ -159,7 +159,7 @@
             </a>
             <button onclick="cancelRequest({{ $workRequest->id }})"
                     style="padding:12px 24px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
-                <i class="icon-[ph--x-fill]"></i> Cancel Request
+                <i class="icon-[ph--x]"></i> Cancel Request
             </button>
         @endif
         {{-- HR/Admin actions: approve/reject pending requests --}}
@@ -171,7 +171,7 @@
             </button>
             <button onclick="showRejectModal({{ $workRequest->id }})"
                     style="padding:12px 24px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
-                <i class="icon-[ph--x-fill]"></i> Reject
+                <i class="icon-[ph--x]"></i> Reject
             </button>
 @endif
         @endif

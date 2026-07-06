@@ -143,7 +143,7 @@
                                 </a>
                                <button onclick="cancelRequest({{ $request->id }}, '{{ route('work-requests.destroy', $request) }}')"
         style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-    <i class="icon-[ph--x-fill]"></i>
+    <i class="icon-[ph--x]"></i>
 </button>
                             @endif
                         </td>

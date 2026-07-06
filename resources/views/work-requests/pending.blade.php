@@ -93,7 +93,7 @@
                             </button>
                             <button type="button" onclick="showRejectModal({{ $request->id }})"
                                     style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-                                <i class="icon-[ph--x-fill]"></i>
+                                <i class="icon-[ph--x]"></i>
                             </button>
                         </td>
                     </tr>

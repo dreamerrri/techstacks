@@ -50,63 +50,60 @@
         <div class="px-7 py-5 border-b border-gray-200 flex justify-between items-center">
             <div>
                 <div class="text-base font-bold text-gray-800 flex items-center gap-2">
-                    <i class="icon-[ph--stack-fill] text-blue-600"></i>
+                       <x-dot-loader /> 
                     <span id="deptModalTitle">Department Breakdown</span>
                 </div>
                 <div class="text-xs text-gray-500 mt-1" id="deptModalMeta">—</div>
             </div>
-            <button onclick="closeDeptModal()" class="btn btn-ghost btn-sm btn-circle">
-                <i class="icon-[ph--x-fill]"></i>
+             <button onclick="closeDeptModal()" class="btn btn-error btn-sm btn-circle">
+                <i class="icon-[ph--x]"></i>
             </button>
         </div>
 
-        <div class="overflow-x-hidden overflow-y-auto max-h-[50vh]">
-            <table id="deptBreakdownTable" class="table table-hover table-fixed w-full text-xs">
-                <colgroup>
-                    <col class="w-44">  {{-- Employee --}}
-                    <col class="w-28">  {{-- Dept --}}
-                    <col class="w-24">  {{-- Basic Pay --}}
-                    <col class="w-24">  {{-- Allowance --}}
-                    <col class="w-20">  {{-- OT Pay --}}
-                    <col class="w-24">  {{-- Earnings --}}
-                    <col class="w-20">  {{-- SSS --}}
-                    <col class="w-24">  {{-- PhilHealth --}}
-                    <col class="w-20">  {{-- Pag-IBIG --}}
-                    <col class="w-16">  {{-- Tax --}}
-                    <col class="w-28">  {{-- Total Deductions --}}
-                    <col class="w-24">  {{-- Net Pay --}}
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>Employee</th>
-                        <th>Dept</th>
-                        <th class="text-right">Basic Pay</th>
-                        <th class="text-right">Allowance</th>
-                        <th class="text-right">OT Pay</th>
-                        <th class="text-right">Earnings</th>
-                        <th class="text-right">SSS</th>
-                        <th class="text-right">PhilHealth</th>
-                        <th class="text-right">Pag-IBIG</th>
-                        <th class="text-right">Tax</th>
-                        <th class="text-right">Total Deductions</th>
-                        <th class="text-right">Net Pay</th>
-                    </tr>
-                </thead>
+      <div class="overflow-y-auto overflow-x-auto max-h-[70vh]">
+            <table id="deptBreakdownTable" class="table  w-full text-sm table-borderless">
+                <colgroup class="text-xs">
+    <col>  {{-- Employee --}}
+    <col>  {{-- Dept --}}
+    <col>  {{-- Basic Pay --}}
+    <col>  {{-- Allowance --}}
+    <col>  {{-- OT Pay --}}
+    <col>  {{-- Earnings --}}
+    <col>  {{-- SSS --}}
+    <col>  {{-- PhilHealth --}}
+    <col>  {{-- Pag-IBIG --}}
+    <col>  {{-- Tax --}}
+    <col>  {{-- Total Deductions --}}
+    <col>  {{-- Net Pay --}}
+</colgroup>
+                <thead class="bg-success/67 shadow-md text-white text-xs">
+                              
+    <tr>
+        <th>Employee</th>
+        <th>Dept</th>
+        <th>Basic Pay</th>
+        <th>Allowance</th>
+        <th>OT Pay</th>
+        <th >Earnings</th>
+        <th>SSS</th>
+        <th>PhilHealth</th>
+        <th>Pag-IBIG</th>
+        <th>Tax</th>
+        <th>Total Deductions</th>
+        <th>Net Pay</th>
+    </tr>
+</thead>
                 <tbody id="deptBreakdownBody"></tbody>
                 <tfoot id="deptBreakdownFoot"></tfoot>
             </table>
-            <div id="deptBreakdownEmpty" class="hidden py-10 text-center text-gray-400">
-                <i class="icon-[ph--tray-fill] text-3xl mb-2 block"></i>
-                No payroll data for the current filter.
-            </div>
+            <div id="deptBreakdownEmpty" class="py-10 text-gray-400 flex flex-col items-center justify-center gap-2 w-full">
+    <i class="icon-[ph--tray-fill] text-3xl"></i>
+    <span>No payroll data for the current filter.</span>
+</div>
+
+
         </div>
 
-        <div id="deptGrossPayBar" class="hidden mx-6 px-5 py-3 bg-emerald-100 rounded-b-xl flex justify-between items-center flex-wrap gap-3">
-            <div class="text-sm font-bold text-emerald-800">
-                <i class="icon-[ph--money-fill] mr-1"></i> Total Gross Pay:
-            </div>
-            <span id="deptTotalGrossPay" class="text-xl font-extrabold text-emerald-800">₱0.00</span>
-        </div>
 
         <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center flex-wrap gap-2">
             <div class="flex gap-2 flex-wrap">
@@ -117,7 +114,6 @@
                     <i class="icon-[ph--file-csv-fill]"></i> Export CSV
                 </button>
             </div>
-            <button onclick="closeDeptModal()" class="btn btn-soft btn-sm">Close</button>
         </div>
     </div>
 </div>
@@ -179,28 +175,29 @@
 
   
 @if($selectedPeriod ?? null)
-    <div class="text-blue-700 flex items-center gap-2 flex-wrap text-sm">
-        <i class="icon-[ph--calendar-fill]"></i>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-blue-700">
+        <div class="flex items-center gap-2 flex-wrap">
+            <i class="icon-[ph--calendar-fill]"></i>
 
-        <strong>
-            {{ $selectedPeriod->cutoff_start->format('M d, Y') }}
-            –
-            {{ $selectedPeriod->cutoff_end->format('M d, Y') }}
-        </strong>
+            <strong>
+                {{ $selectedPeriod->cutoff_start->format('M d, Y') }}
+                –
+                {{ $selectedPeriod->cutoff_end->format('M d, Y') }}
+            </strong>
 
-        <span class="badge {{ $selectedPeriod->status === 'finalized' ? 'badge-soft badge-success' : 'badge-soft badge-warning' }} badge-sm">
-            {{ ucfirst($selectedPeriod->status) }}
-        </span>
+            <span class="badge {{ $selectedPeriod->status === 'finalized' ? 'badge-soft badge-success' : 'badge-soft badge-warning' }} badge-sm">
+                {{ ucfirst($selectedPeriod->status) }}
+            </span>
+        </div>
 
-        <span class="text-gray-400">|</span>
+        {{-- Hide separator on mobile --}}
+        <span class="hidden sm:inline text-gray-400">|</span>
 
-        <span class="text-red-400 text-sm">
+        <span class="text-red-400">
             <strong>Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}</strong>
-            
         </span>
     </div>
-@endif
-   
+@endif  
 
    {{-- Filters group --}}
     <div class="flex flex-row gap-2 md:ml-auto">
@@ -256,28 +253,28 @@
 @endphp
         <table class="table table-hover table-fixed w-full text-sm table-borderless">
             <colgroup>
-                <col class="w-48">  {{-- Employee --}}
-                <col class="w-32">  {{-- Department --}}
-                <col class="w-28">  {{-- Basic Pay --}}
-                <col class="w-24">  {{-- Days Worked --}}
-                <col class="w-20">  {{-- OT Hrs --}}
-                <col class="w-20">  {{-- Holiday --}}
-                <col class="w-28">  {{-- Total Deductions --}}
-                <col class="w-28">  {{-- Net Pay --}}
-                <col class="w-24">  {{-- Actions --}}
-            </colgroup>
+    <col class="w-44">  {{-- Employee --}}
+    <col class="w-28">  {{-- Department --}}
+    <col class="w-24">  {{-- Basic Pay --}}
+    <col class="w-28">  {{-- Days Worked --}}
+    <col class="w-20">  {{-- OT Hrs --}}
+    <col class="w-20">  {{-- Holiday --}}
+    <col class="w-32">  {{-- Total Deductions --}}
+    <col class="w-28">  {{-- Net Pay --}}
+    <col class="w-20">  {{-- Actions --}}
+</colgroup>
            <thead class="sticky top-0 z-5" style="background: white">
-               <tr class="bg-success/67 shadow-md text-white">
-                    <th>Employee</th>
-                    <th>Department</th>
-                    {!! payrollSortTh('base_pay',         'Basic Pay',        'right',  $base, $s, $d) !!}
-                    {!! payrollSortTh('days_worked',      'Days Worked',      'center', $base, $s, $d) !!}
-                    {!! payrollSortTh('overtime_hours',   'OT Hrs',           'center', $base, $s, $d) !!}
-                    {!! payrollSortTh('holiday_days',     'Holiday',          'center', $base, $s, $d) !!}
-                    {!! payrollSortTh('total_deductions', 'Total Deductions', 'right',  $base, $s, $d) !!}
-                    {!! payrollSortTh('net_pay',          'Net Pay',          'right',  $base, $s, $d) !!}
-                    <th class="text-center">Actions</th>
-                </tr>
+               <tr class="bg-success/67 shadow-md text-white text-xs">
+    <th>Employee</th>
+    <th>Department</th>
+    {!! payrollSortTh('base_pay',         'Basic Pay',        'right',  $base, $s, $d) !!}
+    {!! payrollSortTh('days_worked',      'Days Worked',      'center', $base, $s, $d) !!}
+    {!! payrollSortTh('overtime_hours',   'OT Hrs',           'center', $base, $s, $d) !!}
+    {!! payrollSortTh('holiday_days',     'Holiday',          'center', $base, $s, $d) !!}
+    {!! payrollSortTh('total_deductions', 'Total Deductions', 'right',  $base, $s, $d) !!}
+    {!! payrollSortTh('net_pay',          'Net Pay',          'right',  $base, $s, $d) !!}
+    <th class="text-center">Actions</th>
+</tr>
             </thead>
             <tbody>
                 @forelse($employees as $employee)
@@ -324,12 +321,17 @@
                         </td>
                     </tr>
                 @empty
+
                     <tr>
-                        <td colspan="9" class="py-10 text-center text-gray-400">
-                            <i class="icon-[ph--money-fill] text-3xl mb-2 block"></i>
-                            No payroll data found.
-                        </td>
-                    </tr>
+    <td colspan="9" class="py-10 text-gray-400">
+        <div class="flex flex-col items-center">
+            <i class="icon-[ph--user-fill] text-3xl mb-2"></i>
+            <span>No payroll data found.</span>
+        </div>
+    </td>
+</tr>
+
+                    
                 @endforelse
             </tbody>
         </table>
@@ -417,6 +419,8 @@
                 <i class="icon-[ph--money-fill] text-3xl mb-2 block"></i>
                 No payroll data found.
             </div>
+
+
         @endforelse
     </div>
 
@@ -444,36 +448,38 @@ function openDeptModal() {
     const foot  = document.getElementById('deptBreakdownFoot');
     const empty = document.getElementById('deptBreakdownEmpty');
     const table = document.getElementById('deptBreakdownTable');
-    const bar   = document.getElementById('deptGrossPayBar');
     const modal = document.getElementById('deptBreakdownModal');
 
     document.getElementById('deptModalTitle').textContent =
-        DEPT_LABEL !== 'All Departments' ? DEPT_LABEL + ' — Payroll Breakdown' : 'All Departments — Payroll Breakdown';
+        DEPT_LABEL !== 'All Departments' ? DEPT_LABEL + ' ' : 'All Departments ';
 
     const periodText = document.querySelector('select[name="payroll_period_id"] option:checked')?.innerText ?? 'Latest Cutoff';
     document.getElementById('deptModalMeta').textContent =
-        data.length + ' employee' + (data.length !== 1 ? 's' : '') + ' · Cutoff: ' + periodText;
+        data.length + ' employee' + (data.length !== 1 ? 's' : '') + ' | ' + periodText;
 
     if (!data.length) {
-        table.classList.add('hidden'); bar.classList.add('hidden'); empty.classList.remove('hidden');
+        table.classList.add('hidden'); empty.classList.remove('hidden');
         modal.classList.remove('hidden'); modal.classList.add('flex');
         document.body.style.overflow = 'hidden'; return;
     }
 
     table.classList.remove('hidden'); empty.classList.add('hidden');
 
-    let totBasic = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
+    let totBasic = 0, totAllowance = 0, totOt = 0, totGross = 0, totSss = 0, totPhil = 0, totPagibig = 0, totTax = 0, totDed = 0, totNet = 0;
 
     body.innerHTML = data.map((emp) => {
-        totBasic   += parseFloat(emp.basic_pay);
-        totSss     += parseFloat(emp.sss_contribution);
-        totPhil    += parseFloat(emp.philhealth_contribution);
-        totPagibig += parseFloat(emp.pagibig_contribution);
-        totTax     += parseFloat(emp.withholding_tax);
-        totDed     += parseFloat(emp.total_deductions);
-        totNet     += parseFloat(emp.net_pay);
+        totBasic     += parseFloat(emp.basic_pay);
+        totAllowance += parseFloat(emp.allowance_benefits);
+        totOt        += parseFloat(emp.overtime_pay);
+        totGross     += parseFloat(emp.gross_pay);
+        totSss       += parseFloat(emp.sss_contribution);
+        totPhil      += parseFloat(emp.philhealth_contribution);
+        totPagibig   += parseFloat(emp.pagibig_contribution);
+        totTax       += parseFloat(emp.withholding_tax);
+        totDed       += parseFloat(emp.total_deductions);
+        totNet       += parseFloat(emp.net_pay);
         return `
-            <tr>
+            <tr class="row-hover text-xs">
                 <td><div class="font-semibold text-gray-800 truncate">${emp.name}</div><div class="text-xs text-gray-400 font-mono">${emp.employee_id}</div></td>
                 <td class="text-gray-500 truncate">${emp.department}</td>
                 <td class="text-right font-semibold">${fmt(emp.basic_pay)}</td>
@@ -489,9 +495,13 @@ function openDeptModal() {
             </tr>`;
     }).join('');
 
-    foot.innerHTML = '';
-    document.getElementById('deptTotalGrossPay').textContent = fmt(totNet);
-    bar.classList.remove('hidden'); bar.classList.add('flex');
+   foot.innerHTML = `
+    <tr class="bg-emerald-100 font-bold text-emerald-800 border-t-2 border-emerald-300">
+        <td colspan="11">Gross Pay (${data.length} employee${data.length !== 1 ? 's' : ''})</td>
+        <td class="text-right">${fmt(totGross)}</td>
+      
+    </tr>`;
+
     modal.classList.remove('hidden'); modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
 }
@@ -547,7 +557,7 @@ function printPayrollTable() {
     <table><thead><tr>${headers.map((h,i) => i>=2?`<th class="num">${h}</th>`:`<th>${h}</th>`).join('')}</tr></thead>
     <tbody>${rows}</tbody>
     <tfoot><tr><td colspan="2">Totals (${data.length} employees)</td><td class="num">${fmt(totBasic)}</td><td class="num">${fmt(totAllowance)}</td><td class="num">${fmt(totOt)}</td><td class="num">${fmt(totGross)}</td><td class="num red">${fmt(totSss)}</td><td class="num red">${fmt(totPhil)}</td><td class="num red">${fmt(totPagibig)}</td><td class="num red">${fmt(totTax)}</td><td class="num red bold">${fmt(totDed)}</td><td class="num green bold">${fmt(totNet)}</td></tr></tfoot>
-    </table><div class="gross-bar"><span><strong>Total Gross Pay</strong></span><strong>${fmt(totNet)}</strong></div></body></html>`);
+        </table><div class="gross-bar"><span><strong>Total Gross Pay</strong></span><strong>${fmt(totNet)}</strong></div></body></html>`);
     win.document.close(); win.focus(); win.print();
 }
 
