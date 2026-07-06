@@ -232,7 +232,7 @@
   
 
     {{-- Desktop Table --}}
-    <div class="overflow-x-hidden overflow-y-auto max-h-[47vh]  hidden md:block">
+    <div class="overflow-x-hidden overflow-y-auto max-h-[55vh]  hidden md:block">
        @php
     $s    = request('sort');
     $d    = request('direction', 'asc');

@@ -175,7 +175,7 @@
 
 
     {{-- Desktop Table --}}
-    <div class="table-responsive overflow-y-auto max-h-[53vh] hidden md:block">
+    <div class="table-responsive overflow-y-auto max-h-[55vh] hidden md:block">
         <table id="contributions-table" class="table table-hover w-full text-sm table-borderless">
            <thead class="sticky top-0 z-5" style="background: white">
                <tr class="bg-success/67 shadow-md text-white">
