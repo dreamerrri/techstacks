@@ -287,7 +287,7 @@
                 <button id="sidebar-toggle" type="button"
                         aria-haspopup="true" aria-expanded="false" aria-label="Toggle sidebar"
                         data-overlay-minifier="#main-sidebar">
-                    <i class="icon-[ph--caret-left-fill]" id="sidebar-arrow"></i>
+                    <i class="icon-[ph--caret-left-fill] bg-white" id="sidebar-arrow"></i>
                 </button>
             </div>
             <nav style="flex: 1;">
