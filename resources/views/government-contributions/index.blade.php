@@ -191,11 +191,11 @@
                 @forelse($employees as $employee)
                     @php
                         $statusClass = match($employee->employment_status) {
-                            'Regular'      => 'badge-soft badge-success',
-                            'Probationary' => 'badge-soft badge-warning',
-                            'Contractual'  => 'badge-soft badge-info',
-                            'Part-time'    => 'badge-soft badge-neutral',
-                            default        => 'badge-soft',
+                            'Regular'      => 'badge-soft badge-success text-xs',
+                            'Probationary' => 'badge-soft badge-warning text-xs',
+                            'Contractual'  => 'badge-soft badge-info text-xs',
+                            'Part-time'    => 'badge-soft badge-neutral text-xs',
+                            default        => 'badge-soft text-xs',
                         };
                     @endphp
                     <tr class="row-hover">

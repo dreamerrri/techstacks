@@ -54,8 +54,7 @@ body {
 .sidebar-pre-collapsed .sidebar {
     transition: none !important;
 }
-.sidebar-pre-collapsed .sidebar .nav-item span,
-.sidebar-pre-collapsed .sidebar .nav-chevron {
+.sidebar-pre-collapsed .sidebar .nav-item span {
     display: none !important;
 }
 .sidebar-pre-collapsed .sidebar .logout-btn {
@@ -75,21 +74,8 @@ body {
 .back-link:hover {
     transform: translateX(-4px);
 }
-/* ── Dropdowns: no-flash pre-open state ── */
-[data-dropdown-open-users] .nav-dropdown:nth-of-type(1) .nav-dropdown-menu,
-[data-dropdown-open-settings] .nav-dropdown:nth-of-type(2) .nav-dropdown-menu {
-    max-height: 200px !important;
-    transition: none !important;
-}
-[data-dropdown-open-users] .nav-dropdown:nth-of-type(1) .nav-chevron,
-[data-dropdown-open-settings] .nav-dropdown:nth-of-type(2) .nav-chevron {
-    transform: rotate(180deg) !important;
-    transition: none !important;
-}
-
 /* ── Dropdowns: suppress animation during pre-paint restore ── */
-.nav-dropdown.no-transition .nav-dropdown-menu,
-.nav-dropdown.no-transition .nav-chevron {
+.nav-dropdown.no-transition .nav-dropdown-menu {
     transition: none !important;
 }
 
@@ -167,7 +153,7 @@ body {
 
 /* ── Nav items ── */
 .nav-item {
-    color: rgba(255,255,255,0.72);
+    color: #ffffff;
     font-size: 14.5px;
     padding: 11px 16px;
     cursor: pointer;
@@ -286,7 +272,7 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    opacity: 0.85;
+    color: #ffffff;
     flex-shrink: 0;
 }
 
@@ -343,14 +329,6 @@ body {
     cursor: pointer;
     text-align: left;
 }
-.nav-chevron {
-    font-size: 10px !important;
-    opacity: 0.6;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    width: auto !important;
-}
-.nav-dropdown.open .nav-chevron { transform: rotate(-180deg); }
-
 .nav-dropdown-menu {
     max-height: 0;
     overflow: hidden;
@@ -368,7 +346,6 @@ body {
 .nav-sub-item {
     padding-left: 45px !important;
     font-size: 13.5px !important;
-    opacity: 0.85;
 }
 
 /* ── Mini sidebar: dropdown trigger disappears, sub-items become
@@ -869,6 +846,3 @@ body {
     .aurora-stat-value { font-size: 26px; }
     .aurora-info-row { font-size: 14px; }
 }
-
-
-

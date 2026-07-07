@@ -85,12 +85,12 @@
                     @forelse($logs as $log)
                         @php
                             $actionClass = match(strtolower($log->action)) {
-                                'create' => 'badge-soft badge-success',
-                                'update' => 'badge-soft badge-warning',
-                                'delete' => 'badge-soft badge-error',
-                                'login'  => 'badge-soft badge-info',
-                                'logout' => 'badge-soft badge-neutral',
-                                default  => 'badge-soft',
+                                'create' => 'badge-soft badge-success text-xs',
+                                'update' => 'badge-soft badge-warning text-xs',
+                                'delete' => 'badge-soft badge-error text-xs',
+                                'login'  => 'badge-soft badge-info text-xs',
+                                'logout' => 'badge-soft badge-neutral text-xs',
+                                default  => 'badge-soft text-xs',
                             };
                         @endphp
                         <tr class="row-hover">
