@@ -77,7 +77,7 @@
             </div>
             <div>
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Time Out</label>
-                <input type="time" name="time_out"
+                <input type="time" name="time_out" readonly
                        value="{{ $todayAttendance && $todayAttendance->time_out ? (is_string($todayAttendance->time_out) ? substr($todayAttendance->time_out, 0, 5) : $todayAttendance->time_out->format('H:i')) : '' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; background:#f9fafb;">
                 <p style="color:#6b7280; font-size:12px; margin-top:4px;">Auto-set when you clock out</p>
@@ -141,6 +141,15 @@
             <div id="hoursDisplay" style="margin-top:12px; padding-top:12px; border-top:1px solid #bbf7d0; font-size:14px; font-weight:600; color:#166534; display:none;">
                 <i class="icon-[ph--calculator-fill]"></i> Rendered Hours: <span id="renderedHoursValue">0.00</span> hrs
             </div>
+        </div>
+
+        <div style="background:#fef3c7; border:1px solid #fcd34d; border-radius:6px; padding:16px; margin-bottom:24px;">
+            <div style="font-size:13px; font-weight:600; color:#92400e; margin-bottom:8px;">
+                <i class="icon-[ph--warning-fill]"></i> Auto Clock-Out
+            </div>
+            <p style="margin:0; font-size:13px; color:#92400e;">
+                Attendance will automatically clock out at 9 hours (including 1-hour break). Any time beyond 9 hours will not be recorded.
+            </p>
         </div>
 
         <div style="display:flex; gap:12px;">

@@ -195,7 +195,7 @@ function cancelRequest(requestId) {
         cancelButtonText: 'Cancel'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('{{ route('work-requests.destroy', ':id') }}'.replace(':id', requestId), {
+            fetch('{{ route('work-requests.destroy', $workRequest->id) }}'.replace('{{ $workRequest->id }}', requestId), {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -230,7 +230,7 @@ function approveRequest(requestId) {
         cancelButtonText: 'Cancel'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('{{ route('work-requests.approve', ':id') }}'.replace(':id', requestId), {
+            fetch('{{ route('work-requests.approve', $workRequest->id) }}'.replace('{{ $workRequest->id }}', requestId), {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -291,7 +291,7 @@ function rejectRequest(requestId, reason) {
     const formData = new FormData();
     formData.append('rejection_reason', reason);
 
-    fetch('{{ route('work-requests.reject', ':id') }}'.replace(':id', requestId), {
+    fetch('{{ route('work-requests.reject', $workRequest->id) }}'.replace('{{ $workRequest->id }}', requestId), {
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',

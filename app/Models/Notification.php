@@ -14,6 +14,7 @@ class Notification extends Model
         'audience_type',
         'link',
         'is_read',
+        'is_resolved',
         'user_id',
         'data',
     ];
@@ -21,6 +22,7 @@ class Notification extends Model
     protected $casts = [
         'data' => 'array',
         'is_read' => 'boolean',
+        'is_resolved' => 'boolean',
     ];
 
     public function user(): BelongsTo
@@ -48,6 +50,11 @@ class Notification extends Model
         return $query->where('is_read', false);
     }
 
+    public function scopeUnresolved($query)
+    {
+        return $query->where('is_resolved', false);
+    }
+
     public function scopeForCurrentUser($query)
     {
         $user = auth()->user();
@@ -72,7 +79,13 @@ class Notification extends Model
 
     public function markAsRead(): void
     {
-        $this->update(['is_read' => true]);
+        $this->is_read = true;
+        $this->save();
+    }
+
+    public function markAsResolved(): void
+    {
+        $this->update(['is_resolved' => true]);
     }
 
     public static function createForEmployee(array $data): self

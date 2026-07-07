@@ -40,6 +40,29 @@ class NotificationController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function markAsResolved($id)
+    {
+        $notification = Notification::findOrFail($id);
+
+        // Only allow marking own notifications or if HR/Admin
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'hr') {
+            if ($notification->user_id !== auth()->id()) {
+                abort(403);
+            }
+        }
+
+        $notification->markAsResolved();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function markAllAsResolved()
+    {
+        Notification::forCurrentUser()->unresolved()->update(['is_resolved' => true]);
+
+        return response()->json(['success' => true]);
+    }
+
     public function generateHrAdminNotifications()
     {
         if (!auth()->user() || (auth()->user()->role !== 'admin' && auth()->user()->role !== 'hr')) {
