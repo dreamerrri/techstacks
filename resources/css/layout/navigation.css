@@ -1,0 +1,178 @@
+/* ═══════════════════════════════════════════════
+   NAVIGATION
+   Nav links, collapsible nav groups, the logout button, and
+   the "mini sidebar" (icon-only) variants of all of the above.
+   ═══════════════════════════════════════════════ */
+
+.sidebar-nav { flex: 1; }
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 100px;
+    padding-bottom: 20px;
+}
+.burger-footer { padding: 10px 20px 15px; }
+
+/* ── Nav items ── */
+.nav-item {
+    color: #ffffff;
+    font-size: 14.5px;
+    padding: 11px 16px;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin: 0 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+    border-bottom: 1px solid rgba(255,255,255,0.101);
+}
+.nav-item span { flex: 1; }
+.nav-item:hover { transform: translateX(3px); }
+.nav-item:hover span,
+.nav-item.active span {
+    font-size: 15px;
+    color: rgb(73, 255, 188);
+}
+.nav-item:hover i,
+.nav-item.active i {
+    color: rgb(73, 255, 188);
+    font-size: 20px;
+}
+.nav-item:hover i { transform: translateX(3px); }
+.nav-item.active {
+    background: rgba(255,255,255,0.10);
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+}
+.nav-item i {
+    width: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+.sidebar-admin .nav-item.nav-sub-item.active,
+.sidebar-hr    .nav-item.nav-sub-item.active,
+.sidebar-user  .nav-item.nav-sub-item.active {
+    background: rgba(110, 231, 183, 0.18);
+    color: #ffffff;
+}
+
+/* ── Mini sidebar (FlyonUI overlay minifier): icon-only nav items ── */
+.overlay-minified .nav-item span { display: none; }
+.overlay-minified .nav-item {
+    justify-content: center;
+    margin: 0 8px;
+    padding: 11px 0;
+    gap: 0;
+}
+.overlay-minified .nav-item:hover { transform: none; }
+.overlay-minified .nav-item:hover i { transform: none; }
+
+/* ── Logout button ── */
+.logout-btn {
+    display: block;
+    width: calc(100% - 40px);
+    margin: 0 20px;
+    padding: 10px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.75);
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.22s;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    position: relative;
+    z-index: 1;
+}
+.logout-btn:hover {
+    background: rgba(163, 27, 27, 0.393);
+    color: rgb(246, 12, 12);
+    border-color: rgba(110, 9, 9, 0.127);
+}
+.overlay-minified .logout-btn {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto;
+    padding: 0;
+    font-size: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.overlay-minified .logout-btn i { font-size: 18px; }
+
+/* ── Nav dropdown (collapsible groups) ── */
+.nav-dropdown-trigger {
+    width: 90%;
+    cursor: pointer;
+    text-align: left;
+}
+.nav-dropdown-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease,
+                transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-6px);
+}
+.nav-dropdown.open .nav-dropdown-menu {
+    max-height: 300px;
+    opacity: 1;
+    transform: translateY(0);
+}
+.nav-sub-item {
+    padding-left: 45px !important;
+    font-size: 13.5px !important;
+}
+/* Suppress animation while restoring open/closed state before first paint */
+.nav-dropdown.no-transition .nav-dropdown-menu {
+    transition: none !important;
+}
+
+/* Mini sidebar: dropdown trigger disappears, sub-items become
+   standalone icon-only rows directly in the sidebar list. No flyout,
+   no grouping, no tooltips — just plain rows like any other nav-item. */
+.overlay-minified .nav-dropdown-trigger {
+    display: none;
+}
+.overlay-minified .nav-dropdown-menu {
+    /* undo the flyout popover entirely — render inline as normal rows */
+    position: static;
+    max-height: none;
+    overflow: visible;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    margin-left: 0;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transition: none;
+}
+.overlay-minified .nav-sub-item {
+    padding-left: 0 !important;
+    margin: 0 8px;
+    justify-content: center;
+}
+
+/* ── Legacy burger/menu icon button (kept for other views) ── */
+.burger-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 6px 8px; border-radius: 5px;
+    color: white; transition: background 0.2s;
+    font-size: 20px; line-height: 1;
+}
+.burger-btn:hover { background: rgba(255,255,255,0.2); }

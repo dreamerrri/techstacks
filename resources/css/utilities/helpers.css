@@ -1,0 +1,34 @@
+/* ═══════════════════════════════════════════════
+   UTILITIES
+   Small, generic helper classes used across many
+   different pages/views (not specific to the app shell).
+   ═══════════════════════════════════════════════ */
+
+/* ── Notyf toast overrides ── */
+.notyf__toast {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 99999 !important;
+}
+.notyf {
+    z-index: 99999 !important;
+}
+
+/* ── Role backgrounds ──
+   Generic "page background" utility, reused on the main content
+   area, mobile content area, and inside various dashboard views. */
+.bg-admin,
+.bg-hr,
+.bg-user { background-color: #f5fbf9; }
+
+/* ── Back link (used on show/edit pages) ── */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+.back-link:hover {
+    transform: translateX(-4px);
+}

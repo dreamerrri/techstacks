@@ -115,12 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Desktop sidebar minify toggle (FlyonUI overlay minifier) ──
     const SIDEBAR_KEY = 'sidebar_collapsed';
     const $layout      = $('.desktop-layout');
-    const $arrow       = $('#sidebar-arrow');
 
     function syncSidebarUI(isMinified) {
         $layout.toggleClass('sidebar-mini', isMinified);
-        $arrow.toggleClass('fa-chevron-left', !isMinified)
-              .toggleClass('fa-chevron-right', isMinified);
         if (isMinified) {
             sessionStorage.setItem(SIDEBAR_KEY, '1');
         } else {

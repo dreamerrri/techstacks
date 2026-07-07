@@ -1,0 +1,236 @@
+/* ═══════════════════════════════════════════════
+   TOPBAR
+   Shared topbar styling (desktop + mobile), the brand/logo
+   block, breadcrumb, and the profile/notification cluster
+   on the right side of the topbar.
+   ═══════════════════════════════════════════════ */
+
+.topbar {
+    padding: 14px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    overflow: visible;
+}
+.topbar::after {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 350px;
+    height: 280px;
+    border-radius: 50%;
+    opacity: 0.09;
+    background: white;
+    pointer-events: none;
+}
+.topbar::before { display: none; }
+
+.desktop-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid rgba(255,255,255,0.12);
+    box-shadow:
+        0 1px 3px rgba(0,0,0,0.08),
+        0 4px 12px rgba(0,0,0,0.12),
+        0 8px 24px rgba(0,0,0,0.08);
+    /* Grid placement (grid-column/grid-row) lives in layout/shell.css,
+       scoped under .desktop-layout, since this class only has meaning
+       inside that grid. */
+}
+
+.mobile-topbar {
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    box-shadow:
+        0 1px 3px rgba(0,0,0,0.08),
+        0 4px 12px rgba(0,0,0,0.12),
+        0 8px 24px rgba(0,0,0,0.06);
+}
+
+/* ── Role gradient backgrounds ── */
+.topbar-admin, .bg-admin .topbar,
+.topbar-hr,    .bg-hr .topbar,
+.topbar-user,  .bg-user .topbar {
+    background: linear-gradient(
+        to right,
+        #266859 0%,    /* saturated */
+        #257462 25%,   /* lighter */
+        #247865 50%,   /* transition */
+        #247c67 75%,   /* brighter */
+        #23806a 100%   /* final */
+    );
+}
+
+.bg-admin .topbar h2, .bg-hr .topbar h2, .bg-user .topbar h2,
+.topbar-admin h2, .topbar-hr h2, .topbar-user h2 { color: white !important; }
+
+.bg-admin .topbar .user-name, .bg-hr .topbar .user-name, .bg-user .topbar .user-name,
+.topbar-admin .user-name, .topbar-hr .user-name, .topbar-user .user-name { color: rgba(255,255,255,0.9) !important; }
+
+.bg-admin .topbar .user-role, .bg-hr .topbar .user-role, .bg-user .topbar .user-role,
+.topbar-admin .user-role, .topbar-hr .user-role, .topbar-user .user-role { color: rgba(255,255,255,0.55) !important; }
+
+/* ── Brand / logo block ──
+   One shared set of classes for the "Techstacks" logo + label,
+   used in both the mobile topbar and the desktop topbar. Sizing
+   differences between the two are handled with a `.desktop-topbar`
+   ancestor override below rather than separate classes. */
+.brand-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #fff;
+}
+.desktop-topbar .brand-link { gap: 10px; }
+
+.brand-logo-icon {
+    flex-shrink: 0;
+    opacity: 0.95;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.brand-title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+.desktop-topbar .brand-title {
+    margin: 0;
+    font-size: 18px;
+    letter-spacing: 0.3px;
+}
+
+.brand-subtitle {
+    font-size: 10px;
+    opacity: 0.55;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+.desktop-topbar .brand-subtitle { margin: 0; }
+
+@keyframes techIconFlare {
+  0% {
+    -webkit-mask-image: linear-gradient(60deg, #000 25%, rgba(0,0,0,.4) 50%, #000 75%);
+    mask-image: linear-gradient(60deg, #000 25%, rgba(0,0,0,.4) 50%, #000 75%);
+    -webkit-mask-size: 400%;
+    mask-size: 400%;
+    -webkit-mask-position: 0 center;
+    mask-position: 0 center;
+  }
+  to {
+    -webkit-mask-image: linear-gradient(60deg, #000 25%, rgba(0,0,0,.4) 50%, #000 75%);
+    mask-image: linear-gradient(60deg, #000 25%, rgba(0,0,0,.4) 50%, #000 75%);
+    -webkit-mask-size: 400%;
+    mask-size: 400%;
+    -webkit-mask-position: 100% center;
+    mask-position: 100% center;
+  }
+}
+.techicon:hover svg {
+  animation: techIconFlare 1.8s ease-in-out infinite alternate;
+}
+.tech:hover {
+   animation: techIconFlare 1.8s ease-in-out infinite alternate;
+}
+.techicon {
+  transition: color 0.2s ease;
+}
+
+/* ── Breadcrumb ── */
+.topbar-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.55);
+    font-size: 13px;
+}
+.topbar-breadcrumb a:hover,
+.topbar-breadcrumb span:hover {
+    color: rgb(73, 255, 188);
+    cursor: pointer;
+}
+.topbar-breadcrumb span {
+    transition: color 0.2s ease;
+}
+.topbar-breadcrumb a {
+    text-decoration: none;
+}
+.topbar-breadcrumb i {
+    margin-top: 1px; /* nakakainis eh mataas ang caret or chevron */
+    font-size: 15px;
+}
+.topbar-divider {
+    width: 1px;
+    height: 28px;
+    background: rgba(255,255,255,0.35);
+    margin-right: 10px;
+    margin-left: 15px;
+}
+
+/* ── Right-side action cluster (notif bell + profile) ── */
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.desktop-topbar .topbar-actions {
+    gap: 15px;
+    margin-left: auto;
+}
+
+/* Generic icon-only button used for the notif bell + mobile burger */
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    font-size: 20px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+}
+.icon-btn--notif {
+    font-size: 18px;
+    position: relative;
+}
+.icon-btn--bell-desktop {
+    z-index: 1001;
+    pointer-events: auto;
+    margin-top: 7px;
+}
+
+.notif-trigger { position: relative; }
+.desktop-topbar .notif-trigger {
+    z-index: 1000;
+    pointer-events: auto;
+}
+
+/* ── Profile name/role text (topbar-specific sizing) ── */
+.profile-group:hover .user-name,
+.profile-group:hover .user-role {
+    color: rgb(73, 255, 188) !important;
+}
+.user-name, .user-role {
+    transition: color 0.2s ease;
+}
+.topbar .user-name { font-size: 14px; font-weight: 600; }
+.topbar .user-role { font-size: 12px; }

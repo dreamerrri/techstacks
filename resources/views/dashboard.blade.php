@@ -163,61 +163,84 @@
     </h2>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
 
-        @if($isAdmin)
-            <a href="{{ route('employees.create') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--user-plus-fill] text-2xl"></i>
-                <span>Create Users</span>
-            </a>
-            <a href="{{ route('roles.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--lock-key-fill] text-2xl"></i>
-                <span>Manage Roles</span>
-            </a>
-            <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--database-fill] text-2xl"></i>
-                <span>System Backup</span>
-            </a>
-            <a href="{{ route('audit-logs.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--clock-counter-clockwise-fill] text-2xl"></i>
-                <span>View Logs</span>
-            </a>
+@if($isAdmin)
+    <a href="{{ route('employees.create') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--user-plus-fill]"></i>
+        </div>
+        <span>Create Users</span>
+    </a>
+    <a href="{{ route('roles.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--lock-key-fill]"></i>
+        </div>
+        <span>Manage Roles</span>
+    </a>
+    <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--database-fill]"></i>
+        </div>
+        <span>System Backup</span>
+    </a>
+    <a href="{{ route('audit-logs.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--clock-counter-clockwise-fill]"></i>
+        </div>
+        <span>View Logs</span>
+    </a>
 
-        @elseif($isHR)
-            <a href="{{ route('employees.create') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--user-plus-fill] text-2xl"></i>
-                <span>Add Employee</span>
-            </a>
-            <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--calculator-fill] text-2xl"></i>
-                <span>Payroll</span>
-            </a>
-            <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--tray-fill] text-2xl"></i>
-                <span>Leave Requests</span>
-            </a>
-            <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--file-pdf-fill] text-2xl"></i>
-                <span>Reports</span>
-            </a>
+@elseif($isHR)
+    <a href="{{ route('employees.create') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--user-plus-fill]"></i>
+        </div>
+        <span>Add Employee</span>
+    </a>
+    <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--calculator-fill]"></i>
+        </div>
+        <span>Payroll</span>
+    </a>
+    <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--tray-fill]"></i>
+        </div>
+        <span>Leave Requests</span>
+    </a>
+    <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--file-pdf-fill]"></i>
+        </div>
+        <span>Reports</span>
+    </a>
 
-        @else
-            <a href="{{ route('profile.show') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--user-fill] text-2xl"></i>
-                <span>My Profile</span>
-            </a>
-            <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--receipt-fill] text-2xl"></i>
-                <span>Payslips</span>
-            </a>
-            <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--calendar-x-fill] text-2xl"></i>
-                <span>Leave Request</span>
-            </a>
-            <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
-                <i class="icon-[ph--clock-fill] text-2xl"></i>
-                <span>Attendance</span>
-            </a>
-        @endif
-
+@else
+    <a href="{{ route('profile.show') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--user-fill]"></i>
+        </div>
+        <span>My Profile</span>
+    </a>
+    <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--receipt-fill]"></i>
+        </div>
+        <span>Payslips</span>
+    </a>
+    <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--calendar-x-fill]"></i>
+        </div>
+        <span>Leave Request</span>
+    </a>
+    <a href="#" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
+            <i class="icon-[ph--clock-fill]"></i>
+        </div>
+        <span>Attendance</span>
+    </a>
+@endif
     </div>
 </div>
 

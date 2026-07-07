@@ -1,0 +1,92 @@
+/* ═══════════════════════════════════════════════
+   NOTIFICATIONS
+   The bell icon badge and the notification dropdown panel.
+   Shared between the mobile and desktop topbars via
+   `.notif-panel--mobile` / `.notif-panel--desktop` modifiers.
+   ═══════════════════════════════════════════════ */
+
+.notif-open { display: block !important; }
+
+@keyframes bell-shake {
+    0%   { transform: rotate(0deg); }
+    15%  { transform: rotate(15deg); }
+    30%  { transform: rotate(-15deg); }
+    45%  { transform: rotate(10deg); }
+    60%  { transform: rotate(-10deg); }
+    75%  { transform: rotate(5deg); }
+    90%  { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
+}
+#notifBtn:hover i {
+    color: rgb(73, 255, 188);
+    animation: bell-shake 0.5s ease infinite; /* remove infinite */
+    display: inline-block; /* required — transform doesn't work on inline elements */
+}
+
+.notif-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.notif-panel {
+    display: none;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.14);
+    border: 1px solid #e5e7eb;
+    z-index: 999;
+    overflow: hidden;
+}
+.notif-panel--mobile {
+    position: fixed;
+    right: 8px;
+    top: 60px;
+    width: calc(100vw - 16px);
+    max-width: 340px;
+}
+.notif-panel--desktop {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    width: 320px;
+}
+
+.notif-panel-header {
+    padding: 13px 16px;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.notif-panel-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.notif-panel-title i {
+    font-size: 13px;
+    color: #6b7280;
+}
+.notif-panel-count {
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+}
