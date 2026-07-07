@@ -70,7 +70,7 @@ use Illuminate\Support\Facades\Storage;
     <div class="card bg-base-100 shadow-sm p-6 md:col-span-2">
         <h2 class="text-sm font-bold text-gray-800 mb-5 flex items-center gap-2">
             <span class="w-7 h-7 rounded-md bg-red-100 flex items-center justify-center text-red-600 text-xs flex-shrink-0">
-                <i class="icon-[ph--user-fill]-cog"></i>
+                <i class="icon-[ph--user-gear-fill]"></i>
             </span>
             Account Settings
         </h2>
@@ -259,15 +259,15 @@ use Illuminate\Support\Facades\Storage;
         </h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             @foreach([
-                ['SSS Number',        $employee->sss_number,        'fa-shield-alt',   'text-emerald-600', 'bg-emerald-100'],
-                ['PhilHealth Number', $employee->philhealth_number,  'fa-heart',        'text-blue-600',    'bg-blue-100'],
-                ['Pag-IBIG Number',   $employee->pagibig_number,     'fa-home',         'text-amber-500',   'bg-amber-100'],
-                ['TIN Number',        $employee->tin_number,         'fa-file-invoice', 'text-violet-600',  'bg-violet-100'],
-            ] as [$label, $value, $icon, $color, $bg])
-                <div class="card bg-base-100 shadow-sm p-4 text-center">
-                    <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 {{ $color }} {{ $bg }}">
-                        <i class="fas {{ $icon }}"></i>
-                    </div>
+    ['SSS Number',        $employee->sss_number,        'icon-[ph--shield-check-fill]', 'text-emerald-600', 'bg-emerald-100'],
+    ['PhilHealth Number', $employee->philhealth_number,  'icon-[ph--heart-fill]',        'text-blue-600',    'bg-blue-100'],
+    ['Pag-IBIG Number',   $employee->pagibig_number,     'icon-[ph--house-fill]',        'text-amber-500',   'bg-amber-100'],
+    ['TIN Number',        $employee->tin_number,         'icon-[ph--receipt-fill]',      'text-violet-600',  'bg-violet-100'],
+] as [$label, $value, $icon, $color, $bg])
+    <div class="card bg-base-100 shadow-sm p-4 text-center">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 {{ $color }} {{ $bg }}">
+            <i class="{{ $icon }} size-5"></i>
+        </div>
                     <div class="text-xs text-gray-400 uppercase tracking-widest font-medium mb-1">{{ $label }}</div>
                     <div class="font-bold font-mono text-gray-800 text-xs break-all">{{ $value ?? '—' }}</div>
                 </div>
