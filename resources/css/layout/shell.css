@@ -1,0 +1,64 @@
+/* ═══════════════════════════════════════════════
+   APP SHELL
+   The two top-level layouts (.mobile-layout / .desktop-layout)
+   and the grid regions inside them. Edit this file when you
+   need to change overall page structure, spacing, or the
+   mobile/desktop breakpoint.
+   ═══════════════════════════════════════════════ */
+
+.mobile-layout  { display: none; }
+
+.desktop-layout {
+    display: grid;
+    position: relative;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+    overflow: hidden;
+    transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.desktop-layout.sidebar-mini { grid-template-columns: 68px 1fr; }
+
+/* Grid placement for the three regions inside .desktop-layout.
+   Scoped to .desktop-layout so these rules can't leak onto
+   .sidebar/.desktop-topbar if they're ever reused elsewhere. */
+.desktop-layout .desktop-topbar { grid-column: 1 / -1; grid-row: 1; }
+.desktop-layout .sidebar        { grid-column: 1; grid-row: 2; }
+.desktop-main                   { grid-column: 2; grid-row: 2; overflow-y: auto; }
+
+/* Content padding (inside both mobile + desktop main areas) */
+.content { padding: 40px; }
+
+.mobile-content {
+    overflow-y: auto;
+    min-height: 100vh;
+    height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .mobile-layout  { display: block; }
+    .desktop-layout { display: none !important; }
+    .content { padding: 20px 16px; }
+    .user-mobile-cards { display: block !important; }
+}
+
+/* ── No-flash pre-collapsed state (FlyonUI overlay minifier) ──
+   Restored from sessionStorage before first paint (see the inline
+   script in app.blade.php) so the sidebar doesn't visibly "snap"
+   from expanded to collapsed on load. */
+.sidebar-pre-collapsed .desktop-layout {
+    grid-template-columns: 68px 1fr !important;
+    transition: none !important;
+}
+.sidebar-pre-collapsed .sidebar {
+    transition: none !important;
+}
+.sidebar-pre-collapsed .sidebar .nav-item span {
+    display: none !important;
+}
+.sidebar-pre-collapsed .sidebar .logout-btn {
+    font-size: 0 !important;
+}
+.sidebar-pre-collapsed .sidebar .logout-btn i {
+    font-size: 18px !important;
+}

@@ -1,0 +1,189 @@
+/* ═══════════════════════════════════════════════
+   DATA VIEWS
+   Reusable pieces for index/show pages: permission checklists,
+   key/value detail sections, list rows (users/roles/permissions),
+   the JSON viewer, and the mobile "card" fallback for tables.
+   ═══════════════════════════════════════════════ */
+
+/* ── RBAC / Permission styles ── */
+.permission-module-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.permission-module-card h3 {
+    margin: 0 0 16px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2937;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e5e7eb;
+}
+.permission-module {
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+.permission-module h4 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+.permission-checkbox {
+    display: inline-block;
+    margin-right: 16px;
+    margin-bottom: 8px;
+    padding: 6px 12px;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.permission-checkbox:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+.permission-checkbox input { margin-right: 6px; }
+
+/* ── Detail sections ── */
+.detail-section {
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+.detail-section h3 {
+    margin: 0 0 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+}
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+.detail-item { display: flex; flex-direction: column; }
+.detail-item label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.detail-item span { font-size: 14px; color: #1f2937; }
+
+/* ── Role / User / Permission list items ── */
+.permissions-list,
+.users-list,
+.roles-list { display: grid; gap: 12px; }
+
+.user-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+.user-item .user-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 600; font-size: 13px; flex-shrink: 0;
+}
+.user-item .user-info { flex: 1; }
+.user-item .user-name { font-size: 14px; font-weight: 600; color: #1f2937; }
+.user-item .user-email { font-size: 12px; color: #6b7280; }
+
+.role-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+.role-item .role-info { display: flex; flex-direction: column; gap: 4px; }
+.role-item .role-name { font-size: 14px; font-weight: 600; color: #1f2937; }
+.role-item .role-slug code {
+    font-size: 11px;
+    background: #f3f4f6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #dc2626;
+}
+
+/* ── JSON viewer ── */
+.json-viewer {
+    background: #1f2937;
+    color: #e5e7eb;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* ── Responsive table / user cards ── */
+.user-mobile-cards { display: none; }
+
+.user-card {
+    border: 1px solid #e5e7eb; border-radius: 8px;
+    padding: 14px; margin-bottom: 10px; background: white;
+}
+.user-card-header {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; margin-bottom: 4px;
+}
+.user-card-meta {
+    display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 8px;
+    border-top: 1px solid #f3f4f6;
+    margin-top: 10px; padding-top: 10px;
+}
+
+/* ── Payroll form grid ── */
+@media (min-width: 769px) {
+    .payroll-form-grid {
+        grid-template-columns: 1fr 350px !important;
+        display: grid !important;
+        width: 100% !important;
+        gap: 24px !important;
+    }
+    .payroll-form-grid > div:nth-child(2) {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 350px !important;
+        min-width: 350px !important;
+        height: auto !important;
+    }
+    #previewPanel {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        min-height: 100px !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    #previewPanel > * {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
