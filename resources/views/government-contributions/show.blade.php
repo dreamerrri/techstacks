@@ -97,6 +97,7 @@
                            value="{{ $employee->custom_sss_contribution ?? $sssContribution['employee_share'] }}"
                            step="0.01" min="0"
                            class="input input-bordered w-full font-bold text-red-600 text-lg">
+                    <div class="text-xs text-gray-500 mt-1 italic">Leave blank to use calculated contribution based on salary</div>
                 </div>
                 <div class="bg-white p-4 rounded-xl shadow-sm">
                     <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Total Contribution</div>
@@ -125,6 +126,7 @@
                            value="{{ $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'] }}"
                            step="0.01" min="0"
                            class="input input-bordered w-full font-bold text-red-600 text-lg">
+                    <div class="text-xs text-gray-500 mt-1 italic">Leave blank to use calculated contribution based on salary</div>
                 </div>
             </div>
         </div>
@@ -151,6 +153,7 @@
                            value="{{ $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'] }}"
                            step="0.01" min="0"
                            class="input input-bordered w-full font-bold text-red-600 text-lg">
+                    <div class="text-xs text-gray-500 mt-1 italic">Leave blank to use calculated contribution based on salary</div>
                 </div>
             </div>
         </div>
@@ -193,13 +196,13 @@
         .then(r => r.json())
         .then(data => {
             if (data.success) {
-                Toast?.fire({ icon: 'success', title: 'Custom contributions updated successfully!' });
+                window.notyf?.success('Custom contributions updated successfully!');
                 setTimeout(() => location.reload(), 1200);
             } else {
-                Toast?.fire({ icon: 'error', title: 'Error updating contributions.' });
+                window.notyf?.error('Error updating contributions.');
             }
         })
-        .catch(() => Toast?.fire({ icon: 'error', title: 'Error updating contributions.' }));
+        .catch(() => window.notyf?.error('Error updating contributions.'));
     }
 
     const employeeData = {

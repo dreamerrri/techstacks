@@ -75,7 +75,10 @@
                         <span style="font-weight:600;">{{ ucfirst($request->request_type) }}</span>
                         <span style="color:#6b7280;">|</span>
                         <span>{{ $request->work_date->format('M d, Y') }}</span>
-                        @if($request->estimated_hours)
+                        @if($request->request_type === 'overtime' && $request->calculated_overtime_hours)
+                        <span style="color:#6b7280;">|</span>
+                        <span>{{ number_format($request->calculated_overtime_hours, 1) }} OT hrs</span>
+                        @elseif($request->estimated_hours)
                         <span style="color:#6b7280;">|</span>
                         <span>{{ number_format($request->estimated_hours, 1) }} hrs</span>
                         @endif
@@ -168,7 +171,9 @@
                 @php
                     $totalAllowances = $employee->activeAllowances->sum('amount');
                     $totalBenefits = $employee->activeBenefits->sum('amount');
-                    $totalAllowancesAndBenefits = $totalAllowances + $totalBenefits;
+                    $totalAllowancesAndBenefits = round(($totalAllowances + $totalBenefits) / 2, 2);
+                    $totalAllowancesPerCutoff = round($totalAllowances / 2, 2);
+                    $totalBenefitsPerCutoff = round($totalBenefits / 2, 2);
                 @endphp
                 
                 <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; padding:16px;">
@@ -180,7 +185,7 @@
                                         <div style="font-weight:600; color:#1f2937; font-size:13px;">{{ $allowance->name }}</div>
                                         <div style="color:#6b7280; font-size:11px;">{{ $allowance->type }}</div>
                                     </div>
-                                    <div style="font-weight:700; color:#10b981; font-size:14px;">₱{{ number_format($allowance->amount, 2) }}</div>
+                                    <div style="font-weight:700; color:#10b981; font-size:14px;">₱{{ number_format(round($allowance->amount / 2, 2), 2) }}</div>
                                 </div>
                             @endforeach
                             @foreach($employee->activeBenefits as $benefit)
@@ -189,12 +194,12 @@
                                         <div style="font-weight:600; color:#1f2937; font-size:13px;">{{ $benefit->name }}</div>
                                         <div style="color:#6b7280; font-size:11px;">{{ $benefit->type }}</div>
                                     </div>
-                                    <div style="font-weight:700; color:#3b82f6; font-size:14px;">₱{{ number_format($benefit->amount, 2) }}</div>
+                                    <div style="font-weight:700; color:#3b82f6; font-size:14px;">₱{{ number_format(round($benefit->amount / 2, 2), 2) }}</div>
                                 </div>
                             @endforeach
                         </div>
                         <div style="padding-top:12px; border-top:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:600; color:#374151; font-size:14px;">Total Allowances & Benefits:</span>
+                            <span style="font-weight:600; color:#374151; font-size:14px;">Total Allowances & Benefits (per cutoff):</span>
                             <span style="font-weight:700; color:#10b981; font-size:16px;">₱{{ number_format($totalAllowancesAndBenefits, 2) }}</span>
                         </div>
                     @else
@@ -384,15 +389,15 @@ function previewPayroll() {
                                 <span style="font-weight:600; color:#1f2937;">₱${previewData.basic_salary ? previewData.basic_salary.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                <span style="color:#6b7280;">Weekend Pay:</span>
+                                <span style="color:#6b7280;">Weekend Rate:</span>
                                 <span style="color:#10b981;">+₱${previewData.weekend_pay ? previewData.weekend_pay.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                <span style="color:#6b7280;">Overtime Pay:</span>
+                                <span style="color:#6b7280;">Overtime Rate:</span>
                                 <span style="color:#10b981;">+₱${previewData.overtime_pay ? previewData.overtime_pay.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
-                                <span style="color:#6b7280;">Holiday Pay:</span>
+                                <span style="color:#6b7280;">Holiday Rate:</span>
                                 <span style="color:#10b981;">+₱${previewData.holiday_pay ? previewData.holiday_pay.toFixed(2) : '0.00'}</span>
                             </div>
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">

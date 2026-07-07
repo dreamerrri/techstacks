@@ -45,8 +45,58 @@
     <div class="px-6 py-5 border-b border-gray-200">
         <h2 class="text-base font-bold text-gray-800 m-0">Payroll Periods</h2>
         <p class="text-gray-500 text-sm mt-1 mb-0">Select a payroll period to start encoding attendance</p>
+    </div>
 
+    {{-- Filters --}}
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <form method="GET" action="{{ route('manual-payroll-attendance.index') }}">
+            <div class="flex flex-wrap gap-3 items-end">
+                {{-- Year Filter --}}
+                <div style="min-width: 120px;">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Year</label>
+                    <select name="year" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                            onchange="this.form.submit()">
+                        <option value="">All Years</option>
+                        @foreach($availableYears as $year)
+                            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
+                {{-- Month Filter --}}
+                <div style="min-width: 140px;">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Month</label>
+                    <select name="month" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                            onchange="this.form.submit()">
+                        <option value="">All Months</option>
+                        @foreach($availableMonths as $month)
+                            <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }}>
+                                {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Phase Filter --}}
+                <div style="min-width: 140px;">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Phase</label>
+                    <select name="phase" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                            onchange="this.form.submit()">
+                        <option value="">All Phases</option>
+                        <option value="1" {{ request('phase') == '1' ? 'selected' : '' }}>1st Half (1-15)</option>
+                        <option value="2" {{ request('phase') == '2' ? 'selected' : '' }}>2nd Half (16-End)</option>
+                    </select>
+                </div>
+
+                {{-- Clear Filters --}}
+                @if(request()->hasAny(['year', 'month', 'phase']))
+                <button type="button" onclick="window.location.href='{{ route('manual-payroll-attendance.index') }}'"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors">
+                    <i class="icon-[ph--x-fill]"></i> Clear
+                </button>
+                @endif
+            </div>
+        </form>
     </div>
       
 
