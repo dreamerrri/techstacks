@@ -43,11 +43,31 @@
 .notif-panel {
     display: none;
     background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.14);
-    border: 1px solid #e5e7eb;
-    z-index: 999;
-    overflow: hidden;
+
+    /* top-left | top-right | bottom-right | bottom-left */
+    border-radius: 14px 14px 14px 14px;
+
+    box-shadow: 0 9px 22px rgba(162, 153, 153, 0.14);
+    border: 0.5px solid #e5e7eb;
+    position: absolute;
+    overflow: visible;
+}
+
+.notif-panel::before {
+    content: "";
+    position: absolute;
+
+    top: -10px;
+    right: 93px;          /* Move left/right until it lines up with the bell */
+
+    width: 0;
+    height: 0;
+
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid white;
+
+    z-index: 1001;
 }
 .notif-panel--mobile {
     position: fixed;
@@ -58,7 +78,7 @@
 }
 .notif-panel--desktop {
     position: absolute;
-    right: 0;
+    right: -90px;
     top: calc(100% + 10px);
     width: 320px;
 }
@@ -69,6 +89,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.max-h-\[380px\].overflow-y-auto {
+    border-radius: 0 0 14px 14px;   /* bottom corners */
+
 }
 .notif-panel-title {
     font-size: 14px;
