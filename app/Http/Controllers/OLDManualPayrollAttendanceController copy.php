@@ -22,52 +22,20 @@ class ManualPayrollAttendanceController extends Controller
      * GET /manual-payroll-attendance
      * Show the manual payroll attendance encoding interface
      */
- public function index(Request $request)
+ public function index()
 {
-    $query = PayrollPeriod::whereNotIn('status', ['archived']);
-
-    // Apply year filter
-    if ($request->filled('year')) {
-        $query->whereYear('cutoff_start', $request->year);
-    }
-
-    // Apply month filter
-    if ($request->filled('month')) {
-        $query->whereMonth('cutoff_start', $request->month);
-    }
-
-    // Apply phase filter
-    if ($request->filled('phase')) {
-        if ($request->phase == '1') {
-            $query->whereDay('cutoff_start', '<=', 15);
-        } elseif ($request->phase == '2') {
-            $query->whereDay('cutoff_start', '>', 15);
-        }
-    }
-
     try {
-        $periods = $query->with('payrollInputs')
+        $periods = PayrollPeriod::with('payrollInputs')
+            ->whereNotIn('status', ['archived'])
             ->orderByDesc('cutoff_start')
             ->get();
     } catch (\Exception $e) {
-        $periods = $query->orderByDesc('cutoff_start')
+        $periods = PayrollPeriod::whereNotIn('status', ['archived'])
+            ->orderByDesc('cutoff_start')
             ->get();
     }
 
-    // Get available years, months for filters
-    $availableYears = PayrollPeriod::whereNotIn('status', ['archived'])
-        ->selectRaw('DISTINCT YEAR(cutoff_start) as year')
-        ->orderByDesc('year')
-        ->pluck('year')
-        ->toArray();
-
-    $availableMonths = PayrollPeriod::whereNotIn('status', ['archived'])
-        ->selectRaw('DISTINCT MONTH(cutoff_start) as month')
-        ->orderBy('month')
-        ->pluck('month')
-        ->toArray();
-
-    return view('manual-payroll-attendance.index', compact('periods', 'availableYears', 'availableMonths'));
+    return view('manual-payroll-attendance.index', compact('periods'));
 }
 
     /**
@@ -115,7 +83,7 @@ class ManualPayrollAttendanceController extends Controller
 
                     // Calculate special work from approved requests
                     $weekendsWorked = $approvedRequests->where('request_type', 'weekend')->count();
-                    $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('calculated_overtime_hours');
+                    $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('estimated_hours');
                     $holidayDays = $approvedRequests->where('request_type', 'holiday')->count();
 
                     // Only create if there are computed days or special work
@@ -133,7 +101,7 @@ class ManualPayrollAttendanceController extends Controller
                             'late_hours' => 0,
                             'holiday_days' => $holidayDays,
                             'night_differential_hours' => 0,
-                            'allowances' => round(($employee->activeAllowances->sum('amount') + $employee->activeBenefits->sum('amount')) / 2, 2),
+                            'allowances' => $employee->activeAllowances->sum('amount') + $employee->activeBenefits->sum('amount'),
                             'deductions' => 0,
                             'deductions_remarks' => '',
                             'reimbursements' => 0,
@@ -200,7 +168,7 @@ class ManualPayrollAttendanceController extends Controller
 
         // Calculate special work from approved requests
         $weekendsWorked = $approvedRequests->where('request_type', 'weekend')->count();
-        $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('calculated_overtime_hours');
+        $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('estimated_hours');
         $holidayDays = $approvedRequests->where('request_type', 'holiday')->count();
 
         // If payroll input exists, use approved request values as defaults (don't save to DB)
@@ -346,9 +314,9 @@ class ManualPayrollAttendanceController extends Controller
             $totalMonthlyGross = $firstCutoffGrossPay + $secondCutoffGrossPay;
             $totalMonthlyContributions = $totalContributions * 2; // Since contributions are halved per cutoff
             
-            // Use total monthly allowances for withholding tax calculation
-            // Since allowances are divided by 2 per cutoff, multiply by 2 to get total monthly
-            $totalMonthlyAllowances = ($validated['allowances'] ?? 0) * 2;
+            // Only use current cutoff allowances for withholding tax calculation
+            // Allowances are advance paychecks and should not be doubled across cutoffs
+            $currentCutoffAllowances = $validated['allowances'] ?? 0;
 
 $withholdingTaxService = new WithholdingTaxService();
 $taxResult = $withholdingTaxService->calculate($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);
@@ -356,7 +324,7 @@ $withholdingTax = $taxResult['tax'];
             \Log::info('Withholding tax result in ManualPayrollAttendanceController', [
                 'total_monthly_gross' => $totalMonthlyGross,
                 'total_monthly_contributions' => $totalMonthlyContributions,
-                'total_monthly_allowances' => $totalMonthlyAllowances,
+                'current_cutoff_allowances' => $currentCutoffAllowances,
                 'withholding_tax' => $withholdingTax
             ]);
         }

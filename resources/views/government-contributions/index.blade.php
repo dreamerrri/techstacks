@@ -345,10 +345,10 @@ function openContribModal() {
         totSss += sss; totPhil += phil; totPag += pag; totAll += total;
 
         const statusClass = {
-            'Regular':      'badge-soft badge-success',
-            'Probationary': 'badge-soft badge-warning',
-            'Contractual':  'badge-soft badge-info',
-            'Part-time':    'badge-soft badge-neutral',
+            'Regular':      'badge-soft badge-success text-xs',
+            'Probationary': 'badge-soft badge-warning text-xs',
+            'Contractual':  'badge-soft badge-info text-xs',
+            'Part-time':    'badge-soft badge-neutral text-xs',
         }[emp.status] ?? 'badge-soft';
 
         return `
