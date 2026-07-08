@@ -11,57 +11,55 @@
 @endsection
 
 @section('content')
-
 @php
     $user = auth()->user();
-    $isAdmin = $user->isAdmin();
-    $isHR = $user->isHR();
-    $color = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
+    $admin = $user->isAdmin();
+    $hr = $user->isHR();
+    $color = $admin ? '#dc2626' : ($hr ? '#2563eb' : '#667eea');
+    $colorDark = $admin ? '#991b1b' : ($hr ? '#1e40af' : '#764ba2');
 @endphp
 
-{{-- Header --}}
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-    <div>
-        <div style="display:inline-block; background:#fef3c7; color:#92400e; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="icon-[ph--clock-fill]"></i> Pending Requests
-        </div>
-        <h2 style="margin:8px 0 4px 0;">Pending Work Requests</h2>
-        <p style="color:#6b7280; margin:0;">
-            Review and approve or reject pending work requests
-        </p>
-    </div>
-    <div style="display:flex; gap:8px;">
-        <a href="{{ route('work-requests.index') }}"
+
+
+<x-table-card action="{{ route('work-requests.pending') }}">
+    <x-slot:title>
+        <x-dot-loader /> Pending Work Requests
+        <x-info-tooltip>
+            {{ $admin || $hr ? 'Review and manage pending work requests' : 'View and manage your pending work requests' }}
+        </x-info-tooltip>
+
+   
+    </x-slot:title>
+
+<x-slot:actions>
+          <a href="{{ route('work-requests.index') }}"
            style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
             <i class="icon-[ph--list-fill]"></i> All Requests
         </a>
-    </div>
-</div>
+</x-slot:actions>
 
+
+    <x-data-table>
 @if($pendingRequests->count() > 0)
-    {{-- Pending Requests Table --}}
-    <div class="card" style="padding:0; overflow:hidden;">
-        <div style="overflow-x:auto;">
-            <table style="width:100%; border-collapse:collapse;">
-                <thead>
-                    <tr style="background:#f9fafb;">
-                        <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Employee</th>
-                        <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Type</th>
-                        <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Work Date</th>
-                        <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Time</th>
-                        <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Reason</th>
-                        <th style="padding:12px 16px; text-align:center; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Actions</th>
-                    </tr>
-                </thead>
+ <x-slot:head>
+
+              
+                        <th>Employee</th>
+                        <th>Type</th>
+                        <th>Work Date</th>
+                        <th>Time</th>
+                        <th>Reason</th>
+                        <th>Actions</th>
+    </x-slot:head>
                 <tbody>
                     @foreach($pendingRequests as $request)
-                    <tr style="border-bottom:1px solid #e5e7eb;">
-                        <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                            <div style="font-weight:600;">{{ $request->employee->full_name }}</div>
-                            <div style="font-size:12px; color:#6b7280;">{{ $request->employee->employee_id }}</div>
-                            <div style="font-size:12px; color:#6b7280;">{{ $request->employee->position }}</div>
+                    <tr class="row-hover">
+                        <td>
+                            <div>{{ $request->employee->full_name }}</div>
+                            <div>{{ $request->employee->employee_id }}</div>
+                            <div>{{ $request->employee->position }}</div>
                         </td>
-                        <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
+                        <td>
                             <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600; 
                                 {{ $request->request_type === 'weekend' ? 'background:#dbeafe; color:#1e40af;' : 
                                    ($request->request_type === 'holiday' ? 'background:#fef3c7; color:#92400e;' : 'background:#e0e7ff; color:#3730a3;') }}">
@@ -72,29 +70,26 @@
                             {{ $request->work_date->format('M d, Y') }}
                             <div style="font-size:12px; color:#6b7280;">{{ $request->work_date->format('l') }}</div>
                         </td>
-                        <td style="padding:12px 16px; font-size:14px; color:#6b7280;">
+                        <td>
                             {{ $request->start_time ? $request->start_time : '-' }} 
                             @if($request->end_time) - {{ $request->end_time }}@endif
                             @if($request->estimated_hours)
                             <div style="font-size:12px; color:#6b7280;">{{ number_format($request->estimated_hours, 2) }} hrs</div>
                             @endif
                         </td>
-                        <td style="padding:12px 16px; font-size:14px; color:#6b7280; max-width:200px;">
+                        <td>
                             {{ $request->reason ? \Illuminate\Support\Str::limit($request->reason, 50) : '-' }}
                         </td>
-                        <td style="padding:12px 16px; text-align:center;">
-                            <a href="{{ route('work-requests.show', $request) }}"
-                               style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
-                                <i class="icon-[ph--eye-fill]"></i>
-                            </a>
-                            <button type="button" onclick="approveRequest({{ $request->id }})"
-                                    style="padding:6px 12px; background:#10b981; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; margin-right:4px;">
-                                <i class="icon-[ph--check-fill]"></i>
-                            </button>
-                            <button type="button" onclick="showRejectModal({{ $request->id }})"
-                                    style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-                                <i class="icon-[ph--x]"></i>
-                            </button>
+                        <td>
+                          <a href="{{ route('work-requests.show', $request) }}" class="btn btn-soft btn-info btn-sm">
+    <i class="icon-[ph--eye-fill]"></i>
+</a>
+<button type="button" class="btn btn-soft btn-success btn-sm" onclick="approveRequest({{ $request->id }})">
+    <i class="icon-[ph--check-fill]"></i>
+</button>
+<button type="button" class="btn btn-soft btn-error btn-sm" onclick="showRejectModal({{ $request->id }})">
+    <i class="icon-[ph--x]"></i>
+</button>
                         </td>
                     </tr>
                     @endforeach
@@ -116,7 +111,15 @@
     </div>
 @endif
 
+
+    </x-data-table>
+
+
+</x-table-card>
 @endsection
+
+
+
 
 @section('scripts')
 <script>

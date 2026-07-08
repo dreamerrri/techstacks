@@ -3,9 +3,9 @@
 
     A three-dot "loading" indicator. At rest it's three dots in a row
     (like the Linux/GNOME loading ellipsis). While something is happening
-    (page navigation, form submit, fetch/XHR/Livewire request) the dots
-    morph into a triangle and spin like a circle, then morph back when
-    it's done.
+    (page navigation, form submit, fetch/XHR/Livewire request, or a
+    FlyonUI modal opening/closing) the dots morph into a triangle and
+    spin like a circle, then morph back when it's done.
 
     INSTALL
     -------
@@ -27,6 +27,10 @@
       - window.fetch calls
       - XMLHttpRequest calls (this covers jQuery $.ajax too)
       - Livewire v3 navigate events (harmless no-op if you don't use Livewire)
+      - FlyonUI modals / overlays (HSOverlay) opening or closing — via any
+        trigger: a [data-overlay] button, ESC key, backdrop click, or a
+        HSOverlay.open()/close() call. Harmless no-op if you don't use
+        FlyonUI overlays.
 
     You can also trigger it manually from your own JS, e.g. around a
     custom async action:
@@ -283,6 +287,38 @@
     // Livewire v3 (no-op if Livewire isn't present)
     document.addEventListener('livewire:navigating', function () { start(); });
     document.addEventListener('livewire:navigated', function () { stop(true); });
+
+    // FlyonUI modals / overlays (HSOverlay)
+    //
+    // FlyonUI toggles an "open" class on the .overlay element itself while
+    // it's shown (that's what the `overlay-open:*` Tailwind variants key
+    // off of). Watching that class directly — rather than binding to the
+    // [data-overlay] trigger buttons — means this catches every way an
+    // overlay can open or close: a trigger button click, the ESC key, a
+    // backdrop click, or a plain HSOverlay.open('#id') / .close() call.
+    // No-op if you don't use FlyonUI overlays on the page.
+    if (window.MutationObserver) {
+        var overlayObserver = new MutationObserver(function (mutations) {
+            mutations.forEach(function (m) {
+                var el = m.target;
+                if (!el.classList || !el.classList.contains('overlay')) return;
+
+                var oldClasses = (m.oldValue || '').split(' ');
+                var wasOpen = oldClasses.indexOf('open') !== -1;
+                var isOpen = el.classList.contains('open');
+
+                if (isOpen && !wasOpen) start();
+                if (!isOpen && wasOpen) stop();
+            });
+        });
+
+        overlayObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class'],
+            attributeOldValue: true,
+            subtree: true,
+        });
+    }
 })();
     </script>
     @endpush

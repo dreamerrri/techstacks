@@ -5,14 +5,8 @@ namespace App\Services;
 class WithholdingTaxService
 {
     /**
-     * Calculate monthly withholding tax per BIR's revised (TRAIN law) table.
-     *
-     * Formula per bracket: Tax = Base + (Rate x (Taxable Income - Floor))
-     *
-     * @param float $totalMonthlyGross Total gross pay for the month (both cutoffs combined)
-     * @param float $totalMonthlyContributions Total SSS + PhilHealth + Pag-IBIG for the month
-     * @param float $totalMonthlyAllowances Allowances for the current cutoff (treated as advance pay, not doubled)
-     * @return array{tax: float, taxable_income: float, bracket: int}
+     * Calculate monthly withholding tax per BIR's revised (TRAIN law) table,
+     * effective January 1, 2023 onwards.
      */
     public function calculate(float $totalMonthlyGross, float $totalMonthlyContributions, float $totalMonthlyAllowances = 0): array
     {
@@ -23,9 +17,9 @@ class WithholdingTaxService
             [0,        20833,  0,          0.00],
             [20833,    33332,  0,          0.15],
             [33333,    66666,  1875,       0.20],
-            [66667,    166666, 13541.80,   0.25],
-            [166667,   666666, 90841.80,   0.30],
-            [666667,   null,   200841.80,  0.35],
+            [66667,    166666, 8541.80,    0.25],   // corrected from 13541.80
+            [166667,   666666, 33541.80,   0.30],   // corrected from 90841.80
+            [666667,   null,   183541.80,  0.35],   // corrected from 200841.80
         ];
 
         foreach ($brackets as $index => [$floor, $ceiling, $base, $rate]) {
@@ -41,7 +35,6 @@ class WithholdingTaxService
             }
         }
 
-        // Unreachable: last bracket has no ceiling and always matches
         return ['tax' => 0, 'taxable_income' => $taxableIncome, 'bracket' => 0];
     }
 }

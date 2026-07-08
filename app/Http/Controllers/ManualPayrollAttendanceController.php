@@ -13,7 +13,8 @@ use App\Services\PhilHealthContributionService;
 use App\Services\PagIbigContributionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
+use App\Services\WithholdingTaxService;
 
 class ManualPayrollAttendanceController extends Controller
 {
@@ -317,7 +318,9 @@ class ManualPayrollAttendanceController extends Controller
             // Allowances are advance paychecks and should not be doubled across cutoffs
             $currentCutoffAllowances = $validated['allowances'] ?? 0;
 
-            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);
+$withholdingTaxService = new WithholdingTaxService();
+$taxResult = $withholdingTaxService->calculate($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);
+$withholdingTax = $taxResult['tax'];
             \Log::info('Withholding tax result in ManualPayrollAttendanceController', [
                 'total_monthly_gross' => $totalMonthlyGross,
                 'total_monthly_contributions' => $totalMonthlyContributions,
@@ -377,25 +380,7 @@ class ManualPayrollAttendanceController extends Controller
      * Formula: (Total Monthly Gross - Total Monthly Contributions - Total Monthly Allowances) - 33,333 = taxablePay
      * taxablePay * 20% + 1875 = Withholding Tax
      */
-    private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions, float $totalMonthlyAllowances = 0): float
-    {
-        // Calculate taxable income: Total Gross - Total Monthly Contributions - Total Monthly Allowances
-        // Allowances are considered as advance paychecks and should be deducted from taxable income
-        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $totalMonthlyAllowances;
-        
-        // Subtract lower limit of bracket (33,333) to get taxablePay (excess)
-        $taxablePay = $taxableIncome - 33333;
-        
-        // If taxable income is below 33,333, no tax for this bracket
-        if ($taxablePay <= 0) {
-            return 0;
-        }
-        
-        // Apply formula: taxablePay * 20% + 1875
-        $withholdingTax = ($taxablePay * 0.20) + 1875;
-        
-        return round($withholdingTax, 2);
-    }
+
 
     /**
      * POST /manual-payroll-attendance/save

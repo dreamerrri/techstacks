@@ -171,7 +171,9 @@ class PayrollInput extends Model
                 'total_monthly_contributions' => $totalMonthlyContributions,
                 'current_cutoff_allowances' => $currentCutoffAllowances,
             ]);
-            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);
+$withholdingTaxService = new \App\Services\WithholdingTaxService();
+$taxResult = $withholdingTaxService->calculate($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);
+$withholdingTax = $taxResult['tax'];
             \Log::info('Withholding tax result in PayrollInput', ['withholding_tax' => $withholdingTax]);
         }
 
@@ -215,23 +217,5 @@ class PayrollInput extends Model
      * Formula: (Total Monthly Gross - Total Monthly Contributions - Total Monthly Allowances) - 33,333 = taxablePay
      * taxablePay * 20% + 1875 = Withholding Tax
      */
-    private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions, float $totalMonthlyAllowances = 0): float
-    {
-        // Calculate taxable income: Total Gross - Total Monthly Contributions - Total Monthly Allowances
-        // Allowances are considered as advance paychecks and should be deducted from taxable income
-        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $totalMonthlyAllowances;
-        
-        // Subtract lower limit of bracket (33,333) to get taxablePay (excess)
-        $taxablePay = $taxableIncome - 33333;
-        
-        // If taxable income is below 33,333, no tax for this bracket
-        if ($taxablePay <= 0) {
-            return 0;
-        }
-        
-        // Apply formula: taxablePay * 20% + 1875
-        $withholdingTax = ($taxablePay * 0.20) + 1875;
-        
-        return round($withholdingTax, 2);
-    }
+   
 }
