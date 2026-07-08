@@ -18,6 +18,7 @@ class WorkRequest extends Model
         'start_time',
         'end_time',
         'estimated_hours',
+        'calculated_overtime_hours',
         'reason',
         'status',
         'approved_by',
@@ -28,6 +29,7 @@ class WorkRequest extends Model
     protected $casts = [
         'work_date' => 'date',
         'estimated_hours' => 'decimal:2',
+        'calculated_overtime_hours' => 'decimal:2',
         'approved_at' => 'datetime',
     ];
 

@@ -135,7 +135,7 @@ function approveRequest(requestId) {
         cancelButtonText: 'Cancel'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('{{ route('work-requests.approve', ':id') }}'.replace(':id', requestId), {
+            fetch('/work-requests/' + requestId + '/approve', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -191,7 +191,7 @@ function rejectRequest(requestId, reason) {
     const formData = new FormData();
     formData.append('rejection_reason', reason);
 
-    fetch('{{ route('work-requests.reject', ':id') }}'.replace(':id', requestId), {
+    fetch('/work-requests/' + requestId + '/reject', {
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',

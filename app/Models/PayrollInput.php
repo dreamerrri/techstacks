@@ -162,14 +162,14 @@ class PayrollInput extends Model
             $totalMonthlyGross = $firstCutoffGrossPay + $grossPay;
             $totalMonthlyContributions = $totalContributions * 2; // Since contributions are halved per cutoff
             
-            // Only use current cutoff allowances for withholding tax calculation
-            // Allowances are advance paychecks and should not be doubled across cutoffs
-            $currentCutoffAllowances = $this->allowances;
+            // Use total monthly allowances for withholding tax calculation
+            // Since allowances are divided by 2 per cutoff, multiply by 2 to get total monthly
+            $totalMonthlyAllowances = $this->allowances * 2;
 
             \Log::info('Withholding tax calculation in PayrollInput', [
                 'total_monthly_gross' => $totalMonthlyGross,
                 'total_monthly_contributions' => $totalMonthlyContributions,
-                'current_cutoff_allowances' => $currentCutoffAllowances,
+                'total_monthly_allowances' => $totalMonthlyAllowances,
             ]);
 $withholdingTaxService = new \App\Services\WithholdingTaxService();
 $taxResult = $withholdingTaxService->calculate($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);

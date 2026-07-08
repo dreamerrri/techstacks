@@ -51,8 +51,15 @@
         }
 
         // Get notifications for current user based on role
-        $notifications = \App\Models\Notification::forCurrentUser()->unread()->latest()->limit(50)->get();
-        $notifCount = $notifications->count();
+        $notifications = \App\Models\Notification::forCurrentUser()
+            ->where(function($q) {
+                $q->where('is_read', false)
+                  ->orWhere('is_resolved', false);
+            })
+            ->latest()
+            ->limit(50)
+            ->get();
+        $notifCount = \App\Models\Notification::forCurrentUser()->unread()->count();
     @endphp
 
         {{-- ═══════════════════════════════════════
