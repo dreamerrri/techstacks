@@ -159,6 +159,7 @@
         <form method="GET" action="{{ route('payroll.index') }}"
       class="flex flex-col md:flex-row md:items-center gap-3 pb-4 ">
  @if($isAdmin || $isHR)
+ 
     {{-- Search group --}}
     <div class="join flex-none w-64 min-w-40">
         <input type="text" name="search" value="{{ request('search') }}"

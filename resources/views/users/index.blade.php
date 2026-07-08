@@ -124,7 +124,7 @@
         {{-- Desktop Table --}}
         <div class="table-responsive overflow-y-auto max-h-[53vh] hidden md:block table-borderless">
             <table class="table table-hover w-full text-sm">
-               <thead class="sticky top-0 z-5" style="background: white">
+               <thead class="sticky top-0 z-5" style="background: white text-xs">
                    <tr class="bg-success/67 shadow-md text-white">
                         <th>Name</th>
                         <th>Email</th>

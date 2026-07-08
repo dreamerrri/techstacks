@@ -9,79 +9,85 @@
 
 @section('content')
 
-    {{-- Header --}}
-    <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
-        <h2 class="text-xl font-bold text-gray-800 m-0">Roles Management</h2>
+
+        {{-- Desktop Table --}}
+    
+<x-table-card>
+ <x-slot:title>
+        <x-dot-loader /> Roles Management
+        <x-info-tooltip>
+            Manage all system roles and their assigned permissions.
+        </x-info-tooltip>
+    </x-slot:title>
+
+    <x-slot:actions>
         <a href="{{ route('roles.create') }}" class="btn btn-soft btn-error btn-sm">
             <i class="icon-[ph--plus-fill]"></i> Create Role
         </a>
-    </div>
+    </x-slot:actions>
 
-    <div class="card bg-base-100 shadow-sm overflow-hidden p-0">
 
-        {{-- Desktop Table --}}
-        <div class="table-responsive hidden md:block ">
-            <table class="table table-hover w-full text-sm">
-                <thead>
-                    <tr class="bg-success/67 text-white">
-                        <th>Name</th>
-                        <th>Slug</th>
-                        <th>Description</th>
-                        <th>Users</th>
-                        <th>Permissions</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($roles as $role)
-                        <tr class="row-hover">
-                            <td class="font-semibold text-gray-800">{{ $role->name }}</td>
-                            <td><code class="bg-gray-100 text-red-600 text-xs px-1.5 py-0.5 rounded">{{ $role->slug }}</code></td>
-                            <td class="text-gray-500">{{ $role->description ?? '—' }}</td>
-                            <td class="text-gray-500">{{ $role->users_count }}</td>
-                            <td class="text-gray-500">{{ $role->permissions->count() }}</td>
-                            <td>
-                                @if($role->is_active)
-                                    <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
-                                @else
-                                    <span class="badge badge-soft badge-error"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="flex gap-2 items-center">
-                                    <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
-                                        <i class="icon-[ph--eye-fill]"></i>
-                                    </a>
-                                    <a href="{{ route('roles.edit', $role) }}" class="btn btn-soft btn-warning btn-sm">
-                                        <i class="icon-[ph--pencil-fill]"></i>
-                                    </a>
-                                    @if($role->users_count == 0)
-                                        <form method="POST" action="{{ route('roles.destroy', $role) }}"
-                                              data-confirm="This role will be permanently deleted."
-                                              data-confirm-title="Delete Role?"
-                                              data-confirm-icon="warning"
-                                              data-confirm-btn="Yes, delete">
-                                            @csrf @method('DELETE')
-                                            <button class="btn btn-soft btn-error btn-sm">
-                                                <i class="icon-[ph--trash-fill]"></i>
-                                            </button>
-                                        </form>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="py-10 text-center text-gray-400">
-                                <i class="icon-[ph--user-fill]-tag text-3xl mb-2 block"></i>
-                                No roles found.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+<x-data-table>
+    <x-slot:head>
+        <th class="w-40">Name</th>
+        <th class="w-24">Slug</th>
+        <th>Description</th>
+        <th class="w-40 text-right">Users</th>
+        <th class="w-40 text-right">Permissions</th>
+        <th class="w-40 text-right">Status</th>
+        <th class="w-40 text-right">Actions</th>
+    </x-slot:head>
+
+    @forelse($roles as $role)
+        <tr class="row-hover">
+            <td class="font-semibold text-gray-800">{{ $role->name }}</td>
+            <td><code class="bg-gray-100 text-red-600 text-xs px-1.5 py-0.5 rounded">{{ $role->slug }}</code></td>
+            <td class="text-gray-500 truncate">{{ $role->description ?? '—' }}</td>
+            <td class="text-gray-500 text-right">{{ $role->users_count }}</td>
+            <td class="text-gray-500 text-right">{{ $role->permissions->count() }}</td>
+            <td class="text-right">
+                @if($role->is_active)
+                    <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
+                @else
+                    <span class="badge badge-soft badge-error"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
+                @endif
+            </td>
+            <td class="text-right">
+                <div class="flex gap-2 items-center justify-end">
+                    <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
+                        <i class="icon-[ph--eye-fill]"></i>
+                    </a>
+                    <a href="{{ route('roles.edit', $role) }}" class="btn btn-soft btn-warning btn-sm">
+                        <i class="icon-[ph--pencil-fill]"></i>
+                    </a>
+                    @if($role->users_count == 0)
+                        <form method="POST" action="{{ route('roles.destroy', $role) }}"
+                              data-confirm="This role will be permanently deleted."
+                              data-confirm-title="Delete Role?"
+                              data-confirm-icon="warning"
+                              data-confirm-btn="Yes, delete">
+                            @csrf @method('DELETE')
+                            <button class="btn btn-soft btn-error btn-sm">
+                                <i class="icon-[ph--trash-fill]"></i>
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            </td>
+        </tr>
+    @empty
+        <tr>
+            <td colspan="7" class="py-10 text-gray-400">
+                <div class="flex flex-col items-center">
+                    <i class="icon-[ph--tray-fill] text-3xl mb-2"></i>
+                    <span>No data found.</span>
+                </div>
+            </td>
+        </tr>
+    @endforelse
+</x-data-table>
+</x-table-card>
+
 
         {{-- Mobile Cards --}}
         <div class="md:hidden p-4 flex flex-col gap-3">
@@ -145,3 +151,4 @@
     </div>
 
 @endsection
+
