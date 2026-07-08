@@ -17,8 +17,8 @@
     </x-slot:title>
 
     <x-slot:filters>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 items-end w-full">
-            <div class="fieldset">
+     <div class="flex flex-wrap items-end gap-2">
+            <div>
                 <label class="label text-xs font-semibold uppercase tracking-wider text-gray-400">Module</label>
                 <select name="module" class="select select-bordered select-sm w-full">
                     <option value="">All Modules</option>
@@ -46,7 +46,7 @@
                 <input type="date" name="date_to" value="{{ request('date_to') }}"
                        class="input input-bordered input-sm w-full">
             </div>
-            <div class="flex gap-2 md:col-span-4">
+            <div>
                 <button type="submit" class="btn btn-soft btn-error btn-sm">
                     <i class="icon-[ph--funnel-fill]"></i> Filter
                 </button>
