@@ -1,21 +1,10 @@
 @extends('layouts.app')
 
 @section('title', 'Create Payroll Period')
-@section('breadcrumb')
-    <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Manage Employees</a>
-    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
-    <a href="{{ route('manual-payroll-attendance.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Attendance</a>
-    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:600;">Create Payroll Period</span>
-@endsection
+
 @section('content')
 
-@php
-    $user = auth()->user();
-    $isAdmin = $user->isAdmin();
-    $isHR = $user->isHR();
-    $color = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
-@endphp
+
 
 {{-- Header --}}
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">

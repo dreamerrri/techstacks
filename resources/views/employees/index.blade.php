@@ -1,11 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Manage Employees')
-@section('breadcrumb')
-    <span>Manage Employees</span>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <span class="text-white font-medium">Employees</span>
-@endsection
 
 @section('content')
 
@@ -65,13 +60,19 @@
            Manage all employee records in the system.
         </span>
     </span>
+           
 </div>
                 </h2>
 
-                <a href="{{ route('employees.archived') }}" class="text-gray-500 text-xs no-underline hover:text-emerald-600">
+         
+<a href="{{ route('employees.create') }}" class="btn btn-soft btn-error btn-sm">
+            <i class="icon-[ph--plus-fill]"></i> Add Employee
+        </a>
+       
+            </div> 
+            {{-- -HIDE MUNA   <a href="{{ route('employees.archived') }}" class="text-gray-500 text-xs no-underline hover:text-emerald-600">
                     <i class="icon-[ph--archive-fill]"></i> View Archived
-                </a>
-            </div>
+                </a>--}} 
 
             {{-- Search & Filters --}}
 <form method="GET" action="{{ route('employees.index') }}"

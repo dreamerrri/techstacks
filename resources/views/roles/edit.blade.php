@@ -1,15 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Edit Role')
-@section('breadcrumb')
-    <a href="{{ route('users.index') }}" class="text-white/55 no-underline">Manage Users</a>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <a href="{{ route('roles.index') }}" class="text-white/55 no-underline">Roles</a>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <a href="{{ route('roles.show', $role) }}" class="text-white/55 no-underline">{{ $role->name }}</a>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <span class="text-white font-semibold">Edit {{ $role->name }}</span>
-@endsection
+
 
 @section('content')
 

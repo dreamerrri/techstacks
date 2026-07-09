@@ -2,7 +2,7 @@
 
 @section('title', $employee->full_name . ' - Attendance')
 
-@section('breadcrumb')
+{{-- @section('breadcrumb')
     <a href="{{ route('dashboard') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Dashboard</a>
     <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Employees</a>
@@ -10,7 +10,7 @@
     <a href="{{ route('employees.show', $employee) }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">{{ $employee->full_name }}</a>
     <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">Attendance Records</span>
-@endsection
+@endsection --}}
 
 @section('content')
 

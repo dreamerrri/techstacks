@@ -1,11 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Permissions Management')
-@section('breadcrumb')
-    <span>Manage Users</span>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <span class="text-white font-medium">Permissions</span>
-@endsection
+
 
 @section('content')
 

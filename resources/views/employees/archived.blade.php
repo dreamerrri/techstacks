@@ -1,13 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Archived Employees')
-@section('breadcrumb')
-    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline">Manage Employees</a>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline">Employees</a>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <span class="text-white font-semibold">Archived Employees</span>
-@endsection
+
 
 @section('content')
 
