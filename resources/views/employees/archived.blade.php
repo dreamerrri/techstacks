@@ -11,32 +11,36 @@
 
 @section('content')
 
-    <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
-        <div class="flex items-center gap-3 flex-wrap">
-            <a href="{{ route('employees.index') }}" class="back-link text-gray-500 no-underline text-sm hover:text-emerald-600">
-                <i class="icon-[ph--arrow-left-fill]"></i> Back
+ <a href="{{ route('employees.index') }}" class="back-link text-gray-500 no-underline text-sm hover:text-emerald-600">
+                <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee page
             </a>
-            <h2 class="text-lg font-bold text-gray-800 m-0 flex items-center gap-2">
-                <i class="icon-[ph--archive-fill]"></i> Archived Employees
-            </h2>
-        </div>
-    </div>
+<x-table-card>
+    <x-slot:title>
+        <x-dot-loader /> Archived Employees
+        <x-info-tooltip>
+           Manage archived employees
+        </x-info-tooltip>
+    </x-slot:title>
 
-    <div class="card bg-base-100 shadow-sm overflow-hidden p-0">
 
-        {{-- Desktop Table --}}
-        <div class="table-responsive hidden md:block">
-            <table class="table table-hover w-full text-sm">
-                <thead>
-                    <tr>
+
+
+<x-data-table>
+    <x-slot:head>
+
+             
                         <th>Employee ID</th>
                         <th>Full Name</th>
                         <th>Department</th>
                         <th>Position</th>
                         <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+               
+    </x-slot:head>
+
+
+               
+          
+       
                     @forelse($employees as $employee)
                         <tr>
                             <td class="font-mono text-gray-500">{{ $employee->employee_id }}</td>
@@ -58,16 +62,15 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="py-10 text-center text-gray-400">
-                                <i class="icon-[ph--archive-fill] text-3xl mb-2 block"></i>
-                                No archived employees.
-                            </td>
+                            <td colspan="5" class="py-10 text-gray-400">
+    <div class="flex flex-col items-center"> {{-- Remember this --}}
+        <i class="icon-[ph--archive-fill] text-3xl mb-2"></i>
+        <span>No archived employees.</span> {{-- And this --}}
+    </div>
+</td>
                         </tr>
                     @endforelse
-                </tbody>
-            </table>
-        </div>
-
+    </x-data-table>
         {{-- Mobile Cards --}}
         <div class="md:hidden p-4 flex flex-col gap-3">
             @forelse($employees as $employee)
@@ -111,8 +114,7 @@
             @endforelse
         </div>
 
-    </div>
-
+    
     <div class="mt-5">{{ $employees->links() }}</div>
-
+</x-table-card>
 @endsection

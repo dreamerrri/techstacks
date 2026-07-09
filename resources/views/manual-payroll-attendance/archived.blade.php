@@ -15,23 +15,21 @@
     $user    = auth()->user();
     $isAdmin = $user->isAdmin();
 @endphp
+ <a href="{{ route('manual-payroll-attendance.index') }}" class="back-link text-gray-500 no-underline text-sm hover:text-emerald-600">
+                <i class="icon-[ph--arrow-left-fill]"></i> Back to Attendance page
+            </a>
 
-{{-- Header --}}
-<div class="flex justify-between items-center flex-wrap gap-3 mb-6">
-    <div>
-        <a href="{{ route('manual-payroll-attendance.index') }}"
-           class="text-gray-500 text-sm no-underline inline-flex items-center gap-1 mb-2">
-            <i class="icon-[ph--arrow-left-fill]"></i> Back to Attendance
-        </a>
-        <span class="badge badge-soft badge-neutral mb-2 block w-fit">
-            <i class="icon-[ph--archive-fill]"></i> Archived Payroll Periods
-        </span>
-        <p class="text-gray-500 m-0">Archived periods are read-only and can be restored if needed.</p>
-    </div>
-</div>
+<x-table-card>
+    <x-slot:title>
+        <x-dot-loader/> Arhived Payroll Periods
+        <x-info-tooltip>
+           Archived periods are read-only and can be restored if needed
+        </x-info-tooltip>
+    </x-slot:title>
+
 
 {{-- Archived Periods List --}}
-<div class="card bg-base-100 shadow-sm overflow-hidden p-0">
+
     <div class="px-6 py-5 border-b border-gray-200">
         <h2 class="text-base font-bold text-gray-800 m-0">Archived Periods</h2>
         <p class="text-gray-500 text-sm mt-1 mb-0">{{ $periods->count() }} archived payroll {{ Str::plural('period', $periods->count()) }}</p>
@@ -78,8 +76,8 @@
                         @endif
                     </div>
                 @endforeach
-            </div>
-        </div>
+      </div>
+      </div>
     @else
         <div class="py-16 px-6 text-center">
             <i class="icon-[ph--archive-fill] text-5xl text-gray-300 mb-4 block"></i>
@@ -87,8 +85,11 @@
             <p class="text-gray-400 m-0">Archived payroll periods will appear here.</p>
         </div>
     @endif
-</div>
 
+
+   
+
+</x-table-card>
 @endsection
 
 @section('scripts')
