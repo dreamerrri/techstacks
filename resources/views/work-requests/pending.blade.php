@@ -2,13 +2,6 @@
 
 @section('title', 'Pending Work Requests')
 
-@section('breadcrumb')
-    <a href="{{ route('dashboard') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Dashboard</a>
-    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
-    <a href="{{ route('work-requests.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Work Requests</a>
-    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:600;">Pending Requests</span>
-@endsection
 
 @section('content')
 @php
@@ -19,7 +12,7 @@
     $colorDark = $admin ? '#991b1b' : ($hr ? '#1e40af' : '#764ba2');
 @endphp
 
-
+{{-- -ACTUALLY THIS PAGE IS REDUNDANT SINCE MAY FILTER NAMAN SI WORK-REQUEST INDEX --}}
 
 <x-table-card action="{{ route('work-requests.pending') }}">
     <x-slot:title>

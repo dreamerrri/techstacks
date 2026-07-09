@@ -1,11 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Payroll Preview')
-@section('breadcrumb')
-    <span>Manage Payroll</span>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <span class="text-white font-medium">Payroll</span>
-@endsection
+
 
 @section('content')
 

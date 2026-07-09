@@ -155,6 +155,7 @@ Route::prefix('payroll')->name('payroll.')->group(function () {
     });
 
     // Payroll Period Routes — admin and HR only
+    //Dapat naka nest ito sa manual payroll attendance routes sheeeeeeeeet
 Route::middleware('permission:manage.payroll.periods')->prefix('payroll-periods')->name('payroll-periods.')->group(function () {
     Route::get('/create',                    [PayrollPeriodController::class, 'create'])->name('create');
     Route::get('/archived',                  [PayrollPeriodController::class, 'archived'])->name('archived');

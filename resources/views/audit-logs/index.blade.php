@@ -1,11 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Audit Logs')
-@section('breadcrumb')
-    <span>Monitoring</span>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <span class="text-white font-medium">Audit Logs</span>
-@endsection
+
 
 @section('content')
 <x-table-card action="{{ route('audit-logs.index') }}">

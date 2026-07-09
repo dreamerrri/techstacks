@@ -2,13 +2,6 @@
 
 @section('title', 'Edit Work Request')
 
-@section('breadcrumb')
-    <a href="{{ route('dashboard') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Dashboard</a>
-    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
-    <a href="{{ route('work-requests.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Work Requests</a>
-    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:600;">Edit Request</span>
-@endsection
 
 @section('content')
 

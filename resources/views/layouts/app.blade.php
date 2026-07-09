@@ -43,6 +43,12 @@
         $isHR    = $user->role === 'hr';
         $role    = $isAdmin ? 'admin' : ($isHR ? 'hr' : 'user');
 
+        // Attendance nav item should also light up for payroll-period routes
+        // (create / archived / store / finalize / archive / restore), since
+        // those pages are conceptually part of the attendance/payroll workflow
+        // even though they live under a separate 'payroll-periods.' route name.
+        $attendanceActive = request()->routeIs('manual-payroll-attendance.*') || request()->routeIs('payroll-periods.*');
+
         function profilePhotoUrl($path) {
             if (app()->environment('production')) {
                 return \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($path, now()->addHours(24));
@@ -148,7 +154,7 @@
                 <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
                     <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
                 </a>
-                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
+                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ $attendanceActive ? 'active' : '' }}">
                     <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
                 </a>
                 <a href="{{ route('roles.index') }}" class="nav-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
@@ -164,7 +170,7 @@
                 <a href="{{ route('employees.index') }}" class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                     <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
                 </a>
-                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
+                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ $attendanceActive ? 'active' : '' }}">
                     <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
                 </a>
                 <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span></a>
@@ -231,7 +237,7 @@
 
             <div class="topbar-breadcrumb">
                 <span class="topbar-divider"></span>
-                @yield('breadcrumb')
+                {{ \Diglactic\Breadcrumbs\Breadcrumbs::render() }}
             </div>
 
             <div class="topbar-actions">
@@ -303,7 +309,7 @@
                 @if($isAdmin)
                     @php
                         $userMgmtOpen    = request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('permissions.*');
-                        $empMgmtOpen     = request()->routeIs('employees.*') || request()->routeIs('manual-payroll-attendance.*');
+                        $empMgmtOpen     = request()->routeIs('employees.*') || $attendanceActive;
                         $payrollMgmtOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
                         $monitoringOpen  = request()->routeIs('audit-logs.*') || request()->routeIs('reports.*');
                     @endphp
@@ -335,7 +341,7 @@
                             <a href="{{ route('employees.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                                 <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
                             </a>
-                            <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
+                            <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item nav-sub-item {{ $attendanceActive ? 'active' : '' }}">
                                 <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
                             </a>
                             <a href="{{ route('work-requests.index') }}"
@@ -377,7 +383,7 @@
 
                 @elseif($isHR)
                     @php
-                        $hrEmpOpen     = request()->routeIs('employees.*') || request()->routeIs('manual-payroll-attendance.*');
+                        $hrEmpOpen     = request()->routeIs('employees.*') || $attendanceActive;
                         $hrPayrollOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
                         $hrOtherOpen   = request()->routeIs('reports.*');
                     @endphp
@@ -391,7 +397,7 @@
                             <a href="{{ route('employees.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
                                 <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
                             </a>
-                            <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('manual-payroll-attendance.*') ? 'active' : '' }}">
+                            <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item nav-sub-item {{ $attendanceActive ? 'active' : '' }}">
                                 <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
                             </a>
                             <a href="{{ route('work-requests.index') }}"

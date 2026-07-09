@@ -1,13 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Payroll Details - ' . $employee->full_name)
-@section('breadcrumb')
-    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline">Manage Payroll</a>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <a href="{{ route('payroll.index') }}" class="text-white/55 no-underline">Payroll</a>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <span class="text-white font-semibold">{{ $employee->full_name }}</span>
-@endsection
+
 
 @section('content')
 

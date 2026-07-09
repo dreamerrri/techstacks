@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('title', 'My Attendance')
-
-@section('breadcrumb')
+{{-- @section('breadcrumb')
     <a href="{{ route('dashboard') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Dashboard</a>
     <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
     <span style="color:white; font-weight:600;">My Attendance</span>
 @endsection
+ --}}
 
 @section('content')
 

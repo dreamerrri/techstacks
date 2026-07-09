@@ -1,15 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Edit Employee')
-@section('breadcrumb')
-    <span>Manage Employees</span>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <a href="{{ route('employees.index') }}" class="text-white/55 no-underline">Employees</a>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <a href="{{ route('employees.show', $employee) }}" class="text-white/55 no-underline">{{ $employee->full_name }}</a>
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-    <span class="text-white font-semibold">Edit {{ $employee->full_name }}</span>
-@endsection
+
 
 @section('content')
 
