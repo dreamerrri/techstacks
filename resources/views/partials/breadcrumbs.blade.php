@@ -1,24 +1,37 @@
 {{-- resources/views/partials/breadcrumbs.blade.php --}}
 
 @unless ($breadcrumbs->isEmpty())
-    <div class="breadcrumb-trail flex items-center gap-2" data-depth="{{ $breadcrumbs->count() }}">
-        @foreach ($breadcrumbs as $breadcrumb)
+  <div class="breadcrumb-trail flex items-center" data-depth="{{ $breadcrumbs->count() }}">
+    @foreach ($breadcrumbs as $breadcrumb)
+
+        <span class="breadcrumb-item inline-flex items-center"
+              style="animation-delay: {{ $loop->index * 60 }}ms">
+
             @if (!is_null($breadcrumb->url) && !$loop->last)
-                <a href="{{ $breadcrumb->url }}" class="text-white/55 no-underline transition-colors duration-200 hover:text-white/80">
+                <a href="{{ $breadcrumb->url }}"
+                   class="text-white/55 no-underline transition-colors duration-200 hover:text-white/80">
                     {{ $breadcrumb->title }}
                 </a>
             @elseif($loop->last)
-                <span class="text-white font-semibold">{{ $breadcrumb->title }}</span>
+                <span class="text-white font-semibold">
+                    {{ $breadcrumb->title }}
+                </span>
             @else
-                <span class="text-white/55">{{ $breadcrumb->title }}</span>
+                <span class="text-white/55">
+                    {{ $breadcrumb->title }}
+                </span>
             @endif
 
-            @unless ($loop->last)
-                <i class="icon-[ph--caret-right-fill] text-xs text-white/40"></i>
-            @endunless
-        @endforeach
-    </div>
+        </span>
 
+        @unless ($loop->last)
+            <span class="mx-3 inline-flex items-center text-white/40">
+                <i class="icon-[ph--caret-right-fill] text-xs"></i>
+            </span>
+        @endunless
+
+    @endforeach
+</div>
     <script>
         (function () {
             var el = document.querySelector('.breadcrumb-trail');
@@ -55,14 +68,20 @@
             to   { opacity: 1; }
         }
 
-        .breadcrumb-slide-forward  { animation: breadcrumb-slide-in-right 250ms ease-out; }
-        .breadcrumb-slide-backward { animation: breadcrumb-slide-in-left 250ms ease-out; }
-        .breadcrumb-fade-only      { animation: breadcrumb-fade-in 250ms ease-out; }
+        .breadcrumb-slide-forward .breadcrumb-item {
+            animation: breadcrumb-slide-in-right 250ms ease-out backwards;
+        }
+        .breadcrumb-slide-backward .breadcrumb-item {
+            animation: breadcrumb-slide-in-left 250ms ease-out backwards;
+        }
+        .breadcrumb-fade-only .breadcrumb-item {
+            animation: breadcrumb-fade-in 250ms ease-out backwards;
+        }
 
         @media (prefers-reduced-motion: reduce) {
-            .breadcrumb-slide-forward,
-            .breadcrumb-slide-backward,
-            .breadcrumb-fade-only {
+            .breadcrumb-slide-forward .breadcrumb-item,
+            .breadcrumb-slide-backward .breadcrumb-item,
+            .breadcrumb-fade-only .breadcrumb-item {
                 animation: none;
             }
         }
