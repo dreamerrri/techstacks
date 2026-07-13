@@ -351,7 +351,7 @@ class ManualPayrollAttendanceController extends Controller
             $totalMonthlyAllowances = ($validated['allowances'] ?? 0) * 2;
 
 $withholdingTaxService = new WithholdingTaxService();
-$taxResult = $withholdingTaxService->calculate($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);
+$taxResult = $withholdingTaxService->calculate($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
 $withholdingTax = $taxResult['tax'];
             \Log::info('Withholding tax result in ManualPayrollAttendanceController', [
                 'total_monthly_gross' => $totalMonthlyGross,

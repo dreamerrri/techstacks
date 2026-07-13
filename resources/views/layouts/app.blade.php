@@ -520,7 +520,7 @@
    {{-- SweetAlert2's CDN script is also commented out, but app.js still calls Swal.fire(...) in confirmAction and the data-confirm form handler. Every data-confirm form (archive, delete allowance, delete benefit) will throw Swal is not defined in console and silently fail to submit. --}}
 
 
-   {{-- @yield('scripts') --}}
+   @yield('scripts')
  {{-- @stack('scripts') --}}
     </body>
     </html>
