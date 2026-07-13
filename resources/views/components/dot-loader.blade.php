@@ -12,14 +12,9 @@
     1. Save this file as: resources/views/components/dot-loader.blade.php
     2. Drop it anywhere in a Blade view:
            <x-dot-loader />
-    3. Make sure your main layout has `@stack('scripts')` right before
-       `</body>`. This component pushes its (one-time) script there.
-
-       If your layout uses `@yield('scripts')` instead of stacks (a few
-       of your other Laravel views do), either:
-         a) swap that yield for `@stack('scripts')` in the layout, or
-         b) delete the @push/@endpush block below and paste the
-            <script> tag directly before </body> in your layout once.
+    3. No layout changes needed — the style/script are inlined via @once,
+       not pushed to a stack, so they work regardless of whether your
+       layout uses @yield('scripts') or @stack('scripts').
 
     That's it — no build step, no npm package. It auto-hooks into:
       - normal <form> submits
@@ -58,7 +53,8 @@
         <x-dot-loader color1="#ef4444" color2="#22c55e" color3="#3b82f6" />
 
     Multiple instances on the same page are fine — each has its own
-    props/CSS vars, and the script only ever attaches itself once.
+    props/CSS vars, and the style/script only ever render once per page
+    load regardless of how many times <x-dot-loader /> is used.
     Calling DotLoader.start()/stop() (or a real request firing) will
     animate every instance on the page at once. If you need independent
     per-instance control (e.g. one spinner per row in a table), give
@@ -106,7 +102,6 @@
 </span>
 
 @once
-    @push('scripts')
     <style>
         .dot-loader {
             --dl-size: 10px;
@@ -321,5 +316,4 @@
     }
 })();
     </script>
-    @endpush
 @endonce

@@ -5,6 +5,7 @@ import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 import 'flyonui/flyonui';
 
+
 // ── Global Notyf instance ─────────────────────────────────────
 window.notyf = new Notyf({
     duration: 5000,
@@ -114,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Desktop sidebar minify toggle (FlyonUI overlay minifier) ──
     const SIDEBAR_KEY = 'sidebar_collapsed';
-    const $layout      = $('.desktop-layout');
+    const $layout = $('.app-shell');
 
     function syncSidebarUI(isMinified) {
         $layout.toggleClass('sidebar-mini', isMinified);

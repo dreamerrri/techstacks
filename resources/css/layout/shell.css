@@ -1,43 +1,70 @@
 /* ═══════════════════════════════════════════════
    APP SHELL
-   The two top-level layouts (.mobile-layout / .desktop-layout)
-   and the grid regions inside them. Edit this file when you
-   need to change overall page structure, spacing, or the
-   mobile/desktop breakpoint.
+   One grid (.app-shell) holds both mobile and desktop nav pieces as
+   siblings, plus a single .main-content region. The breakpoint below
+   decides which nav set is visible and where .main-content sits —
+   it does NOT duplicate content in the DOM. (The old .mobile-layout /
+   .desktop-layout split rendered @yield('content') twice, which broke
+   every ID-based JS component: FlyonUI tabs, the allowance/benefit
+   toggle, etc. — querySelector('#id') always grabbed the first,
+   possibly-hidden copy.)
+   Edit this file when you need to change overall page structure,
+   spacing, or the mobile/desktop breakpoint.
    ═══════════════════════════════════════════════ */
 
-.mobile-layout  { display: none; }
-
-.desktop-layout {
+.app-shell {
     display: grid;
-    position: relative;
     grid-template-columns: 250px 1fr;
     grid-template-rows: auto 1fr;
     height: 100vh;
     overflow: hidden;
     transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.desktop-layout.sidebar-mini { grid-template-columns: 68px 1fr; }
+.app-shell.sidebar-mini { grid-template-columns: 68px 1fr; }
 
-/* Grid placement for the three regions inside .desktop-layout.
-   Scoped to .desktop-layout so these rules can't leak onto
-   .sidebar/.desktop-topbar if they're ever reused elsewhere. */
-.desktop-layout .desktop-topbar { grid-column: 1 / -1; grid-row: 1; }
-.desktop-layout .sidebar        { grid-column: 1; grid-row: 2; }
-.desktop-main                   { grid-column: 2; grid-row: 2; overflow-y: auto; }
+/* Desktop nav pieces occupy the grid */
+.app-shell .desktop-topbar { grid-column: 1 / -1; grid-row: 1; }
+.app-shell .sidebar        { grid-column: 1; grid-row: 2; }
+.app-shell .main-content   { grid-column: 2; grid-row: 2; overflow-y: auto; }
 
-/* Content padding (inside both mobile + desktop main areas) */
+/* Mobile nav pieces hidden by default (desktop-first) */
+.app-shell .mobile-topbar,
+.app-shell .burger-dropdown { display: none; }
+
 .content { padding: 40px; }
 
-.mobile-content {
-    overflow-y: auto;
-    min-height: 100vh;
-    height: 100vh;
-}
-
 @media (max-width: 768px) {
-    .mobile-layout  { display: block; }
-    .desktop-layout { display: none !important; }
+    .app-shell {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+    }
+
+    /* Hide desktop nav pieces */
+    .app-shell .desktop-topbar,
+    .app-shell .sidebar { display: none !important; }
+
+    /* Show mobile topbar, placed in the grid */
+    .app-shell .mobile-topbar {
+        display: flex; /* adjust if mobile-topbar's original layout used something else */
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    /* Burger dropdown menu — keep it out of grid flow, same as before
+       (it was already an overlay-style panel, not a grid participant) */
+    .app-shell .burger-dropdown {
+        display: block; /* toggled open/closed via its own JS/class, unchanged */
+    }
+
+    .app-shell .main-content {
+        grid-column: 1;
+        grid-row: 2;
+        overflow-y: visible;
+    }
+
     .content { padding: 20px 16px; }
     .user-mobile-cards { display: block !important; }
 }
@@ -46,7 +73,7 @@
    Restored from sessionStorage before first paint (see the inline
    script in app.blade.php) so the sidebar doesn't visibly "snap"
    from expanded to collapsed on load. */
-.sidebar-pre-collapsed .desktop-layout {
+.sidebar-pre-collapsed .app-shell {
     grid-template-columns: 68px 1fr !important;
     transition: none !important;
 }
