@@ -6,6 +6,8 @@
  *   3. @source flyonui.js   → lets Tailwind see classes FlyonUI's JS injects at runtime,
  *                              needed since node_modules is gitignored
  */
-@plugin 'flyonui';
+@plugin "flyonui" {
+  themes: mintlify --default, dark --prefersdark;
+}
 @import 'flyonui/variants.css';
 @source '../../node_modules/flyonui/flyonui.js';

@@ -30,10 +30,11 @@
 --}}
 @props(['tabs' => []])
 
-<nav class="tabs tabs-bordered" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
+<nav class="tabs tabs-bordered [&_.tab:hover]:text-success [&_.tab:hover]:border-success [&_.tab-active]:border-success [&_.tab-active]:text-success"
+     aria-label="Tabs" role="tablist" aria-orientation="horizontal">
     @foreach($tabs as $index => $tab)
         <button type="button"
-                class="tab active-tab:tab-active active-tab:text-success active-tab:border-success hover:text-success hover:border-success w-full {{ $index === 0 ? 'active' : '' }}"
+                class="tab active-tab:tab-active w-full {{ $index === 0 ? 'active' : '' }}"
                 id="tabs-{{ $tab['id'] }}-item"
                 data-tab="#tabs-{{ $tab['id'] }}"
                 aria-controls="tabs-{{ $tab['id'] }}"
