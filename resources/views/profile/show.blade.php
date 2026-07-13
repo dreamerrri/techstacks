@@ -261,9 +261,62 @@ use Illuminate\Support\Facades\Storage;
                     </button>
                 </form>
             </x-panel>
+                    {{-- New: Appearance / Theme panel --}}
+<x-panel>
+    <x-panel-header icon="icon-[ph--palette-fill]" color="text-indigo-600" bg="bg-indigo-100">
+        Appearance
+    </x-panel-header>
+
+    <p class="text-xs text-gray-400 mb-4">
+        Pick a theme — it applies instantly and is saved to your account.
+    </p>
+
+    @php
+        $themes = ['light','dark','black','claude','corporate','ghibli','gourmet','luxury','mintlify','pastel','perplexity','shadcn','slack','soft','spotify','valorant','vscode'];
+    @endphp
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" id="theme-picker">
+        @foreach($themes as $theme)
+            <label class="cursor-pointer border rounded-field p-3 flex items-center gap-2 has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary"
+                   data-theme="{{ $theme }}">
+                <input type="radio"
+                       name="theme"
+                       value="{{ $theme }}"
+                       class="theme-controller radio radio-sm"
+                       data-theme-select
+                       {{ $user->theme === $theme ? 'checked' : '' }}>
+                <span class="capitalize text-sm">{{ $theme }}</span>
+            </label>
+        @endforeach
+    </div>
+</x-panel>
         </x-tab-panel>
 
-    </div>
+
+
 </div>
+</div>
+
+<script>
+document.querySelectorAll('#theme-picker input[data-theme-select]').forEach(input => {
+    input.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        document.documentElement.setAttribute('data-theme', theme);
+        fetch('{{ route('settings.theme') }}', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({ theme })
+        })
+        .then(res => {
+            console.log('theme save response:', res.status);
+            if (!res.ok) return res.text().then(t => console.error(t));
+        })
+        .catch(err => console.error('theme save failed:', err));
+    });
+});
+</script>
 
 @endsection

@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-    <html lang="en" data-theme="mintlify">
+    <html lang="en" data-theme="{{ auth()->check() ? (auth()->user()->theme ?? 'light') : 'light' }}">
         <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+
+        {{-- FlyonUI theme fonts — required for corporate, ghibli, gourmet, luxury,
+     slack, soft, valorant, claude, pastel, spotify, vscode themes --}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Work+Sans:ital,wght@0,100..900;1,100..900&family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+
+
         <title>@yield('title') - HR Management System</title>
 
         {{-- ⚡ Must be first: restore sidebar + dropdown states before first paint — prevents flash --}}

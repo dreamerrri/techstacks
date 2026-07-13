@@ -7,6 +7,7 @@
 <x-table-card action="{{ route('audit-logs.index') }}">
     <x-slot:title>
         <x-dot-loader /> Audit Logs
+         
         <x-info-tooltip>
             Track and review all system activity and changes.
         </x-info-tooltip>

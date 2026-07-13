@@ -5,9 +5,54 @@
  *   2. @import variants.css → custom variants for JS-driven state (tooltip-shown:, dropdown-open:, etc.)
  *   3. @source flyonui.js   → lets Tailwind see classes FlyonUI's JS injects at runtime,
  *                              needed since node_modules is gitignored
- */
+ themes: mintlify --default, dark --prefersdark; */
 @plugin "flyonui" {
-  themes: mintlify --default, dark --prefersdark;
+  themes: all;
 }
 @import 'flyonui/variants.css';
 @source '../../node_modules/flyonui/flyonui.js';
+
+@plugin "flyonui/theme" {
+  name: "claude";
+  font-family: "Geist";
+}
+@plugin "flyonui/theme" {
+  name: "corporate";
+  font-family: "Public Sans";
+}
+@plugin "flyonui/theme" {
+  name: "ghibli";
+  font-family: "Amaranth";
+}
+@plugin "flyonui/theme" {
+  name: "gourmet";
+  font-family: "Rubik";
+}
+@plugin "flyonui/theme" {
+  name: "luxury";
+  font-family: "Archivo";
+}
+@plugin "flyonui/theme" {
+  name: "pastel";
+  font-family: "Open Sans";
+}
+@plugin "flyonui/theme" {
+  name: "slack";
+  font-family: "Lato";
+}
+@plugin "flyonui/theme" {
+  name: "soft";
+  font-family: "Montserrat";
+}
+@plugin "flyonui/theme" {
+  name: "spotify";
+  font-family: "Lato";
+}
+@plugin "flyonui/theme" {
+  name: "valorant";
+  font-family: "Work Sans";
+}
+@plugin "flyonui/theme" {
+  name: "vscode";
+  font-family: "Fira Code";
+}

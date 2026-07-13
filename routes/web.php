@@ -19,6 +19,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\WorkRequestController;
+use App\Http\Controllers\SettingsController;
 
 Route::get('/test', function () {
     return 'ok';
@@ -48,16 +49,17 @@ Route::middleware('guest')->group(function () {
 
        Route::post('/password/update/send', [AuthController::class, 'updatePassword'])
     ->name('password.update.submit');
-
+   
     
 });
 
 // Protected Routes
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
+ Route::patch('/settings/theme', [SettingsController::class, 'updateTheme'])->name('settings.theme');
     // All roles can reach /dashboard; the controller scopes data per role.
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+    
 
     // Employee Attendance - All authenticated employees can manage their own attendance
     Route::prefix('employee-attendance')->name('employee-attendance.')->group(function () {
