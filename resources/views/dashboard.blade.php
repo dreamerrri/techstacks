@@ -116,7 +116,7 @@
                  style="color: #667eea; background: #667eea20;">
                 <i class="icon-[ph--buildings-fill]"></i>
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $user->employee?->department ?? '—' }}</div>
+            <div class="text-2xl font-small text-gray-800 mb-1">{{ $user->employee?->department ?? '—' }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Department</div>
         </div>
 
@@ -125,7 +125,7 @@
                  style="color: #764ba2; background: #764ba220;">
                 <i class="icon-[ph--identification-badge-fill]"></i>
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $user->employee?->position ?? '—' }}</div>
+            <div class="text-2xl font-small text-gray-800 mb-1">{{ $user->employee?->position ?? '—' }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Position</div>
         </div>
 
@@ -134,7 +134,7 @@
                  style="color: #fbbf24; background: #fbbf2420;">
                 <i class="icon-[ph--briefcase-fill]"></i>
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $user->employee?->employment_status ?? '—' }}</div>
+            <div class="text-2xl font-small text-gray-800 mb-1">{{ $user->employee?->employment_status ?? '—' }}</div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Employment Status</div>
         </div>
 
@@ -143,7 +143,7 @@
                  style="color: #10b981; background: #10b98120;">
                 <i class="icon-[ph--calendar-fill]"></i>
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">
+            <div class="text-2xl font-small text-gray-800 mb-1">
                 {{ $user->employee?->date_hired ? \Carbon\Carbon::parse($user->employee->date_hired)->format('M d, Y') : '—' }}
             </div>
             <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Date Hired</div>

@@ -68,11 +68,18 @@
         $notifCount = \App\Models\Notification::forCurrentUser()->unread()->count();
     @endphp
 
-        {{-- ═══════════════════════════════════════
-            MOBILE LAYOUT
-            ═══════════════════════════════════════ --}}
-        <div class="mobile-layout">
+    {{-- ═══════════════════════════════════════
+        APP SHELL
+        One shell, one content region. Mobile topbar/burger-menu and
+        desktop topbar/sidebar are both always in the DOM as siblings;
+        CSS (app-shell.css) decides which set is visible per breakpoint.
+        @yield('content') renders exactly once — do NOT duplicate it,
+        that's what caused every ID-based JS component (tabs, dropdowns,
+        the allowance/benefit toggle) to silently target the wrong copy.
+        ═══════════════════════════════════════ --}}
+    <div class="app-shell">
 
+        {{-- Mobile topbar --}}
         <div class="mobile-topbar sidebar-{{ $role }}">
             <a href="{{ route('dashboard') }}" class="brand-link">
                 <svg fill="currentColor" height="1.4em" viewBox="0 0 1813 1441" width="1.4em" xmlns="http://www.w3.org/2000/svg" class="brand-logo-icon">
@@ -128,13 +135,13 @@
                     </div>
                 </a>
 
-
                 <button id="burgerBtn" class="icon-btn">
                     <i class="icon-[ph--list-fill]" id="burgerIcon"></i>
                 </button>
             </div>
         </div>
 
+        {{-- Mobile burger menu --}}
         <div class="burger-dropdown sidebar-{{ $role }}" id="burgerDropdown">
             <a href="{{ route('dashboard') }}"
             class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -204,19 +211,7 @@
             </div>
         </div>
 
-        <div class="mobile-content bg-{{ $role }}">
-            <div class="content">
-                @yield('content')
-            </div>
-        </div>
-
-        </div>{{-- end .mobile-layout --}}
-
-    {{-- ═══════════════════════════════════════
-        DESKTOP LAYOUT
-        ═══════════════════════════════════════ --}}
-    <div class="desktop-layout">
-
+        {{-- Desktop topbar --}}
         <div class="topbar desktop-topbar topbar-{{ $role }}">
 
             <a class="techicon brand-link" href="{{ route('dashboard') }}">
@@ -286,12 +281,11 @@
                     </div>
                 </a>
 
-
             </div>
 
         </div>
 
-        {{-- Sidebar --}}
+        {{-- Desktop sidebar --}}
         <div id="main-sidebar" class="sidebar sidebar-{{ $role }} overlay [--auto-close:false]">
             <div class="sidebar-toggle-row">
                 <button id="sidebar-toggle" type="button"
@@ -315,27 +309,27 @@
                     @endphp
 
                     <div class="nav-dropdown {{ $userMgmtOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--user-gear-fill]"></i><span>Manage Users</span>
-                            <i class="icon-[ph--caret-down-fill]"></i>
+                        <button class="nav-item nav-dropdown-trigger swap swap-rotate" type="button">
+                            <i class="icon-[ph--user-gear-fill]"></i><span>Access Control</span>
+                            <i class="dropdown-arrow icon-[ph--caret-down-fill]  w-4 h-4"></i>
                         </button>
-                        <div class="nav-dropdown-menu">
+                        <div class="nav-dropdown-menu" style="hidden">
                             <a href="{{ route('users.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--users-fill]"></i><span>Users</span>
+                                <i class="icon-[ph--users-fill] icon"></i><span>Users</span>
                             </a>
                             <a href="{{ route('roles.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--lock-fill]"></i><span>Roles</span>
+                                <i class="icon-[ph--lock-fill] icon"></i><span>Roles</span>
                             </a>
                             <a href="{{ route('permissions.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--shield-check-fill]"></i><span>Permissions</span>
+                                <i class="icon-[ph--shield-check-fill] icon"></i><span>Permissions</span>
                             </a>
                         </div>
                     </div>
 
                     <div class="nav-dropdown {{ $empMgmtOpen ? 'open' : '' }}">
                         <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--users-three-fill]"></i><span>Manage Employees</span>
-                            <i class="icon-[ph--caret-down-fill]"></i>
+                            <i class="icon-[ph--users-three-fill]"></i><span>Workforce</span>
+                            <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
                         </button>
                         <div class="nav-dropdown-menu">
                             <a href="{{ route('employees.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
@@ -353,8 +347,8 @@
 
                     <div class="nav-dropdown {{ $payrollMgmtOpen ? 'open' : '' }}">
                         <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--wallet-fill]"></i><span>Manage Payroll</span>
-                            <i class="icon-[ph--caret-down-fill]"></i>
+                            <i class="icon-[ph--wallet-fill]"></i><span>Finance</span>
+                            <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
                         </button>
                         <div class="nav-dropdown-menu">
                             <a href="{{ route('payroll.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
@@ -368,8 +362,8 @@
 
                     <div class="nav-dropdown {{ $monitoringOpen ? 'open' : '' }}">
                         <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--chart-line-fill]"></i><span>Monitoring</span>
-                            <i class="icon-[ph--caret-down-fill]"></i>
+                            <i class="icon-[ph--chart-line-fill]"></i><span >Monitoring</span>
+                           <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4" ></i>
                         </button>
                         <div class="nav-dropdown-menu">
                             <a href="{{ route('audit-logs.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
@@ -390,8 +384,8 @@
 
                     <div class="nav-dropdown {{ $hrEmpOpen ? 'open' : '' }}">
                         <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--users-three-fill]"></i><span>Employee Management</span>
-                            <i class="icon-[ph--caret-down-fill]"></i>
+                            <i class="icon-[ph--users-three-fill]"></i><span>Workforce</span>
+                            <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
                         </button>
                         <div class="nav-dropdown-menu">
                             <a href="{{ route('employees.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
@@ -409,8 +403,8 @@
 
                     <div class="nav-dropdown {{ $hrPayrollOpen ? 'open' : '' }}">
                         <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--wallet-fill]"></i><span>Payroll</span>
-                            <i class="icon-[ph--caret-down-fill]"></i>
+                            <i class="icon-[ph--wallet-fill]"></i><span>Finance</span>
+                           <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
                         </button>
                         <div class="nav-dropdown-menu">
                             <a href="{{ route('payroll.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
@@ -424,16 +418,13 @@
 
                     <div class="nav-dropdown {{ $hrOtherOpen ? 'open' : '' }}">
                         <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--chart-line-fill]"></i><span>Reports & Settings</span>
-                            <i class="icon-[ph--caret-down-fill]"></i>
+                            <i class="icon-[ph--chart-line-fill]"></i><span>Settings</span>
+                           <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
                         </button>
                         <div class="nav-dropdown-menu">
                             <a href="#" class="nav-item nav-sub-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
                                 <i class="icon-[ph--chart-bar-fill]"></i><span>Reports</span>
                             </a>
-
-
-                            
                             <a href="#" class="nav-item nav-sub-item">
                                 <i class="icon-[ph--gear-fill]"></i><span>Settings</span>
                             </a>
@@ -462,14 +453,14 @@
             </div>
         </div>
 
-        {{-- Main Content --}}
-        <div class="desktop-main bg-{{ $role }}">
+        {{-- Main content — rendered ONCE, positioned per-breakpoint by CSS --}}
+        <div class="main-content bg-{{ $role }}">
             <div class="content">
                 @yield('content')
             </div>
         </div>
 
-    </div>{{-- end .desktop-layout --}}
+    </div>{{-- end .app-shell --}}
 
     {{-- Desktop notif dropdown --}}
     <script>
@@ -517,10 +508,19 @@
 </script>
 @endif
 
-    {{-- SweetAlert2 for confirm dialogs only --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- FlyonUI JS is loaded once via the Vite bundle (resources/js/app.js
+         has `import 'flyonui/flyonui'`). Do NOT add a second
+         <script src="../node_modules/flyonui/flyonui.js"> here — that was
+         double-initializing every FlyonUI JS component against the
+         (now-removed) duplicated DOM. --}}
 
-    @yield('scripts')
- @stack('scripts')
+    {{-- SweetAlert2 for confirm dialogs only --}}
+   {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+
+   {{-- SweetAlert2's CDN script is also commented out, but app.js still calls Swal.fire(...) in confirmAction and the data-confirm form handler. Every data-confirm form (archive, delete allowance, delete benefit) will throw Swal is not defined in console and silently fail to submit. --}}
+
+
+   {{-- @yield('scripts') --}}
+ {{-- @stack('scripts') --}}
     </body>
     </html>
