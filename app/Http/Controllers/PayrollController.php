@@ -369,30 +369,45 @@ class PayrollController extends Controller
         ];
     }
 
-    /**
-     * Calculate withholding tax based on monthly computation
-     * Formula: (Total Monthly Gross - Total Monthly Contributions - Total Monthly Allowances) - 33,333 = taxablePay
-     * taxablePay * 20% + 1875 = Withholding Tax
-     */
     private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions, float $totalMonthlyAllowances = 0): float
-    {
-        // Calculate taxable income: Total Gross - Total Monthly Contributions - Total Monthly Allowances
-        // Allowances are considered as advance paychecks and should be deducted from taxable income
-        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $totalMonthlyAllowances;
-        
-        // Subtract lower limit of bracket (33,333) to get taxablePay (excess)
-        $taxablePay = $taxableIncome - 33333;
-        
-        // If taxable income is below 33,333, no tax for this bracket
-        if ($taxablePay <= 0) {
-            return 0;
-        }
-        
-        // Apply formula: taxablePay * 20% + 1875
-        $withholdingTax = ($taxablePay * 0.20) + 1875;
-        
-        return round($withholdingTax, 2);
+{
+    // Calculate taxable income: Total Gross - Total Monthly Contributions - Total Monthly Allowances
+    // Allowances are considered as advance paychecks and should be deducted from taxable income
+    $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $totalMonthlyAllowances;
+
+    // Bracket 1: ₱0 - ₱20,833 -> exempt
+    if ($taxableIncome <= 20833) {
+        return 0;
     }
+
+    // Bracket 2: ₱20,833 - ₱33,332 -> 15% of excess over ₱20,833
+    if ($taxableIncome <= 33332) {
+        $taxablePay = $taxableIncome - 20833;
+        return round($taxablePay * 0.15, 2);
+    }
+
+    // Bracket 3: ₱33,333 - ₱66,666 -> ₱1,875 + 20% of excess over ₱33,333
+    if ($taxableIncome <= 66666) {
+        $taxablePay = $taxableIncome - 33333;
+        return round(($taxablePay * 0.20) + 1875, 2);
+    }
+
+    // Bracket 4: ₱66,667 - ₱166,666 -> ₱13,541.80 + 25% of excess over ₱66,667
+    if ($taxableIncome <= 166666) {
+        $taxablePay = $taxableIncome - 66667;
+        return round(($taxablePay * 0.25) + 13541.80, 2);
+    }
+
+    // Bracket 5: ₱166,667 - ₱666,666 -> ₱90,841.80 + 30% of excess over ₱166,667
+    if ($taxableIncome <= 666666) {
+        $taxablePay = $taxableIncome - 166667;
+        return round(($taxablePay * 0.30) + 90841.80, 2);
+    }
+
+    // Bracket 6: Over ₱666,667 -> ₱200,841.80 + 35% of excess over ₱666,667
+    $taxablePay = $taxableIncome - 666667;
+    return round(($taxablePay * 0.35) + 200841.80, 2);
+}
 
     /**
      * Download payslip PDF for an employee.
