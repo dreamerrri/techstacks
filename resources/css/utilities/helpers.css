@@ -17,10 +17,10 @@
 
 /* ── Role backgrounds ──
    Generic "page background" utility, reused on the main content
-   area, mobile content area, and inside various dashboard views. */
+   area, mobile content area, and inside various dashboard views.   background-color: #f5fbf9; */
 .bg-admin,
 .bg-hr,
-.bg-user { background-color: #f5fbf9; }
+.bg-user {}
 
 /* ── Back link (used on show/edit pages) ── */
 .back-link {
