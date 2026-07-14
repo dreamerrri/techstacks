@@ -57,6 +57,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
  Route::patch('/settings/theme', [SettingsController::class, 'updateTheme'])->name('settings.theme');
+
+
+ 
     // All roles can reach /dashboard; the controller scopes data per role.
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     
