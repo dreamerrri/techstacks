@@ -172,7 +172,7 @@ class PayrollInput extends Model
                 'total_monthly_allowances' => $totalMonthlyAllowances,
             ]);
 $withholdingTaxService = new \App\Services\WithholdingTaxService();
-$taxResult = $withholdingTaxService->calculate($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);
+$taxResult = $withholdingTaxService->calculate($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
 $withholdingTax = $taxResult['tax'];
             \Log::info('Withholding tax result in PayrollInput', ['withholding_tax' => $withholdingTax]);
         }

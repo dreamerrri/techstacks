@@ -238,9 +238,11 @@ class PayrollController extends Controller
         ];
 
         // Fetch active allowances and benefits — use loaded relations if available
-        $allowances = $employee->relationLoaded('allowances')
+        // Allowances are stored as full monthly, divide by 2 for per-cutoff calculation
+        $fullMonthlyAllowances = $employee->relationLoaded('allowances')
             ? $employee->allowances->pluck('amount')->toArray()
             : $employee->activeAllowances()->pluck('amount')->toArray();
+        $allowances = array_map(fn($amount) => round($amount / 2, 2), $fullMonthlyAllowances);
 
         $benefits = $employee->relationLoaded('benefits')
             ? $employee->benefits->pluck('amount')->toArray()
@@ -304,22 +306,22 @@ class PayrollController extends Controller
         $totalMonthlyGross = $firstCutoffGrossPay + $grossPay;
         $totalMonthlyContributions = $currentCutoffContributions * 2; // Total monthly fixed contributions
         
-        // Only use current cutoff allowances for withholding tax calculation
-        // Allowances are advance paychecks and should not be doubled across cutoffs
-        $currentCutoffAllowances = array_sum($allowances);
+        // Use total monthly allowances for withholding tax calculation
+        // Since allowances are now per-cutoff (divided by 2), multiply by 2 to get total monthly
+        $totalMonthlyAllowances = array_sum($allowances) * 2;
 
         if ($period && $period->isSecondHalfOfMonth()) {
             \Log::info('Withholding tax calculation in PayrollController', [
                 'total_monthly_gross'         => $totalMonthlyGross,
                 'total_monthly_contributions' => $totalMonthlyContributions,
-                'current_cutoff_allowances'   => $currentCutoffAllowances,
+                'total_monthly_allowances'    => $totalMonthlyAllowances,
             ]);
 
-            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $currentCutoffAllowances);
+            $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
             \Log::info('Withholding tax result', ['withholding_tax' => $withholdingTax]);
         }
 
-        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $currentCutoffAllowances;
+        $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $totalMonthlyAllowances;
 
         // Manual deductions and reimbursements from payroll input
         $manualDeductions = $payrollInput ? ($payrollInput->deductions ?? 0) : 0;
