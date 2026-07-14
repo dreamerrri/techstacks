@@ -7,11 +7,56 @@
  *                              needed since node_modules is gitignored
  themes: mintlify --default, dark --prefersdark; */
 @plugin "flyonui" {
-  themes: all;
+  /* FIX: was "techstacks--default" (no space) — that got parsed as a single
+     literal theme name instead of "techstacks" + the --default flag. */
+  themes: all, techstacks --default;
 }
 @import 'flyonui/variants.css';
 @source '../../node_modules/flyonui/flyonui.js';
 
+/* ── techstacks ──
+   Reproduces today's sidebar/topbar look exactly (mint-teal gradient,
+   white nav text, bright mint hover accent).
+
+   The first block (--color-primary, --color-base-100, etc.) is the
+   normal FlyonUI palette — drives every generic component (buttons,
+   badges, cards) app-wide whenever this theme is active.
+
+   The second block (--color-sidebar-bg, --color-topbar-bg, etc.) is a
+   small custom set of tokens consumed only by layout/sidebar.css,
+   layout/topbar.css, and layout/navigation.css. Only "techstacks"
+   defines them — every other theme falls back to the standard
+   FlyonUI slots above automatically via the var(--x, fallback)
+   chains in those files. This block was missing entirely before,
+   which is why the sidebar/topbar never picked up the gradient. */
+@plugin "flyonui/theme" {
+  name: "techstacks";
+  default: true;
+  color-scheme: light;
+
+  --color-primary: #1e6b57;
+  --color-primary-content: #ffffff;
+  --color-secondary: #247865;
+  --color-secondary-content: #ffffff;
+  --color-accent: #23806a;
+  --color-accent-content: #ffffff;
+  --color-neutral: #1f2937;
+  --color-neutral-content: #f9fafb;
+  --color-base-100: #ffffff;
+  --color-base-200: #f5f7f6;
+  --color-base-300: #e5e7eb;
+  --color-base-content: #111827;
+
+  /* app-chrome tokens — sidebar/topbar-specific, see note above */
+  --color-sidebar-bg: linear-gradient(180deg, #1e6b57 0%, #21765f 30%, #23806a 55%, #258572 75%, #268a77 100%);
+  --color-sidebar-content: #ffffff;
+  --color-sidebar-glow: rgba(52, 211, 153, 0.12);
+  --color-topbar-bg: linear-gradient(to right, #266859 0%, #257462 25%, #247865 50%, #247c67 75%, #23806a 100%);
+  --color-topbar-content: #ffffff;
+  --color-topbar-glow: #ffffff;
+  --color-chrome-accent: rgb(73, 255, 188);
+  --sidebar-wave-opacity: 1;
+}
 @plugin "flyonui/theme" {
   name: "claude";
   font-family: "Geist";

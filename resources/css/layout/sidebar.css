@@ -3,10 +3,19 @@
    The desktop sidebar (colors, wave background, header,
    collapse toggle) and its mobile equivalent, the burger
    dropdown panel.
+
+   Color values now come from the app-chrome custom properties
+   defined in app.css (--color-sidebar-bg, --color-sidebar-content,
+   --color-sidebar-glow, --sidebar-wave-opacity). The "techstacks"
+   theme sets these explicitly to reproduce today's mint-teal
+   gradient + wave look. Every other FlyonUI theme doesn't define
+   them, so the var(--x, fallback) chains below fall back to that
+   theme's own --color-neutral / --color-neutral-content — no
+   gradient, no wave, but fully theme-matched automatically.
    ═══════════════════════════════════════════════ */
 
 .sidebar {
-    color: white;
+    color: var(--color-sidebar-content, var(--color-neutral-content));
     padding: 20px 0;
     position: relative;
     overflow-y: auto;
@@ -21,24 +30,23 @@
 /* Grid placement (grid-column/grid-row) lives in layout/shell.css,
    scoped under .desktop-layout .sidebar. */
 
-/* ── Unified mint green sidebar ── */
+/* ── Sidebar surface ──
+   techstacks overrides --color-sidebar-bg with its gradient; every
+   other theme falls back to a flat --color-neutral surface. */
 .sidebar-admin,
 .sidebar-hr,
 .sidebar-user {
-    background: linear-gradient(180deg,
-        #1e6b57 0%,
-        #21765f 30%,
-        #23806a 55%,
-        #258572 75%,
-        #268a77 100%
-    );
+    background: var(--color-sidebar-bg, var(--color-neutral));
     box-shadow:
         4px 0 6px rgba(0,0,0,0.08),
         8px 0 24px rgba(0,0,0,0.12),
         16px 0 48px rgba(0,0,0,0.08);
 }
 
-/* ── Wave pattern overlay ── */
+/* ── Wave pattern overlay (techstacks-only flourish) ──
+   Opacity is driven by --sidebar-wave-opacity, which defaults to 0
+   (hidden) and is only set to 1 by the techstacks theme. Other
+   themes get a clean flat sidebar with no wave graphic. */
 .sidebar::before {
     content: '';
     position: fixed;
@@ -54,6 +62,7 @@
     mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 15%, rgba(0,0,0,0.5) 25%, transparent 40%);
     pointer-events: none;
     z-index: 0;
+    opacity: var(--sidebar-wave-opacity, 0);
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
 }
 /* Hide the wave once the sidebar is minified (icon-only rail) */
@@ -63,8 +72,8 @@
 .sidebar-header {
     padding: 14px 16px;
     text-align: center;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-top: 1px solid color-mix(in srgb, var(--color-sidebar-content, var(--color-neutral-content)) 8%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-sidebar-content, var(--color-neutral-content)) 8%, transparent);
     margin-bottom: 4px;
     position: relative;
     z-index: 1;
@@ -80,7 +89,9 @@
 }
 .sidebar-admin .sidebar-header::after,
 .sidebar-hr    .sidebar-header::after,
-.sidebar-user  .sidebar-header::after { background: rgba(52, 211, 153, 0.12); }
+.sidebar-user  .sidebar-header::after {
+    background: var(--color-sidebar-glow, color-mix(in srgb, var(--color-chrome-accent, var(--color-primary)) 12%, transparent));
+}
 
 .sidebar-header h1 {
     font-size: 20px;
@@ -107,7 +118,7 @@
 .overlay-minified #sidebar-toggle i { transform: rotate(180deg); }
 #sidebar-toggle {
     border: none;
-    color: rgba(255,255,255,0.75);
+    color: color-mix(in srgb, var(--color-sidebar-content, var(--color-neutral-content)) 75%, transparent);
     cursor: pointer;
     font-size: 20px;
     width: 30px;
@@ -122,10 +133,13 @@
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 #sidebar-toggle:hover {
-    color: #6ee7b7;
+    color: var(--color-chrome-accent, var(--color-primary));
 }
 
-/* ── Mobile equivalent: burger dropdown panel ── */
+/* ── Mobile equivalent: burger dropdown panel ──
+   Shares the sidebar-{role} classes (see app_blade.php), so its
+   background/text come from the exact same variables as the
+   desktop sidebar above. */
 .burger-dropdown {
     max-height: 0;
     overflow: hidden;

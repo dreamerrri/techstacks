@@ -3,6 +3,13 @@
    Shared topbar styling (desktop + mobile), the brand/logo
    block, breadcrumb, and the profile/notification cluster
    on the right side of the topbar.
+
+   Uses the same app-chrome variable pattern as sidebar.css:
+   --color-topbar-bg / --color-topbar-content / --color-topbar-glow
+   are set explicitly by the techstacks theme (app.css) and fall
+   back to standard FlyonUI slots (--color-base-200 / --color-base-content)
+   for every other theme. --color-chrome-accent is the shared mint
+   hover accent used by both the sidebar and the topbar.
    ═══════════════════════════════════════════════ */
 
 .topbar {
@@ -10,8 +17,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: white;
-    border-bottom: 1px solid #e5e7eb;
+    background: var(--color-topbar-bg, var(--color-base-200));
+    border-bottom: 1px solid color-mix(in srgb, var(--color-topbar-content, var(--color-base-content)) 15%, transparent);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -26,7 +33,7 @@
     height: 280px;
     border-radius: 50%;
     opacity: 0.09;
-    background: white;
+    background: var(--color-topbar-glow, var(--color-chrome-accent, var(--color-primary)));
     pointer-events: none;
 }
 .topbar::before { display: none; }
@@ -35,7 +42,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    border-bottom: 2px solid rgba(255,255,255,0.12);
+    border-bottom: 2px solid color-mix(in srgb, var(--color-topbar-content, var(--color-base-content)) 12%, transparent);
     box-shadow:
         0 1px 3px rgba(0,0,0,0.08),
         0 4px 12px rgba(0,0,0,0.12),
@@ -59,28 +66,29 @@
         0 8px 24px rgba(0,0,0,0.06);
 }
 
-/* ── Role gradient backgrounds ── */
+/* ── Role gradient backgrounds ──
+   NOTE: mobile-topbar must carry `topbar-{role}` (not `sidebar-{role}`)
+   for this to apply — see the app_blade.php fix. */
 .topbar-admin, .bg-admin .topbar,
 .topbar-hr,    .bg-hr .topbar,
 .topbar-user,  .bg-user .topbar {
-    background: linear-gradient(
-        to right,
-        #266859 0%,    /* saturated */
-        #257462 25%,   /* lighter */
-        #247865 50%,   /* transition */
-        #247c67 75%,   /* brighter */
-        #23806a 100%   /* final */
-    );
+    background: var(--color-topbar-bg, var(--color-base-200));
 }
 
 .bg-admin .topbar h2, .bg-hr .topbar h2, .bg-user .topbar h2,
-.topbar-admin h2, .topbar-hr h2, .topbar-user h2 { color: white !important; }
+.topbar-admin h2, .topbar-hr h2, .topbar-user h2 {
+    color: var(--color-topbar-content, var(--color-base-content)) !important;
+}
 
 .bg-admin .topbar .user-name, .bg-hr .topbar .user-name, .bg-user .topbar .user-name,
-.topbar-admin .user-name, .topbar-hr .user-name, .topbar-user .user-name { color: rgba(255,255,255,0.9) !important; }
+.topbar-admin .user-name, .topbar-hr .user-name, .topbar-user .user-name {
+    color: color-mix(in srgb, var(--color-topbar-content, var(--color-base-content)) 90%, transparent) !important;
+}
 
 .bg-admin .topbar .user-role, .bg-hr .topbar .user-role, .bg-user .topbar .user-role,
-.topbar-admin .user-role, .topbar-hr .user-role, .topbar-user .user-role { color: rgba(255,255,255,0.55) !important; }
+.topbar-admin .user-role, .topbar-hr .user-role, .topbar-user .user-role {
+    color: color-mix(in srgb, var(--color-topbar-content, var(--color-base-content)) 55%, transparent) !important;
+}
 
 /* ── Brand / logo block ──
    One shared set of classes for the "Techstacks" logo + label,
@@ -92,7 +100,7 @@
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    color: #fff;
+    color: var(--color-topbar-content, var(--color-base-content));
 }
 .desktop-topbar .brand-link { gap: 10px; }
 
@@ -160,12 +168,12 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    color: rgba(255,255,255,0.55);
+    color: color-mix(in srgb, var(--color-topbar-content, var(--color-base-content)) 55%, transparent);
     font-size: 13px;
 }
 .topbar-breadcrumb a:hover,
 .topbar-breadcrumb span:hover {
-    color: rgb(73, 255, 188);
+    color: var(--color-chrome-accent, var(--color-primary));
     cursor: pointer;
 }
 .topbar-breadcrumb span {
@@ -181,7 +189,7 @@
 .topbar-divider {
     width: 1px;
     height: 28px;
-    background: rgba(255,255,255,0.35);
+    background: color-mix(in srgb, var(--color-topbar-content, var(--color-base-content)) 35%, transparent);
     margin-right: 10px;
     margin-left: 15px;
 }
@@ -202,7 +210,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #fff;
+    color: var(--color-topbar-content, var(--color-base-content));
     font-size: 20px;
     padding: 4px;
     display: flex;
@@ -227,7 +235,7 @@
 /* ── Profile name/role text (topbar-specific sizing) ── */
 .profile-group:hover .user-name,
 .profile-group:hover .user-role {
-    color: rgb(73, 255, 188) !important;
+    color: var(--color-chrome-accent, var(--color-primary)) !important;
 }
 .user-name, .user-role {
     transition: color 0.2s ease;

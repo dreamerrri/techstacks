@@ -272,12 +272,12 @@ use Illuminate\Support\Facades\Storage;
     </p>
 
     @php
-        $themes = ['light','dark','black','claude','corporate','ghibli','gourmet','luxury','mintlify','pastel','perplexity','shadcn','slack','soft','spotify','valorant','vscode'];
+        $themes = ['techstacks','light','dark','black','claude','corporate','ghibli','gourmet','luxury','mintlify','pastel','perplexity','shadcn','slack','soft','spotify','valorant','vscode'];
     @endphp
 
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" id="theme-picker">
         @foreach($themes as $theme)
-            <label class="cursor-pointer border rounded-field p-3 flex items-center gap-2 has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary"
+            <label class="cursor-pointer border rounded-field p-3 flex items-center gap-2 has-checked:border-primary has-checked:ring-2"
                    data-theme="{{ $theme }}">
                 <input type="radio"
                        name="theme"
