@@ -10,12 +10,13 @@
    theme sets these explicitly to reproduce today's mint-teal
    gradient + wave look. Every other FlyonUI theme doesn't define
    them, so the var(--x, fallback) chains below fall back to that
-   theme's own --color-neutral / --color-neutral-content — no
-   gradient, no wave, but fully theme-matched automatically.
+   theme's own --color-base-200 / --color-base-content — matching
+   the topbar's fallback tokens so both chrome surfaces stay in
+   sync for any theme that doesn't explicitly override them.
    ═══════════════════════════════════════════════ */
 
 .sidebar {
-    color: var(--color-sidebar-content, var(--color-neutral-content));
+    color: var(--color-sidebar-content, var(--color-base-content));
     padding: 20px 0;
     position: relative;
     overflow-y: auto;
@@ -32,17 +33,19 @@
 
 /* ── Sidebar surface ──
    techstacks overrides --color-sidebar-bg with its gradient; every
-   other theme falls back to a flat --color-neutral surface. */
+   other theme falls back to a flat --color-base-200 surface. */
 .sidebar-admin,
 .sidebar-hr,
 .sidebar-user {
-    background: var(--color-sidebar-bg, var(--color-neutral));
+    background: var(--color-sidebar-bg, var(--color-base-200));
     box-shadow:
         4px 0 6px rgba(0,0,0,0.08),
         8px 0 24px rgba(0,0,0,0.12),
         16px 0 48px rgba(0,0,0,0.08);
 }
-
+#sidebar-arrow {
+    background-color: var(--color-sidebar-content, var(--color-base-content));
+}
 /* ── Wave pattern overlay (techstacks-only flourish) ──
    Opacity is driven by --sidebar-wave-opacity, which defaults to 0
    (hidden) and is only set to 1 by the techstacks theme. Other
@@ -72,8 +75,8 @@
 .sidebar-header {
     padding: 14px 16px;
     text-align: center;
-    border-top: 1px solid color-mix(in srgb, var(--color-sidebar-content, var(--color-neutral-content)) 8%, transparent);
-    border-bottom: 1px solid color-mix(in srgb, var(--color-sidebar-content, var(--color-neutral-content)) 8%, transparent);
+    border-top: 1px solid color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 8%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 8%, transparent);
     margin-bottom: 4px;
     position: relative;
     z-index: 1;
@@ -118,7 +121,7 @@
 .overlay-minified #sidebar-toggle i { transform: rotate(180deg); }
 #sidebar-toggle {
     border: none;
-    color: color-mix(in srgb, var(--color-sidebar-content, var(--color-neutral-content)) 75%, transparent);
+    color: color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 75%, transparent);
     cursor: pointer;
     font-size: 20px;
     width: 30px;

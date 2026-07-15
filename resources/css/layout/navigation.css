@@ -19,7 +19,7 @@
 
 /* ── Nav items ── */
 .nav-item {
-    color: var(--color-sidebar-content, var(--color-neutral-content));
+    color: var(--color-sidebar-content, var(--color-base-content));
     font-size: 14.5px;
     padding: 11px 16px;
     cursor: pointer;
@@ -48,7 +48,7 @@
 }
 .nav-item:hover i { transform: translateX(3px); }
 .nav-item.active {
-    color: var(--color-sidebar-content, var(--color-neutral-content));
+    color: var(--color-sidebar-content, var(--color-base-content));
     font-weight: 600;
     border-radius: 8px;
 }
@@ -58,7 +58,7 @@
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    color: var(--color-sidebar-content, var(--color-neutral-content));
+    color: var(--color-sidebar-content, var(--color-base-content));
     flex-shrink: 0;
 }
 .dropdown-arrow {
@@ -71,7 +71,7 @@
 .sidebar-admin .nav-item.nav-sub-item.active,
 .sidebar-hr    .nav-item.nav-sub-item.active,
 .sidebar-user  .nav-item.nav-sub-item.active {
-    color: var(--color-sidebar-content, var(--color-neutral-content));
+    color: var(--color-sidebar-content, var(--color-base-content));
 }
 
 /* ── Mini sidebar (FlyonUI overlay minifier): icon-only nav items ── */
@@ -91,9 +91,9 @@
     width: calc(100% - 40px);
     margin: 0 20px;
     padding: 10px;
-    background: color-mix(in srgb, var(--color-sidebar-content, var(--color-neutral-content)) 7%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-sidebar-content, var(--color-neutral-content)) 15%, transparent);
-    color: color-mix(in srgb, var(--color-sidebar-content, var(--color-neutral-content)) 75%, transparent);
+    background: color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 7%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 15%, transparent);
+    color: color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 75%, transparent);
     border-radius: 8px;
     cursor: pointer;
     text-align: center;
@@ -139,17 +139,17 @@
 }
 
 .nav-dropdown-menu::before {
-    content: '';
+    content: "";
+    z-index: 0;
+    width: 1px;
     position: absolute;
     top: 6px;
     bottom: 6px;
-    left: 27px;              /* tweak until it lines up with the icon column above */
-    width: 1px;
-    /* FIX: was rgba(255,255,255,255) — alpha 255 isn't valid (0-1 or 0-100%),
-       browsers clamp it to fully opaque. Now a proper theme-aware faint line. */
-    background: color-mix(in srgb, var(--color-sidebar-content, var(--color-neutral-content)) 20%, transparent);
-    z-index: 0;
+    left: 27px;
+    background: color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 20%, transparent);
 }
+
+
 
 /* Kill it in mini/collapsed mode — sub-items become flat standalone rows there */
 .overlay-minified .nav-dropdown-menu::before {
@@ -209,10 +209,10 @@
 .burger-btn {
     background: none; border: none; cursor: pointer;
     padding: 6px 8px; border-radius: 5px;
-    color: var(--color-sidebar-content, var(--color-neutral-content));
+    color: var(--color-sidebar-content, var(--color-base-content));
     transition: background 0.2s;
     font-size: 20px; line-height: 1;
 }
 .burger-btn:hover {
-    background: color-mix(in srgb, var(--color-sidebar-content, var(--color-neutral-content)) 20%, transparent);
+    background: color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 20%, transparent);
 }

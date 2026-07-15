@@ -11,8 +11,8 @@
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-red-600 bg-red-100">
                 <i class="icon-[ph--user-fill]"></i>
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ $employees->total() }}</div>
-            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Total Employees</div>
+            <div class="text-3xl font-bold text-base-content mb-1">{{ $employees->total() }}</div>
+            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Total Employees</div>
         </div>
 
 
@@ -20,23 +20,23 @@
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-emerald-600 bg-emerald-100">
                 <i class="icon-[ph--check-circle-fill]"></i>
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\Employee::active()->where('employment_status','Regular')->count() }}</div>
-            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Regular</div>
+            <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\Employee::active()->where('employment_status','Regular')->count() }}</div>
+            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Regular</div>
         </div>
         <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-amber-400 bg-amber-100">
                 <i class="icon-[ph--clock-fill]"></i>
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\Employee::active()->where('employment_status','Probationary')->count() }}</div>
-            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Probationary</div>
+            <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\Employee::active()->where('employment_status','Probationary')->count() }}</div>
+            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Probationary</div>
         </div>
          <a href="{{ route('employees.archived') }}"class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
-              <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-gray-500 bg-gray-100">
+              <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-base-content/60 bg-gray-100">
                 <i class="icon-[ph--archive-fill]"></i>
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\Employee::archived()->count() }}</div>
+            <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\Employee::archived()->count() }}</div>
            
-            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Archived</div>
+            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Archived</div>
          </a>
           
         </div>
@@ -48,11 +48,11 @@
         {{-- Card header --}}
         <div class="sticky top-0 z-10  px-6 pt-5 rounded-t-2xl">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-                <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
+                <h2 class="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
                     <x-dot-loader /> Employee List
                     
                 <div class="tooltip [--placement:right]">
-    <span class="tooltip-toggle cursor-pointer text-gray-400 hover:text-gray-600" aria-label="More info">
+    <span class="tooltip-toggle cursor-pointer text-base-content/40 hover:text-base-content/70" aria-label="More info">
         <i class="icon-[ph--info-fill]"></i>
     </span>
     <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
@@ -70,7 +70,7 @@
         </a>
        
             </div> 
-            {{-- -HIDE MUNA   <a href="{{ route('employees.archived') }}" class="text-gray-500 text-xs no-underline hover:text-emerald-600">
+            {{-- -HIDE MUNA   <a href="{{ route('employees.archived') }}" class="text-base-content/60 text-xs no-underline hover:text-emerald-600">
                     <i class="icon-[ph--archive-fill]"></i> View Archived
                 </a>--}} 
 
@@ -162,19 +162,19 @@
                             };
                         @endphp
                         <tr class="row-hover ">
-                            <td class="font-mono text-gray-500">{{ $employee->employee_id }}</td>
+                            <td class="font-mono text-base-content/60">{{ $employee->employee_id }}</td>
                             <td>
                                 <a href="{{ route('employees.show', $employee) }}"
-                                   class="text-gray-800 no-underline font-semibold hover:text-emerald-600">
+                                   class="text-base-content no-underline font-semibold hover:text-emerald-600">
                                     {{ $employee->full_name }}
                                 </a>
                             </td>
-                            <td class="text-gray-500">{{ $employee->department }}</td>
-                            <td class="text-gray-500">{{ $employee->position }}</td>
+                            <td class="text-base-content/60">{{ $employee->department }}</td>
+                            <td class="text-base-content/60">{{ $employee->position }}</td>
                             <td>
                                 <span class="badge {{ $statusClass }}">{{ $employee->employment_status }}</span>
                             </td>
-                            <td class="text-gray-500">{{ $employee->date_hired->format('M d, Y') }}</td>
+                            <td class="text-base-content/60">{{ $employee->date_hired->format('M d, Y') }}</td>
                             <td>
                                 <div class="flex gap-2">
                                     <a href="{{ route('employees.show', $employee) }}" class="btn btn-soft btn-info btn-sm">
@@ -198,7 +198,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-10 text-center text-gray-400">
+                            <td colspan="7" class="py-10 text-center text-base-content/40">
                                 <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
                                 No employees found.
                             </td>
@@ -220,7 +220,7 @@
                         default        => 'badge-soft',
                     };
                 @endphp
-                <div class="card bg-base-100 border border-gray-200 p-4">
+                <div class="card bg-base-100 border  border-base-300 p-4">
                     <div class="flex justify-between items-start mb-2">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
@@ -236,16 +236,16 @@
                             </div>
                             <div>
                                 <a href="{{ route('employees.show', $employee) }}"
-                                   class="text-gray-800 no-underline font-semibold text-sm hover:text-emerald-600">
+                                   class="text-base-content no-underline font-semibold text-sm hover:text-emerald-600">
                                     {{ $employee->full_name }}
                                 </a>
-                                <div class="text-xs text-gray-500 font-mono">{{ $employee->employee_id }}</div>
+                                <div class="text-xs text-base-content/60 font-mono">{{ $employee->employee_id }}</div>
                             </div>
                         </div>
                         <span class="badge {{ $statusClass }} whitespace-nowrap">{{ $employee->employment_status }}</span>
                     </div>
 
-                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
                         <span><i class="icon-[ph--buildings-fill] w-3.5"></i> {{ $employee->department }}</span>
                         <span><i class="icon-[ph--briefcase-fill] w-3.5"></i> {{ $employee->position }}</span>
                         <span><i class=" icon-[ph--calendar-fill] w-3.5"></i> {{ $employee->date_hired->format('M d, Y') }}</span>
@@ -271,7 +271,7 @@
                     </div>
                 </div>
             @empty
-                <div class="py-10 text-center text-gray-400">
+                <div class="py-10 text-center text-base-content/40">
                     <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
                     No employees found.
                 </div>

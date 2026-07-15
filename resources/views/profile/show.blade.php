@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Storage;
 
         <div class="text-center mt-2 pb-6">
             <h3 class="text-2xl text-base-content font-bold leading-normal mb-1">{{ $user->name }}</h3>
-            <p class="text-gray-500 text-sm m-0 mb-2">{{ $user->email }}</p>
+            <p class="text-base-content/60 text-sm m-0 mb-2">{{ $user->email }}</p>
             <div class="text-xs mt-0 mb-2 text-base-content/60 font-bold uppercase flex items-center justify-center gap-1">
                 <span class="badge {{ $roleClass }}">{{ ucfirst($user->role) }}</span>
                 @if($employee)
@@ -63,30 +63,30 @@ use Illuminate\Support\Facades\Storage;
                             @csrf @method('PUT')
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
                                 <div class="fieldset">
-                                    <label class="label text-xs font-semibold text-gray-600">First Name</label>
+                                    <label class="label text-xs font-semibold text-base-content/70">First Name</label>
                                     <input type="text" name="first_name" value="{{ old('first_name', $employee->first_name) }}"
                                            class="input input-bordered w-full" required>
                                     @error('first_name') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="fieldset">
-                                    <label class="label text-xs font-semibold text-gray-600">Middle Name</label>
+                                    <label class="label text-xs font-semibold text-base-content/70">Middle Name</label>
                                     <input type="text" name="middle_name" value="{{ old('middle_name', $employee->middle_name) }}"
                                            class="input input-bordered w-full">
                                 </div>
                                 <div class="fieldset">
-                                    <label class="label text-xs font-semibold text-gray-600">Last Name</label>
+                                    <label class="label text-xs font-semibold text-base-content/70">Last Name</label>
                                     <input type="text" name="last_name" value="{{ old('last_name', $employee->last_name) }}"
                                            class="input input-bordered w-full" required>
                                     @error('last_name') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="fieldset">
-                                    <label class="label text-xs font-semibold text-gray-600">Birthdate</label>
+                                    <label class="label text-xs font-semibold text-base-content/70">Birthdate</label>
                                     <input type="date" name="birthdate" value="{{ old('birthdate', $employee->birthdate->format('Y-m-d')) }}"
                                            class="input input-bordered w-full" required max="{{ date('Y-m-d', strtotime('-1 day')) }}">
                                     @error('birthdate') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="fieldset">
-                                    <label class="label text-xs font-semibold text-gray-600">Gender</label>
+                                    <label class="label text-xs font-semibold text-base-content/70">Gender</label>
                                     <select name="gender" class="select select-bordered w-full" required>
                                         @foreach(['Male','Female','Other'] as $g)
                                             <option value="{{ $g }}" {{ old('gender', $employee->gender) == $g ? 'selected' : '' }}>{{ $g }}</option>
@@ -95,7 +95,7 @@ use Illuminate\Support\Facades\Storage;
                                     @error('gender') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="fieldset">
-                                    <label class="label text-xs font-semibold text-gray-600">Civil Status</label>
+                                    <label class="label text-xs font-semibold text-base-content/70">Civil Status</label>
                                     <select name="civil_status" class="select select-bordered w-full" required>
                                         @foreach(['Single','Married','Widowed','Separated'] as $cs)
                                             <option value="{{ $cs }}" {{ old('civil_status', $employee->civil_status) == $cs ? 'selected' : '' }}>{{ $cs }}</option>
@@ -104,13 +104,13 @@ use Illuminate\Support\Facades\Storage;
                                     @error('civil_status') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="fieldset">
-                                    <label class="label text-xs font-semibold text-gray-600">Contact Number</label>
+                                    <label class="label text-xs font-semibold text-base-content/70">Contact Number</label>
                                     <input type="text" name="contact_number" value="{{ old('contact_number', $employee->contact_number) }}"
                                            placeholder="09XXXXXXXXX" maxlength="11" class="input input-bordered w-full">
                                     @error('contact_number') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                                 <div class="fieldset md:col-span-2 lg:col-span-3">
-                                    <label class="label text-xs font-semibold text-gray-600">Address</label>
+                                    <label class="label text-xs font-semibold text-base-content/70">Address</label>
                                     <textarea name="address" rows="2" class="textarea textarea-bordered w-full">{{ old('address', $employee->address) }}</textarea>
                                     @error('address') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
@@ -132,7 +132,7 @@ use Illuminate\Support\Facades\Storage;
                             <x-detail-row label="Date Hired">{{ $employee->date_hired->format('M d, Y') }}</x-detail-row>
                             <x-detail-row label="Salary Type" :border="false">{{ $employee->salary_type }}</x-detail-row>
                         </div>
-                        <div class="mt-3 px-3 py-2 bg-gray-50 rounded-lg text-xs text-gray-400">
+                        <div class="mt-3 px-3 py-2 bg-gray-50 rounded-lg text-xs text-base-content/40">
                             <i class="icon-[ph--info-fill]"></i> Employment details can only be changed by HR.
                         </div>
                     </x-panel>
@@ -195,8 +195,8 @@ use Illuminate\Support\Facades\Storage;
                                 <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 {{ $color }} {{ $bg }}">
                                     <i class="{{ $icon }} size-5"></i>
                                 </div>
-                                <div class="text-xs text-gray-400 uppercase tracking-widest font-medium mb-1">{{ $label }}</div>
-                                <div class="font-bold font-mono text-gray-800 text-xs break-all">{{ $value ?? '—' }}</div>
+                                <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium mb-1">{{ $label }}</div>
+                                <div class="font-bold font-mono text-base-content text-xs break-all">{{ $value ?? '—' }}</div>
                             </x-panel>
                         @endforeach
                     </div>
@@ -218,39 +218,39 @@ use Illuminate\Support\Facades\Storage;
                     @csrf @method('PUT')
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
                         <div class="fieldset">
-                            <label class="label text-xs font-semibold text-gray-600">Display Name</label>
+                            <label class="label text-xs font-semibold text-base-content/70">Display Name</label>
                             <input type="text" name="name" value="{{ old('name', $user->name) }}"
                                    class="input input-bordered w-full" required>
                             @error('name') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div class="fieldset">
-                            <label class="label text-xs font-semibold text-gray-600">Email Address</label>
+                            <label class="label text-xs font-semibold text-base-content/70">Email Address</label>
                             <input type="email" name="email" value="{{ old('email', $user->email) }}"
                                    class="input input-bordered w-full" required>
                             @error('email') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
-                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">
+                    <div class="text-xs font-semibold text-base-content/40 uppercase tracking-widest mb-2">
                         Change Password <span class="normal-case font-normal">(leave blank to keep current)</span>
                     </div>
-                    <div class="border-t border-gray-200 mb-4"></div>
+                    <div class="border-t  border-base-300 mb-4"></div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
                         <div class="fieldset">
-                            <label class="label text-xs font-semibold text-gray-600">Current Password</label>
+                            <label class="label text-xs font-semibold text-base-content/70">Current Password</label>
                             <input type="password" name="current_password"
                                    class="input input-bordered w-full" placeholder="••••••••">
                             @error('current_password') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div class="fieldset">
-                            <label class="label text-xs font-semibold text-gray-600">New Password</label>
+                            <label class="label text-xs font-semibold text-base-content/70">New Password</label>
                             <input type="password" name="password"
                                    class="input input-bordered w-full" placeholder="••••••••">
                             @error('password') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div class="fieldset">
-                            <label class="label text-xs font-semibold text-gray-600">Confirm New Password</label>
+                            <label class="label text-xs font-semibold text-base-content/70">Confirm New Password</label>
                             <input type="password" name="password_confirmation"
                                    class="input input-bordered w-full" placeholder="••••••••">
                         </div>
@@ -267,7 +267,7 @@ use Illuminate\Support\Facades\Storage;
         Appearance
     </x-panel-header>
 
-    <p class="text-xs text-gray-400 mb-4">
+    <p class="text-xs text-base-content/40 mb-4">
         Pick a theme — it applies instantly and is saved to your account.
     </p>
 

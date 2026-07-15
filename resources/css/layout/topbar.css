@@ -24,7 +24,8 @@
     z-index: 10;
     overflow: visible;
 }
-.topbar::after {
+.topbar::after {/* hide ko muna */
+    display:none;
     content: '';
     position: absolute;
     top: -80px;
@@ -41,7 +42,7 @@
 .desktop-topbar {
     position: sticky;
     top: 0;
-    z-index: 100;
+ 
     border-bottom: 2px solid color-mix(in srgb, var(--color-topbar-content, var(--color-base-content)) 12%, transparent);
     box-shadow:
         0 1px 3px rgba(0,0,0,0.08),
@@ -59,7 +60,7 @@
     align-items: center;
     position: sticky;
     top: 0;
-    z-index: 200;
+   
     box-shadow:
         0 1px 3px rgba(0,0,0,0.08),
         0 4px 12px rgba(0,0,0,0.12),
@@ -168,9 +169,9 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    color: color-mix(in srgb, var(--color-topbar-content, var(--color-base-content)) 55%, transparent);
     font-size: 13px;
 }
+
 .topbar-breadcrumb a:hover,
 .topbar-breadcrumb span:hover {
     color: var(--color-chrome-accent, var(--color-primary));
@@ -240,5 +241,30 @@
 .user-name, .user-role {
     transition: color 0.2s ease;
 }
-.topbar .user-name { font-size: 14px; font-weight: 600; }
-.topbar .user-role { font-size: 12px; }
+.topbar .user-name {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px; /* tune to taste */
+}
+.topbar .user-role {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+}
+
+
+.breadcrumb-link,
+.breadcrumb-separator {
+    color: var(--color-topbar-content, var(--color-base-content));
+}
+.breadcrumb-current {
+    color: var(--color-chrome-accent, var(--color-primary));
+}
+.breadcrumb-link:hover {
+    color: var(--color-chrome-accent, var(--color-primary));
+}

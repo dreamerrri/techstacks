@@ -6,7 +6,7 @@
 
     Props:
         icon  (string, required) Iconify class, e.g. 'icon-[ph--briefcase-fill]'
-        color (string, optional) Icon text color class. Default: 'text-gray-500'
+        color (string, optional) Icon text color class. Default: 'text-base-content/60'
         bg    (string, optional) Icon square background class. Default: 'bg-gray-100'
 
     Slot: heading text.
@@ -18,11 +18,11 @@
 --}}
 @props([
     'icon',
-    'color' => 'text-gray-500',
+    'color' => 'text-base-content/60',
     'bg'    => 'bg-gray-100',
 ])
 
-<h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+<h2 class="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
     <span class="w-7 h-7 rounded-md {{ $bg }} flex items-center justify-center {{ $color }} text-xs flex-shrink-0">
         <i class="{{ $icon }}"></i>
     </span>

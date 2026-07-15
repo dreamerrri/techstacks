@@ -39,13 +39,13 @@
     <div class="bg-white rounded-2xl w-full max-w-[90vw]  mx-auto shadow-2xl overflow-hidden">
 
         {{-- Modal header --}}
-        <div class="px-7 py-5 border-b border-gray-200 flex justify-between items-center">
+        <div class="px-7 py-5 border-b  border-base-300 flex justify-between items-center">
             <div>
-                <div class="text-base font-bold text-gray-800 flex items-center gap-2">
+                <div class="text-base font-bold text-base-content flex items-center gap-2">
                     <i class="icon-[ph--stack-fill] text-red-600"></i>
                     <span id="contribModalTitle">Contribution Breakdown</span>
                 </div>
-                <div class="text-xs text-gray-500 mt-1" id="contribModalMeta">—</div>
+                <div class="text-xs text-base-content/60 mt-1" id="contribModalMeta">—</div>
             </div>
             <button onclick="closeContribModal()" class="btn btn-error btn-sm btn-circle">
                 <i class="icon-[ph--x]"></i>
@@ -73,14 +73,14 @@
             </table>
            
 
-            <div id="contribBreakdownEmpty" class="py-10 text-gray-400 flex flex-col items-center justify-center gap-2 w-full">
+            <div id="contribBreakdownEmpty" class="py-10 text-base-content/40 flex flex-col items-center justify-center gap-2 w-full">
     <i class="icon-[ph--tray-fill] text-3xl"></i>
     <span>No contribution data for the current filter.</span>
 </div>
         </div>
 
         {{-- Modal footer --}}
-        <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center flex-wrap gap-2">
+        <div class="px-6 py-4 border-t  border-base-300 flex justify-between items-center flex-wrap gap-2">
             <div class="flex gap-2 flex-wrap">
                 <button onclick="printContribBreakdown()" class="btn btn-soft btn-info btn-sm">
                     <i class="icon-[ph--printer-fill]"></i> Print PDF
@@ -101,11 +101,11 @@
     {{-- Card header --}}
     <div class="sticky top-0 z-1 px-7 pt-5 rounded-t-2xl">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
+            <h2 class="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
                 <x-dot-loader /> Employee List
 
 <div class="tooltip [--placement:right]">
-    <span class="tooltip-toggle cursor-pointer text-gray-400 hover:text-gray-600" aria-label="More info">
+    <span class="tooltip-toggle cursor-pointer text-base-content/40 hover:text-base-content/70" aria-label="More info">
         <i class="icon-[ph--info-fill]"></i>
     </span>
     <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
@@ -195,15 +195,15 @@
                         };
                     @endphp
                     <tr class="row-hover">
-                        <td class="font-mono text-gray-500">{{ $employee->employee_id }}</td>
-                        <td class="font-semibold text-gray-800">
+                        <td class="font-mono text-base-content/60">{{ $employee->employee_id }}</td>
+                        <td class="font-semibold text-base-content">
                             <a href="{{ route('government-contributions.show', $employee) }}"
-                               class="text-gray-800 no-underline hover:text-emerald-600">
+                               class="text-base-content no-underline hover:text-emerald-600">
                                 {{ $employee->full_name }}
                             </a>
                         </td>
-                        <td class="text-gray-500">{{ $employee->department }}</td>
-                        <td class="text-gray-500">{{ $employee->position }}</td>
+                        <td class="text-base-content/60">{{ $employee->department }}</td>
+                        <td class="text-base-content/60">{{ $employee->position }}</td>
                         <td><span class="badge {{ $statusClass }}">{{ $employee->employment_status }}</span></td>
                         <td class="text-center">
     <a href="{{ route('government-contributions.show', $employee) }}"
@@ -214,7 +214,7 @@
                     </tr>
                 @empty
                     <tr>
-    <td colspan="6" class="py-10 text-gray-400">
+    <td colspan="6" class="py-10 text-base-content/40">
         <div class="flex flex-col items-center">
             <i class="icon-[ph--user-fill] text-3xl mb-2"></i>
             <span>No employees found.</span>
@@ -238,7 +238,7 @@
                     default        => 'badge-soft',
                 };
             @endphp
-            <div class="card bg-base-100 border border-gray-200 p-4">
+            <div class="card bg-base-100 border  border-base-300 p-4">
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
@@ -254,16 +254,16 @@
                         </div>
                         <div>
                             <a href="{{ route('government-contributions.show', $employee) }}"
-                               class="font-semibold text-gray-800 no-underline text-sm hover:text-emerald-600">
+                               class="font-semibold text-base-content no-underline text-sm hover:text-emerald-600">
                                 {{ $employee->full_name }}
                             </a>
-                            <div class="text-xs text-gray-500 font-mono">{{ $employee->employee_id }}</div>
+                            <div class="text-xs text-base-content/60 font-mono">{{ $employee->employee_id }}</div>
                         </div>
                     </div>
                     <span class="badge {{ $statusClass }} whitespace-nowrap">{{ $employee->employment_status }}</span>
                 </div>
 
-                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
+                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
                     <span><i class="icon-[ph--buildings-fill] w-3.5"></i> {{ $employee->department }}</span>
                     <span><i class="icon-[ph--briefcase-fill] w-3.5"></i> {{ $employee->position }}</span>
                     <span><i class="icon-[ph--money-fill] w-3.5"></i> ₱{{ number_format($employee->basic_salary, 2) }}</span>
@@ -277,7 +277,7 @@
                 </div>
             </div>
         @empty
-            <div class="py-10 text-center text-gray-400">
+            <div class="py-10 text-center text-base-content/40">
                 <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
                 No employees found.
             </div>
@@ -349,8 +349,8 @@ function openContribModal() {
 
         return `
              <tr class="row-hover">
-                <td><div class="font-semibold text-gray-800"><a href="${emp.show_url}" class="text-gray-800 no-underline hover:text-emerald-600">${emp.name}</a></div><div class="text-xs text-gray-400 font-mono">${emp.id}</div></td>
-                <td class="text-gray-500">${emp.department}</td>
+                <td><div class="font-semibold text-base-content"><a href="${emp.show_url}" class="text-base-content no-underline hover:text-emerald-600">${emp.name}</a></div><div class="text-xs text-base-content/40 font-mono">${emp.id}</div></td>
+                <td class="text-base-content/60">${emp.department}</td>
                 <td class="text-right font-semibold">₱${emp.salary}</td>
                 <td class="text-right text-red-600">${fmt(sss)}</td>
                 <td class="text-right text-blue-600">${fmt(phil)}</td>
