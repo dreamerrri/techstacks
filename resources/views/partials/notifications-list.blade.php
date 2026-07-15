@@ -1,7 +1,7 @@
 <div class="max-h-[380px] overflow-y-auto">
     <div id="notif-status" class="sr-only" role="status" aria-live="polite"></div>
 
-<ul id="notif-list" role="list" class="list-none divide-y divide-gray-100{{ $notifCount > 0 ? '' : ' hidden' }}">
+<ul id="notif-list" role="list" class="list-none divide-y divide-base-300{{ $notifCount > 0 ? '' : ' hidden' }}">
             @foreach($notifications as $notification)
             @php
                 $style = match ($notification->type) {
@@ -16,7 +16,7 @@
             <li role="listitem" data-notif-id="{{ $notification->id }}">
                 <a href="{{ $notification->link ?: '#' }}"
                    onclick="markAsRead(event, {{ $notification->id }})"
-                   class="group flex items-center gap-3 bg-base-100 px-4 py-[11px] no-underline outline-none transition-colors duration-150 hover:bg-base-200 focus-visible:bg-base-200 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-200">
+                   class="group flex items-center gap-3 bg-base-100 px-4 py-[11px] no-underline outline-none transition-colors duration-150 hover:bg-base-200 focus-visible:bg-base-200 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/30">
                     <div class="flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-[9px] {{ $style['bg'] }}">
                         <i class="{{ $style['icon'] }} {{ $style['text'] }} text-sm" aria-hidden="true"></i>
                     </div>

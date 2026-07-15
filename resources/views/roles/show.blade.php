@@ -79,7 +79,7 @@
             @if($role->permissions->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     @foreach($role->permissions->groupBy('module') as $module => $modulePerms)
-                        <div class="bg-gray-50 border  border-base-300 rounded-xl p-4">
+                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
                             <div class="text-xs font-bold text-base-content/60 uppercase tracking-widest mb-3">
                                 {{ ucfirst($module) }}
                             </div>
@@ -121,7 +121,7 @@
             @if($role->users->count() > 0)
                 <div class="flex flex-col gap-2">
                     @foreach($role->users as $user)
-                        <div class="flex justify-between items-center p-3 border  border-base-300 rounded-xl hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-center p-3 border border-gray-200 rounded-xl hover:shadow-md transition-shadow">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white font-bold flex-shrink-0">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}

@@ -146,9 +146,25 @@
     top: 6px;
     bottom: 6px;
     left: 27px;
-    background: color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 20%, transparent);
+    background:
+    var(
+        --color-sidebar-content,
+        var(--color-base-content)
+    );
 }
 
+
+/*  .nav-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 27px;              
+    width: 1px;
+    background: rgba(255, 255, 255, 255); 
+    z-index: 0;
+}
+*/
 
 
 /* Kill it in mini/collapsed mode — sub-items become flat standalone rows there */

@@ -20,8 +20,8 @@
         <i class="icon-[ph--info-fill]"></i>
     </span>
     <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
-        <span class="tooltip-body bg-success/67 shadow-md rounded-lg px-3 py-2 text-xs normal-case">
-            {{ $slot }}
-        </span>
+    <span class="tooltip-body bg-success/90 shadow-md rounded-lg px-3 py-2 text-xs normal-case text-success-content font-medium">
+    {{ $slot }}
+</span>
     </span>
 </div>

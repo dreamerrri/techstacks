@@ -31,9 +31,10 @@
     Example:
         <x-sortable-th sort-key="net_pay" label="Net Pay" align="right" route="payroll.index" />
 
-        {{-- non-sortable columns don't need this component, use plain <th> --}}
+         non-sortable columns don't need this component, use plain <th> 
         <th>Employee</th>
 --}}
+
 @props([
     'sortKey',
     'label',
@@ -49,12 +50,12 @@
     $active  = $s === $sortKey;
     $nextDir = ($active && $d === 'asc') ? 'desc' : 'asc';
     $url     = route($route, array_merge($params, ['sort' => $sortKey, 'direction' => $nextDir]));
-    $upCol   = ($active && $d === 'asc')  ? 'text-red-600' : 'text-white';
-    $dnCol   = ($active && $d === 'desc') ? 'text-red-600' : 'text-white';
+   $upCol   = ($active && $d === 'asc')  ? 'text-accent' : 'text-success-content';
+$dnCol   = ($active && $d === 'desc') ? 'text-accent' : 'text-success-content';
 @endphp
 
 <th {{ $attributes->merge(['class' => 'text-' . $align]) }}>
-    <a href="{{ $url }}" class="inline-flex items-center gap-1 tracking-wider text-white">
+    <a href="{{ $url }}" class="inline-flex items-center gap-1 tracking-wider text-success-content">
         {{ $label }}
         <span class="inline-flex flex-col leading-none">
             <i class="icon-[ph--caret-up-fill] text-[9px] {{ $upCol }}"></i>

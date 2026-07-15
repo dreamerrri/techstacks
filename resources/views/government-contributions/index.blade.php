@@ -39,7 +39,7 @@
     <div class="bg-white rounded-2xl w-full max-w-[90vw]  mx-auto shadow-2xl overflow-hidden">
 
         {{-- Modal header --}}
-        <div class="px-7 py-5 border-b  border-base-300 flex justify-between items-center">
+        <div class="px-7 py-5 border-b border-gray-200 flex justify-between items-center">
             <div>
                 <div class="text-base font-bold text-base-content flex items-center gap-2">
                     <i class="icon-[ph--stack-fill] text-red-600"></i>
@@ -80,7 +80,7 @@
         </div>
 
         {{-- Modal footer --}}
-        <div class="px-6 py-4 border-t  border-base-300 flex justify-between items-center flex-wrap gap-2">
+        <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center flex-wrap gap-2">
             <div class="flex gap-2 flex-wrap">
                 <button onclick="printContribBreakdown()" class="btn btn-soft btn-info btn-sm">
                     <i class="icon-[ph--printer-fill]"></i> Print PDF
@@ -238,7 +238,7 @@
                     default        => 'badge-soft',
                 };
             @endphp
-            <div class="card bg-base-100 border  border-base-300 p-4">
+            <div class="card bg-base-100 border border-gray-200 p-4">
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">

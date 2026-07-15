@@ -43,7 +43,7 @@
                     @foreach($periods as $period)
                         @if($period)
                             <div id="period-row-{{ $period->id }}"
-                                 class="border  border-base-300 rounded-xl p-5 cursor-pointer transition-all hover:border-red-400 hover:shadow-md"
+                                 class="border border-gray-200 rounded-xl p-5 cursor-pointer transition-all hover:border-red-400 hover:shadow-md"
                                  onclick="window.location.href='{{ route('manual-payroll-attendance.period', $period) }}'">
 
                                 <div class="flex justify-between items-start mb-3">

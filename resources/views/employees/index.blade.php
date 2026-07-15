@@ -220,7 +220,7 @@
                         default        => 'badge-soft',
                     };
                 @endphp
-                <div class="card bg-base-100 border  border-base-300 p-4">
+                <div class="card bg-base-100 border border-gray-200 p-4">
                     <div class="flex justify-between items-start mb-2">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
