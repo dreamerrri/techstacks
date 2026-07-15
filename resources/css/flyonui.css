@@ -28,6 +28,11 @@
   --color-topbar-glow: #ffffff;
   --color-chrome-accent: rgb(73, 255, 188);
   --sidebar-wave-opacity: 1;
+
+
+  --color-dot-1: #A8E6CF;
+--color-dot-2: #FFEDA3;
+--color-dot-3: #2D3748;
 }
 /* your existing claude / corporate / ghibli / gourmet / luxury / pastel / slack / soft / spotify / valorant / vscode blocks stay as-is */
 @plugin "flyonui/theme" {
@@ -77,4 +82,5 @@
 
 [data-theme="techstacks"] .overlay-backdrop {
   background-color: rgb(17 24 39 / 0.6);
+  
 }
