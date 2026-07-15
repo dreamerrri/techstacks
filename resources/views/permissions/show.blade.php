@@ -77,7 +77,7 @@
             @if($permission->roles->count() > 0)
                 <div class="flex flex-col gap-2">
                     @foreach($permission->roles as $role)
-                        <div class="flex justify-between items-center p-3 border  border-base-300 rounded-xl hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-center p-3 border border-gray-200 rounded-xl hover:shadow-md transition-shadow">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white font-bold flex-shrink-0">
                                     {{ strtoupper(substr($role->name, 0, 1)) }}

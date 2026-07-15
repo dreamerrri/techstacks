@@ -34,7 +34,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach($periods as $period)
                     <div id="period-row-{{ $period->id }}"
-                         class="border  border-base-300 rounded-xl p-5 transition-all hover:border-gray-400 hover:shadow-md">
+                         class="border border-gray-200 rounded-xl p-5 transition-all hover:border-gray-400 hover:shadow-md">
 
                         <div class="flex justify-between items-start mb-3">
                             <div>

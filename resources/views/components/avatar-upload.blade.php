@@ -32,14 +32,14 @@
 ])
 
 <div class="avatar-upload relative flex-shrink-0" data-upload-route="{{ $uploadRoute }}" data-field-name="{{ $fieldName }}">
-    <div class="avatar-circle {{ $size }} rounded-full bg-gray-100 border-2  border-base-300 overflow-hidden flex items-center justify-center cursor-pointer text-3xl font-bold text-base-content/60">
+    <div class="avatar-circle {{ $size }} rounded-full bg-gray-100 border-2 border-gray-200 overflow-hidden flex items-center justify-center cursor-pointer text-3xl font-bold text-base-content/60">
         @if($photoUrl)
             <img class="avatar-img w-full h-full object-cover" src="{{ $photoUrl }}" alt="">
         @else
             <span class="avatar-initials">{{ $initials }}</span>
         @endif
     </div>
-    <label class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-white border-2  border-base-300 flex items-center justify-center cursor-pointer shadow-sm">
+    <label class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center cursor-pointer shadow-sm">
         <i class="icon-[ph--camera-fill] text-[10px] text-base-content/80"></i>
         <input type="file" accept="image/*" class="avatar-file-input hidden">
     </label>

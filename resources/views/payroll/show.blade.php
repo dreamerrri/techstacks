@@ -154,7 +154,7 @@
                 </div>
             @endforeach
         </div>
-        <div class="flex justify-between items-center mt-3 pt-3 border-t-2  border-base-300 font-bold text-sm">
+        <div class="flex justify-between items-center mt-3 pt-3 border-t-2 border-gray-200 font-bold text-sm">
             <span class="text-base-content">Total Earnings</span>
             <span class="text-emerald-600">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['benefits'] ?? 0), 2) }}</span>
         </div>
@@ -186,7 +186,7 @@
                 </div>
             @endforeach
         </div>
-        <div class="flex justify-between items-center mt-3 pt-3 border-t-2  border-base-300 font-bold text-sm">
+        <div class="flex justify-between items-center mt-3 pt-3 border-t-2 border-gray-200 font-bold text-sm">
             <span class="text-base-content">Net Contributions & Deductions</span>
             <span class="text-red-600">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['late_deduction'] ?? 0) + ($payroll['manual_deductions'] ?? 0) + ($payroll['allowances'] ?? 0), 2) }}</span>
         </div>

@@ -97,7 +97,7 @@
             {{-- Mobile Cards --}}
             <div class="md:hidden p-4 flex flex-col gap-3">
                 @foreach($modulePermissions as $permission)
-                    <div class="card bg-base-100 border  border-base-300 p-4">
+                    <div class="card bg-base-100 border border-gray-200 p-4">
                         <div class="flex justify-between items-start mb-2">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white flex-shrink-0">

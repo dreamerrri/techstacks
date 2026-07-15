@@ -43,7 +43,7 @@
 <div id="deptBreakdownModal"
      class="hidden fixed inset-0 z-[9999] bg-black/50 items-start justify-center p-5 overflow-y-auto">
     <div class="bg-white rounded-2xl w-full max-w-[90vw] mx-auto shadow-2xl overflow-hidden">
-        <div class="px-7 py-5 border-b  border-base-300 flex justify-between items-center">
+        <div class="px-7 py-5 border-b border-gray-200 flex justify-between items-center">
             <div>
                 <div class="text-base font-bold text-base-content flex items-center gap-2">
                        <x-dot-loader /> 
@@ -101,7 +101,7 @@
         </div>
 
 
-        <div class="px-6 py-4 border-t  border-base-300 flex justify-between items-center flex-wrap gap-2">
+        <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center flex-wrap gap-2">
             <div class="flex gap-2 flex-wrap">
                 <button onclick="printPayrollTable()" class="btn btn-soft btn-info btn-sm">
                     <i class="icon-[ph--printer-fill]"></i> Print PDF
@@ -338,7 +338,7 @@
     <div class="md:hidden p-4 flex flex-col gap-3">
         @forelse($employees as $employee)
             @php $payroll = $payrollData[$employee->id] ?? []; @endphp
-            <div class="card bg-base-100 border  border-base-300 p-4">
+            <div class="card bg-base-100 border border-gray-200 p-4">
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-linear-to-br {{ $avatarClass }} flex items-center justify-center text-white text-sm font-bold flex-shrink-0">

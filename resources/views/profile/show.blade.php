@@ -234,7 +234,7 @@ use Illuminate\Support\Facades\Storage;
                     <div class="text-xs font-semibold text-base-content/40 uppercase tracking-widest mb-2">
                         Change Password <span class="normal-case font-normal">(leave blank to keep current)</span>
                     </div>
-                    <div class="border-t  border-base-300 mb-4"></div>
+                    <div class="border-t border-gray-200 mb-4"></div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
                         <div class="fieldset">

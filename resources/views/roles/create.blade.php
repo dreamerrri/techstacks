@@ -71,7 +71,7 @@
                 @if($permissions->count())
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         @foreach($permissions as $module => $modulePermissions)
-                            <div class="bg-gray-50 border  border-base-300 rounded-xl p-4">
+                            <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
                                 <div class="text-xs font-bold text-base-content/60 uppercase tracking-widest mb-3">
                                     {{ ucfirst($module) }}
                                 </div>

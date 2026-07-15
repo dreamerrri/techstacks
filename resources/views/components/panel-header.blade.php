@@ -19,7 +19,7 @@
 @props([
     'icon',
     'color' => 'text-base-content/60',
-    'bg'    => 'bg-gray-100',
+    'bg'    => 'bg-base-200',
 ])
 
 <h2 class="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
