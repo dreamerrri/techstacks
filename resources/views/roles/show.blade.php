@@ -6,7 +6,7 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('roles.index') }}" class="back-link text-gray-500 no-underline text-sm hover:text-emerald-600">
+        <a href="{{ route('roles.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Roles
         </a>
     </div>
@@ -31,8 +31,8 @@
                     {{ strtoupper(substr($role->name, 0, 1)) }}
                 </div>
                 <div>
-                    <h2 class="text-xl font-bold text-gray-800 m-0">{{ $role->name }}</h2>
-                    <code class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{{ $role->slug }}</code>
+                    <h2 class="text-xl font-bold text-base-content m-0">{{ $role->name }}</h2>
+                    <code class="text-xs text-base-content/60 bg-gray-100 px-2 py-0.5 rounded">{{ $role->slug }}</code>
                 </div>
             </div>
             <a href="{{ route('roles.edit', $role) }}" class="btn btn-soft btn-error btn-sm">
@@ -42,16 +42,16 @@
 
         {{-- Role Information --}}
         <div class="mb-8">
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
                 <i class="icon-[ph--user-fill] text-red-600"></i> Role Information
             </h3>
             <div class="flex flex-col">
                 <div class="flex justify-between items-center py-3 border-b border-base-200">
-                    <span class="text-gray-400 font-medium">Description</span>
-                    <span class="text-gray-700 text-right">{{ $role->description ?? '—' }}</span>
+                    <span class="text-base-content/40 font-medium">Description</span>
+                    <span class="text-base-content/80 text-right">{{ $role->description ?? '—' }}</span>
                 </div>
                 <div class="flex justify-between items-center py-3 border-b border-base-200">
-                    <span class="text-gray-400 font-medium">Status</span>
+                    <span class="text-base-content/40 font-medium">Status</span>
                     <span>
                         @if($role->is_active)
                             <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
@@ -61,30 +61,30 @@
                     </span>
                 </div>
                 <div class="flex justify-between items-center py-3 border-b border-base-200">
-                    <span class="text-gray-400 font-medium">Total Users</span>
-                    <span class="font-semibold text-gray-800">{{ $role->users->count() }}</span>
+                    <span class="text-base-content/40 font-medium">Total Users</span>
+                    <span class="font-semibold text-base-content">{{ $role->users->count() }}</span>
                 </div>
                 <div class="flex justify-between items-center py-3">
-                    <span class="text-gray-400 font-medium">Total Permissions</span>
-                    <span class="font-semibold text-gray-800">{{ $role->permissions->count() }}</span>
+                    <span class="text-base-content/40 font-medium">Total Permissions</span>
+                    <span class="font-semibold text-base-content">{{ $role->permissions->count() }}</span>
                 </div>
             </div>
         </div>
 
         {{-- Permissions --}}
         <div class="mb-8">
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
                 <i class="icon-[ph--key-fill] text-red-600"></i> Permissions ({{ $role->permissions->count() }})
             </h3>
             @if($role->permissions->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     @foreach($role->permissions->groupBy('module') as $module => $modulePerms)
                         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                            <div class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
+                            <div class="text-xs font-bold text-base-content/60 uppercase tracking-widest mb-3">
                                 {{ ucfirst($module) }}
                             </div>
                             @foreach($modulePerms as $permission)
-                                <div class="flex items-center gap-2 text-xs text-gray-700 mb-1.5">
+                                <div class="flex items-center gap-2 text-xs text-base-content/80 mb-1.5">
                                     <i class="icon-[ph--check-circle-fill] text-emerald-500 text-[11px] flex-shrink-0"></i>
                                     {{ $permission->name }}
                                 </div>
@@ -93,13 +93,13 @@
                     @endforeach
                 </div>
             @else
-                <p class="text-gray-400 text-sm m-0">No permissions assigned to this role.</p>
+                <p class="text-base-content/40 text-sm m-0">No permissions assigned to this role.</p>
             @endif
         </div>
 
         {{-- Assigned Users --}}
         <div>
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-gray-400 border-b-2 border-red-200 pb-2 mb-4">
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
                 <i class="icon-[ph--user-fill] text-red-600"></i> Assigned Users ({{ $role->users->count() }})
             </h3>
 
@@ -127,8 +127,8 @@
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                                 <div>
-                                    <div class="font-semibold text-gray-800 text-sm">{{ $user->name }}</div>
-                                    <div class="text-gray-500 text-xs">{{ $user->email }}</div>
+                                    <div class="font-semibold text-base-content text-sm">{{ $user->name }}</div>
+                                    <div class="text-base-content/60 text-xs">{{ $user->email }}</div>
                                 </div>
                             </div>
                             @if($user->id !== auth()->id())
@@ -147,7 +147,7 @@
                     @endforeach
                 </div>
             @else
-                <p class="text-gray-400 text-sm m-0">No users assigned to this role.</p>
+                <p class="text-base-content/40 text-sm m-0">No users assigned to this role.</p>
             @endif
         </div>
 

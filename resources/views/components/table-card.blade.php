@@ -65,9 +65,9 @@
 
 <div class="card bg-base-100 shadow-sm flex flex-col p-0">
 
-    <div class="sticky top-0 z-10 bg-white px-7 pt-5 rounded-t-2xl">
+    <div class="sticky top-0 z-10 bg-base-100 px-7 pt-5 rounded-t-2xl">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
+            <h2 class="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
                 {{ $title ?? '' }}
             </h2>
 

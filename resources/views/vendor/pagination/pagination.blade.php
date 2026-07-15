@@ -1,6 +1,6 @@
    <div class="flex items-center justify-between">
    
-   <p class="text-sm text-gray-500 mt-2">
+   <p class="text-sm text-base-content/60 mt-2">
     Showing {{ $paginator->firstItem() }} to {{ $paginator->lastItem() }} of {{ $paginator->total() }} results
 </p>
 @if ($paginator->hasPages())

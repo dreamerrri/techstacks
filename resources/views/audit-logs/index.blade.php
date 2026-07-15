@@ -16,7 +16,7 @@
     <x-slot:filters>
      <div class="flex flex-wrap items-end gap-2">
             <div>
-                <label class="label text-xs font-semibold uppercase tracking-wider text-gray-400">Module</label>
+                <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/40">Module</label>
                 <select name="module" class="select select-bordered select-sm w-full">
                     <option value="">All Modules</option>
                     @foreach($modules as $module)
@@ -25,7 +25,7 @@
                 </select>
             </div>
             <div class="fieldset">
-                <label class="label text-xs font-semibold uppercase tracking-wider text-gray-400">Action</label>
+                <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/40">Action</label>
                 <select name="action" class="select select-bordered select-sm w-full">
                     <option value="">All Actions</option>
                     @foreach($actions as $action)
@@ -34,12 +34,12 @@
                 </select>
             </div>
             <div class="fieldset">
-                <label class="label text-xs font-semibold uppercase tracking-wider text-gray-400">Date From</label>
+                <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/40">Date From</label>
                 <input type="date" name="date_from" value="{{ request('date_from') }}"
                        class="input input-bordered input-sm w-full">
             </div>
             <div class="fieldset">
-                <label class="label text-xs font-semibold uppercase tracking-wider text-gray-400">Date To</label>
+                <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/40">Date To</label>
                 <input type="date" name="date_to" value="{{ request('date_to') }}"
                        class="input input-bordered input-sm w-full">
             </div>
@@ -76,17 +76,17 @@
                 };
             @endphp
             <tr class="row-hover">
-                <td class="text-gray-500 text-xs whitespace-nowrap">
+                <td class="text-base-content/60 text-xs whitespace-nowrap">
                     {{ $log->created_at->format('M d, Y') }}<br>
                     {{ $log->created_at->format('h:i:s A') }}
                 </td>
-                <td class="font-semibold text-gray-800">{{ $log->user?->name ?? '—' }}</td>
+                <td class="font-semibold text-base-content">{{ $log->user?->name ?? '—' }}</td>
                 <td>
                     <span class="badge {{ $actionClass }}">{{ ucfirst($log->action) }}</span>
                 </td>
-                <td class="text-gray-500">{{ ucfirst($log->module) }}</td>
-                <td class="text-gray-500 max-w-[200px] truncate">{{ $log->description }}</td>
-                <td class="text-gray-500 font-mono text-xs">{{ $log->ip_address ?? '—' }}</td>
+                <td class="text-base-content/60">{{ ucfirst($log->module) }}</td>
+                <td class="text-base-content/60 max-w-[200px] truncate">{{ $log->description }}</td>
+                <td class="text-base-content/60 font-mono text-xs">{{ $log->ip_address ?? '—' }}</td>
                 <td>
                     <a href="{{ route('audit-logs.show', $log) }}" class="btn btn-soft btn-info btn-sm">
                         <i class="icon-[ph--eye-fill]"></i>
@@ -95,7 +95,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="7" class="py-10 text-center text-gray-400">
+                <td colspan="7" class="py-10 text-center text-base-content/40">
                     <i class="icon-[ph--clock-counter-clockwise-fill] text-3xl mb-2 block"></i>
                     No audit logs found.
                 </td>
@@ -123,19 +123,19 @@
                             {{ $log->user ? strtoupper(substr($log->user->name, 0, 1)) : 'S' }}
                         </div>
                         <div>
-                            <div class="font-semibold text-gray-800 text-sm">{{ $log->user?->name ?? 'System' }}</div>
-                            <div class="text-xs text-gray-400">{{ $log->created_at->format('M d, Y h:i:s A') }}</div>
+                            <div class="font-semibold text-base-content text-sm">{{ $log->user?->name ?? 'System' }}</div>
+                            <div class="text-xs text-base-content/40">{{ $log->created_at->format('M d, Y h:i:s A') }}</div>
                         </div>
                     </div>
                     <span class="badge {{ $actionClass }} whitespace-nowrap">{{ ucfirst($log->action) }}</span>
                 </div>
 
-                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
+                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
                     <span><i class="icon-[ph--cube-fill] w-3.5"></i> {{ ucfirst($log->module) }}</span>
                     <span><i class="icon-[ph--graph-fill] w-3.5"></i> {{ $log->ip_address ?? '—' }}</span>
                 </div>
 
-                <div class="text-xs text-gray-400 mt-1">{{ $log->description }}</div>
+                <div class="text-xs text-base-content/40 mt-1">{{ $log->description }}</div>
 
                 <div class="mt-3 pt-3 border-t border-gray-100">
                     <a href="{{ route('audit-logs.show', $log) }}" class="btn btn-soft btn-info btn-sm">
@@ -144,7 +144,7 @@
                 </div>
             </div>
         @empty
-            <div class="py-10 text-center text-gray-400">
+            <div class="py-10 text-center text-base-content/40">
                 <i class="icon-[ph--clock-counter-clockwise-fill] text-3xl mb-2 block"></i>
                 No audit logs found.
             </div>

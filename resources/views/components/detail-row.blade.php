@@ -23,7 +23,7 @@
     'border' => true,
 ])
 
-<div class="flex justify-between items-center py-2.5 {{ $border ? 'border-b border-gray-100' : '' }}">
-    <span class="text-gray-400">{{ $label }}</span>
-    <span class="font-medium text-gray-800">{{ $slot }}</span>
+<div class="flex justify-between items-center py-2.5 {{ $border ? 'border-b border-base-300' : '' }}">
+    <span class="text-base-content/40">{{ $label }}</span>
+    <span class="font-medium text-base-content">{{ $slot }}</span>
 </div>

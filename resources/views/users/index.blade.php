@@ -14,30 +14,30 @@
                                 <i class="icon-[ph--users-fill]"></i>
 
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::count() }}</div>
-            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Total Users</div>
+            <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\User::count() }}</div>
+            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Total Users</div>
         </div>
         <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-red-800 bg-red-100">
                                 <i class="icon-[ph--shield-check-fill]"></i>
 
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::where('role','admin')->count() }}</div>
-            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Admins</div>
+            <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\User::where('role','admin')->count() }}</div>
+            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Admins</div>
         </div>
         <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-amber-600 bg-amber-100">
                 <i class="icon-[ph--user-fill]"></i>
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::where('role','hr')->count() }}</div>
-            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">HR Personnel</div>
+            <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\User::where('role','hr')->count() }}</div>
+            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">HR Personnel</div>
         </div>
         <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-emerald-600 bg-emerald-100">
                 <i class="icon-[ph--check-circle-fill]"></i>
             </div>
-            <div class="text-3xl font-bold text-gray-800 mb-1">{{ \App\Models\User::where('is_active', true)->count() }}</div>
-            <div class="text-xs text-gray-400 uppercase tracking-widest font-medium">Active Accounts</div>
+            <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\User::where('is_active', true)->count() }}</div>
+            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Active Accounts</div>
         </div>
     </div>
 
@@ -47,12 +47,12 @@
  {{-- NEW --}}
     <div class="sticky top-0 z-10  px-7 pt-5 rounded-t-2xl">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
+            <h2 class="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
                <x-dot-loader /> User Accounts
 
 
                                <div class="tooltip [--placement:right]">
-    <span class="tooltip-toggle cursor-pointer text-gray-400 hover:text-gray-600" aria-label="More info">
+    <span class="tooltip-toggle cursor-pointer text-base-content/40 hover:text-base-content/70" aria-label="More info">
         <i class="icon-[ph--info-fill]"></i>
     </span>
     <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
@@ -155,7 +155,7 @@
                         @endphp
                         <tr class="row-hover">
                             {{-- Name --}}
-                            <td class="font-semibold text-gray-800">
+                            <td class="font-semibold text-base-content">
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
                                         @if($user->profile_photo)
@@ -171,7 +171,7 @@
                                         @endif
                                     </div>
                                     @if($user->employee)
-                                        <a href="{{ route('employees.show', $user->employee) }}" class="text-gray-800 no-underline font-semibold hover:text-emerald-600">
+                                        <a href="{{ route('employees.show', $user->employee) }}" class="text-base-content no-underline font-semibold hover:text-emerald-600">
                                             {{ $user->name }}
                                         </a>
                                     @else
@@ -183,7 +183,7 @@
                                 </div>
                             </td>
 
-                            <td class="text-gray-500">{{ $user->email }}</td>
+                            <td class="text-base-content/60">{{ $user->email }}</td>
 
                             {{-- Role selector --}}
                             <td>
@@ -208,7 +208,7 @@
                                 @endif
                             </td>
 
-                            <td class="text-gray-500 text-xs">
+                            <td class="text-base-content/60 text-xs">
                                 {{ $user->last_login_at ? $user->last_login_at->format('M d, Y h:i A') : 'Never' }}
                             </td>
 
@@ -227,13 +227,13 @@
                                         </button>
                                     </form>
                                 @else
-                                    <span class="text-gray-400 text-xs">—</span>
+                                    <span class="text-base-content/40 text-xs">—</span>
                                 @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="py-10 text-center text-gray-400">
+                            <td colspan="6" class="py-10 text-center text-base-content/40">
                                 <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
                                 No users found.
                             </td>
@@ -254,7 +254,7 @@
                         default    => 'badge-soft',
                     };
                 @endphp
-                <div class="card bg-base-100 border border-gray-200 p-4 mb-3">
+                <div class="card bg-base-100 border  border-base-300 p-4 mb-3">
                     <div class="flex justify-between items-start mb-3">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
@@ -271,9 +271,9 @@
                                 @endif
                             </div>
                             <div>
-                                <div class="font-semibold text-gray-800 text-sm flex items-center gap-1">
+                                <div class="font-semibold text-base-content text-sm flex items-center gap-1">
                                     @if($user->employee)
-                                        <a href="{{ route('employees.show', $user->employee) }}" class="text-gray-800 no-underline font-semibold">{{ $user->name }}</a>
+                                        <a href="{{ route('employees.show', $user->employee) }}" class="text-base-content no-underline font-semibold">{{ $user->name }}</a>
                                     @else
                                         {{ $user->name }}
                                     @endif
@@ -281,7 +281,7 @@
                                         <span class="badge badge-soft badge-success text-[10px] px-2 py-0 normal-case">You</span>
                                     @endif
                                 </div>
-                                <div class="text-xs text-gray-500">{{ $user->email }}</div>
+                                <div class="text-xs text-base-content/60">{{ $user->email }}</div>
                             </div>
                         </div>
                         @if($user->is_active)
@@ -303,7 +303,7 @@
                             </select>
                         </form>
 
-                        <span class="text-xs text-gray-400">
+                        <span class="text-xs text-base-content/40">
                             {{ $user->last_login_at ? $user->last_login_at->format('M d, Y h:i A') : 'Never logged in' }}
                         </span>
 
@@ -320,12 +320,12 @@
                                 </button>
                             </form>
                         @else
-                            <span class="text-gray-400 text-xs">—</span>
+                            <span class="text-base-content/40 text-xs">—</span>
                         @endif
                     </div>
                 </div>
             @empty
-                <div class="py-10 text-center text-gray-400">
+                <div class="py-10 text-center text-base-content/40">
                     <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
                     No users found.
                 </div>

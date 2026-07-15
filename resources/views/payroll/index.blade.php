@@ -45,11 +45,11 @@
     <div class="bg-white rounded-2xl w-full max-w-[90vw] mx-auto shadow-2xl overflow-hidden">
         <div class="px-7 py-5 border-b border-gray-200 flex justify-between items-center">
             <div>
-                <div class="text-base font-bold text-gray-800 flex items-center gap-2">
+                <div class="text-base font-bold text-base-content flex items-center gap-2">
                        <x-dot-loader /> 
                     <span id="deptModalTitle">Department Breakdown</span>
                 </div>
-                <div class="text-xs text-gray-500 mt-1" id="deptModalMeta">—</div>
+                <div class="text-xs text-base-content/60 mt-1" id="deptModalMeta">—</div>
             </div>
              <button onclick="closeDeptModal()" class="btn btn-error btn-sm btn-circle">
                 <i class="icon-[ph--x]"></i>
@@ -92,7 +92,7 @@
                 <tbody id="deptBreakdownBody"></tbody>
                 <tfoot id="deptBreakdownFoot"></tfoot>
             </table>
-            <div id="deptBreakdownEmpty" class="py-10 text-gray-400 flex flex-col items-center justify-center gap-2 w-full">
+            <div id="deptBreakdownEmpty" class="py-10 text-base-content/40 flex flex-col items-center justify-center gap-2 w-full">
     <i class="icon-[ph--tray-fill] text-3xl"></i>
     <span>No payroll data for the current filter.</span>
 </div>
@@ -121,7 +121,7 @@
 
     <div class="sticky top-0 z-10 px-7 pt-5 rounded-t-2xl">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2 m-0">
+            <h2 class="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
                 <x-dot-loader /> Payroll Summary
         
 
@@ -129,7 +129,7 @@
 
 
 <div class="tooltip [--placement:right]">
-    <span class="tooltip-toggle cursor-pointer text-gray-400 hover:text-gray-600" aria-label="More info">
+    <span class="tooltip-toggle cursor-pointer text-base-content/40 hover:text-base-content/70" aria-label="More info">
         <i class="icon-[ph--info-fill]"></i>
     </span>
     <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
@@ -188,7 +188,7 @@
         </div>
 
         {{-- Hide separator on mobile --}}
-        <span class="hidden sm:inline text-gray-400">|</span>
+        <span class="hidden sm:inline text-base-content/40">|</span>
 
         <span class="text-red-400">
             <strong>Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}</strong>
@@ -284,16 +284,16 @@
                                 </div>
                                 <div class="min-w-0">
                                     <a href="{{ route('employees.show', $employee) }}"
-                                       class="font-semibold text-gray-800 no-underline hover:text-emerald-600 truncate block">
+                                       class="font-semibold text-base-content no-underline hover:text-emerald-600 truncate block">
                                         {{ $employee->full_name }}
                                     </a>
-                                    <div class="text-xs text-gray-500 font-mono">{{ $employee->employee_id }}</div>
+                                    <div class="text-xs text-base-content/60 font-mono">{{ $employee->employee_id }}</div>
                                 </div>
                             </div>
                         </td>
-                        <td class="text-gray-500 truncate">{{ $employee->department }}</td>
-                        <td class="text-right font-semibold text-gray-800">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
-                        <td class="text-center font-semibold text-gray-800">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</td>
+                        <td class="text-base-content/60 truncate">{{ $employee->department }}</td>
+                        <td class="text-right font-semibold text-base-content">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
+                        <td class="text-center font-semibold text-base-content">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</td>
                         <td class="text-center font-semibold text-amber-500">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</td>
                         <td class="text-center font-semibold text-violet-500">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</td>
                         <td class="text-right font-semibold text-red-600">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
@@ -320,7 +320,7 @@
                 @empty
 
                     <tr>
-    <td colspan="9" class="py-10 text-gray-400">
+    <td colspan="9" class="py-10 text-base-content/40">
         <div class="flex flex-col items-center">
             <i class="icon-[ph--user-fill] text-3xl mb-2"></i>
             <span>No payroll data found.</span>
@@ -346,16 +346,16 @@
                         </div>
                         <div>
                             <a href="{{ route('employees.show', $employee) }}"
-                               class="font-semibold text-gray-800 no-underline text-sm hover:text-emerald-600">
+                               class="font-semibold text-base-content no-underline text-sm hover:text-emerald-600">
                                 {{ $employee->full_name }}
                             </a>
-                            <div class="text-xs text-gray-500 font-mono">{{ $employee->employee_id }}</div>
+                            <div class="text-xs text-base-content/60 font-mono">{{ $employee->employee_id }}</div>
                         </div>
                     </div>
                     <span class="badge badge-soft badge-warning whitespace-nowrap">{{ $employee->employment_status }}</span>
                 </div>
 
-                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
+                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
                     <span><i class="icon-[ph--buildings-fill] w-3.5"></i> {{ $employee->department }}</span>
                     <span><i class="icon-[ph--briefcase-fill] w-3.5"></i> {{ $employee->position }}</span>
                 </div>
@@ -363,18 +363,18 @@
                 <div class="mt-3 border-t border-gray-100">
                     <button type="button"
                             onclick="var d=this.nextElementSibling; var i=this.querySelector('i'); d.classList.toggle('hidden'); i.classList.toggle('fa-chevron-down'); i.classList.toggle('fa-chevron-up');"
-                            class="w-full py-2 bg-transparent border-none cursor-pointer flex justify-between items-center text-xs font-semibold text-gray-500">
+                            class="w-full py-2 bg-transparent border-none cursor-pointer flex justify-between items-center text-xs font-semibold text-base-content/60">
                         <span>View Payroll Breakdown</span>
                         <i class="icon-[ph--caret-down-fill] text-[11px]"></i>
                     </button>
 
                     <div class=" pb-1 flex flex-col gap-2 text-xs">
                         @foreach([
-                            ['Days Worked',          $payroll['attendance_data']['days_worked'] ?? 0,               'text-gray-800 font-semibold'],
+                            ['Days Worked',          $payroll['attendance_data']['days_worked'] ?? 0,               'text-base-content font-semibold'],
                             ['Overtime Hours',        $payroll['attendance_data']['overtime_hours'] ?? 0,            'text-amber-500'],
                             ['Holiday Days',          $payroll['attendance_data']['holiday_days'] ?? 0,              'text-violet-500'],
-                            ['Basic Pay',             '₱'.number_format($payroll['base_pay'] ?? 0, 2),              'text-gray-800 font-semibold'],
-                            ['Gross Pay',             '₱'.number_format($payroll['gross_pay'] ?? 0, 2),             'text-gray-800 font-semibold'],
+                            ['Basic Pay',             '₱'.number_format($payroll['base_pay'] ?? 0, 2),              'text-base-content font-semibold'],
+                            ['Gross Pay',             '₱'.number_format($payroll['gross_pay'] ?? 0, 2),             'text-base-content font-semibold'],
                             ['Allowance & Benefits',  '+₱'.number_format($payroll['allowance_benefits'] ?? 0, 2),   'text-emerald-600'],
                             ['SSS',                   '-₱'.number_format($payroll['sss_contribution'] ?? 0, 2),     'text-red-600'],
                             ['PhilHealth',            '-₱'.number_format($payroll['philhealth_contribution'] ?? 0, 2), 'text-red-600'],
@@ -383,7 +383,7 @@
                             ['Total Deductions',      '-₱'.number_format($payroll['total_deductions'] ?? 0, 2),     'text-red-600 font-semibold'],
                         ] as [$label, $val, $cls])
                             <div class="flex justify-between items-center">
-                                <span class="text-gray-500">{{ $label }}:</span>
+                                <span class="text-base-content/60">{{ $label }}:</span>
                                 <span class="{{ $cls }}">{{ $val }}</span>
                             </div>
                         @endforeach
@@ -412,7 +412,7 @@
                 </div>
             </div>
         @empty
-            <div class="py-10 text-center text-gray-400">
+            <div class="py-10 text-center text-base-content/40">
                 <i class="icon-[ph--money-fill] text-3xl mb-2 block"></i>
                 No payroll data found.
             </div>
@@ -477,8 +477,8 @@ function openDeptModal() {
         totNet       += parseFloat(emp.net_pay);
         return `
             <tr class="row-hover text-xs">
-                <td><div class="font-semibold text-gray-800 truncate">${emp.name}</div><div class="text-xs text-gray-400 font-mono">${emp.employee_id}</div></td>
-                <td class="text-gray-500 truncate">${emp.department}</td>
+                <td><div class="font-semibold text-base-content truncate">${emp.name}</div><div class="text-xs text-base-content/40 font-mono">${emp.employee_id}</div></td>
+                <td class="text-base-content/60 truncate">${emp.department}</td>
                 <td class="text-right font-semibold">${fmt(emp.basic_pay)}</td>
                 <td class="text-right">${fmt(emp.allowance_benefits)}</td>
                 <td class="text-right">${fmt(emp.overtime_pay)}</td>

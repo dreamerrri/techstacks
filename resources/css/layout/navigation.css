@@ -2,6 +2,11 @@
    NAVIGATION
    Nav links, collapsible nav groups, the logout button, and
    the "mini sidebar" (icon-only) variants of all of the above.
+
+   Text/icon colors come from --color-sidebar-content, hover/active
+   accents from --color-chrome-accent — both fall back to standard
+   FlyonUI slots for any theme other than techstacks (see sidebar.css
+   header comment for the full explanation).
    ═══════════════════════════════════════════════ */
 
 .sidebar-nav { flex: 1; }
@@ -14,7 +19,7 @@
 
 /* ── Nav items ── */
 .nav-item {
-    color: #ffffff;
+    color: var(--color-sidebar-content, var(--color-base-content));
     font-size: 14.5px;
     padding: 11px 16px;
     cursor: pointer;
@@ -34,18 +39,16 @@
 .nav-item:hover { transform: translateX(3px); }
 .nav-item:hover span,
 .nav-item.active span {
-   
-    color: rgb(73, 255, 188);
+    color: var(--color-chrome-accent, var(--color-primary));
 }
 .nav-item:hover i,
 .nav-item.active i {
-    color: rgb(73, 255, 188);
+    color: var(--color-chrome-accent, var(--color-primary));
     font-size: 20px;
 }
 .nav-item:hover i { transform: translateX(3px); }
 .nav-item.active {
-  
-    color: white;
+    color: var(--color-sidebar-content, var(--color-base-content));
     font-weight: 600;
     border-radius: 8px;
 }
@@ -55,7 +58,7 @@
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    color: #ffffff;
+    color: var(--color-sidebar-content, var(--color-base-content));
     flex-shrink: 0;
 }
 .dropdown-arrow {
@@ -68,9 +71,7 @@
 .sidebar-admin .nav-item.nav-sub-item.active,
 .sidebar-hr    .nav-item.nav-sub-item.active,
 .sidebar-user  .nav-item.nav-sub-item.active {
-    
-    color: #ffffff;
-    
+    color: var(--color-sidebar-content, var(--color-base-content));
 }
 
 /* ── Mini sidebar (FlyonUI overlay minifier): icon-only nav items ── */
@@ -90,9 +91,9 @@
     width: calc(100% - 40px);
     margin: 0 20px;
     padding: 10px;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.75);
+    background: color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 7%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 15%, transparent);
+    color: color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 75%, transparent);
     border-radius: 8px;
     cursor: pointer;
     text-align: center;
@@ -104,9 +105,9 @@
     z-index: 1;
 }
 .logout-btn:hover {
-    background: rgba(163, 27, 27, 0.393);
-    color: rgb(246, 12, 12);
-    border-color: rgba(110, 9, 9, 0.127);
+    background: color-mix(in srgb, var(--color-error) 25%, transparent);
+    color: var(--color-error);
+    border-color: color-mix(in srgb, var(--color-error) 35%, transparent);
 }
 .overlay-minified .logout-btn {
     width: 36px;
@@ -138,15 +139,33 @@
 }
 
 .nav-dropdown-menu::before {
+    content: "";
+    z-index: 0;
+    width: 1px;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 27px;
+    background:
+    var(
+        --color-sidebar-content,
+        var(--color-base-content)
+    );
+}
+
+
+/*  .nav-dropdown-menu::before {
     content: '';
     position: absolute;
     top: 6px;
     bottom: 6px;
-    left: 27px;              /* tweak until it lines up with the icon column above */
+    left: 27px;              
     width: 1px;
-    background: rgba(255, 255, 255, 255); /* match your dark sidebar accent */
+    background: rgba(255, 255, 255, 255); 
     z-index: 0;
 }
+*/
+
 
 /* Kill it in mini/collapsed mode — sub-items become flat standalone rows there */
 .overlay-minified .nav-dropdown-menu::before {
@@ -206,7 +225,10 @@
 .burger-btn {
     background: none; border: none; cursor: pointer;
     padding: 6px 8px; border-radius: 5px;
-    color: white; transition: background 0.2s;
+    color: var(--color-sidebar-content, var(--color-base-content));
+    transition: background 0.2s;
     font-size: 20px; line-height: 1;
 }
-.burger-btn:hover { background: rgba(255,255,255,0.2); }
+.burger-btn:hover {
+    background: color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 20%, transparent);
+}

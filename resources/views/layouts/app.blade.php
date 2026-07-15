@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-    <html lang="en" data-theme="{{ auth()->check() ? (auth()->user()->theme ?? 'light') : 'light' }}">
-        <head>
+<html lang="en" data-theme="{{ auth()->check() ? (auth()->user()->theme ?? 'techstacks') : 'techstacks' }}">
+            <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
@@ -88,7 +88,7 @@
     <div class="app-shell">
 
         {{-- Mobile topbar --}}
-        <div class="mobile-topbar sidebar-{{ $role }}">
+        <div class="mobile-topbar topbar-{{ $role }}">
             <a href="{{ route('dashboard') }}" class="brand-link">
                 <svg fill="currentColor" height="1.4em" viewBox="0 0 1813 1441" width="1.4em" xmlns="http://www.w3.org/2000/svg" class="brand-logo-icon">
                     <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fill-rule="evenodd"></path>
@@ -104,6 +104,11 @@
                     </span>
                 </div>
             </a>
+
+            {{-- mobile topbar --}}
+<x-search-box id="search-modal-mobile" />
+
+        
 
             <div class="topbar-actions">
                 <div class="notif-trigger">
@@ -245,6 +250,10 @@
 
             <div class="topbar-actions">
 
+
+{{-- Desktop topbar --}}
+<x-search-box id="search-modal-desktop" />
+
                 <div class="notif-trigger">
                     <button id="notifBtn"
                             class="icon-btn icon-btn--bell-desktop">
@@ -299,7 +308,7 @@
                 <button id="sidebar-toggle" type="button"
                         aria-haspopup="true" aria-expanded="false" aria-label="Toggle sidebar"
                         data-overlay-minifier="#main-sidebar">
-                    <i class="icon-[ph--caret-left-fill] bg-white" id="sidebar-arrow"></i>
+                   <i class="icon-[ph--caret-left-fill]" id="sidebar-arrow"></i>
                 </button>
             </div>
             <nav class="sidebar-nav">
@@ -527,6 +536,7 @@
 
 
    @yield('scripts')
+   @stack('modals')
  {{-- @stack('scripts') --}}
     </body>
     </html>

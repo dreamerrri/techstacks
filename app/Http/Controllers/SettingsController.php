@@ -14,7 +14,7 @@ class SettingsController extends Controller
             'theme' => ['required', 'string', Rule::in([
                 'light','dark','black','claude','corporate','ghibli','gourmet',
                 'luxury','mintlify','pastel','perplexity','shadcn','slack',
-                'soft','spotify','valorant','vscode',
+                'soft','spotify','valorant','vscode','techstacks'
             ])],
         ]);
         $request->user()->update(['theme' => $request->theme]);

@@ -27,7 +27,7 @@
                 <div class="w-8 h-8 rounded-full bg-linear-to-br bg-warning flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                     {{ strtoupper(substr($module, 0, 1)) }}
                 </div>
-                <h3 class="text-base font-bold text-gray-800 m-0">{{ ucfirst($module) }}</h3>
+                <h3 class="text-base font-bold text-base-content m-0">{{ ucfirst($module) }}</h3>
                 <span class="badge badge-soft badge-success text-xs normal-case tracking-normal">
                     {{ $modulePermissions->count() }}
                 </span>
@@ -46,12 +46,12 @@
 
                 @forelse($modulePermissions as $permission)
                     <tr class="row-hover">
-                        <td class="font-semibold text-gray-800">{{ $permission->name }}</td>
+                        <td class="font-semibold text-base-content">{{ $permission->name }}</td>
                         <td><code class="bg-gray-100 text-red-600 text-xs px-1.5 py-0.5 rounded">{{ $permission->slug }}</code></td>
-                        <td class="text-gray-500">
+                        <td class="text-base-content/60">
                             <span class="truncate block" title="{{ $permission->description }}">{{ $permission->description ?? '—' }}</span>
                         </td>
-                        <td class="text-gray-500 text-right">{{ $permission->roles->count() }}</td>
+                        <td class="text-base-content/60 text-right">{{ $permission->roles->count() }}</td>
                         <td class="text-right">
                             @if($permission->is_active)
                                 <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
@@ -84,7 +84,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="py-10 text-gray-400">
+                        <td colspan="6" class="py-10 text-base-content/40">
                             <div class="flex flex-col items-center">
                                 <i class="icon-[ph--tray-fill] text-3xl mb-2"></i>
                                 <span>No data found.</span>
@@ -104,8 +104,8 @@
                                     <i class="icon-[ph--key-fill] text-xs"></i>
                                 </div>
                                 <div>
-                                    <div class="font-semibold text-gray-800 text-sm">{{ $permission->name }}</div>
-                                    <code class="text-xs text-gray-500">{{ $permission->slug }}</code>
+                                    <div class="font-semibold text-base-content text-sm">{{ $permission->name }}</div>
+                                    <code class="text-xs text-base-content/60">{{ $permission->slug }}</code>
                                 </div>
                             </div>
                             @if($permission->is_active)
@@ -115,12 +115,12 @@
                             @endif
                         </div>
 
-                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-2">
-                            <span><i class="icon-[ph--user-tag-fill] w-3.5"></i>{{ $permission->roles->count() }} roles</span>
+                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                            <span><i class="icon-[ph--user-fill] w-3.5"></i>{{ $permission->roles->count() }} roles</span>
                         </div>
 
                         @if($permission->description)
-                            <div class="text-xs text-gray-400 mt-1">{{ $permission->description }}</div>
+                            <div class="text-xs text-base-content/40 mt-1">{{ $permission->description }}</div>
                         @endif
 
                         <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">

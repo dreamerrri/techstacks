@@ -27,10 +27,10 @@
             <x-tab-panel id="account" :first="true"> ... </x-tab-panel>
             <x-tab-panel id="settings"> ... </x-tab-panel>
         </div>
---}}
+--}} {{-- [&_.tab:hover]:text-success [&_.tab:hover]:border-success [&_.tab-active]:border-success [&_.tab-active]:text-success --}}
 @props(['tabs' => []])
 
-<nav class="tabs tabs-bordered [&_.tab:hover]:text-success [&_.tab:hover]:border-success [&_.tab-active]:border-success [&_.tab-active]:text-success"
+<nav class="tabs tabs-bordered "
      aria-label="Tabs" role="tablist" aria-orientation="horizontal">
     @foreach($tabs as $index => $tab)
         <button type="button"

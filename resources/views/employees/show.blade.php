@@ -7,7 +7,7 @@
 
     {{-- Top nav --}}
     <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
-        <a href="{{ route('employees.index') }}" class="back-link text-gray-500 no-underline text-sm hover:text-emerald-600">
+        <a href="{{ route('employees.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee List
         </a>
         <div class="flex gap-2 flex-wrap">
@@ -41,8 +41,8 @@
             @endif
         </div>
         <div>
-            <h2 class="text-xl font-bold text-gray-800 m-0 mb-1">{{ $employee->full_name }}</h2>
-            <p class="text-gray-500 m-0">{{ $employee->position }} — {{ $employee->department }}</p>
+            <h2 class="text-xl font-bold text-base-content m-0 mb-1">{{ $employee->full_name }}</h2>
+            <p class="text-base-content/60 m-0">{{ $employee->position }} — {{ $employee->department }}</p>
             @php
                 $statusClass = match($employee->employment_status) {
                     'Regular'      => 'badge-soft badge-success',
@@ -61,7 +61,7 @@
 
         {{-- Personal Info --}}
         <div class="card bg-base-100 shadow-sm p-5">
-            <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <h2 class="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
                 <i class="icon-[ph--user-fill] text-red-600"></i> Personal Information
             </h2>
             <div class="flex flex-col text-sm">
@@ -75,8 +75,8 @@
                     ['Address',     $employee->address],
                 ] as [$label, $value])
                     <div class="flex justify-between items-start py-2 border-b border-base-200 gap-4">
-                        <span class="text-gray-400 w-2/5 flex-shrink-0">{{ $label }}</span>
-                        <span class="font-semibold text-gray-800 text-right break-words">{{ $value }}</span>
+                        <span class="text-base-content/40 w-2/5 flex-shrink-0">{{ $label }}</span>
+                        <span class="font-semibold text-base-content text-right break-words">{{ $value }}</span>
                     </div>
                 @endforeach
             </div>
@@ -84,7 +84,7 @@
 
         {{-- Employment Details --}}
         <div class="card bg-base-100 shadow-sm p-5">
-            <h2 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <h2 class="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
                 <i class="icon-[ph--briefcase-fill] text-red-600"></i> Employment Details
             </h2>
             <div class="flex flex-col text-sm">
@@ -95,12 +95,12 @@
                     ['Salary Type', $employee->salary_type],
                 ] as [$label, $value])
                     <div class="flex justify-between items-center py-2 border-b border-base-200">
-                        <span class="text-gray-400">{{ $label }}</span>
-                        <span class="font-semibold text-gray-800">{{ $value }}</span>
+                        <span class="text-base-content/40">{{ $label }}</span>
+                        <span class="font-semibold text-base-content">{{ $value }}</span>
                     </div>
                 @endforeach
                 <div class="flex justify-between items-center py-2">
-                    <span class="text-gray-400">Basic Salary</span>
+                    <span class="text-base-content/40">Basic Salary</span>
                     <span class="font-bold text-red-600 text-base">₱{{ number_format($employee->basic_salary, 2) }}</span>
                 </div>
             </div>
@@ -119,7 +119,7 @@
                 $period        = $payrollInput ? $payrollInput->payrollPeriod : null;
             @endphp
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-sm font-bold text-gray-800 m-0 flex items-center gap-2">
+                <h2 class="text-sm font-bold text-base-content m-0 flex items-center gap-2">
                     <i class="icon-[ph--clock-fill] text-red-600"></i> Payroll Input Summary
                 </h2>
                 @if(auth()->user()->isAdmin() || auth()->user()->isHR())
@@ -139,7 +139,7 @@
             <div class="bg-gray-50 rounded-xl p-5">
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
                     @foreach([
-                        ['Days Worked',    number_format($daysWorked, 1).' Days',   'text-gray-800'],
+                        ['Days Worked',    number_format($daysWorked, 1).' Days',   'text-base-content'],
                         ['Overtime Hours', number_format($overtimeHours, 1).' Hrs', 'text-red-600'],
                         ['Late Hours',     number_format($lateHours, 1).' Hrs',     'text-red-600'],
                         ['Allowances',     '₱'.number_format($allowances, 2),       'text-emerald-600'],
@@ -147,7 +147,7 @@
                         ['Net Pay',        '₱'.number_format($netPay, 2),           'text-emerald-600'],
                     ] as [$label, $value, $cls])
                         <div>
-                            <div class="text-xs text-gray-500 mb-1">{{ $label }}</div>
+                            <div class="text-xs text-base-content/60 mb-1">{{ $label }}</div>
                             <div class="text-lg font-bold {{ $cls }}">{{ $value }}</div>
                         </div>
                     @endforeach
@@ -169,10 +169,10 @@
         <div class="card bg-base-100 shadow-sm p-5 md:col-span-2">
             <div class="flex justify-between items-center">
                 <div>
-                    <h2 class="text-sm font-bold text-gray-800 m-0 flex items-center gap-2">
+                    <h2 class="text-sm font-bold text-base-content m-0 flex items-center gap-2">
                         <i class="icon-[ph--identification-card-fill] text-red-600"></i> Government Contributions
                     </h2>
-                    <p class="text-gray-500 text-xs mt-1 mb-0">View and manage government contribution rates for this employee.</p>
+                    <p class="text-base-content/60 text-xs mt-1 mb-0">View and manage government contribution rates for this employee.</p>
                 </div>
                 <a href="{{ route('government-contributions.show', $employee) }}" class="btn btn-soft btn-info btn-sm">
                     <i class="icon-[ph--eye-fill]"></i> View Contributions
@@ -184,10 +184,10 @@
         <div class="card bg-base-100 shadow-sm p-5 md:col-span-2">
             <div class="flex justify-between items-center">
                 <div>
-                    <h2 class="text-sm font-bold text-gray-800 m-0 flex items-center gap-2">
+                    <h2 class="text-sm font-bold text-base-content m-0 flex items-center gap-2">
                         <i class="icon-[ph--clock-fill] text-red-600"></i> Attendance Records
                     </h2>
-                    <p class="text-gray-500 text-xs mt-1 mb-0">View daily time-in/time-out records and attendance history for this employee.</p>
+                    <p class="text-base-content/60 text-xs mt-1 mb-0">View daily time-in/time-out records and attendance history for this employee.</p>
                 </div>
                 <a href="{{ route('employee-attendance.show-employee', $employee) }}" class="btn btn-soft btn-success btn-sm">
                     <i class="icon-[ph--eye-fill]"></i> View Attendance
@@ -199,7 +199,7 @@
         @if(auth()->user()->isAdmin() || auth()->user()->isHR())
         <div class="card bg-base-100 shadow-sm p-5 md:col-span-2">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-sm font-bold text-gray-800 m-0 flex items-center gap-2">
+                <h2 class="text-sm font-bold text-base-content m-0 flex items-center gap-2">
                     <i class="icon-[ph--gift-fill] text-red-600"></i> Allowances & Benefits
                 </h2>
                 <div class="flex gap-2">
@@ -218,17 +218,17 @@
 
             {{-- Allowances --}}
             <div class="mb-6">
-                <h3 class="text-sm font-bold text-gray-700 mb-3">Allowances</h3>
+                <h3 class="text-sm font-bold text-base-content/80 mb-3">Allowances</h3>
                 @if($employee->activeAllowances()->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         @foreach($employee->activeAllowances as $allowance)
                             <div class="bg-gray-50 p-3 rounded-lg border-l-4 border-emerald-500">
                                 <div class="flex justify-between items-start">
                                     <div>
-                                        <div class="font-semibold text-gray-800 text-sm">{{ $allowance->name }}</div>
-                                        <div class="text-gray-500 text-xs mt-0.5">{{ $allowance->type }}</div>
+                                        <div class="font-semibold text-base-content text-sm">{{ $allowance->name }}</div>
+                                        <div class="text-base-content/60 text-xs mt-0.5">{{ $allowance->type }}</div>
                                         @if($allowance->description)
-                                            <div class="text-gray-400 text-xs mt-1">{{ $allowance->description }}</div>
+                                            <div class="text-base-content/40 text-xs mt-1">{{ $allowance->description }}</div>
                                         @endif
                                     </div>
                                     <div class="text-right">
@@ -249,23 +249,23 @@
                         @endforeach
                     </div>
                 @else
-                    <div class="py-3 bg-gray-50 rounded-lg text-center text-gray-400 text-xs">No allowances added</div>
+                    <div class="py-3 bg-gray-50 rounded-lg text-center text-base-content/40 text-xs">No allowances added</div>
                 @endif
             </div>
 
             {{-- Benefits --}}
             <div class="mb-4">
-                <h3 class="text-sm font-bold text-gray-700 mb-3">Benefits</h3>
+                <h3 class="text-sm font-bold text-base-content/80 mb-3">Benefits</h3>
                 @if($employee->activeBenefits->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         @foreach($employee->activeBenefits as $benefit)
                             <div class="bg-gray-50 p-3 rounded-lg border-l-4 border-blue-500">
                                 <div class="flex justify-between items-start">
                                     <div>
-                                        <div class="font-semibold text-gray-800 text-sm">{{ $benefit->name }}</div>
-                                        <div class="text-gray-500 text-xs mt-0.5">{{ $benefit->type }}</div>
+                                        <div class="font-semibold text-base-content text-sm">{{ $benefit->name }}</div>
+                                        <div class="text-base-content/60 text-xs mt-0.5">{{ $benefit->type }}</div>
                                         @if($benefit->description)
-                                            <div class="text-gray-400 text-xs mt-1">{{ $benefit->description }}</div>
+                                            <div class="text-base-content/40 text-xs mt-1">{{ $benefit->description }}</div>
                                         @endif
                                     </div>
                                     <div class="text-right">
@@ -286,7 +286,7 @@
                         @endforeach
                     </div>
                 @else
-                    <div class="py-3 bg-gray-50 rounded-lg text-center text-gray-400 text-xs">No benefits added</div>
+                    <div class="py-3 bg-gray-50 rounded-lg text-center text-base-content/40 text-xs">No benefits added</div>
                 @endif
             </div>
 
@@ -297,15 +297,15 @@
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
                         <div class="fieldset">
-                            <label class="label text-xs text-gray-500">Name</label>
+                            <label class="label text-xs text-base-content/60">Name</label>
                             <input type="text" name="name" required class="input input-bordered input-sm w-full">
                         </div>
                         <div class="fieldset">
-                            <label class="label text-xs text-gray-500">Amount</label>
+                            <label class="label text-xs text-base-content/60">Amount</label>
                             <input type="number" name="amount" step="0.01" min="0" required class="input input-bordered input-sm w-full">
                         </div>
                         <div class="fieldset">
-                            <label class="label text-xs text-gray-500">Type</label>
+                            <label class="label text-xs text-base-content/60">Type</label>
                             <select name="type" class="select select-bordered select-sm w-full">
                                 <option value="monthly">Monthly</option>
                                 <option value="one-time">One-time</option>
@@ -313,7 +313,7 @@
                         </div>
                     </div>
                     <div class="fieldset mb-3">
-                        <label class="label text-xs text-gray-500">Description (optional)</label>
+                        <label class="label text-xs text-base-content/60">Description (optional)</label>
                         <textarea name="description" rows="2" class="textarea textarea-bordered textarea-sm w-full"></textarea>
                     </div>
                     <div class="flex gap-2">
@@ -334,15 +334,15 @@
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
                         <div class="fieldset">
-                            <label class="label text-xs text-gray-500">Name</label>
+                            <label class="label text-xs text-base-content/60">Name</label>
                             <input type="text" name="name" required class="input input-bordered input-sm w-full">
                         </div>
                         <div class="fieldset">
-                            <label class="label text-xs text-gray-500">Amount</label>
+                            <label class="label text-xs text-base-content/60">Amount</label>
                             <input type="number" name="amount" step="0.01" min="0" required class="input input-bordered input-sm w-full">
                         </div>
                         <div class="fieldset">
-                            <label class="label text-xs text-gray-500">Type</label>
+                            <label class="label text-xs text-base-content/60">Type</label>
                             <select name="type" class="select select-bordered select-sm w-full">
                                 <option value="monthly">Monthly</option>
                                 <option value="one-time">One-time</option>
@@ -350,7 +350,7 @@
                         </div>
                     </div>
                     <div class="fieldset mb-3">
-                        <label class="label text-xs text-gray-500">Description (optional)</label>
+                        <label class="label text-xs text-base-content/60">Description (optional)</label>
                         <textarea name="description" rows="2" class="textarea textarea-bordered textarea-sm w-full"></textarea>
                     </div>
                     <div class="flex gap-2">
