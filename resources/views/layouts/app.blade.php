@@ -326,22 +326,54 @@
                     @endphp
 
                     <div class="nav-dropdown {{ $userMgmtOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger swap swap-rotate" type="button">
-                            <i class="icon-[ph--user-gear-fill]"></i><span>Access Control</span>
-                            <i class="dropdown-arrow icon-[ph--caret-down-fill]  w-4 h-4"></i>
-                        </button>
-                        <div class="nav-dropdown-menu" style="hidden">
-                            <a href="{{ route('users.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--users-fill] icon"></i><span>Users</span>
-                            </a>
-                            <a href="{{ route('roles.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--lock-fill] icon"></i><span>Roles</span>
-                            </a>
-                            <a href="{{ route('permissions.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--shield-check-fill] icon"></i><span>Permissions</span>
-                            </a>
-                        </div>
-                    </div>
+
+    <button
+        class="nav-item nav-dropdown-trigger swap swap-rotate"
+        type="button"
+        data-tooltip="Access Control">
+
+        <i class="icon-[ph--user-gear-fill]"></i>
+        <span>Access Control</span>
+
+        <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
+
+    </button>
+
+
+    <div class="nav-dropdown-menu" style="hidden">
+
+        <a href="{{ route('users.index') }}"
+            data-tooltip="Users"
+            class="nav-item nav-sub-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+
+            <i class="icon-[ph--users-fill] icon"></i>
+            <span>Users</span>
+
+        </a>
+
+
+        <a href="{{ route('roles.index') }}"
+            data-tooltip="Roles"
+            class="nav-item nav-sub-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
+
+            <i class="icon-[ph--lock-fill] icon"></i>
+            <span>Roles</span>
+
+        </a>
+
+
+        <a href="{{ route('permissions.index') }}"
+            data-tooltip="Permissions"
+            class="nav-item nav-sub-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
+
+            <i class="icon-[ph--shield-check-fill] icon"></i>
+            <span>Permissions</span>
+
+        </a>
+
+    </div>
+
+</div>
 
                     <div class="nav-dropdown {{ $empMgmtOpen ? 'open' : '' }}">
                         <button class="nav-item nav-dropdown-trigger" type="button">

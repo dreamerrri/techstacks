@@ -1,74 +1,9 @@
-{{--
-    <x-dot-loader />
-
-    A three-dot "loading" indicator. At rest it's three dots in a row
-    (like the Linux/GNOME loading ellipsis). While something is happening
-    (page navigation, form submit, fetch/XHR/Livewire request, or a
-    FlyonUI modal opening/closing) the dots morph into a triangle and
-    spin like a circle, then morph back when it's done.
-
-    INSTALL
-    -------
-    1. Save this file as: resources/views/components/dot-loader.blade.php
-    2. Drop it anywhere in a Blade view:
-           <x-dot-loader />
-    3. No layout changes needed — the style/script are inlined via @once,
-       not pushed to a stack, so they work regardless of whether your
-       layout uses @yield('scripts') or @stack('scripts').
-
-    That's it — no build step, no npm package. It auto-hooks into:
-      - normal <form> submits
-      - full page reloads / navigations
-      - window.fetch calls
-      - XMLHttpRequest calls (this covers jQuery $.ajax too)
-      - Livewire v3 navigate events (harmless no-op if you don't use Livewire)
-      - FlyonUI modals / overlays (HSOverlay) opening or closing — via any
-        trigger: a [data-overlay] button, ESC key, backdrop click, or a
-        HSOverlay.open()/close() call. Harmless no-op if you don't use
-        FlyonUI overlays.
-
-    You can also trigger it manually from your own JS, e.g. around a
-    custom async action:
-
-        DotLoader.start();
-        // ... do the thing ...
-        DotLoader.stop();
-
-    RESIZE / RESTYLE
-    ----------------
-    All visual knobs are props (or just override the CSS vars yourself):
-
-        <x-dot-loader
-            size="8px"          {{-- dot diameter --}}
-           {{--  color="#22c55e"     {{-- default/fallback color for all dots --}}
-           {{--  gap="12px"          {{-- spacing between dots at rest --}}
-          {{--   radius="14px"       {{-- circle radius while spinning --}}
-         {{--    morph=".3s"         {{-- speed of row <-> circle transition --}}
-         {{--    spin=".7s"          {{-- speed of one full rotation --}}
-{{-- />
-
-    To give each of the 3 dots its own color, use color1 / color2 / color3
-    (each falls back to `color` above if you leave it out):
-
-        <x-dot-loader color1="#ef4444" color2="#22c55e" color3="#3b82f6" />
-
-    Multiple instances on the same page are fine — each has its own
-    props/CSS vars, and the style/script only ever render once per page
-    load regardless of how many times <x-dot-loader /> is used.
-    Calling DotLoader.start()/stop() (or a real request firing) will
-    animate every instance on the page at once. If you need independent
-    per-instance control (e.g. one spinner per row in a table), give
-    each one a unique `id` prop and target it directly, e.g.:
-
-        document.getElementById('row-42-loader').classList.add('is-active');
---}}
-
 @props([
     'size' => '10px',
     'color' => 'currentColor',
-    'color1' => '#A8E6CF',
-    'color2' => '#FFEDA3',
-    'color3' => '#2D3748',
+    'color1' => 'var(--color-dot-1, var(--color-success))',
+    'color2' => 'var(--color-dot-2, var(--color-warning))',
+    'color3' => 'var(--color-dot-3, var(--color-neutral))',
     'gap' => '14px',
     'radius' => '12px',
     'morph' => '.35s',
@@ -176,7 +111,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, .6);
+            background: color-mix(in srgb, var(--color-base-100) 60%, transparent);
             z-index: 9999;
             opacity: 0;
             pointer-events: none;
@@ -185,9 +120,6 @@
         .dot-loader-overlay.is-visible {
             opacity: 1;
             pointer-events: all;
-        }
-        .dark .dot-loader-overlay {
-            background: rgba(15, 23, 42, .6);
         }
     </style>
 
@@ -239,9 +171,6 @@
 
     window.DotLoader = { start: start, stop: stop };
 
-    // Arriving mid-navigation: resume the spinner instantly (no morph-in)
-    // so it reads as continuous across the reload, then let it morph back
-    // to resting dots once this page is actually ready.
     if (sessionStorage.getItem(STORAGE_KEY)) {
         sessionStorage.removeItem(STORAGE_KEY);
         pending = 1;
@@ -250,19 +179,16 @@
         window.addEventListener('load', function () { stop(true); });
     }
 
-    // Full page reload / navigation away from this page
     window.addEventListener('beforeunload', function () {
         sessionStorage.setItem(STORAGE_KEY, '1');
         start();
     });
 
-    // Normal (non-AJAX) form submits
     document.addEventListener('submit', function (e) {
         if (e.defaultPrevented) return;
         start();
     }, true);
 
-    // fetch()
     var nativeFetch = window.fetch;
     if (nativeFetch) {
         window.fetch = function () {
@@ -271,7 +197,6 @@
         };
     }
 
-    // XMLHttpRequest (covers jQuery $.ajax too)
     var nativeOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function () {
         this.addEventListener('loadstart', function () { start(); });
@@ -279,19 +204,9 @@
         return nativeOpen.apply(this, arguments);
     };
 
-    // Livewire v3 (no-op if Livewire isn't present)
     document.addEventListener('livewire:navigating', function () { start(); });
     document.addEventListener('livewire:navigated', function () { stop(true); });
 
-    // FlyonUI modals / overlays (HSOverlay)
-    //
-    // FlyonUI toggles an "open" class on the .overlay element itself while
-    // it's shown (that's what the `overlay-open:*` Tailwind variants key
-    // off of). Watching that class directly — rather than binding to the
-    // [data-overlay] trigger buttons — means this catches every way an
-    // overlay can open or close: a trigger button click, the ESC key, a
-    // backdrop click, or a plain HSOverlay.open('#id') / .close() call.
-    // No-op if you don't use FlyonUI overlays on the page.
     if (window.MutationObserver) {
         var overlayObserver = new MutationObserver(function (mutations) {
             mutations.forEach(function (m) {
