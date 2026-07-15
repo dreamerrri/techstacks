@@ -115,6 +115,12 @@
                 <td class="iname">Basic Salary</td>
                 <td class="iamt">PHP{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
             </tr>
+            @if(($payroll['weekend_pay'] ?? 0) > 0)
+            <tr>
+                <td class="iname">Weekend Pay</td>
+                <td class="iamt">PHP{{ number_format($payroll['weekend_pay'], 2) }}</td>
+            </tr>
+            @endif
             <tr>
                 <td class="iname">Allowance per cut</td>
                 <td class="iamt">PHP{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</td>

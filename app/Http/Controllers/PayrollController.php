@@ -210,6 +210,7 @@ class PayrollController extends Controller
             $attendanceData = [
                 'days_worked'              => $payrollInput->days_worked ?? 0,
                 'regular_hours'            => ($payrollInput->days_worked ?? 0) * 8,
+                'weekends_worked'          => $payrollInput->weekends_worked ?? 0,
                 'overtime_hours'           => $payrollInput->overtime_hours ?? 0,
                 'late_hours'               => $payrollInput->late_hours ?? 0,
                 'night_differential_hours' => $payrollInput->night_differential_hours ?? 0,
@@ -221,6 +222,7 @@ class PayrollController extends Controller
             $attendanceData = [
                 'days_worked'              => 0,
                 'regular_hours'            => 0,
+                'weekends_worked'          => 0,
                 'overtime_hours'           => 0,
                 'late_hours'               => 0,
                 'night_differential_hours' => 0,
@@ -339,6 +341,7 @@ class PayrollController extends Controller
             'hourly_rate'             => $result['hourly_rate'],
             'daily_rate'              => $result['daily_rate'],
             'base_pay'                => $result['basic_salary'],
+            'weekend_pay'             => $result['weekend_pay'],
             'overtime_pay'            => $result['overtime_pay'],
             'night_differential_pay'  => $result['night_differential'],
             'holiday_pay'             => $result['holiday_pay'],
