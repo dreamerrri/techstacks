@@ -16,7 +16,7 @@
 @props(['placement' => 'right'])
 
 <div class="tooltip [--placement:{{ $placement }}]">
-    <span class="tooltip-toggle cursor-pointer text-gray-400 hover:text-gray-600" aria-label="More info">
+    <span class="tooltip-toggle cursor-pointer text-base-content/40 hover:text-base-content/70" aria-label="More info">
         <i class="icon-[ph--info-fill]"></i>
     </span>
     <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">

@@ -6,13 +6,13 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('employees.show', $employee) }}" class="back-link text-gray-500 no-underline text-sm hover:text-emerald-600">
+        <a href="{{ route('employees.show', $employee) }}" class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee Profile
         </a>
     </div>
 
     <div class="card bg-base-100 shadow-sm p-6">
-        <h2 class="text-base font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <h2 class="text-base font-bold text-base-content mb-6 flex items-center gap-2">
             <i class="icon-[ph--user-fill]-edit text-red-600"></i> Edit — {{ $employee->full_name }}
         </h2>
 

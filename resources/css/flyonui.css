@@ -1,17 +1,35 @@
-/*
- * FlyonUI complete setup — DO NOT split these lines across files.
- * All three are required together or components silently half-work:
- *   1. @plugin        → static component classes (btn, card, badge, tooltip, etc.)
- *   2. @import variants.css → custom variants for JS-driven state (tooltip-shown:, dropdown-open:, etc.)
- *   3. @source flyonui.js   → lets Tailwind see classes FlyonUI's JS injects at runtime,
- *                              needed since node_modules is gitignored
- themes: mintlify --default, dark --prefersdark; */
 @plugin "flyonui" {
   themes: all;
 }
 @import 'flyonui/variants.css';
-@source '../../node_modules/flyonui/flyonui.js';
 
+@plugin "flyonui/theme" {
+  name: "techstacks";
+  color-scheme: dark;
+
+  --color-primary: #1e6b57;
+  --color-primary-content: #ffffff;
+  --color-secondary: #247865;
+  --color-secondary-content: #ffffff;
+  --color-accent: #23806a;
+  --color-accent-content: #ffffff;
+  --color-neutral: #1f2937;
+  --color-neutral-content: #f9fafb;
+  --color-base-100: #ffffff;
+  --color-base-200: #f5f7f6;
+  --color-base-300: #e5e7eb;
+  --color-base-content: #111827;
+
+  --color-sidebar-bg: linear-gradient(180deg, #1e6b57 0%, #21765f 30%, #23806a 55%, #258572 75%, #268a77 100%);
+  --color-sidebar-content: #ffffff;
+  --color-sidebar-glow: rgba(52, 211, 153, 0.12);
+  --color-topbar-bg: linear-gradient(to right, #266859 0%, #257462 25%, #247865 50%, #247c67 75%, #23806a 100%);
+  --color-topbar-content: #ffffff;
+  --color-topbar-glow: #ffffff;
+  --color-chrome-accent: rgb(73, 255, 188);
+  --sidebar-wave-opacity: 1;
+}
+/* your existing claude / corporate / ghibli / gourmet / luxury / pastel / slack / soft / spotify / valorant / vscode blocks stay as-is */
 @plugin "flyonui/theme" {
   name: "claude";
   font-family: "Geist";
@@ -55,4 +73,8 @@
 @plugin "flyonui/theme" {
   name: "vscode";
   font-family: "Fira Code";
+}
+
+[data-theme="techstacks"] .overlay-backdrop {
+  background-color: rgb(17 24 39 / 0.6);
 }
