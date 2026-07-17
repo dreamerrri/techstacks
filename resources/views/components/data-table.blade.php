@@ -32,11 +32,13 @@
 
 <div class="overflow-x-auto overflow-y-auto max-h-[{{ $maxHeight }}] hidden md:block">
     <table class="table table-hover table-fixed w-full text-sm table-borderless">
+        @if(isset($head))
         <thead class="sticky top-0 z-5 bg-base-100">
             <tr class="bg-success/67 shadow-md text-success-content text-xs">
                 {{ $head }}
             </tr>
         </thead>
+        @endif
         <tbody>
             {{ $slot }}
         </tbody>
