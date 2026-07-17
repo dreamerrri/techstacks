@@ -48,8 +48,10 @@
   .net-pay .np-label  { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
 
   /* ── Signatures ── */
-  .sigs { display: flex; justify-content: space-between; padding: 28px 60px 20px; }
-  .sig-block { text-align: center; min-width: 160px; }
+  .sigs { padding: 28px 60px 20px; }
+  .sigs table { width: 100%; border-collapse: collapse; }
+  .sigs td { width: 50%; padding: 0 20px; vertical-align: top; }
+  .sig-block { text-align: center; }
   .sig-block .sig-img { height: 44px; margin-bottom: 0; }
   .sig-block .sig-line { border-top: 1px solid #111; width: 180px; margin: 0 auto 5px; }
   .sig-block .sig-name { font-size: 11px; font-weight: 700; text-transform: uppercase; }
@@ -115,32 +117,26 @@
                 <td class="iname">Basic Salary</td>
                 <td class="iamt">PHP{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
             </tr>
-            @if(($payroll['weekend_pay'] ?? 0) > 0)
             <tr>
-                <td class="iname">Weekend Pay</td>
-                <td class="iamt">PHP{{ number_format($payroll['weekend_pay'], 2) }}</td>
+                <td class="iname">Weekend Pay (30%)</td>
+                <td class="iamt">PHP{{ number_format($payroll['weekend_pay'] ?? 0, 2) }}</td>
             </tr>
-            @endif
             <tr>
                 <td class="iname">Allowance per cut</td>
                 <td class="iamt">PHP{{ number_format($payroll['allowance_benefits'] ?? 0, 2) }}</td>
             </tr>
             <tr>
-                <td class="iname">Overtime Pay</td>
+                <td class="iname">Overtime Pay (125%)</td>
                 <td class="iamt">PHP{{ number_format($payroll['overtime_pay'] ?? 0, 2) }}</td>
             </tr>
-            @if(($payroll['night_differential_pay'] ?? 0) > 0)
             <tr>
-                <td class="iname">Night Differential</td>
-                <td class="iamt">PHP{{ number_format($payroll['night_differential_pay'], 2) }}</td>
+                <td class="iname">Night Differential (10%)</td>
+                <td class="iamt">PHP{{ number_format($payroll['night_differential_pay'] ?? 0, 2) }}</td>
             </tr>
-            @endif
-            @if(($payroll['holiday_pay'] ?? 0) > 0)
             <tr>
-                <td class="iname">Holiday Pay</td>
-                <td class="iamt">PHP{{ number_format($payroll['holiday_pay'], 2) }}</td>
+                <td class="iname">Holiday Pay (200%)</td>
+                <td class="iamt">PHP{{ number_format($payroll['holiday_pay'] ?? 0, 2) }}</td>
             </tr>
-            @endif
             <tr class="subtotal">
                 <td class="iname" style="text-align:right; padding-right:12px;">Total Earnings</td>
                 <td class="iamt">PHP{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</td>
@@ -206,16 +202,24 @@
 
 {{-- ── SIGNATURES ── --}}
 <div class="sigs">
-    <div class="sig-block">
-        <div class="sig-line"></div>
-        <div class="sig-name">{{ $authorizedSignatory ?? 'RENZ ANDREW S. GWAPO' }}</div>
-        <div class="sig-role">Admin/HR</div>
-    </div>
-    <div class="sig-block">
-        <div class="sig-line"></div>
-        <div class="sig-name">{{ $employee->full_name }}</div>
-        <div class="sig-role">Employee's Signature</div>
-    </div>
+    <table>
+        <tr>
+            <td>
+                <div class="sig-block">
+                    <div class="sig-line"></div>
+                    <div class="sig-name">{{ $authorizedSignatory ?? 'RENZ ANDREW S. GWAPO' }}</div>
+                    <div class="sig-role">Admin/HR</div>
+                </div>
+            </td>
+            <td>
+                <div class="sig-block">
+                    <div class="sig-line"></div>
+                    <div class="sig-name">{{ $employee->full_name }}</div>
+                    <div class="sig-role">Employee's Signature</div>
+                </div>
+            </td>
+        </tr>
+    </table>
 </div>
 
 {{-- ── FOOTNOTE ── --}}
