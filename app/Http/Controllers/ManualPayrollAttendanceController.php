@@ -45,6 +45,11 @@ class ManualPayrollAttendanceController extends Controller
         }
     }
 
+    // Apply status filter
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
     try {
         $periods = $query->with('payrollInputs')
             ->orderByDesc('cutoff_start')

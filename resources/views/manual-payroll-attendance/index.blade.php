@@ -34,6 +34,57 @@
         </div>
     </x-slot:actions>
 
+    {{-- Filters --}}
+    <div class="card bg-base-100 shadow-sm p-4 mb-4">
+        <div class="flex flex-wrap items-end gap-3">
+            <div class="form-control">
+                <label class="label label-text">Year</label>
+                <select id="filter-year" class="select select-bordered select-sm w-32">
+                    <option value="">All Years</option>
+                    @foreach($availableYears as $year)
+                        <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label label-text">Month</label>
+                <select id="filter-month" class="select select-bordered select-sm w-40">
+                    <option value="">All Months</option>
+                    @foreach($availableMonths as $month)
+                        <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }}>
+                            {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label label-text">Phase</label>
+                <select id="filter-phase" class="select select-bordered select-sm w-36">
+                    <option value="">All Phases</option>
+                    <option value="1" {{ request('phase') == '1' ? 'selected' : '' }}>1st Half</option>
+                    <option value="2" {{ request('phase') == '2' ? 'selected' : '' }}>2nd Half</option>
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label label-text">Status</label>
+                <select id="filter-status" class="select select-bordered select-sm w-36">
+                    <option value="">All Statuses</option>
+                    <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="finalized" {{ request('status') == 'finalized' ? 'selected' : '' }}>Finalized</option>
+                </select>
+            </div>
+
+            <div class="flex gap-2">
+                <button id="clear-filters" class="btn btn-soft btn-neutral btn-sm">
+                    <i class="icon-[ph--x-fill]"></i> Clear
+                </button>
+            </div>
+        </div>
+    </div>
+
     {{-- Payroll Periods List --}}
     <div class="card bg-base-100 shadow-sm overflow-hidden p-0">
 
@@ -103,6 +154,53 @@
 
 @section('scripts')
 <script>
+    // Filter functionality
+    const filterYear = document.getElementById('filter-year');
+    const filterMonth = document.getElementById('filter-month');
+    const filterPhase = document.getElementById('filter-phase');
+    const filterStatus = document.getElementById('filter-status');
+    const clearFiltersBtn = document.getElementById('clear-filters');
+
+    function applyFilters() {
+        const params = new URLSearchParams();
+        if (filterYear.value) params.append('year', filterYear.value);
+        if (filterMonth.value) params.append('month', filterMonth.value);
+        if (filterPhase.value) params.append('phase', filterPhase.value);
+        if (filterStatus.value) params.append('status', filterStatus.value);
+
+        fetch(`{{ route('manual-payroll-attendance.index') }}?${params.toString()}`, {
+            headers: {
+                'Accept': 'text/html',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newPeriodsList = doc.querySelector('.card.bg-base-100.shadow-sm.overflow-hidden.p-0');
+            const currentPeriodsList = document.querySelector('.card.bg-base-100.shadow-sm.overflow-hidden.p-0');
+            if (newPeriodsList && currentPeriodsList) {
+                currentPeriodsList.innerHTML = newPeriodsList.innerHTML;
+            }
+        })
+        .catch(() => window.notyf.error('Failed to apply filters.'));
+    }
+
+    // Add change event listeners to all filters
+    [filterYear, filterMonth, filterPhase, filterStatus].forEach(select => {
+        select.addEventListener('change', applyFilters);
+    });
+
+    // Clear filters
+    clearFiltersBtn.addEventListener('click', () => {
+        filterYear.value = '';
+        filterMonth.value = '';
+        filterPhase.value = '';
+        filterStatus.value = '';
+        applyFilters();
+    });
+
     function confirmDelete(periodId, label, url) {
     Swal.fire({
         title: 'Archive Payroll Period?',
