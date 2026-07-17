@@ -1,576 +1,322 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="{{ auth()->check() ? (auth()->user()->theme ?? 'techstacks') : 'techstacks' }}">
-            <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title') - HR Management System</title>
 
-        {{-- FlyonUI theme fonts — required for corporate, ghibli, gourmet, luxury,
-     slack, soft, valorant, claude, pastel, spotify, vscode themes --}}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Work+Sans:ital,wght@0,100..900;1,100..900&family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @yield('styles')
 
+    <style>
+    /* Single source of truth for sidebar width.
+       Sidebar element width AND main-content start-padding
+       both read from these two variables — never hardcode
+       the width in more than one place. */
+    :root {
+        --sidebar-w: 16.5rem;   /* expanded width, matches old w-66 */
+        --sidebar-w-mini: 4.25rem; /* minified width, matches old w-17 */
+    }
+</style>
+</head>
+<body>
 
-        <title>@yield('title') - HR Management System</title>
+@php
+    $user    = auth()->user();
+    $isAdmin = $user->role === 'admin';
+    $isHR    = $user->role === 'hr';
+    $role    = $isAdmin ? 'admin' : ($isHR ? 'hr' : 'user');
 
-        {{-- ⚡ Must be first: restore sidebar + dropdown states before first paint — prevents flash --}}
-        <script>
-            if (sessionStorage.getItem('sidebar_collapsed') === '1') {
-                document.documentElement.classList.add('sidebar-pre-collapsed');
-            }
-            document.addEventListener('DOMContentLoaded', function() {
-                document.querySelectorAll('.nav-dropdown').forEach(function(dropdown) {
-                    var label = dropdown.querySelector('.nav-dropdown-trigger span');
-                    if (!label) return;
-                    var key = 'dropdown_' + label.textContent.trim();
-                    if (sessionStorage.getItem(key) === 'open') {
-                        dropdown.classList.add('open', 'no-transition');
-                    }
-                });
-                requestAnimationFrame(function() {
-                    requestAnimationFrame(function() {
-                        document.querySelectorAll('.nav-dropdown.no-transition')
-                            .forEach(function(el) { el.classList.remove('no-transition'); });
-                    });
-                });
-            });
-        </script>
+    $attendanceActive = request()->routeIs('manual-payroll-attendance.*') || request()->routeIs('payroll-periods.*');
 
-        {{-- CSS --}}
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-        @yield('styles')
-    </head>
-    <body>
-
-    @php
-        $user    = auth()->user();
-        $isAdmin = $user->role === 'admin';
-        $isHR    = $user->role === 'hr';
-        $role    = $isAdmin ? 'admin' : ($isHR ? 'hr' : 'user');
-
-        // Attendance nav item should also light up for payroll-period routes
-        // (create / archived / store / finalize / archive / restore), since
-        // those pages are conceptually part of the attendance/payroll workflow
-        // even though they live under a separate 'payroll-periods.' route name.
-        $attendanceActive = request()->routeIs('manual-payroll-attendance.*') || request()->routeIs('payroll-periods.*');
-
-        function profilePhotoUrl($path) {
-            if (app()->environment('production')) {
-                return \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($path, now()->addHours(24));
-            }
-            return asset('images/placeholder-avatar.png');
+    function profilePhotoUrl($path) {
+        if (app()->environment('production')) {
+            return \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($path, now()->addHours(24));
         }
+        return asset('images/placeholder-avatar.png');
+    }
 
-        // Get notifications for current user based on role
-        $notifications = \App\Models\Notification::forCurrentUser()
-            ->where(function($q) {
-                $q->where('is_read', false)
-                  ->orWhere('is_resolved', false);
-            })
-            ->latest()
-            ->limit(50)
-            ->get();
-        $notifCount = \App\Models\Notification::forCurrentUser()->unread()->count();
-    @endphp
+    $notifications = \App\Models\Notification::forCurrentUser()
+        ->where(function($q) {
+            $q->where('is_read', false)
+              ->orWhere('is_resolved', false);
+        })
+        ->latest()
+        ->limit(50)
+        ->get();
+    $notifCount = \App\Models\Notification::forCurrentUser()->unread()->count();
+@endphp
 
-    {{-- ═══════════════════════════════════════
-        APP SHELL
-        One shell, one content region. Mobile topbar/burger-menu and
-        desktop topbar/sidebar are both always in the DOM as siblings;
-        CSS (app-shell.css) decides which set is visible per breakpoint.
-        @yield('content') renders exactly once — do NOT duplicate it,
-        that's what caused every ID-based JS component (tabs, dropdowns,
-        the allowance/benefit toggle) to silently target the wrong copy.
-        ═══════════════════════════════════════ --}}
-    <div class="app-shell">
+<div class="flex flex-col flex-1 min-w-0 sm:ps-[var(--sidebar-w)] overlay-minified:sm:ps-[var(--sidebar-w-mini)] transition-[padding] duration-300">
 
-        {{-- Mobile topbar --}}
-        <div class="mobile-topbar topbar-{{ $role }}">
-            <a href="{{ route('dashboard') }}" class="brand-link">
-                <svg fill="currentColor" height="1.4em" viewBox="0 0 1813 1441" width="1.4em" xmlns="http://www.w3.org/2000/svg" class="brand-logo-icon">
-                    <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fill-rule="evenodd"></path>
-                    <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fill-rule="evenodd"></path>
-                </svg>
-                <div class="brand-text">
-                    <span class="brand-title">Techstacks</span>
-                    <span class="brand-subtitle">
-                        @if($isAdmin) Admin Portal
-                        @elseif($isHR) HR Portal
-                        @else Employee Portal
-                        @endif
-                    </span>
-                </div>
-            </a>
+    {{-- Sidebar --}}
+<aside id="collapsible-mini-sidebar"
+       class="overlay [--auto-close:sm] sm:shadow-none overlay-open:translate-x-0 drawer drawer-start hidden sm:fixed sm:inset-y-0 sm:start-0 sm:z-10 sm:flex sm:translate-x-0 border-e border-base-content/20 overflow-y-auto w-[var(--sidebar-w)] overlay-minified:w-[var(--sidebar-w-mini)]"
+       role="dialog" tabindex="-1">
 
-            {{-- mobile topbar --}}
-<x-search-box id="search-modal-mobile" />
+        <div class="drawer-header overlay-minified:px-3.75 py-2 w-full flex items-center justify-between gap-3">
+             <x-techicon>
+        @if($isAdmin) Admin Portal
+        @elseif($isHR) HR Portal
+        @else Employee Portal
+        @endif
+    </x-techicon>
+          
+        </div>
 
         
 
-            <div class="topbar-actions">
-                <div class="notif-trigger">
-                    <button id="notifBtnMobile"
-                            onclick="document.getElementById('notifDropdownMobile').classList.toggle('notif-open')"
-                            class="icon-btn icon-btn--notif">
-                        <i class="icon-[ph--bell-fill]"></i>
-                        @if($notifCount > 0)
-                            <span class="notif-badge">
-                                {{ $notifCount > 9 ? '9+' : $notifCount }}
-                            </span>
-                        @endif
-                    </button>
-
-                    <div id="notifDropdownMobile" class="notif-panel notif-panel--mobile">
-                        <div class="notif-panel-header">
-                            <span class="notif-panel-title">
-                                <i class="icon-[ph--bell-fill]"></i> Notifications
-                            </span>
-                            @if($notifCount > 0)
-                                <span class="notif-panel-count">{{ $notifCount }} pending</span>
-                            @endif
-                        </div>
-                        @include('partials.notifications-list')
-                    </div>
-                </div>
-
-                <a href="{{ route('profile.show') }}" class="avatar-link">
-                    <div class="user-avatar avatar-{{ $role }}">
-                        @if($user->profile_photo)
-                            <img src="{{ profilePhotoUrl($user->profile_photo) }}"
-                                alt="{{ $user->name }}"
-                                class="avatar-img">
-                        @else
-                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                        @endif
-                    </div>
-                </a>
-
-                <button id="burgerBtn" class="icon-btn">
-                    <i class="icon-[ph--list-fill]" id="burgerIcon"></i>
-                </button>
-            </div>
-        </div>
-
-        {{-- Mobile burger menu --}}
-        <div class="burger-dropdown sidebar-{{ $role }}" id="burgerDropdown">
-            <a href="{{ route('dashboard') }}"
-            class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                <i class="icon-[ph--house-fill]"></i><span>Dashboard</span>
-            </a>
-
-            @if($isAdmin)
-                <a href="{{ route('users.index') }}" class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--users-fill]"></i><span>All Users</span>
-                </a>
-                <a href="{{ route('employees.index') }}" class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--users-three-fill]"></i><span>Employees</span>
-                </a>
-                <a href="{{ route('government-contributions.index') }}" class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
-                </a>
-                <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
-                </a>
-                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ $attendanceActive ? 'active' : '' }}">
-                    <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
-                </a>
-                <a href="{{ route('roles.index') }}" class="nav-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--lock-fill]"></i><span>Roles</span>
-                </a>
-                <a href="{{ route('permissions.index') }}" class="nav-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--shield-check-fill]"></i><span>Permissions</span>
-                </a>
-                <a href="{{ route('audit-logs.index') }}" class="nav-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--file-text-fill]"></i><span>Audit Logs</span>
-                </a>
-            @elseif($isHR)
-                <a href="{{ route('employees.index') }}" class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
-                </a>
-                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ $attendanceActive ? 'active' : '' }}">
-                    <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
-                </a>
-                <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span></a>
-                <a href="{{ route('payroll.index') }}"
-                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
-                </a>
-                <a href="{{ route('government-contributions.index') }}" class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
-                </a>
-                <a href="#" class="nav-item"><i class="icon-[ph--chart-bar-fill]"></i><span>Reports</span></a>
-                <a href="#" class="nav-item"><i class="icon-[ph--gear-fill]"></i><span>Settings</span></a>
-            @else
-                <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--user-fill]"></i><span>My Profile</span>
-                </a>
-                <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--receipt-fill]"></i><span>My Payslip</span>
-                </a>
-                <a href="#" class="nav-item"><i class="icon-[ph--calendar-x-fill]"></i><span>Leave Request</span></a>
-                <a href="{{ route('employee-attendance.index') }}" class="nav-item {{ request()->routeIs('employee-attendance.*') ? 'active' : '' }}"><i class="icon-[ph--clock-fill]"></i><span>Attendance</span></a>
-            @endif
-
-            <div class="burger-footer">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="icon-[ph--sign-out-fill]"></i> Logout
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        {{-- Desktop topbar --}}
-        <div class="topbar desktop-topbar topbar-{{ $role }}">
-
-            <a class="techicon brand-link" href="{{ route('dashboard') }}">
-                <svg  fill="currentColor" height="2em" viewBox="0 0 1813 1441" width="2em" xmlns="http://www.w3.org/2000/svg" class="brand-logo-icon">
-                    <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fill-rule="evenodd"></path>
-                    <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fill-rule="evenodd"></path>
-                </svg>
-                <div class="tech brand-text">
-                    <span class="brand-title">Techstacks</span>
-                    <span class="brand-subtitle">
-                        @if($isAdmin) Admin Portal
-                        @elseif($isHR) HR Portal
-                        @else Employee Portal
-                        @endif
-                    </span>
-                </div>
-            </a>
-
-            <div class="topbar-breadcrumb">
-                <span class="topbar-divider"></span>
-                {{ \Diglactic\Breadcrumbs\Breadcrumbs::render() }}
-            </div>
-
-            <div class="topbar-actions">
-
-
-{{-- Desktop topbar --}}
-<x-search-box id="search-modal-desktop" />
-
-                <div class="notif-trigger">
-                    <button id="notifBtn"
-                            class="icon-btn icon-btn--bell-desktop">
-                <i class="icon-[fluent--alert-24-filled]"></i>
-                        @if($notifCount > 0)
-                            <span class="notif-badge">
-                                {{ $notifCount > 9 ? '9+' : $notifCount }}
-                            </span>
-                        @endif
-                    </button>
-                    <div id="notifDropdown" class="notif-panel notif-panel--desktop">
-                        <div class="notif-panel-header">
-                            <span class="notif-panel-title">
-                                <i class="icon-[ph--bell-fill]"></i> Notifications
-                            </span>
-                            @if($notifCount > 0)
-                                <span class="notif-panel-count">{{ $notifCount }} pending</span>
-                            @endif
-                        </div>
-                        @include('partials.notifications-list')
-                    </div>
-                </div>
-
-                <a href="{{ route('profile.show') }}" class="avatar-link">
-                    <div class="user-avatar avatar-{{ $role }} user-avatar--sm">
-                        @if($user->profile_photo)
-                            <img src="{{ profilePhotoUrl($user->profile_photo) }}"
-                                alt="{{ $user->name }}"
-                                class="avatar-img">
-                        @else
-                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                        @endif
-                    </div>
-                    <div class="profile-group">
-                        <div class="user-name">{{ $user->name }}</div>
-                        <div class="user-role">
-                            @if($isAdmin) Administrator
-                            @elseif($isHR) HR Personnel
-                            @else Employee
-                            @endif
-                        </div>
-                    </div>
-                </a>
-
-            </div>
-
-        </div>
-
-        {{-- Desktop sidebar --}}
-        <div id="main-sidebar" class="sidebar sidebar-{{ $role }} overlay [--auto-close:false]">
-            <div class="sidebar-toggle-row">
-                <button id="sidebar-toggle" type="button"
-                        aria-haspopup="true" aria-expanded="false" aria-label="Toggle sidebar"
-                        data-overlay-minifier="#main-sidebar">
-                   <i class="icon-[ph--caret-left-fill]" id="sidebar-arrow"></i>
-                </button>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="{{ route('dashboard') }}"
-                class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <i class="icon-[ph--house-fill]"></i><span>Dashboard</span>
-                </a>
+        <div class="drawer-body px-2 pt-4">
+            <ul class="menu p-0">
+                <li>
+                    <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <span class="icon-[tabler--home] size-5"></span>
+                        <span class="overlay-minified:hidden">Dashboard</span>
+                    </a>
+                </li>
 
                 @if($isAdmin)
                     @php
                         $userMgmtOpen    = request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('permissions.*');
-                        $empMgmtOpen     = request()->routeIs('employees.*') || $attendanceActive;
+                        $empMgmtOpen     = request()->routeIs('employees.*') || $attendanceActive || request()->routeIs('work-requests.*');
                         $payrollMgmtOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
                         $monitoringOpen  = request()->routeIs('audit-logs.*') || request()->routeIs('reports.*');
                     @endphp
 
-                    <div class="nav-dropdown {{ $userMgmtOpen ? 'open' : '' }}">
-
-    <button
-        class="nav-item nav-dropdown-trigger swap swap-rotate"
-        type="button"
-        data-tooltip="Access Control">
-
-        <i class="icon-[ph--user-gear-fill]"></i>
-        <span>Access Control</span>
-
-        <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
-
-    </button>
-
-
-    <div class="nav-dropdown-menu" style="hidden">
-
-        <a href="{{ route('users.index') }}"
-            data-tooltip="Users"
-            class="nav-item nav-sub-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-
-            <i class="icon-[ph--users-fill] icon"></i>
-            <span>Users</span>
-
-        </a>
-
-
-        <a href="{{ route('roles.index') }}"
-            data-tooltip="Roles"
-            class="nav-item nav-sub-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
-
-            <i class="icon-[ph--lock-fill] icon"></i>
-            <span>Roles</span>
-
-        </a>
-
-
-        <a href="{{ route('permissions.index') }}"
-            data-tooltip="Permissions"
-            class="nav-item nav-sub-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
-
-            <i class="icon-[ph--shield-check-fill] icon"></i>
-            <span>Permissions</span>
-
-        </a>
-
-    </div>
-
-</div>
-
-                    <div class="nav-dropdown {{ $empMgmtOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--users-three-fill]"></i><span>Workforce</span>
-                            <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
+                    <li class="dropdown relative [--adaptive:none] [--strategy:static] overlay-minified:[--adaptive:adaptive] overlay-minified:[--strategy:fixed] overlay-minified:[--offset:15] overlay-minified:[--trigger:hover] overlay-minified:[--placement:right-start]">
+                        <button type="button" class="dropdown-toggle" aria-haspopup="menu" aria-expanded="false">
+                            <span class="icon-[tabler--lock] size-5"></span>
+                            <span class="overlay-minified:hidden">Access Control</span>
+                            <span class="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4 overlay-minified:hidden"></span>
                         </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="{{ route('employees.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
-                            </a>
-                            <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item nav-sub-item {{ $attendanceActive ? 'active' : '' }}">
-                                <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
-                            </a>
-                            <a href="{{ route('work-requests.index') }}"
-                            class="nav-item nav-sub-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span>
-                            </a>
-                        </div>
-                    </div>
+<ul class="dropdown-menu mt-0 shadow-none overlay-minified:shadow-md overlay-minified:shadow-base-300/20 dropdown-open:opacity-100 hidden min-w-60 ms-6 ps-2 border-s border-base-content/20 rounded-none {{ $userMgmtOpen ? 'open' : '' }}" role="menu">
+                                <li><a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'active' : '' }}"><span class="icon-[tabler--users] size-5"></span>Users</a></li>
+                            <li><a href="{{ route('roles.index') }}" class="{{ request()->routeIs('roles.*') ? 'active' : '' }}"><span class="icon-[tabler--shield] size-5"></span>Roles</a></li>
+                            <li><a href="{{ route('permissions.index') }}" class="{{ request()->routeIs('permissions.*') ? 'active' : '' }}"><span class="icon-[tabler--shield-check] size-5"></span>Permissions</a></li>
+                        </ul>
+                    </li>
 
-                    <div class="nav-dropdown {{ $payrollMgmtOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--wallet-fill]"></i><span>Finance</span>
-                            <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
+                    <li class="dropdown relative [--adaptive:none] [--strategy:static] overlay-minified:[--adaptive:adaptive] overlay-minified:[--strategy:fixed] overlay-minified:[--offset:15] overlay-minified:[--trigger:hover] overlay-minified:[--placement:right-start]">
+                        <button type="button" class="dropdown-toggle" aria-haspopup="menu" aria-expanded="false">
+                            <span class="icon-[tabler--users-group] size-5"></span>
+                            <span class="overlay-minified:hidden">Workforce</span>
+                            <span class="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4 overlay-minified:hidden"></span>
                         </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="{{ route('payroll.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
-                            </a>
-                            <a href="{{ route('government-contributions.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
-                            </a>
-                        </div>
-                    </div>
+                        <ul class="dropdown-menu mt-0 shadow-none overlay-minified:shadow-md overlay-minified:shadow-base-300/20 dropdown-open:opacity-100 hidden min-w-60 ms-6 ps-2 border-s border-base-content/20 rounded-none {{ $empMgmtOpen ? 'open' : '' }}" role="menu">
+                            <li><a href="{{ route('employees.index') }}" class="{{ request()->routeIs('employees.*') ? 'active' : '' }}"><span class="icon-[tabler--id] size-5"></span>Employees</a></li>
+                            <li><a href="{{ route('manual-payroll-attendance.index') }}" class="{{ $attendanceActive ? 'active' : '' }}"><span class="icon-[tabler--calendar-check] size-5"></span>Attendance</a></li>
+                            <li><a href="{{ route('work-requests.index') }}" class="{{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><span class="icon-[tabler--notes] size-5"></span>Work Requests</a></li>
+                        </ul>
+                    </li>
 
-                    <div class="nav-dropdown {{ $monitoringOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--chart-line-fill]"></i><span >Monitoring</span>
-                           <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4" ></i>
+                    <li class="dropdown relative [--adaptive:none] [--strategy:static] overlay-minified:[--adaptive:adaptive] overlay-minified:[--strategy:fixed] overlay-minified:[--offset:15] overlay-minified:[--trigger:hover] overlay-minified:[--placement:right-start]">
+                        <button type="button" class="dropdown-toggle" aria-haspopup="menu" aria-expanded="false">
+                            <span class="icon-[tabler--wallet] size-5"></span>
+                            <span class="overlay-minified:hidden">Finance</span>
+                            <span class="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4 overlay-minified:hidden"></span>
                         </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="{{ route('audit-logs.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--file-text-fill]"></i><span>Audit Logs</span>
-                            </a>
-                            <a href="#" class="nav-item nav-sub-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--chart-bar-fill]"></i><span>Reports</span>
-                            </a>
-                        </div>
-                    </div>
+                        <ul class="dropdown-menu mt-0 shadow-none overlay-minified:shadow-md overlay-minified:shadow-base-300/20 dropdown-open:opacity-100 hidden min-w-60 ms-6 ps-2 border-s border-base-content/20 rounded-none {{ $payrollMgmtOpen ? 'open' : '' }}" role="menu">
+                            <li><a href="{{ route('payroll.index') }}" class="{{ request()->routeIs('payroll.*') ? 'active' : '' }}"><span class="icon-[tabler--cash] size-5"></span>Payroll</a></li>
+                            <li><a href="{{ route('government-contributions.index') }}" class="{{ request()->routeIs('government-contributions.*') ? 'active' : '' }}"><span class="icon-[tabler--id-badge] size-5"></span>Gov. Contributions</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown relative [--adaptive:none] [--strategy:static] overlay-minified:[--adaptive:adaptive] overlay-minified:[--strategy:fixed] overlay-minified:[--offset:15] overlay-minified:[--trigger:hover] overlay-minified:[--placement:right-start]">
+                        <button type="button" class="dropdown-toggle" aria-haspopup="menu" aria-expanded="false">
+                            <span class="icon-[tabler--chart-line] size-5"></span>
+                            <span class="overlay-minified:hidden">Monitoring</span>
+                            <span class="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4 overlay-minified:hidden"></span>
+                        </button>
+                        <ul class="dropdown-menu mt-0 shadow-none overlay-minified:shadow-md overlay-minified:shadow-base-300/20 dropdown-open:opacity-100 hidden min-w-60 ms-6 ps-2 border-s border-base-content/20 rounded-none {{ $monitoringOpen ? 'open' : '' }}" role="menu">
+                            <li><a href="{{ route('audit-logs.index') }}" class="{{ request()->routeIs('audit-logs.*') ? 'active' : '' }}"><span class="icon-[tabler--file-text] size-5"></span>Audit Logs</a></li>
+                            <li><a href="#" class="{{ request()->routeIs('reports.*') ? 'active' : '' }}"><span class="icon-[tabler--chart-bar] size-5"></span>Reports</a></li>
+                        </ul>
+                    </li>
 
                 @elseif($isHR)
                     @php
-                        $hrEmpOpen     = request()->routeIs('employees.*') || $attendanceActive;
+                        $hrEmpOpen     = request()->routeIs('employees.*') || $attendanceActive || request()->routeIs('work-requests.*');
                         $hrPayrollOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
-                        $hrOtherOpen   = request()->routeIs('reports.*');
                     @endphp
 
-                    <div class="nav-dropdown {{ $hrEmpOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--users-three-fill]"></i><span>Workforce</span>
-                            <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
+                    <li class="dropdown relative [--adaptive:none] [--strategy:static] overlay-minified:[--adaptive:adaptive] overlay-minified:[--strategy:fixed] overlay-minified:[--offset:15] overlay-minified:[--trigger:hover] overlay-minified:[--placement:right-start]">
+                        <button type="button" class="dropdown-toggle" aria-haspopup="menu" aria-expanded="false">
+                            <span class="icon-[tabler--users-group] size-5"></span>
+                            <span class="overlay-minified:hidden">Workforce</span>
+                            <span class="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4 overlay-minified:hidden"></span>
                         </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="{{ route('employees.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
-                            </a>
-                            <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item nav-sub-item {{ $attendanceActive ? 'active' : '' }}">
-                                <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
-                            </a>
-                            <a href="{{ route('work-requests.index') }}"
-                            class="nav-item nav-sub-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span>
-                            </a>
-                        </div>
-                    </div>
+                        <ul class="dropdown-menu mt-0 shadow-none overlay-minified:shadow-md overlay-minified:shadow-base-300/20 dropdown-open:opacity-100 hidden min-w-60 ms-6 ps-2 border-s border-base-content/20 rounded-none {{ $hrEmpOpen ? 'open' : '' }}" role="menu">
+                            <li><a href="{{ route('employees.index') }}" class="{{ request()->routeIs('employees.*') ? 'active' : '' }}"><span class="icon-[tabler--id] size-5"></span>Employees</a></li>
+                            <li><a href="{{ route('manual-payroll-attendance.index') }}" class="{{ $attendanceActive ? 'active' : '' }}"><span class="icon-[tabler--calendar-check] size-5"></span>Attendance</a></li>
+                            <li><a href="{{ route('work-requests.index') }}" class="{{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><span class="icon-[tabler--notes] size-5"></span>Work Requests</a></li>
+                        </ul>
+                    </li>
 
-                    <div class="nav-dropdown {{ $hrPayrollOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--wallet-fill]"></i><span>Finance</span>
-                           <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
+                    <li class="dropdown relative [--adaptive:none] [--strategy:static] overlay-minified:[--adaptive:adaptive] overlay-minified:[--strategy:fixed] overlay-minified:[--offset:15] overlay-minified:[--trigger:hover] overlay-minified:[--placement:right-start]">
+                        <button type="button" class="dropdown-toggle" aria-haspopup="menu" aria-expanded="false">
+                            <span class="icon-[tabler--wallet] size-5"></span>
+                            <span class="overlay-minified:hidden">Finance</span>
+                            <span class="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4 overlay-minified:hidden"></span>
                         </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="{{ route('payroll.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
-                            </a>
-                            <a href="{{ route('government-contributions.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="nav-dropdown {{ $hrOtherOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--chart-line-fill]"></i><span>Settings</span>
-                           <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
-                        </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="#" class="nav-item nav-sub-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--chart-bar-fill]"></i><span>Reports</span>
-                            </a>
-                            <a href="#" class="nav-item nav-sub-item">
-                                <i class="icon-[ph--gear-fill]"></i><span>Settings</span>
-                            </a>
-                        </div>
-                    </div>
+                        <ul class="dropdown-menu mt-0 shadow-none overlay-minified:shadow-md overlay-minified:shadow-base-300/20 dropdown-open:opacity-100 hidden min-w-60 ms-6 ps-2 border-s border-base-content/20 rounded-none {{ $hrPayrollOpen ? 'open' : '' }}" role="menu">
+                            <li><a href="{{ route('payroll.index') }}" class="{{ request()->routeIs('payroll.*') ? 'active' : '' }}"><span class="icon-[tabler--cash] size-5"></span>Payroll</a></li>
+                            <li><a href="{{ route('government-contributions.index') }}" class="{{ request()->routeIs('government-contributions.*') ? 'active' : '' }}"><span class="icon-[tabler--id-badge] size-5"></span>Gov. Contributions</a></li>
+                        </ul>
+                    </li>
 
                 @else
-                    <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
-                        <i class="icon-[ph--user-fill]"></i><span>My Profile</span>
-                    </a>
-                    <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                        <i class="icon-[ph--receipt-fill]"></i><span>My Payslip</span>
-                    </a>
-                    <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span></a>
-                    <a href="{{ route('employee-attendance.index') }}" class="nav-item {{ request()->routeIs('employee-attendance.*') ? 'active' : '' }}"><i class="icon-[ph--clock-fill]"></i><span>Attendance</span></a>
+                    <li>
+                        <a href="{{ route('profile.show') }}" class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
+                            <span class="icon-[tabler--user] size-5"></span>
+                            <span class="overlay-minified:hidden">My Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('payroll.index') }}" class="{{ request()->routeIs('payroll.*') ? 'active' : '' }}">
+                            <span class="icon-[tabler--receipt] size-5"></span>
+                            <span class="overlay-minified:hidden">My Payslip</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('employee-attendance.index') }}" class="{{ request()->routeIs('employee-attendance.*') ? 'active' : '' }}">
+                            <span class="icon-[tabler--clock] size-5"></span>
+                            <span class="overlay-minified:hidden">Attendance</span>
+                        </a>
+                    </li>
                 @endif
-            </nav>
+            </ul>
+        </div>
 
-            <div class="sidebar-footer">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="icon-[ph--sign-out-fill]"></i> Logout
+        <div class="drawer-footer p-2">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-error btn-soft btn-block">
+                    <span class="icon-[tabler--logout] size-5"></span>
+                    <span class="overlay-minified:hidden">Logout</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    {{-- Main column: navbar + page content --}}
+    <div class="flex flex-col flex-1 min-w-0 ">
+
+        {{-- Navbar --}}
+        <nav class="navbar bg-base-100  gap-4 shadow-base-300/20 shadow-sm  ">
+            <div class="navbar-start items-center gap-2">
+                <button type="button" class="btn btn-text max-sm:btn-square sm:hidden"
+                        aria-haspopup="dialog" aria-expanded="false" aria-controls="collapsible-mini-sidebar"
+                        data-overlay="#collapsible-mini-sidebar">
+                    <span class="icon-[tabler--menu-2] size-5"></span>
+                </button>
+            {{-- <a class="link text-base-content link-neutral text-xl font-bold no-underline" href="{{ route('dashboard') }}">
+                    @if($isAdmin) Admin Portal
+                    @elseif($isHR) HR Portal
+                    @else Employee Portal
+                    @endif
+                </a>  --}}    
+
+                  <div class="hidden sm:block">
+                <button type="button" class="btn btn-circle btn-text" aria-haspopup="dialog" aria-expanded="false"
+                        aria-controls="collapsible-mini-sidebar" aria-label="Minify navigation"
+                        data-overlay-minifier="#collapsible-mini-sidebar">
+                    <span class="icon-[tabler--menu-2] size-5"></span>
+                </button>
+            </div>
+            </div>
+            
+
+            <div class="navbar-end flex items-center gap-4">
+
+                <x-search-box id="search-modal" />
+
+                {{-- Notifications --}}
+                <div class="dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]">
+                    <button id="notif-dropdown" type="button" class="dropdown-toggle btn btn-text btn-circle relative"
+                            aria-haspopup="menu" aria-expanded="false" aria-label="Notifications">
+                        <span class="icon-[tabler--bell] size-5"></span>
+                        @if($notifCount > 0)
+                            <span class="badge badge-error badge-sm absolute -top-1 -end-1">
+                                {{ $notifCount > 9 ? '9+' : $notifCount }}
+                            </span>
+                        @endif
                     </button>
-                </form>
+                    <div class="dropdown-menu dropdown-open:opacity-100 hidden min-w-72" role="menu" aria-labelledby="notif-dropdown">
+                        @include('partials.notifications-list')
+                    </div>
+                </div>
+
+                {{-- User avatar dropdown --}}
+                <div class="dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]">
+                    <button id="dropdown-avatar" type="button" class="dropdown-toggle flex items-center" aria-haspopup="menu" aria-expanded="false">
+                        <div class="avatar">
+                            <div class="size-9.5 rounded-full">
+                                @if($user->profile_photo)
+                                    <img src="{{ profilePhotoUrl($user->profile_photo) }}" alt="{{ $user->name }}">
+                                @else
+                                    <span class="flex items-center justify-center bg-base-200 size-full rounded-full">
+                                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-open:opacity-100 hidden min-w-60" role="menu" aria-labelledby="dropdown-avatar">
+                        <li class="dropdown-header gap-2">
+                            <div>
+                                <h6 class="text-base-content text-base font-semibold">{{ $user->name }}</h6>
+                                <small class="text-base-content/50">
+                                    @if($isAdmin) Administrator
+                                    @elseif($isHR) HR Personnel
+                                    @else Employee
+                                    @endif
+                                </small>
+                            </div>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('profile.show') }}">
+                                <span class="icon-[tabler--user]"></span>
+                                My Profile
+                            </a>
+                        </li>
+                        <li class="dropdown-footer gap-2">
+                            <form action="{{ route('logout') }}" method="POST" class="w-full">
+                                @csrf
+                                <button type="submit" class="btn btn-error btn-soft btn-block">
+                                    <span class="icon-[tabler--logout]"></span>
+                                    Sign out
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
+        </nav>
 
-        {{-- Main content — rendered ONCE, positioned per-breakpoint by CSS --}}
-        <div class="main-content bg-{{ $role }}">
-            <div class="content">
-                @yield('content')
-            </div>
-        </div>
+        {{-- Page content --}}
+        <main class="p-4">
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-error">{{ session('error') }}</div>
+            @endif
+            @if(session('warning'))
+                <div class="alert alert-warning">{{ session('warning') }}</div>
+            @endif
+            @if(session('info'))
+                <div class="alert alert-info">{{ session('info') }}</div>
+            @endif
 
-    </div>{{-- end .app-shell --}}
+            @yield('content')
+        </main>
+    </div>
+</div>
 
-    {{-- Desktop notif dropdown --}}
-    <script>
-    document.addEventListener('click', function(e) {
-        const btn      = document.getElementById('notifBtn');
-        const dropdown = document.getElementById('notifDropdown');
-        if (btn && dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.remove('notif-open');
-        }
-    });
-    document.getElementById('notifBtn')?.addEventListener('click', function(e) {
-        e.stopPropagation();
-        document.getElementById('notifDropdown')?.classList.toggle('notif-open');
-    });
-    </script>
+@yield('scripts')
+@stack('modals')
+{{-- @stack('scripts') --}}
 
-    {{-- Mobile notif dropdown --}}
-    <script>
-    document.addEventListener('click', function(e) {
-        const btnM  = document.getElementById('notifBtnMobile');
-        const dropM = document.getElementById('notifDropdownMobile');
-        if (btnM && dropM && !btnM.contains(e.target) && !dropM.contains(e.target)) {
-            dropM.classList.remove('notif-open');
-        }
-    });
-    </script>
-
-    {{-- Flash toasts --}}
-    @if(session('success') || session('error') || session('warning') || session('info'))
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        @if(session('success'))
-            window.notyf?.success(@json(session('success')));
-        @endif
-        @if(session('error'))
-            window.notyf?.error(@json(session('error')));
-        @endif
-        @if(session('warning'))
-            window.notyf?.open({ type: 'warning', message: @json(session('warning')) });
-        @endif
-        @if(session('info'))
-            window.notyf?.open({ type: 'info', message: @json(session('info')) });
-        @endif
-    });
-</script>
-@endif
-
-    {{-- FlyonUI JS is loaded once via the Vite bundle (resources/js/app.js
-         has `import 'flyonui/flyonui'`). Do NOT add a second
-         <script src="../node_modules/flyonui/flyonui.js"> here — that was
-         double-initializing every FlyonUI JS component against the
-         (now-removed) duplicated DOM. --}}
-
-    {{-- SweetAlert2 for confirm dialogs only --}}
-   {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
-
-   {{-- SweetAlert2's CDN script is also commented out, but app.js still calls Swal.fire(...) in confirmAction and the data-confirm form handler. Every data-confirm form (archive, delete allowance, delete benefit) will throw Swal is not defined in console and silently fail to submit. --}}
-
-
-   @yield('scripts')
-   @stack('modals')
- {{-- @stack('scripts') --}}
-    </body>
-    </html>
+</body>
+</html>

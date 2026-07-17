@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\Storage;
     };
 @endphp
 
-<div class="card bg-base-100 shadow-lg w-full mt-16 mb-6">
+<div class=" w-full mt-16 mb-6">
     <div class="px-6">
         <div class="flex flex-wrap justify-center">
-            <div class="w-full flex justify-center -mt-16">
+            <div class="w-full flex justify-center">
                 <x-avatar-upload
                     size="w-32 h-32"
                     :photo-url="$user->profile_photo ? Storage::disk('s3')->temporaryUrl($user->profile_photo, now()->addHours(24)) : null"
@@ -272,7 +272,7 @@ use Illuminate\Support\Facades\Storage;
     </p>
 
     @php
-        $themes = ['techstacks','light','dark','black','claude','corporate','ghibli','gourmet','luxury','mintlify','pastel','perplexity','shadcn','slack','soft','spotify','valorant','vscode'];
+        $themes = ['techstacks', 'techstacks-light', 'light','dark','black','claude','corporate','ghibli','gourmet','luxury','mintlify','pastel','perplexity','shadcn','slack','soft','spotify','valorant','vscode'];
     @endphp
 
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" id="theme-picker">

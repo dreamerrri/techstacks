@@ -6,34 +6,79 @@
 @plugin "flyonui/theme" {
   name: "techstacks";
   color-scheme: dark;
-
-  --color-primary: #1e6b57;
-  --color-primary-content: #ffffff;
-  --color-secondary: #247865;
-  --color-secondary-content: #ffffff;
-  --color-accent: #23806a;
-  --color-accent-content: #ffffff;
-  --color-neutral: #1f2937;
-  --color-neutral-content: #f9fafb;
-  --color-base-100: #ffffff;
-  --color-base-200: #f5f7f6;
-  --color-base-300: #e5e7eb;
-  --color-base-content: #111827;
-
-  --color-sidebar-bg: linear-gradient(180deg, #1e6b57 0%, #21765f 30%, #23806a 55%, #258572 75%, #268a77 100%);
-  --color-sidebar-content: #ffffff;
-  --color-sidebar-glow: rgba(52, 211, 153, 0.12);
-  --color-topbar-bg: linear-gradient(to right, #266859 0%, #257462 25%, #247865 50%, #247c67 75%, #23806a 100%);
-  --color-topbar-content: #ffffff;
-  --color-topbar-glow: #ffffff;
-  --color-chrome-accent: rgb(73, 255, 188);
-  --sidebar-wave-opacity: 1;
-
-
-  --color-dot-1: #A8E6CF;
---color-dot-2: #FFEDA3;
---color-dot-3: #2D3748;
+  /* Base surfaces */
+  --color-base-100: #313D42; /* Cards */
+  --color-base-200: #2B353A; /* Section background */
+  --color-base-300: #232C30; /* Main background */
+  --color-base-content: #E0E6E8; /* Primary text */
+  /* Brand colors */
+  --color-primary: #24D6AE; /* Mint Green — signature color */
+  --color-primary-content: #0D1515;
+  --color-secondary: #15B79E; /* Teal */
+  --color-secondary-content: #FFFFFF;
+  --color-accent: #32C8FF; /* Cyan Accent */
+  --color-accent-content: #0D1515;
+  --color-neutral: #3E5A55; /* Border color, lifted to match new surfaces */
+  --color-neutral-content: #FFFFFF;
+  /* Status colors */
+  --color-info: #32C8FF;
+  --color-info-content: #0D1515;
+  --color-success: #24D6AE;
+  --color-success-content: #0D1515;
+  --color-warning: #FFB547;
+  --color-warning-content: #0D1515;
+  --color-error: #FF6464;
+  --color-error-content: #0D1515;
+  /* Shape & feel — tight radii, low depth = enterprise/comfortable */
+  --radius-selector: 0.375rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
 }
+
+
+@plugin "flyonui/theme" {
+  name: "techstacks-light";
+  color-scheme: light;
+  /* Base surfaces */
+  --color-base-100: #FFFFFF; /* Cards */
+  --color-base-200: #EEF2F3; /* Section background */
+  --color-base-300: #E2E8EA; /* Main background */
+  --color-base-content: #1C2427; /* Primary text */
+  /* Brand colors */
+  --color-primary: #24D6AE; /* Mint Green — signature color */
+  --color-primary-content: #0D1515;
+  --color-secondary: #15B79E; /* Teal */
+  --color-secondary-content: #FFFFFF;
+  --color-accent: #32C8FF; /* Cyan Accent */
+  --color-accent-content: #0D1515;
+  --color-neutral: #C7D2D4; /* Border color, light equivalent */
+  --color-neutral-content: #1C2427;
+  /* Status colors */
+  --color-info: #0F8FC4;
+  --color-info-content: #FFFFFF;
+  --color-success: #14A886;
+  --color-success-content: #FFFFFF;
+  --color-warning: #C97F0E;
+  --color-warning-content: #FFFFFF;
+  --color-error: #D64545;
+  --color-error-content: #FFFFFF;
+  /* Shape & feel — tight radii, low depth = enterprise/comfortable */
+  --radius-selector: 0.375rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+
 /* your existing claude / corporate / ghibli / gourmet / luxury / pastel / slack / soft / spotify / valorant / vscode blocks stay as-is */
 @plugin "flyonui/theme" {
   name: "claude";
