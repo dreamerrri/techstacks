@@ -1,6 +1,5 @@
 import './bootstrap';
 import $ from 'jquery';
-import { initBurger } from './burger.js';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 import 'flyonui/flyonui';
@@ -61,8 +60,10 @@ window.confirmAction = function({ url, method = 'POST', csrfToken, title, text, 
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    initBurger();
-    
+    // Note: no initBurger() call here anymore. The mobile drawer trigger
+    // is a plain data-overlay="#main-sidebar" button now — FlyonUI's own
+    // overlay plugin (imported above) wires up open/close, the backdrop,
+    // and focus handling automatically. burger.js can be deleted.
 
     // ── Session flash notifications (survive page reloads) ────
     const flashTypes = ['success', 'error', 'warning', 'info'];
@@ -96,26 +97,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Dropdown state persistence (accordion only — mini mode hides
-    //    the trigger entirely via CSS, so this only runs at full width) ──
-    const $sidebar = $('#main-sidebar');
-
-    $('.nav-dropdown-trigger').on('click', function (e) {
-        const dropdown = $(this).closest('.nav-dropdown');
-        const id       = $(this).find('span').text().trim();
-
-        dropdown.toggleClass('open');
-
-        if (dropdown.hasClass('open')) {
-            sessionStorage.setItem('dropdown_' + id, 'open');
-        } else {
-            sessionStorage.removeItem('dropdown_' + id);
-        }
-    });
+    // Note: the old dropdown-accordion open/close sessionStorage handler
+    // (for .nav-dropdown-trigger) is gone. Each group's expanded/collapsed
+    // state is now computed server-side per request (the $xxxOpen booleans
+    // in app.blade.php) and FlyonUI's own dropdown component handles the
+    // click-to-toggle interaction — nothing left for custom JS to do here.
 
     // ── Desktop sidebar minify toggle (FlyonUI overlay minifier) ──
     const SIDEBAR_KEY = 'sidebar_collapsed';
-    const $layout = $('.app-shell');
+    const $sidebar = $('#main-sidebar');
+    const $layout  = $('.app-shell');
 
     function syncSidebarUI(isMinified) {
         $layout.toggleClass('sidebar-mini', isMinified);

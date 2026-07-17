@@ -1,157 +1,44 @@
 /* ═══════════════════════════════════════════════
    SIDEBAR
-   The desktop sidebar (colors, wave background, header,
-   collapse toggle) and its mobile equivalent, the burger
-   dropdown panel.
+   #main-sidebar is now a single FlyonUI drawer/overlay component (see
+   app.blade.php) instead of a separate .sidebar div (desktop) plus
+   .burger-dropdown div (mobile). FlyonUI's own drawer/dropdown/menu CSS
+   handles positioning, the slide-in transform, scrolling, and the
+   minified-width icon rail — none of that needs reinventing here.
 
-   Color values now come from the app-chrome custom properties
-   defined in app.css (--color-sidebar-bg, --color-sidebar-content,
-   --color-sidebar-glow, --sidebar-wave-opacity). The "techstacks"
-   theme sets these explicitly to reproduce today's mint-teal
-   gradient + wave look. Every other FlyonUI theme doesn't define
-   them, so the var(--x, fallback) chains below fall back to that
-   theme's own --color-base-200 / --color-base-content — matching
-   the topbar's fallback tokens so both chrome surfaces stay in
-   sync for any theme that doesn't explicitly override them.
+   Everything visual that used to live in this file (the wave SVG
+   background, the header glow blur, the box-shadow stack) has been
+   dropped rather than ported over, per "rebuild from zero, keep only
+   icons/topbar/links." Add it back deliberately if/when you want it —
+   easiest place would be a ::before on .sidebar-admin/.sidebar-hr/
+   .sidebar-user, same as before.
    ═══════════════════════════════════════════════ */
 
-.sidebar {
-    color: var(--color-sidebar-content, var(--color-base-content));
-    padding: 20px 0;
-    position: relative;
-    overflow-y: auto;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-.sidebar::-webkit-scrollbar { display: none; }
-
-/* Grid placement (grid-column/grid-row) lives in layout/shell.css,
-   scoped under .desktop-layout .sidebar. */
-
-/* ── Sidebar surface ──
-   techstacks overrides --color-sidebar-bg with its gradient; every
-   other theme falls back to a flat --color-base-200 surface. */
+/* ── Role background ──
+   Same --color-sidebar-bg custom property the old sidebar used, so it
+   still falls back cleanly to --color-base-200 for any theme other than
+   techstacks (matches the fallback pattern topbar.css uses). */
 .sidebar-admin,
 .sidebar-hr,
 .sidebar-user {
+    color: var(--color-sidebar-content, var(--color-base-content));
     background: var(--color-sidebar-bg, var(--color-base-200));
-    box-shadow:
-        4px 0 6px rgba(0,0,0,0.08),
-        8px 0 24px rgba(0,0,0,0.12),
-        16px 0 48px rgba(0,0,0,0.08);
-}
-#sidebar-arrow {
-    background-color: var(--color-sidebar-content, var(--color-base-content));
-}
-/* ── Wave pattern overlay (techstacks-only flourish) ──
-   Opacity is driven by --sidebar-wave-opacity, which defaults to 0
-   (hidden) and is only set to 1 by the techstacks theme. Other
-   themes get a clean flat sidebar with no wave graphic. */
-.sidebar::before {
-    content: '';
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 250px;
-    height: 45%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 250 200' preserveAspectRatio='none'%3E%3Cpath d='M0,130 C40,105 80,155 125,128 C170,101 210,145 250,122 L250,200 L0,200 Z' fill='rgba(255,255,255,0.04)'/%3E%3Cpath d='M0,130 C40,105 80,155 125,128 C170,101 210,145 250,122' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'/%3E%3Cpath d='M0,134 C40,109 80,159 125,132 C170,105 210,149 250,126' fill='none' stroke='rgba(255,255,255,0.045)' stroke-width='0.8'/%3E%3Cpath d='M0,138 C40,113 80,163 125,136 C170,109 210,153 250,130' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='0.8'/%3E%3Cpath d='M0,152 C35,130 70,168 120,148 C165,130 210,160 250,142 L250,200 L0,200 Z' fill='rgba(255,255,255,0.07)'/%3E%3Cpath d='M0,152 C35,130 70,168 120,148 C165,130 210,160 250,142' fill='none' stroke='rgba(255,255,255,0.09)' stroke-width='1'/%3E%3Cpath d='M0,156 C35,134 70,172 120,152 C165,134 210,164 250,146' fill='none' stroke='rgba(255,255,255,0.065)' stroke-width='0.8'/%3E%3Cpath d='M0,160 C35,138 70,176 120,156 C165,138 210,168 250,150' fill='none' stroke='rgba(255,255,255,0.045)' stroke-width='0.8'/%3E%3Cpath d='M0,172 C40,155 75,185 115,168 C155,152 210,178 250,162 L250,200 L0,200 Z' fill='rgba(255,255,255,0.09)'/%3E%3Cpath d='M0,172 C40,155 75,185 115,168 C155,152 210,178 250,162' fill='none' stroke='rgba(255,255,255,0.11)' stroke-width='1'/%3E%3Cpath d='M0,176 C40,159 75,189 115,172 C155,156 210,182 250,166' fill='none' stroke='rgba(255,255,255,0.08)' stroke-width='0.8'/%3E%3Cpath d='M0,180 C40,163 75,193 115,176 C155,160 210,186 250,170' fill='none' stroke='rgba(255,255,255,0.055)' stroke-width='0.8'/%3E%3C/svg%3E");
-    background-size: 100% 100%;
-    background-position: bottom center;
-    background-repeat: no-repeat;
-    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 15%, rgba(0,0,0,0.5) 25%, transparent 40%);
-    mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 15%, rgba(0,0,0,0.5) 25%, transparent 40%);
-    pointer-events: none;
-    z-index: 0;
-    opacity: var(--sidebar-wave-opacity, 0);
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-}
-/* Hide the wave once the sidebar is minified (icon-only rail) */
-.overlay-minified .sidebar::before { width: 0; opacity: 0; }
-
-/* ── Sidebar header ── */
-.sidebar-header {
-    padding: 14px 16px;
-    text-align: center;
-    border-top: 1px solid color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 8%, transparent);
-    border-bottom: 1px solid color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 8%, transparent);
-    margin-bottom: 4px;
-    position: relative;
-    z-index: 1;
-}
-.sidebar-header::after {
-    content: '';
-    position: absolute;
-    top: -20px; left: 50%; transform: translateX(-50%);
-    width: 120px; height: 120px;
-    border-radius: 50%;
-    filter: blur(20px);
-    pointer-events: none;
-}
-.sidebar-admin .sidebar-header::after,
-.sidebar-hr    .sidebar-header::after,
-.sidebar-user  .sidebar-header::after {
-    background: var(--color-sidebar-glow, color-mix(in srgb, var(--color-chrome-accent, var(--color-primary)) 12%, transparent));
 }
 
-.sidebar-header h1 {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
+/* Hide the scrollbar on the nav body, same as before */
+.drawer-body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
-.sidebar-header p {
-    font-size: 11px;
-    opacity: 0.55;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-}
+.drawer-body::-webkit-scrollbar { display: none; }
 
-/* ── Sidebar collapse toggle row (sits above <nav>) ── */
-.sidebar-toggle-row {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0 16px 10px;
-    position: relative;
-    z-index: 1;
+/* ── Collapsed rail: center icons ──
+   FlyonUI's .menu items are a 3-column grid (icon / label / trailing),
+   built for icon+label rows. Once overlay-minified:hidden removes the
+   label, the icon stays pinned to that first grid column instead of
+   centering in the now icon-only row — this re-centers it. */
+.overlay-minified .sidebar-menu > li > a,
+.overlay-minified .sidebar-menu > li > .dropdown-toggle {
+    grid-template-columns: 1fr;
+    justify-items: center;
 }
-.overlay-minified .sidebar-toggle-row { justify-content: center; padding: 0 0 10px; }
-.overlay-minified #sidebar-toggle i { transform: rotate(180deg); }
-#sidebar-toggle {
-    border: none;
-    color: color-mix(in srgb, var(--color-sidebar-content, var(--color-base-content)) 75%, transparent);
-    cursor: pointer;
-    font-size: 20px;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: background 0.2s, color 0.2s;
-}
-#sidebar-toggle i {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-#sidebar-toggle:hover {
-    color: var(--color-chrome-accent, var(--color-primary));
-}
-
-/* ── Mobile equivalent: burger dropdown panel ──
-   Shares the sidebar-{role} classes (see app_blade.php), so its
-   background/text come from the exact same variables as the
-   desktop sidebar above. */
-.burger-dropdown {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    position: fixed;
-    top: 56px;
-    left: 0;
-    right: 0;
-    z-index: 199;
-}
-.burger-dropdown.open { max-height: 600px; overflow-y: auto; }
-.burger-dropdown .nav-item { margin: 2px 8px; border-radius: 5px; }

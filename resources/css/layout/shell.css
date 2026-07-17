@@ -1,15 +1,16 @@
 /* ═══════════════════════════════════════════════
    APP SHELL
-   One grid (.app-shell) holds both mobile and desktop nav pieces as
-   siblings, plus a single .main-content region. The breakpoint below
-   decides which nav set is visible and where .main-content sits —
-   it does NOT duplicate content in the DOM. (The old .mobile-layout /
-   .desktop-layout split rendered @yield('content') twice, which broke
-   every ID-based JS component: FlyonUI tabs, the allowance/benefit
-   toggle, etc. — querySelector('#id') always grabbed the first,
-   possibly-hidden copy.)
-   Edit this file when you need to change overall page structure,
-   spacing, or the mobile/desktop breakpoint.
+   One grid (.app-shell) holds the mobile topbar, desktop topbar,
+   #main-sidebar, and .main-content as siblings; CSS decides which
+   nav pieces are visible and where .main-content sits — it does NOT
+   duplicate content in the DOM. @yield('content') renders exactly once.
+
+   #main-sidebar is now a single FlyonUI drawer/overlay element instead of
+   a separate .sidebar (desktop) + .burger-dropdown (mobile) pair — see
+   app.blade.php. Below 768px it's a fixed-position slide-in drawer,
+   entirely out of grid flow (FlyonUI's own .drawer CSS sets
+   position:fixed). At 768px+ we pull it back into the grid — see the
+   media query near the bottom of this file.
    ═══════════════════════════════════════════════ */
 
 .app-shell {
@@ -24,16 +25,20 @@
 
 /* Desktop nav pieces occupy the grid */
 .app-shell .desktop-topbar { grid-column: 1 / -1; grid-row: 1; }
-.app-shell .sidebar        { grid-column: 1; grid-row: 2; }
 .app-shell .main-content   { grid-column: 2; grid-row: 2; overflow-y: auto; }
 
+/* #main-sidebar's grid-column/row is harmless to set unconditionally —
+   below 768px it's position:fixed (see .drawer in FlyonUI's CSS), so grid
+   placement has no effect on it until the media query below turns grid
+   placement back on. */
+.app-shell #main-sidebar { grid-column: 1; grid-row: 2; }
+
 /* Mobile nav pieces hidden by default (desktop-first) */
-.app-shell .mobile-topbar,
-.app-shell .burger-dropdown { display: none; }
+.app-shell .mobile-topbar { display: none; }
 
 .content { padding: 40px; }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .app-shell {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
@@ -42,21 +47,16 @@
         overflow: visible;
     }
 
-    /* Hide desktop nav pieces */
-    .app-shell .desktop-topbar,
-    .app-shell .sidebar { display: none !important; }
+    /* Hide desktop topbar only — #main-sidebar hides/shows itself via its
+       own `hidden` / min-[768px]:flex classes (driven by FlyonUI's overlay
+       open/close + this breakpoint), so it's deliberately NOT forced here. */
+    .app-shell .desktop-topbar { display: none !important; }
 
     /* Show mobile topbar, placed in the grid */
     .app-shell .mobile-topbar {
         display: flex; /* adjust if mobile-topbar's original layout used something else */
         grid-column: 1;
         grid-row: 1;
-    }
-
-    /* Burger dropdown menu — keep it out of grid flow, same as before
-       (it was already an overlay-style panel, not a grid participant) */
-    .app-shell .burger-dropdown {
-        display: block; /* toggled open/closed via its own JS/class, unchanged */
     }
 
     .app-shell .main-content {
@@ -69,23 +69,35 @@
     .user-mobile-cards { display: block !important; }
 }
 
+/* ── Pull #main-sidebar back into normal grid flow at 768px+ ──
+   FlyonUI's own sample uses `sm:absolute sm:z-0` for this, which assumes
+   a simpler (non-grid) page. Since .app-shell already places nav pieces
+   via CSS Grid, we instead force `position: static` here and let the
+   existing grid-column/grid-row assignment above do the placement. This
+   selector (#main-sidebar, unlayered) beats FlyonUI's own `.drawer{
+   position:fixed}` rule (which ships inside a Tailwind @layer) regardless
+   of stylesheet order, since unlayered CSS always wins over @layer'd CSS. */
+@media (min-width: 768px) {
+    .app-shell #main-sidebar {
+        position: static;
+    }
+}
+
 /* ── No-flash pre-collapsed state (FlyonUI overlay minifier) ──
-   Restored from sessionStorage before first paint (see the inline
-   script in app.blade.php) so the sidebar doesn't visibly "snap"
-   from expanded to collapsed on load. */
+   Restored from sessionStorage before first paint (see the inline script
+   in app.blade.php) so the sidebar doesn't visibly "snap" from expanded
+   to collapsed on load. Targets any element carrying an
+   `overlay-minified:hidden` utility class — covers nav labels and the
+   logout label alike, so there's no need to enumerate them individually
+   the way the old rules did. */
 .sidebar-pre-collapsed .app-shell {
     grid-template-columns: 68px 1fr !important;
     transition: none !important;
 }
-.sidebar-pre-collapsed .sidebar {
+.sidebar-pre-collapsed #main-sidebar {
+    width: 68px !important;
     transition: none !important;
 }
-.sidebar-pre-collapsed .sidebar .nav-item span {
+.sidebar-pre-collapsed #main-sidebar [class~="overlay-minified:hidden"] {
     display: none !important;
-}
-.sidebar-pre-collapsed .sidebar .logout-btn {
-    font-size: 0 !important;
-}
-.sidebar-pre-collapsed .sidebar .logout-btn i {
-    font-size: 18px !important;
 }

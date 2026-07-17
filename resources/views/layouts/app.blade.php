@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="{{ auth()->check() ? (auth()->user()->theme ?? 'techstacks') : 'techstacks' }}">
-            <head>
+    <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
@@ -14,27 +14,15 @@
 
         <title>@yield('title') - HR Management System</title>
 
-        {{-- ⚡ Must be first: restore sidebar + dropdown states before first paint — prevents flash --}}
+        {{-- ⚡ Must be first: restore the minified/collapsed sidebar state before
+             first paint — prevents a flash of the expanded sidebar on load.
+             (No dropdown-restore script needed anymore: which nav group starts
+             "open" is now computed server-side per request, see $xxxOpen below,
+             so there's nothing left for client JS to restore.) --}}
         <script>
             if (sessionStorage.getItem('sidebar_collapsed') === '1') {
                 document.documentElement.classList.add('sidebar-pre-collapsed');
             }
-            document.addEventListener('DOMContentLoaded', function() {
-                document.querySelectorAll('.nav-dropdown').forEach(function(dropdown) {
-                    var label = dropdown.querySelector('.nav-dropdown-trigger span');
-                    if (!label) return;
-                    var key = 'dropdown_' + label.textContent.trim();
-                    if (sessionStorage.getItem(key) === 'open') {
-                        dropdown.classList.add('open', 'no-transition');
-                    }
-                });
-                requestAnimationFrame(function() {
-                    requestAnimationFrame(function() {
-                        document.querySelectorAll('.nav-dropdown.no-transition')
-                            .forEach(function(el) { el.classList.remove('no-transition'); });
-                    });
-                });
-            });
         </script>
 
         {{-- CSS --}}
@@ -78,12 +66,18 @@
 
     {{-- ═══════════════════════════════════════
         APP SHELL
-        One shell, one content region. Mobile topbar/burger-menu and
-        desktop topbar/sidebar are both always in the DOM as siblings;
-        CSS (app-shell.css) decides which set is visible per breakpoint.
-        @yield('content') renders exactly once — do NOT duplicate it,
-        that's what caused every ID-based JS component (tabs, dropdowns,
-        the allowance/benefit toggle) to silently target the wrong copy.
+        One shell, one content region, one sidebar. The old setup rendered a
+        completely separate `.burger-dropdown` nav for mobile and a
+        `.sidebar` for desktop — two copies of the same links, kept in sync
+        by hand (and they'd already drifted: mobile's employee menu had
+        "Leave Request" where desktop has "Work Requests"). That's gone now.
+
+        #main-sidebar below is the ONE nav, for every breakpoint. FlyonUI's
+        overlay+drawer component renders it as a slide-in drawer on mobile
+        (triggered by the topbar's menu button via data-overlay) and, at
+        768px (matching this shell's existing breakpoint — see shell.css),
+        as the static collapsible rail — same DOM, same links, no
+        duplication. @yield('content') still renders exactly once.
         ═══════════════════════════════════════ --}}
     <div class="app-shell">
 
@@ -107,8 +101,6 @@
 
             {{-- mobile topbar --}}
 <x-search-box id="search-modal-mobile" />
-
-        
 
             <div class="topbar-actions">
                 <div class="notif-trigger">
@@ -148,79 +140,18 @@
                     </div>
                 </a>
 
-                <button id="burgerBtn" class="icon-btn">
-                    <i class="icon-[ph--list-fill]" id="burgerIcon"></i>
+                {{-- Opens #main-sidebar as a slide-in drawer. FlyonUI wires this up
+                     automatically for any element with data-overlay="#main-sidebar" —
+                     no custom JS, no icon swap. See burger.js removal note in app.js. --}}
+                <button type="button"
+                        class="icon-btn"
+                        aria-haspopup="dialog"
+                        aria-expanded="false"
+                        aria-controls="main-sidebar"
+                        aria-label="Open navigation menu"
+                        data-overlay="#main-sidebar">
+                    <i class="icon-[ph--list-fill]"></i>
                 </button>
-            </div>
-        </div>
-
-        {{-- Mobile burger menu --}}
-        <div class="burger-dropdown sidebar-{{ $role }}" id="burgerDropdown">
-            <a href="{{ route('dashboard') }}"
-            class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                <i class="icon-[ph--house-fill]"></i><span>Dashboard</span>
-            </a>
-
-            @if($isAdmin)
-                <a href="{{ route('users.index') }}" class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--users-fill]"></i><span>All Users</span>
-                </a>
-                <a href="{{ route('employees.index') }}" class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--users-three-fill]"></i><span>Employees</span>
-                </a>
-                <a href="{{ route('government-contributions.index') }}" class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
-                </a>
-                <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
-                </a>
-                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ $attendanceActive ? 'active' : '' }}">
-                    <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
-                </a>
-                <a href="{{ route('roles.index') }}" class="nav-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--lock-fill]"></i><span>Roles</span>
-                </a>
-                <a href="{{ route('permissions.index') }}" class="nav-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--shield-check-fill]"></i><span>Permissions</span>
-                </a>
-                <a href="{{ route('audit-logs.index') }}" class="nav-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--file-text-fill]"></i><span>Audit Logs</span>
-                </a>
-            @elseif($isHR)
-                <a href="{{ route('employees.index') }}" class="nav-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
-                </a>
-                <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item {{ $attendanceActive ? 'active' : '' }}">
-                    <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
-                </a>
-                <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span></a>
-                <a href="{{ route('payroll.index') }}"
-                class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
-                </a>
-                <a href="{{ route('government-contributions.index') }}" class="nav-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
-                </a>
-                <a href="#" class="nav-item"><i class="icon-[ph--chart-bar-fill]"></i><span>Reports</span></a>
-                <a href="#" class="nav-item"><i class="icon-[ph--gear-fill]"></i><span>Settings</span></a>
-            @else
-                <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--user-fill]"></i><span>My Profile</span>
-                </a>
-                <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                    <i class="icon-[ph--receipt-fill]"></i><span>My Payslip</span>
-                </a>
-                <a href="#" class="nav-item"><i class="icon-[ph--calendar-x-fill]"></i><span>Leave Request</span></a>
-                <a href="{{ route('employee-attendance.index') }}" class="nav-item {{ request()->routeIs('employee-attendance.*') ? 'active' : '' }}"><i class="icon-[ph--clock-fill]"></i><span>Attendance</span></a>
-            @endif
-
-            <div class="burger-footer">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="icon-[ph--sign-out-fill]"></i> Logout
-                    </button>
-                </form>
             </div>
         </div>
 
@@ -249,7 +180,6 @@
             </div>
 
             <div class="topbar-actions">
-
 
 {{-- Desktop topbar --}}
 <x-search-box id="search-modal-desktop" />
@@ -302,205 +232,242 @@
 
         </div>
 
-        {{-- Desktop sidebar --}}
-        <div id="main-sidebar" class="sidebar sidebar-{{ $role }} overlay [--auto-close:false]">
-            <div class="sidebar-toggle-row">
-                <button id="sidebar-toggle" type="button"
-                        aria-haspopup="true" aria-expanded="false" aria-label="Toggle sidebar"
-                        data-overlay-minifier="#main-sidebar">
-                   <i class="icon-[ph--caret-left-fill]" id="sidebar-arrow"></i>
-                </button>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="{{ route('dashboard') }}"
-                class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <i class="icon-[ph--house-fill]"></i><span>Dashboard</span>
+        {{-- ═══════════════════════════════════════
+            UNIFIED SIDEBAR — drawer on mobile, collapsible rail on desktop.
+            Classes match FlyonUI's own overlay+drawer+minifier sample, with
+            two deliberate changes:
+              1. Breakpoint is 768px (min-[768px]:...), not Tailwind's
+                 default sm: (640px) — matches this shell's existing
+                 mobile/desktop split so there's no broken zone between
+                 640-768px where sidebar and topbar would disagree.
+              2. The sample uses `sm:absolute sm:z-0` to place itself at
+                 desktop widths, which assumes it's the only positioned
+                 thing on the page. We already have a CSS Grid shell
+                 (.app-shell), so instead shell.css forces `position: static`
+                 back on at 768px+ and lets the grid do the placement —
+                 same idea, adapted to fit the existing layout.
+            ═══════════════════════════════════════ --}}
+        <aside id="main-sidebar"
+               class="sidebar-{{ $role }} overlay [--auto-close:768] drawer drawer-start hidden w-[250px] min-[768px]:flex min-[768px]:translate-x-0 min-[768px]:shadow-none border-e border-base-content/15"
+               role="dialog"
+               tabindex="-1"
+               aria-label="Main navigation">
+
+            <div class="drawer-header overlay-minified:justify-center overlay-minified:px-0 py-3 border-b border-base-content/10">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 overlay-minified:hidden">
+                    <svg fill="currentColor" height="1.5em" viewBox="0 0 1813 1441" width="1.5em" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fill-rule="evenodd"></path>
+                        <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fill-rule="evenodd"></path>
+                    </svg>
+                    <span class="drawer-title text-base font-semibold">Techstacks</span>
                 </a>
 
-                @if($isAdmin)
-                    @php
-                        $userMgmtOpen    = request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('permissions.*');
-                        $empMgmtOpen     = request()->routeIs('employees.*') || $attendanceActive;
-                        $payrollMgmtOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
-                        $monitoringOpen  = request()->routeIs('audit-logs.*') || request()->routeIs('reports.*');
-                    @endphp
+                {{-- Desktop-only minify toggle (icon-rail collapse). Same
+                     #main-sidebar id, so the existing minify-persistence
+                     logic in app.js needs no changes. --}}
+                <button type="button"
+                        class="btn btn-circle btn-text hidden min-[768px]:flex"
+                        id="sidebar-toggle"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        aria-label="Toggle sidebar width"
+                        data-overlay-minifier="#main-sidebar">
+                    <i class="icon-[ph--caret-left-fill] transition-transform overlay-minified:rotate-180" id="sidebar-arrow"></i>
+                </button>
 
-                    <div class="nav-dropdown {{ $userMgmtOpen ? 'open' : '' }}">
+                {{-- Mobile-only close button — the sample relies on
+                     backdrop-click/Escape alone, but an explicit close
+                     affordance is worth the one extra button. --}}
+                <button type="button"
+                        class="btn btn-circle btn-text min-[768px]:hidden"
+                        aria-label="Close navigation menu"
+                        data-overlay="#main-sidebar">
+                    <i class="icon-[ph--x]"></i>
+                </button>
+            </div>
 
-    <button
-        class="nav-item nav-dropdown-trigger swap swap-rotate"
-        type="button"
-        data-tooltip="Access Control">
+            <nav class="drawer-body px-2 pt-3">
+                <ul class="menu p-0 sidebar-menu">
 
-        <i class="icon-[ph--user-gear-fill]"></i>
-        <span>Access Control</span>
+                    <li>
+                        <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'menu-active' : '' }}">
+                            <span class="icon-[ph--house-fill] size-5"></span>
+                            <span class="overlay-minified:hidden">Dashboard</span>
+                        </a>
+                    </li>
 
-        <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
+                    @if($isAdmin)
+                        @php
+                            $userMgmtOpen    = request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('permissions.*');
+                            $empMgmtOpen     = request()->routeIs('employees.*') || $attendanceActive;
+                            $payrollMgmtOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
+                            $monitoringOpen  = request()->routeIs('audit-logs.*') || request()->routeIs('reports.*');
+                        @endphp
 
-    </button>
+                        <x-sidebar-nav-group id="dropdown-access-control" label="Access Control" icon="ph--user-gear-fill" :open="$userMgmtOpen">
+                            <li>
+                                <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--users-fill] size-5"></span> Users
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('roles.index') }}" class="{{ request()->routeIs('roles.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--lock-fill] size-5"></span> Roles
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('permissions.index') }}" class="{{ request()->routeIs('permissions.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--shield-check-fill] size-5"></span> Permissions
+                                </a>
+                            </li>
+                        </x-sidebar-nav-group>
 
+                        <x-sidebar-nav-group id="dropdown-workforce" label="Workforce" icon="ph--users-three-fill" :open="$empMgmtOpen">
+                            <li>
+                                <a href="{{ route('employees.index') }}" class="{{ request()->routeIs('employees.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--identification-badge-fill] size-5"></span> Employees
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('manual-payroll-attendance.index') }}" class="{{ $attendanceActive ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--calendar-check-fill] size-5"></span> Attendance
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('work-requests.index') }}" class="{{ request()->routeIs('work-requests.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--note-pencil-fill] size-5"></span> Work Requests
+                                </a>
+                            </li>
+                        </x-sidebar-nav-group>
 
-    <div class="nav-dropdown-menu" style="hidden">
+                        <x-sidebar-nav-group id="dropdown-finance" label="Finance" icon="ph--wallet-fill" :open="$payrollMgmtOpen">
+                            <li>
+                                <a href="{{ route('payroll.index') }}" class="{{ request()->routeIs('payroll.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--money-fill] size-5"></span> Payroll
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('government-contributions.index') }}" class="{{ request()->routeIs('government-contributions.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--identification-card-fill] size-5"></span> Gov. Contributions
+                                </a>
+                            </li>
+                        </x-sidebar-nav-group>
 
-        <a href="{{ route('users.index') }}"
-            data-tooltip="Users"
-            class="nav-item nav-sub-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                        <x-sidebar-nav-group id="dropdown-monitoring" label="Monitoring" icon="ph--chart-line-fill" :open="$monitoringOpen">
+                            <li>
+                                <a href="{{ route('audit-logs.index') }}" class="{{ request()->routeIs('audit-logs.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--file-text-fill] size-5"></span> Audit Logs
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="{{ request()->routeIs('reports.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--chart-bar-fill] size-5"></span> Reports
+                                </a>
+                            </li>
+                        </x-sidebar-nav-group>
 
-            <i class="icon-[ph--users-fill] icon"></i>
-            <span>Users</span>
+                    @elseif($isHR)
+                        @php
+                            $hrEmpOpen     = request()->routeIs('employees.*') || $attendanceActive || request()->routeIs('work-requests.*');
+                            $hrPayrollOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
+                            $hrOtherOpen   = request()->routeIs('reports.*');
+                        @endphp
 
-        </a>
+                        <x-sidebar-nav-group id="dropdown-workforce" label="Workforce" icon="ph--users-three-fill" :open="$hrEmpOpen">
+                            <li>
+                                <a href="{{ route('employees.index') }}" class="{{ request()->routeIs('employees.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--identification-badge-fill] size-5"></span> Employees
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('manual-payroll-attendance.index') }}" class="{{ $attendanceActive ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--calendar-check-fill] size-5"></span> Attendance
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('work-requests.index') }}" class="{{ request()->routeIs('work-requests.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--note-pencil-fill] size-5"></span> Work Requests
+                                </a>
+                            </li>
+                        </x-sidebar-nav-group>
 
+                        <x-sidebar-nav-group id="dropdown-finance" label="Finance" icon="ph--wallet-fill" :open="$hrPayrollOpen">
+                            <li>
+                                <a href="{{ route('payroll.index') }}" class="{{ request()->routeIs('payroll.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--money-fill] size-5"></span> Payroll
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('government-contributions.index') }}" class="{{ request()->routeIs('government-contributions.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--identification-card-fill] size-5"></span> Gov. Contributions
+                                </a>
+                            </li>
+                        </x-sidebar-nav-group>
 
-        <a href="{{ route('roles.index') }}"
-            data-tooltip="Roles"
-            class="nav-item nav-sub-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
+                        {{-- NOTE: this group was labeled "Settings" in the old markup
+                             but used the chart-line icon and only ever contained
+                             Reports + a dead Settings link (both href="#"). Kept
+                             as-is content-wise — flagging in case that was drift
+                             rather than intentional. --}}
+                        <x-sidebar-nav-group id="dropdown-settings" label="Settings" icon="ph--chart-line-fill" :open="$hrOtherOpen">
+                            <li>
+                                <a href="#" class="{{ request()->routeIs('reports.*') ? 'menu-active' : '' }}">
+                                    <span class="icon-[ph--chart-bar-fill] size-5"></span> Reports
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <span class="icon-[ph--gear-fill] size-5"></span> Settings
+                                </a>
+                            </li>
+                        </x-sidebar-nav-group>
 
-            <i class="icon-[ph--lock-fill] icon"></i>
-            <span>Roles</span>
-
-        </a>
-
-
-        <a href="{{ route('permissions.index') }}"
-            data-tooltip="Permissions"
-            class="nav-item nav-sub-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
-
-            <i class="icon-[ph--shield-check-fill] icon"></i>
-            <span>Permissions</span>
-
-        </a>
-
-    </div>
-
-</div>
-
-                    <div class="nav-dropdown {{ $empMgmtOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--users-three-fill]"></i><span>Workforce</span>
-                            <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
-                        </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="{{ route('employees.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
+                    @else
+                        {{-- Employee nav: the old mobile burger-dropdown and desktop
+                             sidebar had actually drifted apart here — mobile had
+                             "Leave Request" (href="#", no route) instead of
+                             "Work Requests" (a real route). Since this is now one
+                             nav for both breakpoints, I went with the desktop/
+                             route-backed set below. Swap this back to Leave
+                             Request if that was actually intentional. --}}
+                        <li>
+                            <a href="{{ route('profile.show') }}" class="{{ request()->routeIs('profile.*') ? 'menu-active' : '' }}">
+                                <span class="icon-[ph--user-fill] size-5"></span>
+                                <span class="overlay-minified:hidden">My Profile</span>
                             </a>
-                            <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item nav-sub-item {{ $attendanceActive ? 'active' : '' }}">
-                                <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
+                        </li>
+                        <li>
+                            <a href="{{ route('payroll.index') }}" class="{{ request()->routeIs('payroll.*') ? 'menu-active' : '' }}">
+                                <span class="icon-[ph--receipt-fill] size-5"></span>
+                                <span class="overlay-minified:hidden">My Payslip</span>
                             </a>
-                            <a href="{{ route('work-requests.index') }}"
-                            class="nav-item nav-sub-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span>
+                        </li>
+                        <li>
+                            <a href="{{ route('work-requests.index') }}" class="{{ request()->routeIs('work-requests.*') ? 'menu-active' : '' }}">
+                                <span class="icon-[ph--note-pencil-fill] size-5"></span>
+                                <span class="overlay-minified:hidden">Work Requests</span>
                             </a>
-                        </div>
-                    </div>
-
-                    <div class="nav-dropdown {{ $payrollMgmtOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--wallet-fill]"></i><span>Finance</span>
-                            <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
-                        </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="{{ route('payroll.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
+                        </li>
+                        <li>
+                            <a href="{{ route('employee-attendance.index') }}" class="{{ request()->routeIs('employee-attendance.*') ? 'menu-active' : '' }}">
+                                <span class="icon-[ph--clock-fill] size-5"></span>
+                                <span class="overlay-minified:hidden">Attendance</span>
                             </a>
-                            <a href="{{ route('government-contributions.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="nav-dropdown {{ $monitoringOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--chart-line-fill]"></i><span >Monitoring</span>
-                           <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4" ></i>
-                        </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="{{ route('audit-logs.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--file-text-fill]"></i><span>Audit Logs</span>
-                            </a>
-                            <a href="#" class="nav-item nav-sub-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--chart-bar-fill]"></i><span>Reports</span>
-                            </a>
-                        </div>
-                    </div>
-
-                @elseif($isHR)
-                    @php
-                        $hrEmpOpen     = request()->routeIs('employees.*') || $attendanceActive;
-                        $hrPayrollOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
-                        $hrOtherOpen   = request()->routeIs('reports.*');
-                    @endphp
-
-                    <div class="nav-dropdown {{ $hrEmpOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--users-three-fill]"></i><span>Workforce</span>
-                            <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
-                        </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="{{ route('employees.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('employees.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--identification-badge-fill]"></i><span>Employees</span>
-                            </a>
-                            <a href="{{ route('manual-payroll-attendance.index') }}" class="nav-item nav-sub-item {{ $attendanceActive ? 'active' : '' }}">
-                                <i class="icon-[ph--calendar-check-fill]"></i><span>Attendance</span>
-                            </a>
-                            <a href="{{ route('work-requests.index') }}"
-                            class="nav-item nav-sub-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="nav-dropdown {{ $hrPayrollOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--wallet-fill]"></i><span>Finance</span>
-                           <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
-                        </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="{{ route('payroll.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--money-fill]"></i><span>Payroll</span>
-                            </a>
-                            <a href="{{ route('government-contributions.index') }}" class="nav-item nav-sub-item {{ request()->routeIs('government-contributions.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--identification-card-fill]"></i><span>Gov. Contributions</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="nav-dropdown {{ $hrOtherOpen ? 'open' : '' }}">
-                        <button class="nav-item nav-dropdown-trigger" type="button">
-                            <i class="icon-[ph--chart-line-fill]"></i><span>Settings</span>
-                           <i class="dropdown-arrow icon-[ph--caret-down-fill] w-4 h-4"></i>
-                        </button>
-                        <div class="nav-dropdown-menu">
-                            <a href="#" class="nav-item nav-sub-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-                                <i class="icon-[ph--chart-bar-fill]"></i><span>Reports</span>
-                            </a>
-                            <a href="#" class="nav-item nav-sub-item">
-                                <i class="icon-[ph--gear-fill]"></i><span>Settings</span>
-                            </a>
-                        </div>
-                    </div>
-
-                @else
-                    <a href="{{ route('profile.show') }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
-                        <i class="icon-[ph--user-fill]"></i><span>My Profile</span>
-                    </a>
-                    <a href="{{ route('payroll.index') }}" class="nav-item {{ request()->routeIs('payroll.*') ? 'active' : '' }}">
-                        <i class="icon-[ph--receipt-fill]"></i><span>My Payslip</span>
-                    </a>
-                    <a href="{{ route('work-requests.index') }}" class="nav-item {{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><i class="icon-[ph--note-pencil-fill]"></i><span>Work Requests</span></a>
-                    <a href="{{ route('employee-attendance.index') }}" class="nav-item {{ request()->routeIs('employee-attendance.*') ? 'active' : '' }}"><i class="icon-[ph--clock-fill]"></i><span>Attendance</span></a>
-                @endif
+                        </li>
+                    @endif
+                </ul>
             </nav>
 
-            <div class="sidebar-footer">
-                <form action="{{ route('logout') }}" method="POST">
+            <div class="drawer-footer overlay-minified:justify-center overlay-minified:px-2 border-t border-base-content/10">
+                <form action="{{ route('logout') }}" method="POST" class="w-full">
                     @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="icon-[ph--sign-out-fill]"></i> Logout
+                    <button type="submit" class="logout-btn w-full">
+                        <span class="icon-[ph--sign-out-fill] size-5"></span>
+                        <span class="overlay-minified:hidden">Logout</span>
                     </button>
                 </form>
             </div>
-        </div>
+        </aside>
 
         {{-- Main content — rendered ONCE, positioned per-breakpoint by CSS --}}
         <div class="main-content bg-{{ $role }}">
