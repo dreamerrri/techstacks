@@ -184,6 +184,12 @@
                             <span class="overlay-minified:hidden">Attendance</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('work-requests.index') }}" class="{{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
+                            <span class="icon-[tabler--notes] size-5"></span>
+                            <span class="overlay-minified:hidden">Work Requests</span>
+                        </a>
+                    </li>
                 @endif
             </ul>
         </div>
