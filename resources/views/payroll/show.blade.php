@@ -79,19 +79,19 @@
     <div class="card-stat card-stat-green">
         <div class="stat-icon-wrap"><i class="icon-[ph--coins-fill]"></i></div>
         <div class="stat-label">Gross Pay</div>
-        <div class="stat-value">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</div>
+        <div class="stat-value text-2xl font-bold text-emerald-600">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</div>
         <div class="stat-sub">For this cutoff</div>
     </div>
     <div class="card-stat card-stat-red">
         <div class="stat-icon-wrap"><i class="icon-[ph--minus-circle-fill]"></i></div>
         <div class="stat-label">Total Deductions</div>
-        <div class="stat-value">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</div>
+        <div class="stat-value text-2xl font-bold text-red-600">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</div>
         <div class="stat-sub">Gov't & Manual Deductions</div>
     </div>
     <div class="card-stat card-stat-net">
         <div class="stat-icon-wrap"><i class="icon-[ph--wallet-fill]"></i></div>
         <div class="stat-label">Net Pay</div>
-        <div class="stat-value">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</div>
+        <div class="stat-value text-2xl font-bold text-emerald-600">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</div>
         <div class="stat-sub">Take-home for this cutoff</div>
     </div>
 </div>
@@ -139,7 +139,7 @@
         </h2>
         <div class="flex flex-col text-sm">
             @foreach([
-                ['Base Pay',           $payroll['attendance_data']['regular_hours'] ?? 0 .' hrs × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['base_pay'] ?? 0, 'text-gray-800', ''],
+                ['Base Pay',           $payroll['attendance_data']['regular_hours'] ?? 0 .' hrs × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['base_pay'] ?? 0, 'text-emerald-600', ''],
                 ['Weekend Pay',        ($payroll['attendance_data']['weekends_worked'] ?? 0) .' weekend days × 0.30 × ₱'. number_format($payroll['daily_rate'] ?? 0, 2) .'/day', $payroll['weekend_pay'] ?? 0, 'text-emerald-600', '+'],
                 ['Overtime Pay',       ($payroll['attendance_data']['overtime_hours'] ?? 0) .' OT hrs × 1.25 × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['overtime_pay'] ?? 0, 'text-emerald-600', '+'],
                 ['Night Differential', ($payroll['attendance_data']['night_diff_hours'] ?? 0) .' ND hrs × 1.10 × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['night_differential_pay'] ?? 0, 'text-emerald-600', '+'],
@@ -156,7 +156,7 @@
             @endforeach
         </div>
         <div class="flex justify-between items-center mt-3 pt-3 border-t-2 border-gray-200 font-bold text-sm">
-            <span class="text-gray-800">Total Earnings</span>
+            <span class="text-gray-300">Total Earnings</span>
             <span class="text-emerald-600">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['benefits'] ?? 0), 2) }}</span>
         </div>
     </div>
@@ -217,7 +217,7 @@
                 <span class="font-semibold text-red-600 ml-4">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</span>
             </div>
         </div>
-        <div class="mt-4 p-4 bg-gray-50 rounded-xl text-xs text-base-content/60 leading-relaxed">
+        <div class="mt-4 p-4 bg-base-200 rounded-xl text-xs text-base-content/60 leading-relaxed">
             <strong class="text-base-content/80">Tax Bracket Reference:</strong><br>
             • ₱0 – ₱20,832: 0%<br>
             • ₱20,833 – ₱33,333: 20%<br>
@@ -229,7 +229,7 @@
     </div>
 
     {{-- Pay Summary (full width) --}}
-    <div class="card bg-base-100 shadow-sm p-5 md:col-span-3">
+    <div class="card bg-base-300 shadow-sm p-5 md:col-span-3">
         <h2 class="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
             <i class="icon-[ph--receipt-fill] text-red-600"></i> Pay Summary
         </h2>
