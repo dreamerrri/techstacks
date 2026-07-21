@@ -94,7 +94,7 @@
 
                         @error('password')
                             <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
+                                <i class="icon-[tabler--circle-x]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
@@ -114,7 +114,7 @@
                         >
                         @error('password_confirmation')
                             <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
+                                <i class="icon-[tabler--circle-x]"></i>
                                 {{ $message }}
                             </div>
                         @enderror

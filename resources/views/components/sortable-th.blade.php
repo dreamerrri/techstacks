@@ -58,8 +58,8 @@ $dnCol   = ($active && $d === 'desc') ? 'text-accent' : 'text-success-content';
     <a href="{{ $url }}" class="inline-flex items-center gap-1 tracking-wider text-success-content">
         {{ $label }}
         <span class="inline-flex flex-col leading-none">
-            <i class="icon-[ph--caret-up-fill] text-[9px] {{ $upCol }}"></i>
-            <i class="icon-[ph--caret-down-fill] text-[9px] {{ $dnCol }}"></i>
+            <i class="icon-[tabler--caret-up] text-[9px] {{ $upCol }}"></i>
+            <i class="icon-[tabler--caret-down] text-[9px] {{ $dnCol }}"></i>
         </span>
     </a>
 </th>

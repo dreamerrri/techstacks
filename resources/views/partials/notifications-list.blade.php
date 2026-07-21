@@ -6,9 +6,9 @@
             @php
                 $style = match ($notification->type) {
                     'alert' => ['bg' => 'bg-error/10', 'text' => 'text-error', 'icon' => 'icon-[ph--warning-fill]', 'label' => 'Alert'],
-                    'error' => ['bg' => 'bg-error/10', 'text' => 'text-error', 'icon' => 'icon-[ph--x-circle-fill]', 'label' => 'Error'],
+                    'error' => ['bg' => 'bg-error/10', 'text' => 'text-error', 'icon' => 'icon-[tabler--circle-x]', 'label' => 'Error'],
                     'warning' => ['bg' => 'bg-warning/10', 'text' => 'text-warning', 'icon' => 'icon-[ph--warning-circle-fill]', 'label' => 'Warning'],
-                    'success' => ['bg' => 'bg-success/10', 'text' => 'text-success', 'icon' => 'icon-[ph--check-circle-fill]', 'label' => 'Success'],
+                    'success' => ['bg' => 'bg-success/10', 'text' => 'text-success', 'icon' => 'icon-[tabler--circle-check]', 'label' => 'Success'],
                     'info' => ['bg' => 'bg-info/10', 'text' => 'text-info', 'icon' => 'icon-[ph--info-fill]', 'label' => 'Info'],
                     default => ['bg' => 'bg-base-300', 'text' => 'text-base-content/50', 'icon' => 'icon-[ph--bell-fill]', 'label' => 'Notification'],
                 };
@@ -33,7 +33,7 @@
 
     <div id="notif-empty-state" class="px-4 py-8 text-center{{ $notifCount > 0 ? ' hidden' : '' }}">
         <div class="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-success/10">
-            <i class="icon-[ph--check-fill] text-lg text-success" aria-hidden="true"></i>
+            <i class="icon-[tabler--check] text-lg text-success" aria-hidden="true"></i>
         </div>
         <div class="mb-1 text-[13px] font-semibold text-base-content">All caught up</div>
         <div class="text-xs text-base-content/40">No pending actions right now</div>

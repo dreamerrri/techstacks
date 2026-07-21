@@ -54,9 +54,9 @@
                         <td class="text-base-content/60 text-right">{{ $permission->roles->count() }}</td>
                         <td class="text-right">
                             @if($permission->is_active)
-                                <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
+                                <span class="badge badge-soft badge-success"><i class="icon-[tabler--circle-check]"></i> Active</span>
                             @else
-                                <span class="badge badge-soft badge-error"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
+                                <span class="badge badge-soft badge-error"><i class="icon-[tabler--circle-x]"></i> Inactive</span>
                             @endif
                         </td>
                         <td class="text-right">
@@ -109,14 +109,14 @@
                                 </div>
                             </div>
                             @if($permission->is_active)
-                                <span class="badge badge-soft badge-success whitespace-nowrap"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
+                                <span class="badge badge-soft badge-success whitespace-nowrap"><i class="icon-[tabler--circle-check]"></i> Active</span>
                             @else
-                                <span class="badge badge-soft badge-error whitespace-nowrap"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
+                                <span class="badge badge-soft badge-error whitespace-nowrap"><i class="icon-[tabler--circle-x]"></i> Inactive</span>
                             @endif
                         </div>
 
                         <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
-                            <span><i class="icon-[ph--user-fill] w-3.5"></i>{{ $permission->roles->count() }} roles</span>
+                            <span><i class="icon-[tabler--user] w-3.5"></i>{{ $permission->roles->count() }} roles</span>
                         </div>
 
                         @if($permission->description)

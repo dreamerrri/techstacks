@@ -73,7 +73,7 @@
     @if($isAdmin || $isHR)
     <div class="card" style="padding:24px;">
         <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-            <i class="icon-[ph--user-fill]" style="color:#6b7280;"></i> Employee
+            <i class="icon-[tabler--user]" style="color:#6b7280;"></i> Employee
         </h3>
         <div style="font-size:14px; font-weight:600; color:#1f2937;">
             {{ $workRequest->employee->full_name }}
@@ -161,7 +161,7 @@
         @if($workRequest->status === 'pending')
     <button onclick="approveRequest({{ $workRequest->id }})"
                     style="padding:12px 24px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
-                <i class="icon-[ph--check-fill]"></i> Approve
+                <i class="icon-[tabler--check]"></i> Approve
             </button>
             <button onclick="showRejectModal({{ $workRequest->id }})"
                     style="padding:12px 24px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">

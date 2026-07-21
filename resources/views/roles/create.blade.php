@@ -13,7 +13,7 @@
 
     <div class="card bg-base-100 shadow-sm p-6">
         <h2 class="text-base font-bold text-base-content mb-6 flex items-center gap-2">
-            <i class="icon-[ph--user-fill]-tag text-red-600"></i> Create New Role
+            <i class="icon-[tabler--user]-tag text-red-600"></i> Create New Role
         </h2>
 
         <form method="POST" action="{{ route('roles.store') }}">
