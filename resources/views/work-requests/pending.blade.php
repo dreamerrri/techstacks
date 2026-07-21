@@ -26,7 +26,7 @@
 
 <x-slot:actions>
           <a href="{{ route('work-requests.index') }}"
-           style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+           class="px-5 py-3 bg-base-200 text-base-content border border-base-300 rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2">
             <i class="icon-[ph--list-fill]"></i> All Requests
         </a>
 </x-slot:actions>
@@ -53,21 +53,19 @@
                             <div>{{ $request->employee->position }}</div>
                         </td>
                         <td>
-                            <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600; 
-                                {{ $request->request_type === 'weekend' ? 'background:#dbeafe; color:#1e40af;' : 
-                                   ($request->request_type === 'holiday' ? 'background:#fef3c7; color:#92400e;' : 'background:#e0e7ff; color:#3730a3;') }}">
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->request_type === 'weekend' ? 'bg-blue-100 text-blue-800' : ($request->request_type === 'holiday' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800') }}">
                                 {{ ucfirst($request->request_type) }}
                             </span>
                         </td>
-                        <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
+                        <td class="px-4 py-3 text-sm text-base-content">
                             {{ $request->work_date->format('M d, Y') }}
-                            <div style="font-size:12px; color:#6b7280;">{{ $request->work_date->format('l') }}</div>
+                            <div class="text-xs text-base-content/60">{{ $request->work_date->format('l') }}</div>
                         </td>
                         <td>
                             {{ $request->start_time ? $request->start_time : '-' }} 
                             @if($request->end_time) - {{ $request->end_time }}@endif
                             @if($request->estimated_hours)
-                            <div style="font-size:12px; color:#6b7280;">{{ number_format($request->estimated_hours, 2) }} hrs</div>
+                            <div class="text-xs text-base-content/60">{{ number_format($request->estimated_hours, 2) }} hrs</div>
                             @endif
                         </td>
                         <td>
@@ -77,10 +75,10 @@
                           <a href="{{ route('work-requests.show', $request) }}" class="btn btn-soft btn-info btn-sm">
     <i class="icon-[ph--eye-fill]"></i>
 </a>
-<button type="button" class="btn btn-soft btn-success btn-sm" onclick="approveRequest({{ $request->id }})">
+<button type="button" class="btn btn-soft btn-success btn-sm" onclick="approveRequest({{ $request->id }})" style="padding:6px 12px; background:#10b981; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
     <i class="icon-[tabler--check]"></i>
 </button>
-<button type="button" class="btn btn-soft btn-error btn-sm" onclick="showRejectModal({{ $request->id }})">
+<button type="button" class="btn btn-soft btn-error btn-sm" onclick="showRejectModal({{ $request->id }})" style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
     <i class="icon-[ph--x]"></i>
 </button>
                         </td>
@@ -91,14 +89,14 @@
         </div>
     </div>
 @else
-    <div class="card" style="padding:48px; text-align:center;">
-        <i class="icon-[tabler--circle-check]" style="font-size:48px; color:#10b981; margin-bottom:16px;"></i>
-        <h3 style="margin:0 0 8px 0; color:#6b7280;">All Caught Up!</h3>
-        <p style="color:#9ca3af; margin:0 0 24px 0;">
+    <div class="card p-12 text-center">
+        <i class="icon-[tabler--circle-check] text-5xl text-emerald-500 mb-4 block"></i>
+        <h3 class="m-0 mb-2 text-base-content/60">All Caught Up!</h3>
+        <p class="text-base-content/40 m-0 mb-6">
             There are no pending work requests to review.
         </p>
         <a href="{{ route('work-requests.index') }}"
-           style="padding:12px 24px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+           class="px-5 py-3 text-white border-none rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2" style="background:{{ $color }};">
             <i class="icon-[ph--list-fill]"></i> View All Requests
         </a>
     </div>
@@ -112,16 +110,14 @@
     <div class="md:hidden p-4 flex flex-col gap-3">
         @if($pendingRequests->count() > 0)
             @foreach($pendingRequests as $request)
-                <div class="card bg-base-100 border border-gray-200 p-4">
+                <div class="card bg-base-100 border border-base-300 p-4">
                     <div class="flex justify-between items-start mb-2">
                         <div>
-                            <div style="font-size:14px; color:#1f2937; font-weight:600;">{{ $request->employee->full_name }}</div>
-                            <div style="font-size:12px; color:#6b7280;">{{ $request->employee->employee_id }}</div>
-                            <div style="font-size:12px; color:#6b7280;">{{ $request->employee->position }}</div>
+                            <div class="text-sm text-base-content font-semibold">{{ $request->employee->full_name }}</div>
+                            <div class="text-xs text-base-content/60">{{ $request->employee->employee_id }}</div>
+                            <div class="text-xs text-base-content/60">{{ $request->employee->position }}</div>
                         </div>
-                        <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600;
-                            {{ $request->request_type === 'weekend' ? 'background:#dbeafe; color:#1e40af;' :
-                               ($request->request_type === 'holiday' ? 'background:#fef3c7; color:#92400e;' : 'background:#e0e7ff; color:#3730a3;') }}">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->request_type === 'weekend' ? 'bg-blue-100 text-blue-800' : ($request->request_type === 'holiday' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800') }}">
                             {{ ucfirst($request->request_type) }}
                         </span>
                     </div>
@@ -136,12 +132,12 @@
                     </div>
 
                     @if($request->reason)
-                        <div style="font-size:12px; color:#6b7280; margin-top:8px;">
+                        <div class="text-xs text-base-content/60 mt-2">
                             <i class="icon-[ph--text-align-left-fill] w-3.5"></i> {{ \Illuminate\Support\Str::limit($request->reason, 80) }}
                         </div>
                     @endif
 
-                    <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
+                    <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-200">
                         <a href="{{ route('work-requests.show', $request) }}" class="btn btn-soft btn-info btn-sm">
                             <i class="icon-[ph--eye-fill]"></i> View
                         </a>
