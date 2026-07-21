@@ -20,11 +20,12 @@
  {{--               <th class="w-36 text-right">Actions</th> --}}
             </x-slot:head>
 
-            @forelse($roles as $role)
+            {{-- foreach($roles as $role) --}}
                 <tr>...</tr>
-            @empty
+            {{-- endforeach --}}
+            {{-- if no data --}}
                 <tr><td colspan="4">No data found.</td></tr>
-            @endforelse
+            {{-- endif --}}
         </x-data-table>
 --}}
 
