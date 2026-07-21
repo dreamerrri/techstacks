@@ -29,7 +29,7 @@
         </x-data-table>
 --}}
 
-@props(['maxHeight' => '62vh'])
+@props(['maxHeight' => '60vh'])
 
 <div class="overflow-x-auto overflow-y-auto hidden md:block isolate relative " style="max-height: {{ $maxHeight }}">
     <table class="table table-hover table-fixed w-full text-sm table-borderless">
