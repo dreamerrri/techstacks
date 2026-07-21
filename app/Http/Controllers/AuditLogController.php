@@ -31,7 +31,8 @@ class AuditLogController extends Controller
             $query->whereDate('created_at', '<=', $request->date_to);
         }
 
-        $logs = $query->paginate(50);
+        $logs = $query->paginate(67)->onEachSide(1);
+   
 
         $modules = AuditLog::distinct()->pluck('module')->sort();
         $actions = AuditLog::distinct()->pluck('action')->sort();
