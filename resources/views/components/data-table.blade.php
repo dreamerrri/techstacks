@@ -27,8 +27,7 @@
                 <tr><td colspan="4">No data found.</td></tr>
             {{-- endif --}}
         </x-data-table>
---}}
-
+        
 @props(['maxHeight' => '60vh'])
 
 <div class="overflow-x-auto overflow-y-auto hidden md:block isolate relative " style="max-height: {{ $maxHeight }}">
