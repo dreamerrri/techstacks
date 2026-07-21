@@ -17,7 +17,7 @@
                 <th class="w-40">Name</th>
                 <th class="w-24">Slug</th>
                 <th>Description</th> {{-- no width = auto-fills remaining space --}}
- {{--               <th class="w-36 text-right">Actions</th>
+ {{--               <th class="w-36 text-right">Actions</th> --}}
             </x-slot:head>
 
             @forelse($roles as $role)
