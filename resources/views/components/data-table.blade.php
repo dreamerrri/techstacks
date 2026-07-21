@@ -37,6 +37,7 @@
                 {{ $head }}
             </tr>
         </thead>
+        @endif
         <tbody>
             {{ $slot }}
         </tbody>

@@ -4,6 +4,10 @@ import { initBurger } from './burger.js';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 import 'flyonui/flyonui';
+import Swal from 'sweetalert2';
+
+// ── Make Swal globally available ───────────────────────────────
+window.Swal = Swal;
 
 
 // ── Global Notyf instance ─────────────────────────────────────

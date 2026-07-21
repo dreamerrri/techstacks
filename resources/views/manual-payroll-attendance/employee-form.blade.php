@@ -34,6 +34,14 @@
     </div>
 </div>
 
+<style>
+    @media (max-width: 768px) {
+        .payroll-form-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
 <div class="payroll-form-grid" style="display:grid; grid-template-columns:1fr 350px; gap:24px;">
     {{-- Attendance Encoding Form --}}
     <div class="card" style="padding:0; overflow:hidden;">
@@ -98,7 +106,7 @@
                     <input type="number" name="daily_rate" step="0.01" min="0" required
                            value="{{ $isEdit ? $payrollInput->daily_rate : $dailyRate }}"
                            style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                           oninput="window.dailyRateValue = this.value">
+                           oninput="window.dailyRateValue = this.value; triggerAutoPreview();">
                     <p style="color:#6b7280; font-size:12px; margin-top:4px;">Based on basic salary (₱{{ number_format($employee->basic_salary ?? 0, 2) }})</p>
                 </div>
                 <div>
@@ -106,7 +114,7 @@
                     <input type="number" name="days_worked" step="0.5" min="0" max="31"
                            value="{{ $isEdit ? $payrollInput->days_worked : ($computedDaysFromAttendance ?? '0') }}"
                            style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                           oninput="window.daysWorkedValue = this.value"
+                           oninput="window.daysWorkedValue = this.value; triggerAutoPreview();"
                            placeholder="{{ $computedDaysFromAttendance ? 'Leave blank to use ' . number_format($computedDaysFromAttendance, 2) . ' days from attendance' : 'Enter days worked' }}">
                     <p style="color:#6b7280; font-size:12px; margin-top:4px;">@if($computedDaysFromAttendance) Leave blank to use {{ number_format($computedDaysFromAttendance, 2) }} days from attendance records, or enter a custom value. @else Enter days worked for the period. @endif</p>
                 </div>
@@ -115,36 +123,39 @@
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Weekends Worked</label>
                 <input type="number" name="weekends_worked" step="0.5" min="0"
-                       value="{{ $isEdit ? ($payrollInput->weekends_worked ?? '0') : ($weekendsWorked ?? '0') }}"
+                       value="{{ $isEdit ? ($payrollInput->weekends_worked ?? '') : '' }}"
+                       placeholder="{{ $weekendsWorked > 0 ? $weekendsWorked . ' from approved work requests' : 'Enter weekends worked' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                       oninput="window.weekendsWorkedValue = this.value">
-                <p style="color:#6b7280; font-size:12px; margin-top:4px;">Number of weekend days worked (paid at 30% premium of daily rate)</p>
+                       oninput="window.weekendsWorkedValue = this.value; triggerAutoPreview();">
+                <p style="color:#6b7280; font-size:12px; margin-top:4px;">Number of weekend days worked (paid at 30% premium of daily rate). Leave blank to use {{ $weekendsWorked }} from approved work requests.</p>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Overtime Hours</label>
                     <input type="number" name="overtime_hours" step="0.5" min="0"
-                           value="{{ $isEdit ? $payrollInput->overtime_hours : ($overtimeHours ?? '0') }}"
+                           value="{{ $isEdit ? $payrollInput->overtime_hours : '' }}"
+                           placeholder="{{ $overtimeHours > 0 ? number_format($overtimeHours, 1) . ' from approved work requests' : 'Enter overtime hours' }}"
                            style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                           oninput="window.overtimeHoursValue = this.value">
+                           oninput="window.overtimeHoursValue = this.value; triggerAutoPreview();">
                 </div>
                 <div>
                     <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Late Hours</label>
                     <input type="number" name="late_hours" step="0.5" min="0"
                            value="{{ $isEdit ? $payrollInput->late_hours : '0' }}"
                            style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                           oninput="window.lateHoursValue = this.value">
+                           oninput="window.lateHoursValue = this.value; triggerAutoPreview();">
                 </div>
             </div>
 
             <div style="margin-bottom:24px;">
                 <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">Holiday Days Worked</label>
                 <input type="number" name="holiday_days" step="0.5" min="0"
-                       value="{{ $isEdit ? ($payrollInput->holiday_days ?? '0') : ($holidayDays ?? '0') }}"
+                       value="{{ $isEdit ? ($payrollInput->holiday_days ?? '') : '' }}"
+                       placeholder="{{ $holidayDays > 0 ? $holidayDays . ' from approved work requests' : 'Enter holiday days' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                       oninput="window.holidayDaysValue = this.value">
-                <p style="color:#6b7280; font-size:12px; margin-top:4px;">Number of regular holidays worked (paid at 200% of daily rate)</p>
+                       oninput="window.holidayDaysValue = this.value; triggerAutoPreview();">
+                <p style="color:#6b7280; font-size:12px; margin-top:4px;">Number of regular holidays worked (paid at 200% of daily rate). Leave blank to use {{ $holidayDays }} from approved work requests.</p>
             </div>
 
             <div style="margin-bottom:24px;">
@@ -152,7 +163,7 @@
                 <input type="number" name="night_differential_hours" step="0.5" min="0"
                        value="{{ $isEdit ? ($payrollInput->night_differential_hours ?? '0') : '0' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                       oninput="window.nightDifferentialHoursValue = this.value">
+                       oninput="window.nightDifferentialHoursValue = this.value; triggerAutoPreview();">
                 <p style="color:#6b7280; font-size:12px; margin-top:4px;">Hours worked during night shift (paid at 10% premium of hourly rate)</p>
             </div>
 
@@ -208,7 +219,7 @@
                 <input type="number" name="deductions" step="0.01" min="0"
                        value="{{ $isEdit ? $payrollInput->deductions : '0' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                       oninput="window.deductionsValue = this.value">
+                       oninput="window.deductionsValue = this.value; triggerAutoPreview();">
                 <input type="text" name="deductions_remarks"
                        value="{{ $isEdit ? ($payrollInput->deductions_remarks ?? '') : '' }}"
                        placeholder="Remarks (optional)"
@@ -221,7 +232,7 @@
                 <input type="number" name="reimbursements" step="0.01" min="0"
                        value="{{ $isEdit ? ($payrollInput->reimbursements ?? '0') : '0' }}"
                        style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;"
-                       oninput="window.reimbursementsValue = this.value">
+                       oninput="window.reimbursementsValue = this.value; triggerAutoPreview();">
                 <input type="text" name="reimbursements_remarks"
                        value="{{ $isEdit ? ($payrollInput->reimbursements_remarks ?? '') : '' }}"
                        placeholder="Remarks (optional)"
@@ -289,23 +300,23 @@ function handleSaveAttendance(event) {
         return;
     }
     
-    // Use stored values from global variables instead of reading from input elements
+    // Read values directly from input elements for reliability
     const formData = new FormData();
     formData.append('payroll_period_id', form.querySelector('[name="payroll_period_id"]').value);
     formData.append('employee_id', form.querySelector('[name="employee_id"]').value);
-    formData.append('daily_rate', window.dailyRateValue);
+    formData.append('daily_rate', form.querySelector('[name="daily_rate"]').value);
     formData.append('rate_type', form.querySelector('[name="rate_type"]').value);
-    formData.append('days_worked', window.daysWorkedValue);
-    formData.append('weekends_worked', window.weekendsWorkedValue);
-    formData.append('overtime_hours', window.overtimeHoursValue);
-    formData.append('late_hours', window.lateHoursValue);
-    formData.append('holiday_days', window.holidayDaysValue);
-    formData.append('night_differential_hours', window.nightDifferentialHoursValue);
-    formData.append('allowances', window.allowancesValue);
-    formData.append('deductions', window.deductionsValue);
-    formData.append('deductions_remarks', window.deductionsRemarksValue);
-    formData.append('reimbursements', window.reimbursementsValue);
-    formData.append('reimbursements_remarks', window.reimbursementsRemarksValue);
+    formData.append('days_worked', form.querySelector('[name="days_worked"]').value);
+    formData.append('weekends_worked', form.querySelector('[name="weekends_worked"]').value);
+    formData.append('overtime_hours', form.querySelector('[name="overtime_hours"]').value);
+    formData.append('late_hours', form.querySelector('[name="late_hours"]').value);
+    formData.append('holiday_days', form.querySelector('[name="holiday_days"]').value);
+    formData.append('night_differential_hours', form.querySelector('[name="night_differential_hours"]').value);
+    formData.append('allowances', form.querySelector('[name="allowances"]').value);
+    formData.append('deductions', form.querySelector('[name="deductions"]').value);
+    formData.append('deductions_remarks', form.querySelector('[name="deductions_remarks"]').value);
+    formData.append('reimbursements', form.querySelector('[name="reimbursements"]').value);
+    formData.append('reimbursements_remarks', form.querySelector('[name="reimbursements_remarks"]').value);
     formData.append('_token', '{{ csrf_token() }}');
     
     fetch('{{ route('manual-payroll-attendance.save') }}', {
@@ -331,6 +342,8 @@ function handleSaveAttendance(event) {
         window.notyf.error('Error saving attendance: ' + error.message);
     });
 }
+
+let previewTimeout = null;
 
 function previewPayroll() {
     const form = document.getElementById('attendanceForm');
@@ -499,6 +512,16 @@ function previewPayroll() {
     .catch(error => {
         window.notyf.error('Error previewing payroll: ' + error.message);
     });
+}
+
+// Auto-preview on input change with debounce
+function triggerAutoPreview() {
+    if (previewTimeout) {
+        clearTimeout(previewTimeout);
+    }
+    previewTimeout = setTimeout(() => {
+        previewPayroll();
+    }, 500);
 }
 </script>
 @endsection

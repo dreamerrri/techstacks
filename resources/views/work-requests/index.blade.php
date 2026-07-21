@@ -155,6 +155,61 @@
             @endif
         </div>
     @endif
+
+    {{-- Mobile Cards --}}
+    <div class="md:hidden p-4 flex flex-col gap-3">
+        @if($workRequests->count() > 0)
+            @foreach($workRequests as $request)
+                <div class="card bg-base-100 border border-gray-200 p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <div style="font-size:14px; color:#1f2937; font-weight:600;">
+                                {{ $request->created_at->format('M d, Y') }}
+                            </div>
+                            @if($admin || $hr)
+                                <div style="font-size:12px; color:#6b7280;">{{ $request->employee->full_name }}</div>
+                            @endif
+                        </div>
+                        <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600;
+                            {{ $request->status === 'pending' ? 'background:#fef3c7; color:#92400e;' :
+                            ($request->status === 'approved' ? 'background:#d1fae5; color:#065f46;' :
+                            ($request->status === 'rejected' ? 'background:#fee2e2; color:#991b1b;' : 'background:#f3f4f6; color:#374151;')) }}">
+                            {{ ucfirst($request->status) }}
+                        </span>
+                    </div>
+
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                        <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600;
+                            {{ $request->request_type === 'weekend' ? 'background:#dbeafe; color:#1e40af;' :
+                            ($request->request_type === 'holiday' ? 'background:#fef3c7; color:#92400e;' : 'background:#e0e7ff; color:#3730a3;') }}">
+                            {{ ucfirst($request->request_type) }}
+                        </span>
+                        <span><i class="icon-[ph--calendar-fill] w-3.5"></i> {{ $request->work_date->format('M d, Y') }}</span>
+                        <span><i class="icon-[ph--clock-fill] w-3.5"></i> {{ $request->start_time ? $request->start_time : '-' }} @if($request->end_time) - {{ $request->end_time }}@endif</span>
+                    </div>
+
+                    <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
+                        <a href="{{ route('work-requests.show', $request) }}" class="btn btn-soft btn-info btn-sm">
+                            <i class="icon-[ph--eye-fill]"></i> View
+                        </a>
+                        @if(!$admin && !$hr && $request->canBeCancelled())
+                            <a href="{{ route('work-requests.edit', $request) }}" class="btn btn-soft btn-warning btn-sm">
+                                <i class="icon-[ph--pencil-fill]"></i> Edit
+                            </a>
+                            <button onclick="cancelRequest({{ $request->id }}, '{{ route('work-requests.destroy', $request) }}')" class="btn btn-soft btn-error btn-sm">
+                                <i class="icon-[ph--x]"></i> Cancel
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <div class="py-10 text-center text-base-content/40">
+                <i class="icon-[ph--calendar-x-fill] text-3xl mb-2 block"></i>
+                No work requests found.
+            </div>
+        @endif
+    </div>
 </x-table-card>
 @endsection
 
