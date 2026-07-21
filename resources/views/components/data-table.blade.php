@@ -27,7 +27,7 @@
             @endforelse
         </x-data-table>
 --}}
-
+{{-- -help --}}
 @props(['maxHeight' => '62vh'])
 
 <div class="overflow-x-auto overflow-y-auto hidden md:block isolate relative " style="max-height: {{ $maxHeight }}">
