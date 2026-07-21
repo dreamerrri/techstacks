@@ -45,7 +45,7 @@
             </div>
             <div>
                 <button type="submit" class="btn btn-soft btn-error btn-sm">
-                    <i class="icon-[ph--funnel-fill]"></i> Filter
+                    <i class="icon-[tabler--filter]"></i> Filter
                 </button>
                 <a href="{{ route('audit-logs.index') }}" class="btn btn-soft btn-sm">Clear</a>
             </div>
@@ -89,14 +89,14 @@
                 <td class="text-base-content/60 font-mono text-xs">{{ $log->ip_address ?? '—' }}</td>
                 <td>
                     <a href="{{ route('audit-logs.show', $log) }}" class="btn btn-soft btn-info btn-sm">
-                        <i class="icon-[ph--eye-fill]"></i>
+                      <i class="icon-[tabler--eye]"></i>
                     </a>
                 </td>
             </tr>
         @empty
             <tr>
                 <td colspan="7" class="py-10 text-center text-base-content/40">
-                    <i class="icon-[ph--clock-counter-clockwise-fill] text-3xl mb-2 block"></i>
+                    <i class="icon-[tabler--history] text-3xl mb-2 block"></i>
                     No audit logs found.
                 </td>
             </tr>
@@ -132,20 +132,20 @@
 
                 <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
                     <span><i class="icon-[ph--cube-fill] w-3.5"></i> {{ ucfirst($log->module) }}</span>
-                    <span><i class="icon-[ph--graph-fill] w-3.5"></i> {{ $log->ip_address ?? '—' }}</span>
+                  <span><i class="icon-[tabler--network] w-3.5"></i> {{ $log->ip_address ?? '—' }}</span>
                 </div>
 
                 <div class="text-xs text-base-content/40 mt-1">{{ $log->description }}</div>
 
                 <div class="mt-3 pt-3 border-t border-gray-100">
                     <a href="{{ route('audit-logs.show', $log) }}" class="btn btn-soft btn-info btn-sm">
-                        <i class="icon-[ph--eye-fill]"></i> View Details
+  <i class="icon-[tabler--eye]"></i>View Details
                     </a>
                 </div>
             </div>
         @empty
             <div class="py-10 text-center text-base-content/40">
-                <i class="icon-[ph--clock-counter-clockwise-fill] text-3xl mb-2 block"></i>
+                <i class="icon-[tabler--history] text-3xl mb-2 block"></i>
                 No audit logs found.
             </div>
         @endforelse

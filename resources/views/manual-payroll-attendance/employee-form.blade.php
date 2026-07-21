@@ -22,7 +22,7 @@
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Period
         </a>
         <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="icon-[ph--user-fill]-edit"></i> {{ $isEdit ? 'Edit' : 'Encode' }} Attendance
+            <i class="icon-[tabler--user]-edit"></i> {{ $isEdit ? 'Edit' : 'Encode' }} Attendance
         </div>
         <h2 style="margin:8px 0 4px 0;">
             {{ $employee->first_name ?? 'Employee' }} {{ $employee->last_name ?? '' }}

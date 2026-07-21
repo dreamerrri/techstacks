@@ -1,7 +1,7 @@
 {{-- Personal Information --}}
 <div class="mb-8">
     <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
-        <i class="icon-[ph--user-fill] text-red-600"></i> Personal Information
+        <i class="icon-[tabler--user] text-red-600"></i> Personal Information
     </h3>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 

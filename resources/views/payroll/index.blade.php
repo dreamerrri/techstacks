@@ -42,72 +42,68 @@
 {{-- Department Breakdown Modal --}}
 <div id="deptBreakdownModal"
      class="hidden fixed inset-0 z-[9999] bg-black/50 items-start justify-center p-5 overflow-y-auto">
-    <div class="bg-white rounded-2xl w-full max-w-[90vw] mx-auto shadow-2xl overflow-hidden">
-        <div class="px-7 py-5 border-b border-gray-200 flex justify-between items-center">
+    <div class="bg-base-100 rounded-2xl w-full max-w-[90vw] mx-auto shadow-2xl overflow-hidden">
+        <div class="px-7 py-5 border-b border-base-300 flex justify-between items-center">
             <div>
                 <div class="text-base font-bold text-base-content flex items-center gap-2">
-                       <x-dot-loader /> 
+                    <x-dot-loader />
                     <span id="deptModalTitle">Department Breakdown</span>
                 </div>
-                <div class="text-xs text-base-content/60 mt-1" id="deptModalMeta">—</div>
+                <div class="text-xs text-base-content mt-1" id="deptModalMeta">—</div>
             </div>
-             <button onclick="closeDeptModal()" class="btn btn-error btn-sm btn-circle">
-                <i class="icon-[ph--x]"></i>
+            <button onclick="closeDeptModal()" class="btn btn-error btn-sm btn-circle">
+                <i class="icon-[tabler--x]"></i>
             </button>
         </div>
 
-      <div class="overflow-y-auto overflow-x-auto max-h-[70vh]">
-            <table id="deptBreakdownTable" class="table  w-full text-sm table-borderless">
-                <colgroup class="text-xs">
-    <col>  {{-- Employee --}}
-    <col>  {{-- Dept --}}
-    <col>  {{-- Basic Pay --}}
-    <col>  {{-- Allowance --}}
-    <col>  {{-- OT Pay --}}
-    <col>  {{-- Earnings --}}
-    <col>  {{-- SSS --}}
-    <col>  {{-- PhilHealth --}}
-    <col>  {{-- Pag-IBIG --}}
-    <col>  {{-- Tax --}}
-    <col>  {{-- Total Deductions --}}
-    <col>  {{-- Net Pay --}}
-</colgroup>
-                <thead class="bg-success/67 shadow-md text-white text-xs">
-                              
-    <tr>
-        <th>Employee</th>
-        <th>Dept</th>
-        <th>Basic Pay</th>
-        <th>Allowance</th>
-        <th>OT Pay</th>
-        <th >Earnings</th>
-        <th>SSS</th>
-        <th>PhilHealth</th>
-        <th>Pag-IBIG</th>
-        <th>Tax</th>
-        <th>Total Deductions</th>
-        <th>Net Pay</th>
-    </tr>
-</thead>
+        <div class="overflow-y-auto overflow-x-auto max-h-[70vh]">
+            <table id="deptBreakdownTable" class="table w-full text-sm table-borderless">
+                <colgroup>
+                    <col>  {{-- Employee --}}
+                    <col>  {{-- Dept --}}
+                    <col>  {{-- Basic Pay --}}
+                    <col>  {{-- Allowance --}}
+                    <col>  {{-- OT Pay --}}
+                    <col>  {{-- Earnings --}}
+                    <col>  {{-- SSS --}}
+                    <col>  {{-- PhilHealth --}}
+                    <col>  {{-- Pag-IBIG --}}
+                    <col>  {{-- Tax --}}
+                    <col>  {{-- Total Deductions --}}
+                    <col>  {{-- Net Pay --}}
+                </colgroup>
+                <thead class="sticky top-0 z-5 bg-base-100">
+                    <tr class="bg-success/67 shadow-md text-success-content text-xs">
+                        <th>Employee</th>
+                        <th>Dept</th>
+                        <th>Basic Pay</th>
+                        <th>Allowance</th>
+                        <th>OT Pay</th>
+                        <th>Earnings</th>
+                        <th>SSS</th>
+                        <th>PhilHealth</th>
+                        <th>Pag-IBIG</th>
+                        <th>Tax</th>
+                        <th>Total Deductions</th>
+                        <th>Net Pay</th>
+                    </tr>
+                </thead>
                 <tbody id="deptBreakdownBody"></tbody>
                 <tfoot id="deptBreakdownFoot"></tfoot>
             </table>
-            <div id="deptBreakdownEmpty" class="py-10 text-base-content/40 flex flex-col items-center justify-center gap-2 w-full">
-    <i class="icon-[ph--tray-fill] text-3xl"></i>
-    <span>No payroll data for the current filter.</span>
-</div>
-
-
+            <div id="deptBreakdownEmpty" class="py-10 text-base-content flex flex-col items-center justify-center gap-2 w-full">
+                <i class="icon-[tabler--inbox] text-3xl"></i>
+                <span>No payroll data for the current filter.</span>
+            </div>
         </div>
 
-
-        <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center flex-wrap gap-2">
+        <div class="px-6 py-4 border-t border-base-300 flex justify-between items-center flex-wrap gap-2">
             <div class="flex gap-2 flex-wrap">
                 <button onclick="printPayrollTable()" class="btn btn-soft btn-info btn-sm">
-                    <i class="icon-[ph--printer-fill]"></i> Print PDF
+                    <i class="icon-[tabler--printer]"></i> Print PDF
                 </button>
                 <button onclick="exportPayrollCSV()" class="btn btn-soft btn-success btn-sm">
-                    <i class="icon-[ph--file-csv-fill]"></i> Export CSV
+                    <i class="icon-[tabler--file-type-csv]"></i> Export CSV
                 </button>
             </div>
         </div>
@@ -115,230 +111,172 @@
 </div>
 
 
-
 {{-- Filters + Table --}}
-<div class="card bg-base-100 shadow-sm  flex flex-col p-0">
+<x-table-card :action="route('payroll.index')">
 
-    <div class="sticky top-0 z-10 px-7 pt-5 rounded-t-2xl">
-        <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h2 class="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
-                <x-dot-loader /> Payroll Summary
-        
-
-                
-
-
-<div class="tooltip [--placement:right]">
-    <span class="tooltip-toggle cursor-pointer text-base-content/40 hover:text-base-content/70" aria-label="More info">
-        <i class="icon-[ph--info-fill]"></i>
-    </span>
-    <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
-        <span class="tooltip-body  bg-success/67 shadow-md rounded-lg px-3 py-2 text-xs normal-case">
-             @if($isAdmin || $isHR)
+    <x-slot:title>
+        <x-dot-loader /> <p class="text-base-content">Payroll Summary</p> 
+        <x-info-tooltip>
+            @if($isAdmin || $isHR)
                 View payroll calculations for all employees.
             @else
                 View your payroll calculation.
             @endif
-        </span>
-    </span>
-</div>
+        </x-info-tooltip>
+    </x-slot:title>
 
+    @if($isAdmin || $isHR)
+        <x-slot:actions>
+            <button onclick="openDeptModal()" class="btn btn-soft btn-error btn-sm">
+                <i class="icon-[tabler--stack]"></i> Breakdown
+            </button>
+        </x-slot:actions>
+    @endif
 
-            </h2>
-            @if($isAdmin || $isHR)
-                <button onclick="openDeptModal()" class="btn btn-soft btn-error btn-sm">
-                    <i class="icon-[ph--stack-fill]"></i> Breakdown
-                </button>
-            @endif
-        </div>
-
-        <form method="GET" action="{{ route('payroll.index') }}"
-      class="flex flex-col md:flex-row md:items-center gap-3 pb-4 ">
- @if($isAdmin || $isHR)
- 
-    {{-- Search group --}}
-    <div class="join flex-none w-64 min-w-40">
-        <input type="text" name="search" value="{{ request('search') }}"
-               placeholder="Search name, ID, email..."
-                oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"   {{-- Could be removed for consistency, come back later --}}
-               class="input input-bordered input-sm join-item w-full border-gray-300">
-               
-        <button type="submit" class="btn btn-outline btn-sm join-item border-gray-300">
-            <i class="icon-[ph--magnifying-glass-fill]"></i>
-        </button>
-    </div>
-    
-  @endif
-
-  
-@if($selectedPeriod ?? null)
-    <div class="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-blue-700">
-        <div class="flex items-center gap-2 flex-wrap">
-            <i class="icon-[ph--calendar-fill]"></i>
-
-            <strong>
-                {{ $selectedPeriod->cutoff_start->format('M d, Y') }}
-                –
-                {{ $selectedPeriod->cutoff_end->format('M d, Y') }}
-            </strong>
-
-            <span class="badge {{ $selectedPeriod->status === 'finalized' ? 'badge-soft badge-success' : 'badge-soft badge-warning' }} badge-sm">
-                {{ ucfirst($selectedPeriod->status) }}
-            </span>
-        </div>
-
-        {{-- Hide separator on mobile --}}
-        <span class="hidden sm:inline text-base-content/40">|</span>
-
-        <span class="text-red-400">
-            <strong>Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}</strong>
-        </span>
-    </div>
-@endif  
-
-   {{-- Filters group --}}
-    <div class="flex flex-row gap-2 md:ml-auto">
+    <x-slot:filters>
         @if($isAdmin || $isHR)
-            <select name="department"
+            {{-- Search group --}}
+            <div class="join flex-none w-64 min-w-40">
+                <input type="text" name="search" value="{{ request('search') }}"
+                       placeholder="Search name, ID, email..."
+                       oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
+                       class="input input-bordered input-sm join-item w-full border-gray-300">
+
+                <button type="submit" class="btn btn-outline btn-sm join-item border-gray-300">
+                    <i class="icon-[tabler--search]"></i>
+                </button>
+            </div>
+        @endif
+
+        @if($selectedPeriod ?? null)
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-blue-700">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <i class="icon-[tabler--calendar]"></i>
+
+                    <strong>
+                        {{ $selectedPeriod->cutoff_start->format('M d, Y') }}
+                        –
+                        {{ $selectedPeriod->cutoff_end->format('M d, Y') }}
+                    </strong>
+
+                    <span class="badge {{ $selectedPeriod->status === 'finalized' ? 'badge-soft badge-success' : 'badge-soft badge-warning' }} badge-sm">
+                        {{ ucfirst($selectedPeriod->status) }}
+                    </span>
+                </div>
+
+                {{-- Hide separator on mobile --}}
+                <span class="hidden sm:inline text-base-content">|</span>
+
+                <span class="text-red-400">
+                    <strong>Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}</strong>
+                </span>
+            </div>
+        @endif
+
+        {{-- Filters group --}}
+        <div class="flex flex-row gap-2 md:ml-auto">
+            @if($isAdmin || $isHR)
+                <select name="department"
+                        onchange="this.closest('form').submit()"
+                        class="select select-bordered select-sm w-35">
+                    <option value="">All Departments</option>
+                    @foreach($departments as $dept)
+                        <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                    @endforeach
+                </select>
+            @endif
+            <select name="payroll_period_id"
                     onchange="this.closest('form').submit()"
-                    class="select select-bordered select-sm w-35">
-                <option value="">All Departments</option>
-                @foreach($departments as $dept)
-                    <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                    class="select select-bordered select-sm w-40">
+                <option value="">Latest Cutoff</option>
+                @foreach($payrollPeriods as $period)
+                    <option value="{{ $period->id }}"
+                        {{ (string) request('payroll_period_id') === (string) $period->id ? 'selected' : '' }}>
+                        {{ $period->cutoff_start->format('M d') }} – {{ $period->cutoff_end->format('M d, Y') }}
+                        ({{ ucfirst($period->status) }})
+                    </option>
                 @endforeach
             </select>
-        @endif
-        <select name="payroll_period_id"
-                onchange="this.closest('form').submit()"  {{-- auto reloads form --}}
-                class="select select-bordered select-sm w-40">
-            <option value="">Latest Cutoff</option>
-            @foreach($payrollPeriods as $period)
-                <option value="{{ $period->id }}"
-                    {{ (string) request('payroll_period_id') === (string) $period->id ? 'selected' : '' }}>
-                    {{ $period->cutoff_start->format('M d') }} – {{ $period->cutoff_end->format('M d, Y') }}
-                    ({{ ucfirst($period->status) }})
-                </option>
-            @endforeach
-        </select>
-        @if(request()->hasAny(['search', 'department', 'payroll_period_id']))
-            <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-sm">Clear</a>
-        @endif
-    </div>
-</form> 
-    </div>
-  
+            @if(request()->hasAny(['search', 'department', 'payroll_period_id']))
+                <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-sm">Clear</a>
+            @endif
+        </div>
+    </x-slot:filters>
 
     {{-- Desktop Table --}}
-    <div class="overflow-x-auto overflow-y-auto max-h-[55vh]  hidden md:block">
-       @php
-    $s    = request('sort');
-    $d    = request('direction', 'asc');
-    $base = array_merge(request()->except(['sort','direction','page']));
-    function payrollSortTh(string $key, string $label, string $align, array $base, ?string $s, string $d): string {
-        $active  = $s === $key;
-        $nextDir = ($active && $d === 'asc') ? 'desc' : 'asc';
-        $url     = route('payroll.index', array_merge($base, ['sort' => $key, 'direction' => $nextDir]));
-        $upCol   = ($active && $d === 'asc')  ? 'text-red-600' : 'text-white';
-        $dnCol   = ($active && $d === 'desc') ? 'text-red-600' : 'text-white';
-        return '<th class="text-' . $align . '"><a href="' . $url . '" class="inline-flex items-center gap-1 tracking-wider text-white">'
-             . $label
-             . '<span class="inline-flex flex-col leading-none">'
-             . '<i class="icon-[ph--caret-up-fill] text-[9px] ' . $upCol . '"></i>'
-             . '<i class="icon-[ph--caret-down-fill] text-[9px] ' . $dnCol . '"></i>'
-             . '</span></a></th>';
-    }
-@endphp
-        <table class="table table-hover table-fixed w-full text-sm table-borderless">
-            <colgroup>
-    <col class="w-44">  {{-- Employee --}}
-    <col class="w-28">  {{-- Department --}}
-    <col class="w-24">  {{-- Basic Pay --}}
-    <col class="w-28">  {{-- Days Worked --}}
-    <col class="w-20">  {{-- OT Hrs --}}
-    <col class="w-20">  {{-- Holiday --}}
-    <col class="w-32">  {{-- Total Deductions --}}
-    <col class="w-28">  {{-- Net Pay --}}
-    <col class="w-20">  {{-- Actions --}}
-</colgroup>
-           <thead class="sticky top-0 z-5" style="background: white">
-               <tr class="bg-success/67 shadow-md text-white text-xs">
-    <th>Employee</th>
-    <th>Department</th>
-    {!! payrollSortTh('base_pay',         'Basic Pay',        'right',  $base, $s, $d) !!}
-    {!! payrollSortTh('days_worked',      'Days Worked',      'center', $base, $s, $d) !!}
-    {!! payrollSortTh('overtime_hours',   'OT Hrs',           'center', $base, $s, $d) !!}
-    {!! payrollSortTh('holiday_days',     'Holiday',          'center', $base, $s, $d) !!}
-    {!! payrollSortTh('total_deductions', 'Total Deductions', 'right',  $base, $s, $d) !!}
-    {!! payrollSortTh('net_pay',          'Net Pay',          'right',  $base, $s, $d) !!}
-    <th class="text-center">Actions</th>
-</tr>
-            </thead>
-            <tbody>
-                @forelse($employees as $employee)
-                    @php $payroll = $payrollData[$employee->id] ?? []; @endphp
-                    <tr class="row-hover">
-                        <td>
-                            <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ $avatarClass }} flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                                    {{ strtoupper(substr($employee->full_name, 0, 1)) }}
-                                </div>
-                                <div class="min-w-0">
-                                    <a href="{{ route('employees.show', $employee) }}"
-                                       class="font-semibold text-base-content no-underline hover:text-emerald-600 truncate block">
-                                        {{ $employee->full_name }}
-                                    </a>
-                                    <div class="text-xs text-base-content/60 font-mono">{{ $employee->employee_id }}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-base-content/60 truncate">{{ $employee->department }}</td>
-                        <td class="text-right font-semibold text-base-content">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
-                        <td class="text-center font-semibold text-base-content">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</td>
-                        <td class="text-center font-semibold text-amber-500">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</td>
-                        <td class="text-center font-semibold text-violet-500">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</td>
-                        <td class="text-right font-semibold text-red-600">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
-                        <td class="text-right font-semibold text-emerald-600">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
-                        <td class="text-center">
-                            <div class="flex gap-2 justify-center">
-                                @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
-                                    <button class="btn btn-soft btn-sm btn-disabled" title="No payroll data">
-                                        <i class="icon-[ph--eye-fill]"></i>
-                                    </button>
-                                @else
-                                    <a href="{{ route('payroll.show', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-                                       class="btn btn-soft btn-info btn-sm" title="Full details">
-                                        <i class="icon-[ph--eye-fill]"></i>
-                                    </a>
-                                    <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-                                       class="btn btn-soft btn-success btn-sm" title="Download payslip">
-                                        <i class="icon-[ph--file-arrow-down-fill]"></i>
-                                    </a>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                @empty
+    <x-data-table max-height="55vh">
+        <x-slot:head>
+            <th class="w-44">Employee</th>
+            <th class="w-28">Department</th>
+            <x-sortable-th sort-key="base_pay" label="Basic Pay" align="right" route="payroll.index" class="w-24" />
+            <x-sortable-th sort-key="days_worked" label="Days Worked" align="center" route="payroll.index" class="w-28" />
+            <x-sortable-th sort-key="overtime_hours" label="OT Hrs" align="center" route="payroll.index" class="w-20" />
+            <x-sortable-th sort-key="holiday_days" label="Holiday" align="center" route="payroll.index" class="w-20" />
+            <x-sortable-th sort-key="total_deductions" label="Total Deductions" align="right" route="payroll.index" class="w-32" />
+            <x-sortable-th sort-key="net_pay" label="Net Pay" align="right" route="payroll.index" class="w-28" />
+            <th class="w-20 text-center">Actions</th>
+        </x-slot:head>
 
-                    <tr>
-    <td colspan="9" class="py-10 text-base-content/40">
-        <div class="flex flex-col items-center">
-            <i class="icon-[ph--user-fill] text-3xl mb-2"></i>
-            <span>No payroll data found.</span>
-        </div>
-    </td>
-</tr>
-
-                    
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+        @forelse($employees as $employee)
+            @php $payroll = $payrollData[$employee->id] ?? []; @endphp
+            <tr class="row-hover">
+                <td>
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ $avatarClass }} flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                            {{ strtoupper(substr($employee->full_name, 0, 1)) }}
+                        </div>
+                        <div class="min-w-0">
+                            <a href="{{ route('employees.show', $employee) }}"
+                               class="font-semibold text-base-content no-underline hover:text-emerald-600 truncate block">
+                                {{ $employee->full_name }}
+                            </a>
+                            <div class="text-xs text-base-content font-mono">{{ $employee->employee_id }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="text-base-content truncate">{{ $employee->department }}</td>
+                <td class="text-right font-semibold text-base-content">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
+                <td class="text-center font-semibold text-base-content">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</td>
+                <td class="text-center font-semibold text-amber-500">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</td>
+                <td class="text-center font-semibold text-violet-500">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</td>
+                <td class="text-right font-semibold text-red-600">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
+                <td class="text-right font-semibold text-emerald-600">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
+                <td class="text-center">
+                    <div class="flex gap-2 justify-center">
+                        @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
+                            <button class="btn btn-soft btn-sm btn-disabled" title="No payroll data">
+                                <i class="icon-[tabler--eye]"></i>
+                            </button>
+                        @else
+                            <a href="{{ route('payroll.show', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
+                               class="btn btn-soft btn-info btn-sm" title="Full details">
+                                <i class="icon-[tabler--eye]"></i>
+                            </a>
+                            <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
+                               class="btn btn-soft btn-success btn-sm" title="Download payslip">
+                                <i class="icon-[tabler--file-download]"></i>
+                            </a>
+                        @endif
+                    </div>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="9" class="py-10 text-base-content">
+                    <div class="flex flex-col items-center">
+                        <i class="icon-[tabler--user] text-3xl mb-2"></i>
+                        <span>No payroll data found.</span>
+                    </div>
+                </td>
+            </tr>
+        @endforelse
+    </x-data-table>
 
     {{-- Mobile Cards --}}
     <div class="md:hidden p-4 flex flex-col gap-3">
         @forelse($employees as $employee)
             @php $payroll = $payrollData[$employee->id] ?? []; @endphp
-            <div class="card bg-base-100 border border-gray-200 p-4">
+            <div class="card bg-base-100 border border-base-300 p-4">
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-linear-to-br {{ $avatarClass }} flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
@@ -349,26 +287,26 @@
                                class="font-semibold text-base-content no-underline text-sm hover:text-emerald-600">
                                 {{ $employee->full_name }}
                             </a>
-                            <div class="text-xs text-base-content/60 font-mono">{{ $employee->employee_id }}</div>
+                            <div class="text-xs text-base-content font-mono">{{ $employee->employee_id }}</div>
                         </div>
                     </div>
                     <span class="badge badge-soft badge-warning whitespace-nowrap">{{ $employee->employment_status }}</span>
                 </div>
 
-                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
-                    <span><i class="icon-[ph--buildings-fill] w-3.5"></i> {{ $employee->department }}</span>
-                    <span><i class="icon-[ph--briefcase-fill] w-3.5"></i> {{ $employee->position }}</span>
+                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content mt-2">
+                    <span><i class="icon-[tabler--building] w-3.5"></i> {{ $employee->department }}</span>
+                    <span><i class="icon-[tabler--briefcase] w-3.5"></i> {{ $employee->position }}</span>
                 </div>
 
-                <div class="mt-3 border-t border-gray-100">
+                <div class="mt-3 border-t border-base-300">
                     <button type="button"
-                            onclick="var d=this.nextElementSibling; var i=this.querySelector('i'); d.classList.toggle('hidden'); i.classList.toggle('fa-chevron-down'); i.classList.toggle('fa-chevron-up');"
-                            class="w-full py-2 bg-transparent border-none cursor-pointer flex justify-between items-center text-xs font-semibold text-base-content/60">
+                            onclick="var d=this.nextElementSibling; var i=this.querySelector('i'); d.classList.toggle('hidden'); i.classList.toggle('rotate-180');"
+                            class="w-full py-2 bg-transparent border-none cursor-pointer flex justify-between items-center text-xs font-semibold text-base-content">
                         <span>View Payroll Breakdown</span>
-                        <i class="icon-[ph--caret-down-fill] text-[11px]"></i>
+                        <i class="icon-[tabler--chevron-down] text-[11px] transition-transform"></i>
                     </button>
 
-                    <div class=" pb-1 flex flex-col gap-2 text-xs">
+                    <div class="pb-1 flex flex-col gap-2 text-xs">
                         @foreach([
                             ['Days Worked',          $payroll['attendance_data']['days_worked'] ?? 0,               'text-base-content font-semibold'],
                             ['Overtime Hours',        $payroll['attendance_data']['overtime_hours'] ?? 0,            'text-amber-500'],
@@ -383,50 +321,48 @@
                             ['Total Deductions',      '-₱'.number_format($payroll['total_deductions'] ?? 0, 2),     'text-red-600 font-semibold'],
                         ] as [$label, $val, $cls])
                             <div class="flex justify-between items-center">
-                                <span class="text-base-content/60">{{ $label }}:</span>
+                                <span class="text-base-content">{{ $label }}:</span>
                                 <span class="{{ $cls }}">{{ $val }}</span>
                             </div>
                         @endforeach
-                        <div class="flex justify-between items-center text-sm font-bold text-emerald-600 pt-1 border-t border-gray-100">
+                        <div class="flex justify-between items-center text-sm font-bold text-emerald-600 pt-1 border-t border-base-300">
                             <span>Net Pay:</span>
                             <span>₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
+                <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-300">
                     @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
                         <button class="btn btn-soft btn-sm btn-disabled">
-                            <i class="icon-[ph--eye-fill]"></i> View Details
+                            <i class="icon-[tabler--eye]"></i> View Details
                         </button>
                     @else
                         <a href="{{ route('payroll.show', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
                            class="btn btn-soft btn-info btn-sm">
-                            <i class="icon-[ph--eye-fill]"></i> View Details
+                            <i class="icon-[tabler--eye]"></i> View Details
                         </a>
                         <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
                            class="btn btn-soft btn-success btn-sm">
-                            <i class="icon-[ph--file-arrow-down-fill]"></i> Payslip
+                            <i class="icon-[tabler--file-download]"></i> Payslip
                         </a>
                     @endif
                 </div>
             </div>
         @empty
-            <div class="py-10 text-center text-base-content/40">
-                <i class="icon-[ph--money-fill] text-3xl mb-2 block"></i>
+            <div class="py-10 text-center text-base-content">
+                <i class="icon-[tabler--cash] text-3xl mb-2 block"></i>
                 No payroll data found.
             </div>
-
-
         @endforelse
     </div>
 
-   {{-- Pagination --}}
-      <div class="px-6 py-4 border-t border-gray-200">
-    {{ $employees->links('vendor.pagination.pagination') }}
-</div>
+    {{-- Pagination --}}
+    <div class="px-6 py-4 border-t border-base-300">
+        {{ $employees->links('vendor.pagination.pagination') }}
+    </div>
 
-</div>
+</x-table-card>
 
 @endsection
 
@@ -477,12 +413,12 @@ function openDeptModal() {
         totNet       += parseFloat(emp.net_pay);
         return `
             <tr class="row-hover text-xs">
-                <td><div class="font-semibold text-base-content truncate">${emp.name}</div><div class="text-xs text-base-content/40 font-mono">${emp.employee_id}</div></td>
-                <td class="text-base-content/60 truncate">${emp.department}</td>
-                <td class="text-right font-semibold">${fmt(emp.basic_pay)}</td>
-                <td class="text-right">${fmt(emp.allowance_benefits)}</td>
-                <td class="text-right">${fmt(emp.overtime_pay)}</td>
-                <td class="text-right font-semibold">${fmt(emp.gross_pay)}</td>
+                <td><div class="font-semibold text-base-content truncate">${emp.name}</div><div class="text-xs text-base-content font-mono">${emp.employee_id}</div></td>
+                <td class="text-base-content truncate">${emp.department}</td>
+                <td class="text-right font-semibold text-base-content">${fmt(emp.basic_pay)}</td>
+                <td class="text-right text-base-content">${fmt(emp.allowance_benefits)}</td>
+                <td class="text-right text-base-content">${fmt(emp.overtime_pay)}</td>
+                <td class="text-right font-semibold text-base-content">${fmt(emp.gross_pay)}</td>
                 <td class="text-right text-red-600">${fmt(emp.sss_contribution)}</td>
                 <td class="text-right text-red-600">${fmt(emp.philhealth_contribution)}</td>
                 <td class="text-right text-red-600">${fmt(emp.pagibig_contribution)}</td>
@@ -493,10 +429,10 @@ function openDeptModal() {
     }).join('');
 
    foot.innerHTML = `
-    <tr class="bg-emerald-100 font-bold text-emerald-800 border-t-2 border-emerald-300">
+    <tr class="bg-success/15 font-bold text-success border-t-2 border-success/30">
         <td colspan="11">Gross Pay (${data.length} employee${data.length !== 1 ? 's' : ''})</td>
         <td class="text-right">${fmt(totGross)}</td>
-      
+
     </tr>`;
 
     modal.classList.remove('hidden'); modal.classList.add('flex');

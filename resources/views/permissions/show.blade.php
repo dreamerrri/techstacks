@@ -13,7 +13,7 @@
 
     @if(session('success'))
         <div class="alert alert-success mb-4">
-            <i class="icon-[ph--check-circle-fill]"></i> {{ session('success') }}
+            <i class="icon-[tabler--circle-check]"></i> {{ session('success') }}
         </div>
     @endif
 
@@ -49,9 +49,9 @@
                     <span class="text-base-content/40 font-medium">Status</span>
                     <span>
                         @if($permission->is_active)
-                            <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
+                            <span class="badge badge-soft badge-success"><i class="icon-[tabler--circle-check]"></i> Active</span>
                         @else
-                            <span class="badge badge-soft badge-error"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
+                            <span class="badge badge-soft badge-error"><i class="icon-[tabler--circle-x]"></i> Inactive</span>
                         @endif
                     </span>
                 </div>
@@ -71,7 +71,7 @@
         {{-- Roles with this Permission --}}
         <div>
             <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="icon-[ph--user-fill]-tag text-red-600"></i> Roles with this Permission ({{ $permission->roles->count() }})
+                <i class="icon-[tabler--user]-tag text-red-600"></i> Roles with this Permission ({{ $permission->roles->count() }})
             </h3>
 
             @if($permission->roles->count() > 0)

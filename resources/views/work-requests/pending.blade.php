@@ -78,7 +78,7 @@
     <i class="icon-[ph--eye-fill]"></i>
 </a>
 <button type="button" class="btn btn-soft btn-success btn-sm" onclick="approveRequest({{ $request->id }})">
-    <i class="icon-[ph--check-fill]"></i>
+    <i class="icon-[tabler--check]"></i>
 </button>
 <button type="button" class="btn btn-soft btn-error btn-sm" onclick="showRejectModal({{ $request->id }})">
     <i class="icon-[ph--x]"></i>
@@ -92,7 +92,7 @@
     </div>
 @else
     <div class="card" style="padding:48px; text-align:center;">
-        <i class="icon-[ph--check-circle-fill]" style="font-size:48px; color:#10b981; margin-bottom:16px;"></i>
+        <i class="icon-[tabler--circle-check]" style="font-size:48px; color:#10b981; margin-bottom:16px;"></i>
         <h3 style="margin:0 0 8px 0; color:#6b7280;">All Caught Up!</h3>
         <p style="color:#9ca3af; margin:0 0 24px 0;">
             There are no pending work requests to review.
