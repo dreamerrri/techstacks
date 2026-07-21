@@ -34,6 +34,14 @@
     </div>
 </div>
 
+<style>
+    @media (max-width: 768px) {
+        .payroll-form-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
 <div class="payroll-form-grid" style="display:grid; grid-template-columns:1fr 350px; gap:24px;">
     {{-- Attendance Encoding Form --}}
     <div class="card" style="padding:0; overflow:hidden;">
