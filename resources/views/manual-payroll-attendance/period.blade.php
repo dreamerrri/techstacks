@@ -35,7 +35,7 @@
         @if($payrollPeriod->isDraft() && $payrollPeriod->payrollInputs && $payrollPeriod->payrollInputs->count() > 0)
         <button onclick="finalizePayroll()"
                 style="padding:10px 20px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; display:inline-flex; align-items:center; gap:8px;">
-            <i class="icon-[ph--check-circle-fill]"></i> Finalize Payroll
+            <i class="icon-[tabler--circle-check]"></i> Finalize Payroll
         </button>
         @endif
         <button onclick="loadPeriodSummary()"
@@ -218,7 +218,7 @@
             @endforeach
         </div>
         <div id="noResults" style="display:none; padding:40px; text-align:center; color:#9ca3af;">
-            <i class="icon-[ph--magnifying-glass-fill]" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+            <i class="icon-[tabler--search]" style="font-size:32px; margin-bottom:10px; display:block;"></i>
             No employees match your filters.
         </div>
     </div>

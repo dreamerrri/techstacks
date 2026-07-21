@@ -28,17 +28,15 @@
         </x-data-table>
 --}}
 
-@props(['maxHeight' => '55vh'])
+@props(['maxHeight' => '62vh'])
 
-<div class="overflow-x-auto overflow-y-auto max-h-[{{ $maxHeight }}] hidden md:block">
+<div class="overflow-x-auto overflow-y-auto hidden md:block isolate relative " style="max-height: {{ $maxHeight }}">
     <table class="table table-hover table-fixed w-full text-sm table-borderless">
-        @if(isset($head))
-        <thead class="sticky top-0 z-5 bg-base-100">
-            <tr class="bg-success/67 shadow-md text-success-content text-xs">
+        <thead class="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-20 [&>tr>th]:bg-success [&>tr>th]:text-success-content [&>tr>th]:text-xs [&>tr>th]:border-b-2 [&>tr>th]:border-success-content/20">
+            <tr>
                 {{ $head }}
             </tr>
         </thead>
-        @endif
         <tbody>
             {{ $slot }}
         </tbody>

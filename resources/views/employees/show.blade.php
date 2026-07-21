@@ -62,7 +62,7 @@
         {{-- Personal Info --}}
         <div class="card bg-base-100 shadow-sm p-5">
             <h2 class="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
-                <i class="icon-[ph--user-fill] text-red-600"></i> Personal Information
+                <i class="icon-[tabler--user] text-red-600"></i> Personal Information
             </h2>
             <div class="flex flex-col text-sm">
                 @foreach([

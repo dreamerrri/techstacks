@@ -60,7 +60,7 @@
                         >
                         @error('email')
                             <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
+                                <i class="icon-[tabler--circle-x]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
