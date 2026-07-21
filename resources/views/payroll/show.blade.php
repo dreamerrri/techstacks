@@ -156,7 +156,7 @@
             @endforeach
         </div>
         <div class="flex justify-between items-center mt-3 pt-3 border-t-2 border-gray-200 font-bold text-sm">
-            <span class="text-gray-300">Total Earnings</span>
+            <span class="text-base-300">Total Earnings</span>
             <span class="text-emerald-600">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['benefits'] ?? 0), 2) }}</span>
         </div>
     </div>
@@ -235,7 +235,7 @@
         </h2>
         <div class="flex flex-col text-sm">
             <div class="flex justify-between items-center py-3 border-b border-gray-100">
-                <span class="text-base-content/60">Gross Pay</span>
+                <span class="text-base-content">Gross Pay</span>
                 <span class="font-semibold text-base-content">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span>
             </div>
             <div class="flex justify-between items-center py-3 border-b border-gray-100">
