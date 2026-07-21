@@ -17,11 +17,11 @@
 {{-- Role access badge --}}
 @if($isAdmin)
     <span class="badge badge-soft badge-success mb-4">
-        <i class="icon-[ph--shield-check-fill]"></i> Administrator Access
+        <i class="icon-[tabler--shield-check]"></i> Administrator Access
     </span>
 @elseif($isHR)
     <span class="badge badge-soft badge-success mb-4">
-        <i class="icon-[ph--user-fill]"></i> HR Department Access
+        <i class="icon-[tabler--user]"></i> HR Department Access
     </span>
 @endif
 
@@ -39,7 +39,7 @@
         <a href="{{ route('users.index') }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
                  style="color: #dc2626; background: #dc262620;">
-                <i class="icon-[ph--users-fill]"></i>
+                <i class="icon-[tabler--users]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['total_users'] }}</div>
             <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Total Users</div>
@@ -48,7 +48,7 @@
         <a href="{{ route('users.index') }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
                  style="color: #991b1b; background: #991b1b20;">
-                <i class="icon-[ph--shield-check-fill]"></i>
+                <i class="icon-[tabler--shield-check]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['admin_users'] }}</div>
             <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Admin Users</div>
@@ -57,7 +57,7 @@
         <a href="{{ route('users.index') }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
                  style="color: #fbbf24; background: #fbbf2420;">
-                <i class="icon-[ph--user-fill]"></i>
+                <i class="icon-[tabler--user]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['hr_users'] }}</div>
             <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">HR Personnel</div>
@@ -66,7 +66,7 @@
         <a href="{{ route('users.index') }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
                  style="color: #10b981; background: #10b98120;">
-                <i class="icon-[ph--check-circle-fill]"></i>
+                <i class="icon-[tabler--circle-check]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['active_users'] }}</div>
             <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Active Accounts</div>
@@ -76,7 +76,7 @@
         <a href="{{ route('employees.index') }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
                  style="color: #2563eb; background: #2563eb20;">
-                <i class="icon-[ph--users-fill]"></i>
+                <i class="icon-[tabler--users]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['total_employees'] }}</div>
             <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Total Employees</div>
@@ -218,7 +218,7 @@
 @else
     <a href="{{ route('profile.show') }}" class="btn btn-soft btn-outline flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="color: #23806a; background: #23806a20;">
-            <i class="icon-[ph--user-fill]"></i>
+            <i class="icon-[tabler--user]"></i>
         </div>
         <span>My Profile</span>
     </a>
@@ -273,11 +273,11 @@
             <span class="font-semibold text-base-content text-right">
                 @if($user->is_active)
                     <span class="badge badge-soft badge-success">
-                        <i class="icon-[ph--check-circle-fill]"></i> Active
+                        <i class="icon-[tabler--circle-check]"></i> Active
                     </span>
                 @else
                     <span class="badge badge-soft badge-error">
-                        <i class="icon-[ph--x-circle-fill]"></i> Inactive
+                        <i class="icon-[tabler--circle-x]"></i> Inactive
                     </span>
                 @endif
             </span>

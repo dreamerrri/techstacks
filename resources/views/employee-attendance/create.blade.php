@@ -213,7 +213,7 @@ function clockIn() {
     if (clockInBtn) {
         clockInBtn.disabled = true;
         clockInBtn.style.opacity = '0.5';
-        clockInBtn.innerHTML = '<i class="icon-[ph--check-fill]"></i> Clocked In';
+        clockInBtn.innerHTML = '<i class="icon-[tabler--check]"></i> Clocked In';
     }
     if (clockOutBtn) {
         clockOutBtn.disabled = false;
@@ -241,7 +241,7 @@ function clockOut() {
     if (clockOutBtn) {
         clockOutBtn.disabled = true;
         clockOutBtn.style.opacity = '0.5';
-        clockOutBtn.innerHTML = '<i class="icon-[ph--check-fill]"></i> Clocked Out';
+        clockOutBtn.innerHTML = '<i class="icon-[tabler--check]"></i> Clocked Out';
     }
 
     // Compute rendered hours

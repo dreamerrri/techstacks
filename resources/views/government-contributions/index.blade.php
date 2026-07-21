@@ -2,7 +2,6 @@
 
 @section('title', 'Government Contributions')
 
-
 @section('content')
 
 @php
@@ -36,27 +35,26 @@
 {{-- Contribution Breakdown Modal --}}
 <div id="contribBreakdownModal"
      class="hidden fixed inset-0 z-[9999] bg-black/50 items-start justify-center p-5 overflow-y-auto">
-    <div class="bg-white rounded-2xl w-full max-w-[90vw]  mx-auto shadow-2xl overflow-hidden">
+    <div class="bg-base-100 rounded-2xl w-full max-w-[90vw] mx-auto shadow-2xl overflow-hidden">
 
         {{-- Modal header --}}
-        <div class="px-7 py-5 border-b border-gray-200 flex justify-between items-center">
+        <div class="px-7 py-5 border-b border-base-300 flex justify-between items-center">
             <div>
                 <div class="text-base font-bold text-base-content flex items-center gap-2">
-                    <i class="icon-[ph--stack-fill] text-red-600"></i>
+                    <i class="icon-[tabler--stack] text-error"></i>
                     <span id="contribModalTitle">Contribution Breakdown</span>
                 </div>
                 <div class="text-xs text-base-content/60 mt-1" id="contribModalMeta">—</div>
             </div>
             <button onclick="closeContribModal()" class="btn btn-error btn-sm btn-circle">
-                <i class="icon-[ph--x]"></i>
+                <i class="icon-[tabler--x]"></i>
             </button>
         </div>
 
         {{-- Modal table --}}
-      <div class="overflow-x-auto overflow-y-auto max-h-[70vh]">
+        <div class="overflow-x-auto overflow-y-auto max-h-[70vh]">
             <table id="contribBreakdownTable" class="table table-hover w-full text-xs min-w-[900px]">
-                <thead class="bg-success/67 shadow-md text-white text-xs">
-
+                <thead class="bg-success/67 shadow-md text-success-content text-xs">
                     <tr>
                         <th>Employee</th>
                         <th>Dept</th>
@@ -71,160 +69,126 @@
                 <tbody id="contribBreakdownBody"></tbody>
                 <tfoot id="contribBreakdownFoot"></tfoot>
             </table>
-           
 
             <div id="contribBreakdownEmpty" class="py-10 text-base-content/40 flex flex-col items-center justify-center gap-2 w-full">
-    <i class="icon-[ph--tray-fill] text-3xl"></i>
-    <span>No contribution data for the current filter.</span>
-</div>
+                <i class="icon-[tabler--inbox] text-3xl"></i>
+                <span>No contribution data for the current filter.</span>
+            </div>
         </div>
 
         {{-- Modal footer --}}
-        <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center flex-wrap gap-2">
+        <div class="px-6 py-4 border-t border-base-300 flex justify-between items-center flex-wrap gap-2">
             <div class="flex gap-2 flex-wrap">
                 <button onclick="printContribBreakdown()" class="btn btn-soft btn-info btn-sm">
-                    <i class="icon-[ph--printer-fill]"></i> Print PDF
+                    <i class="icon-[tabler--printer]"></i> Print PDF
                 </button>
                 <button onclick="exportContribBreakdownCSV()" class="btn btn-soft btn-success btn-sm">
-                    <i class="icon-[ph--file-csv-fill]"></i> Export CSV
+                    <i class="icon-[tabler--csv]"></i> Export CSV
                 </button>
             </div>
         </div>
     </div>
 </div>
 
-
-
 {{-- Filters + Table --}}
-<div class="card bg-base-100 shadow-sm overflow-hidden flex flex-col p-0">
+<x-table-card action="{{ route('government-contributions.index') }}">
+    <x-slot:title>
+        <x-dot-loader /> <p class="text-base-content">Employee List</p>
+        <x-info-tooltip>
+            View and manage employee government contribution rates.
+        </x-info-tooltip>
+    </x-slot:title>
 
-    {{-- Card header --}}
-    <div class="sticky top-0 z-1 px-7 pt-5 rounded-t-2xl">
-        <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h2 class="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
-                <x-dot-loader /> Employee List
+    <x-slot:actions>
+        <button onclick="openContribModal()" class="btn btn-soft btn-error btn-sm">
+            <i class="icon-[tabler--stack]"></i> Breakdown
+        </button>
+    </x-slot:actions>
 
-<div class="tooltip [--placement:right]">
-    <span class="tooltip-toggle cursor-pointer text-base-content/40 hover:text-base-content/70" aria-label="More info">
-        <i class="icon-[ph--info-fill]"></i>
-    </span>
-    <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
-        <span class="tooltip-body  bg-success/67 shadow-md rounded-lg px-3 py-2 text-xs normal-case">
-     
-                View and manage employee government contribution rates.
-            
-         
-        </span>
-    </span>
-</div>
-
-            </h2>
-            <button onclick="openContribModal()" class="btn btn-soft btn-error btn-sm">
-                <i class="icon-[ph--stack-fill]"></i> Breakdown
+    <x-slot:filters>
+        {{-- Search group --}}
+        <div class="join flex-none w-64 min-w-40">
+            <input type="text" name="search" id="search-input" value="{{ request('search') }}"
+                   placeholder="Search name, ID, email..."
+                   oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
+                   class="input input-bordered input-sm join-item w-full border-gray-300">
+            <button type="submit" class="btn btn-outline btn-sm join-item border-gray-300">
+                <i class="icon-[tabler--search]"></i>
             </button>
         </div>
 
-     <form id="filter-form" method="GET" action="{{ route('government-contributions.index') }}"
-      class="flex flex-col md:flex-row md:items-center gap-3 pb-4 ">
-
-    {{-- Search group --}}
-    <div class="join flex-none w-64 min-w-40">
-        <input type="text" name="search" id="search-input" value="{{ request('search') }}"
-               placeholder="Search name, ID, email..."
-               oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
-               class="input input-bordered input-sm join-item w-full border-gray-300">
-               
-        <button type="submit" class="btn btn-outline btn-sm join-item border-gray-300">
-            <i class="icon-[ph--magnifying-glass-fill]"></i>
-        </button>
-        
-    </div>
-
-    
-
-    {{-- Filters group --}}
-    <div class="flex flex-row gap-2 md:ml-auto">
-        <select name="department" id="department-select" 
-        onchange="this.closest('form').submit()"
-        class="select select-bordered select-sm">
-            <option value="">All Departments</option>
-            @foreach($departments as $dept)
-                <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
-            @endforeach
-        </select>
-        <select name="status" id="status-select"
-        onchange="this.closest('form').submit()" 
-        class="select select-bordered select-sm">
-            <option value="">All Status</option>
-            @foreach(['Regular','Probationary','Contractual','Part-time'] as $s)
-                <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
-            @endforeach
-        </select>
-        @if(request()->hasAny(['search','department','status']))
-<a href="{{ route('government-contributions.index') }}" class="btn btn-soft btn-sm">Clear</a>
-        @endif
-    </div>
-</form>
-   
-</div>
-
-
+        {{-- Filters group --}}
+        <div class="flex flex-row gap-2 md:ml-auto">
+            <select name="department" id="department-select" onchange="this.closest('form').submit()"
+                    class="select select-bordered select-sm">
+                <option value="">All Departments</option>
+                @foreach($departments as $dept)
+                    <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                @endforeach
+            </select>
+            <select name="status" id="status-select" onchange="this.closest('form').submit()"
+                    class="select select-bordered select-sm">
+                <option value="">All Status</option>
+                @foreach(['Regular','Probationary','Contractual','Part-time'] as $s)
+                    <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
+                @endforeach
+            </select>
+            @if(request()->hasAny(['search','department','status']))
+                <a href="{{ route('government-contributions.index') }}" class="btn btn-soft btn-sm">Clear</a>
+            @endif
+        </div>
+    </x-slot:filters>
 
     {{-- Desktop Table --}}
-    <div class="table-responsive overflow-y-auto max-h-[55vh] hidden md:block">
-        <table id="contributions-table" class="table table-hover w-full text-sm table-borderless">
-           <thead class="sticky top-0 z-5" style="background: white">
-               <tr class="bg-success/67 shadow-md text-white">
-                    <th>Employee ID</th>
-                    <th>Full Name</th>
-                    <th>Department</th>
-                    <th>Position</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($employees as $employee)
-                    @php
-                        $statusClass = match($employee->employment_status) {
-                            'Regular'      => 'badge-soft badge-success text-xs',
-                            'Probationary' => 'badge-soft badge-warning text-xs',
-                            'Contractual'  => 'badge-soft badge-info text-xs',
-                            'Part-time'    => 'badge-soft badge-neutral text-xs',
-                            default        => 'badge-soft text-xs',
-                        };
-                    @endphp
-                    <tr class="row-hover">
-                        <td class="font-mono text-base-content/60">{{ $employee->employee_id }}</td>
-                        <td class="font-semibold text-base-content">
-                            <a href="{{ route('government-contributions.show', $employee) }}"
-                               class="text-base-content no-underline hover:text-emerald-600">
-                                {{ $employee->full_name }}
-                            </a>
-                        </td>
-                        <td class="text-base-content/60">{{ $employee->department }}</td>
-                        <td class="text-base-content/60">{{ $employee->position }}</td>
-                        <td><span class="badge {{ $statusClass }}">{{ $employee->employment_status }}</span></td>
-                        <td class="text-center">
-    <a href="{{ route('government-contributions.show', $employee) }}"
-       class="btn btn-soft btn-info btn-sm">
-        <i class="icon-[ph--eye-fill]"></i>
-    </a>
-</td>
-                    </tr>
-                @empty
-                    <tr>
-    <td colspan="6" class="py-10 text-base-content/40">
-        <div class="flex flex-col items-center">
-            <i class="icon-[ph--user-fill] text-3xl mb-2"></i>
-            <span>No employees found.</span>
-        </div>
-    </td>
-</tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    <x-data-table maxHeight="55vh">
+        <x-slot:head>
+            <th>Employee ID</th>
+            <th>Full Name</th>
+            <th>Department</th>
+            <th>Position</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </x-slot:head>
+
+        @forelse($employees as $employee)
+            @php
+                $statusClass = match($employee->employment_status) {
+                    'Regular'      => 'badge-soft badge-success text-xs',
+                    'Probationary' => 'badge-soft badge-warning text-xs',
+                    'Contractual'  => 'badge-soft badge-info text-xs',
+                    'Part-time'    => 'badge-soft badge-neutral text-xs',
+                    default        => 'badge-soft text-xs',
+                };
+            @endphp
+            <tr class="row-hover">
+                <td class="font-mono text-base-content/60">{{ $employee->employee_id }}</td>
+                <td class="font-semibold text-base-content">
+                    <a href="{{ route('government-contributions.show', $employee) }}"
+                       class="text-base-content no-underline hover:text-primary">
+                        {{ $employee->full_name }}
+                    </a>
+                </td>
+                <td class="text-base-content/60">{{ $employee->department }}</td>
+                <td class="text-base-content/60">{{ $employee->position }}</td>
+                <td><span class="badge {{ $statusClass }}">{{ $employee->employment_status }}</span></td>
+                <td class="text-center">
+                    <a href="{{ route('government-contributions.show', $employee) }}"
+                       class="btn btn-soft btn-info btn-sm">
+                        <i class="icon-[tabler--eye]"></i>
+                    </a>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="6" class="py-10 text-base-content/40">
+                    <div class="flex flex-col items-center">
+                        <i class="icon-[tabler--user] text-3xl mb-2"></i>
+                        <span>No employees found.</span>
+                    </div>
+                </td>
+            </tr>
+        @endforelse
+    </x-data-table>
 
     {{-- Mobile Cards --}}
     <div class="md:hidden p-4 flex flex-col gap-3">
@@ -247,14 +211,14 @@
                                      alt="{{ $employee->full_name }}"
                                      class="w-full h-full object-cover">
                             @else
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-sm font-bold">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-content text-sm font-bold">
                                     {{ strtoupper(substr($employee->full_name, 0, 1)) }}
                                 </div>
                             @endif
                         </div>
                         <div>
                             <a href="{{ route('government-contributions.show', $employee) }}"
-                               class="font-semibold text-base-content no-underline text-sm hover:text-emerald-600">
+                               class="font-semibold text-base-content no-underline text-sm hover:text-primary">
                                 {{ $employee->full_name }}
                             </a>
                             <div class="text-xs text-base-content/60 font-mono">{{ $employee->employee_id }}</div>
@@ -264,21 +228,21 @@
                 </div>
 
                 <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
-                    <span><i class="icon-[ph--buildings-fill] w-3.5"></i> {{ $employee->department }}</span>
-                    <span><i class="icon-[ph--briefcase-fill] w-3.5"></i> {{ $employee->position }}</span>
-                    <span><i class="icon-[ph--money-fill] w-3.5"></i> ₱{{ number_format($employee->basic_salary, 2) }}</span>
+                    <span><i class="icon-[tabler--building] w-3.5"></i> {{ $employee->department }}</span>
+                    <span><i class="icon-[tabler--briefcase] w-3.5"></i> {{ $employee->position }}</span>
+                    <span><i class="icon-[tabler--cash] w-3.5"></i> ₱{{ number_format($employee->basic_salary, 2) }}</span>
                 </div>
 
                 <div class="mt-3 pt-3 border-t border-gray-100">
                     <a href="{{ route('government-contributions.show', $employee) }}"
                        class="btn btn-soft btn-info btn-sm">
-                        <i class="icon-[ph--eye-fill]"></i> View Contributions
+                        <i class="icon-[tabler--eye]"></i> View Contributions
                     </a>
                 </div>
             </div>
         @empty
             <div class="py-10 text-center text-base-content/40">
-                <i class="icon-[ph--user-fill] text-3xl mb-2 block"></i>
+                <i class="icon-[tabler--user] text-3xl mb-2 block"></i>
                 No employees found.
             </div>
         @endforelse
@@ -286,10 +250,9 @@
 
     {{-- Pagination --}}
     <div class="px-6 py-4 border-t border-gray-200">
-    {{ $employees->links('vendor.pagination.pagination') }}
-</div>
-
-</div>
+        {{ $employees->links('vendor.pagination.pagination') }}
+    </div>
+</x-table-card>
 
 @endsection
 
@@ -312,9 +275,7 @@ function openContribModal() {
     const modal = document.getElementById('contribBreakdownModal');
 
     document.getElementById('contribModalTitle').textContent =
-        DEPT_LABEL !== 'All Departments'
-            ? DEPT_LABEL + ' '
-            : 'All Departments';
+        DEPT_LABEL !== 'All Departments' ? DEPT_LABEL + ' ' : 'All Departments';
 
     document.getElementById('contribModalMeta').textContent =
         data.length + ' employee' + (data.length !== 1 ? 's' : '') + ' on this page';
@@ -349,13 +310,13 @@ function openContribModal() {
 
         return `
              <tr class="row-hover">
-                <td><div class="font-semibold text-base-content"><a href="${emp.show_url}" class="text-base-content no-underline hover:text-emerald-600">${emp.name}</a></div><div class="text-xs text-base-content/40 font-mono">${emp.id}</div></td>
+                <td><div class="font-semibold text-base-content"><a href="${emp.show_url}" class="text-base-content no-underline hover:text-primary">${emp.name}</a></div><div class="text-xs text-base-content/40 font-mono">${emp.id}</div></td>
                 <td class="text-base-content/60">${emp.department}</td>
-                <td class="text-right font-semibold">₱${emp.salary}</td>
-                <td class="text-right text-red-600">${fmt(sss)}</td>
-                <td class="text-right text-blue-600">${fmt(phil)}</td>
-                <td class="text-right text-amber-600">${fmt(pag)}</td>
-                <td class="text-right font-bold">${fmt(total)}</td>
+                <td class="text-right font-semibold text-base-content">₱${emp.salary}</td>
+                <td class="text-right text-error">${fmt(sss)}</td>
+                <td class="text-right text-info">${fmt(phil)}</td>
+                <td class="text-right text-warning">${fmt(pag)}</td>
+                <td class="text-right font-bold text-base-content">${fmt(total)}</td>
                 <td class="text-center"><span class="badge ${statusClass} whitespace-nowrap">${emp.status}</span></td>
             </tr>`;
     }).join('');

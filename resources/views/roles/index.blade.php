@@ -43,9 +43,9 @@
             <td class="text-base-content/60 text-right">{{ $role->permissions->count() }}</td>
             <td class="text-right">
                 @if($role->is_active)
-                    <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
+                    <span class="badge badge-soft badge-success"><i class="icon-[tabler--circle-check]"></i> Active</span>
                 @else
-                    <span class="badge badge-soft badge-error"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
+                    <span class="badge badge-soft badge-error"><i class="icon-[tabler--circle-x]"></i> Inactive</span>
                 @endif
             </td>
             <td class="text-right">
@@ -100,14 +100,14 @@
                             </div>
                         </div>
                         @if($role->is_active)
-                            <span class="badge badge-soft badge-success whitespace-nowrap"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
+                            <span class="badge badge-soft badge-success whitespace-nowrap"><i class="icon-[tabler--circle-check]"></i> Active</span>
                         @else
-                            <span class="badge badge-soft badge-error whitespace-nowrap"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
+                            <span class="badge badge-soft badge-error whitespace-nowrap"><i class="icon-[tabler--circle-x]"></i> Inactive</span>
                         @endif
                     </div>
 
                     <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
-                        <span><i class="icon-[ph--user-fill]s w-3.5"></i> {{ $role->users_count }} users</span>
+                        <span><i class="icon-[tabler--user]s w-3.5"></i> {{ $role->users_count }} users</span>
                         <span><i class="icon-[ph--key-fill] w-3.5"></i> {{ $role->permissions->count() }} permissions</span>
                     </div>
 
@@ -138,7 +138,7 @@
                 </div>
             @empty
                 <div class="py-10 text-center text-base-content/40">
-                    <i class="icon-[ph--user-fill]-tag text-3xl mb-2 block"></i>
+                    <i class="icon-[tabler--user]-tag text-3xl mb-2 block"></i>
                     No roles found.
                 </div>
             @endforelse

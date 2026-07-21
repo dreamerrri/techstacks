@@ -48,7 +48,7 @@
 
                     <div class="form-group">
                         <label for="name">
-                            <i class="icon-[ph--user-fill]"></i> Full Name
+                            <i class="icon-[tabler--user]"></i> Full Name
                         </label>
                         <input
                             type="text"
@@ -60,7 +60,7 @@
                         >
                         @error('name')
                             <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
+                                <i class="icon-[tabler--circle-x]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
@@ -80,7 +80,7 @@
                         >
                         @error('email')
                             <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
+                                <i class="icon-[tabler--circle-x]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
@@ -131,7 +131,7 @@
 
                         @error('password')
                             <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
+                                <i class="icon-[tabler--circle-x]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
@@ -151,7 +151,7 @@
                         >
                         @error('password_confirmation')
                             <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
+                                <i class="icon-[tabler--circle-x]"></i>
                                 {{ $message }}
                             </div>
                         @enderror

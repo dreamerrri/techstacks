@@ -45,7 +45,7 @@
 
                 @if (session('success'))
                     <div class="alert alert-success">
-                        <i class="icon-[ph--check-circle-fill]"></i>
+                        <i class="icon-[tabler--circle-check]"></i>
                         {{ session('success') }}
                     </div>
                 @endif
@@ -68,7 +68,7 @@
                         >
                         @error('email')
                             <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
+                                <i class="icon-[tabler--circle-x]"></i>
                                 {{ $message }}
                             </div>
                         @enderror
@@ -96,7 +96,7 @@
                         </div>
                         @error('password')
                             <div class="error-message">
-                                <i class="icon-[ph--x-circle-fill]"></i>
+                                <i class="icon-[tabler--circle-x]"></i>
                                 {{ $message }}
                             </div>
                         @enderror

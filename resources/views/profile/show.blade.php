@@ -138,7 +138,7 @@ use Illuminate\Support\Facades\Storage;
                     </x-panel>
 
                     <x-panel padding="p-5">
-                        <x-panel-header icon="icon-[ph--shield-check-fill]">
+                        <x-panel-header icon="icon-[tabler--shield-check]">
                             Account Info
                         </x-panel-header>
                         <div class="flex flex-col text-sm">
@@ -158,7 +158,7 @@ use Illuminate\Support\Facades\Storage;
                 </div>
             @else
                 <x-panel padding="p-5">
-                    <x-panel-header icon="icon-[ph--shield-check-fill]">
+                    <x-panel-header icon="icon-[tabler--shield-check]">
                         Account Info
                     </x-panel-header>
                     <div class="flex flex-col text-sm">
@@ -186,7 +186,7 @@ use Illuminate\Support\Facades\Storage;
                     </x-panel-header>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
                         @foreach([
-                            ['SSS Number',        $employee->sss_number,        'icon-[ph--shield-check-fill]', 'text-emerald-600', 'bg-emerald-100'],
+                            ['SSS Number',        $employee->sss_number,        'icon-[tabler--shield-check]', 'text-emerald-600', 'bg-emerald-100'],
                             ['PhilHealth Number', $employee->philhealth_number,  'icon-[ph--heart-fill]',        'text-blue-600',    'bg-blue-100'],
                             ['Pag-IBIG Number',   $employee->pagibig_number,     'icon-[ph--house-fill]',        'text-amber-500',   'bg-amber-100'],
                             ['TIN Number',        $employee->tin_number,         'icon-[ph--receipt-fill]',      'text-violet-600',  'bg-violet-100'],

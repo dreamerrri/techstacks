@@ -13,12 +13,12 @@
 
     @if(session('success'))
         <div class="alert alert-success mb-4">
-            <i class="icon-[ph--check-circle-fill]"></i> {{ session('success') }}
+            <i class="icon-[tabler--circle-check]"></i> {{ session('success') }}
         </div>
     @endif
     @if(session('error'))
         <div class="alert alert-error mb-4">
-            <i class="icon-[ph--x-circle-fill]"></i> {{ session('error') }}
+            <i class="icon-[tabler--circle-x]"></i> {{ session('error') }}
         </div>
     @endif
 
@@ -43,7 +43,7 @@
         {{-- Role Information --}}
         <div class="mb-8">
             <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="icon-[ph--user-fill] text-red-600"></i> Role Information
+                <i class="icon-[tabler--user] text-red-600"></i> Role Information
             </h3>
             <div class="flex flex-col">
                 <div class="flex justify-between items-center py-3 border-b border-base-200">
@@ -54,9 +54,9 @@
                     <span class="text-base-content/40 font-medium">Status</span>
                     <span>
                         @if($role->is_active)
-                            <span class="badge badge-soft badge-success"><i class="icon-[ph--check-circle-fill]"></i> Active</span>
+                            <span class="badge badge-soft badge-success"><i class="icon-[tabler--circle-check]"></i> Active</span>
                         @else
-                            <span class="badge badge-soft badge-error"><i class="icon-[ph--x-circle-fill]"></i> Inactive</span>
+                            <span class="badge badge-soft badge-error"><i class="icon-[tabler--circle-x]"></i> Inactive</span>
                         @endif
                     </span>
                 </div>
@@ -85,7 +85,7 @@
                             </div>
                             @foreach($modulePerms as $permission)
                                 <div class="flex items-center gap-2 text-xs text-base-content/80 mb-1.5">
-                                    <i class="icon-[ph--check-circle-fill] text-emerald-500 text-[11px] flex-shrink-0"></i>
+                                    <i class="icon-[tabler--circle-check] text-emerald-500 text-[11px] flex-shrink-0"></i>
                                     {{ $permission->name }}
                                 </div>
                             @endforeach
@@ -100,7 +100,7 @@
         {{-- Assigned Users --}}
         <div>
             <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="icon-[ph--user-fill] text-red-600"></i> Assigned Users ({{ $role->users->count() }})
+                <i class="icon-[tabler--user] text-red-600"></i> Assigned Users ({{ $role->users->count() }})
             </h3>
 
             @if($availableUsers->count() > 0)
