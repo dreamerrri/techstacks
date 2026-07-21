@@ -248,7 +248,7 @@
                             </span>
                         @endif
                     </button>
-                    <div class="dropdown-menu dropdown-open:opacity-100 hidden min-w-72" role="menu" aria-labelledby="notif-dropdown">
+                    <div class="dropdown-menu dropdown-open:opacity-100 hidden min-w-72 z-50" role="menu" aria-labelledby="notif-dropdown">
                         @include('partials.notifications-list')
                     </div>
                 </div>
