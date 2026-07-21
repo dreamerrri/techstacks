@@ -102,24 +102,24 @@
     <div class="card bg-base-100 shadow-sm p-5 border-l-4 border-blue-600 bg-blue-50">
         <div class="text-xs font-bold text-blue-700 uppercase tracking-wider mb-3">Monthly Gross Breakdown</div>
         <div class="flex flex-col gap-2 text-sm">
-            <div class="flex justify-between"><span class="text-base-content/60">1st Cutoff Gross:</span><span class="font-semibold text-base-content">₱{{ number_format($payroll['first_cutoff_gross_pay'] ?? 0, 2) }}</span></div>
-            <div class="flex justify-between"><span class="text-base-content/60">2nd Cutoff Gross:</span><span class="font-semibold text-base-content">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between"><span class="flex justify-between pt-2 border-t border-blue-200 font-bold text-blue-700">1st Cutoff Gross:</span><span class="flex justify-between pt-2 border-t border-blue-200 font-bold text-blue-700">₱{{ number_format($payroll['first_cutoff_gross_pay'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between"><span class="flex justify-between pt-2 border-t border-blue-200 font-bold text-blue-700">2nd Cutoff Gross:</span><span class="flex justify-between pt-2 border-t border-blue-200 font-bold text-blue-700">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span></div>
             <div class="flex justify-between pt-2 border-t border-blue-200 font-bold text-blue-700"><span>Total Monthly Gross:</span><span>₱{{ number_format($payroll['total_monthly_gross_pay'] ?? 0, 2) }}</span></div>
         </div>
     </div>
     <div class="card bg-base-100 shadow-sm p-5 border-l-4 border-red-700 bg-red-50">
         <div class="text-xs font-bold text-red-700 uppercase tracking-wider mb-3">Monthly Contributions</div>
         <div class="flex flex-col gap-2 text-sm">
-            <div class="flex justify-between"><span class="text-base-content/60">1st Cutoff Gov't:</span><span class="font-semibold text-base-content">₱{{ number_format($payroll['first_cutoff_contributions'] ?? 0, 2) }}</span></div>
-            <div class="flex justify-between"><span class="text-base-content/60">2nd Cutoff Gov't:</span><span class="font-semibold text-base-content">₱{{ number_format($payroll['current_cutoff_contributions'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between"><span class="flex justify-between pt-2 border-t border-red-200 font-bold text-red-700">1st Cutoff Gov't:</span><span class="font-semibold text-base-contentflex justify-between pt-2 border-t border-red-200 font-bold text-red-700">₱{{ number_format($payroll['first_cutoff_contributions'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between"><span class="flex justify-between pt-2 border-t border-red-200 font-bold text-red-700">2nd Cutoff Gov't:</span><span class="flex justify-between pt-2 border-t border-red-200 font-bold text-red-700">₱{{ number_format($payroll['current_cutoff_contributions'] ?? 0, 2) }}</span></div>
             <div class="flex justify-between pt-2 border-t border-red-200 font-bold text-red-700"><span>Total Monthly Gov't:</span><span>₱{{ number_format(($payroll['first_cutoff_contributions'] ?? 0) + ($payroll['current_cutoff_contributions'] ?? 0), 2) }}</span></div>
         </div>
     </div>
     <div class="card bg-base-100 shadow-sm p-5 border-l-4 border-green-700 bg-green-50">
         <div class="text-xs font-bold text-green-700 uppercase tracking-wider mb-3">Monthly Net Pay Breakdown</div>
         <div class="flex flex-col gap-2 text-sm">
-            <div class="flex justify-between"><span class="text-base-content/60">1st Cutoff Net:</span><span class="font-semibold text-base-content">₱{{ number_format($payroll['first_cutoff_net_pay'] ?? 0, 2) }}</span></div>
-            <div class="flex justify-between"><span class="text-base-content/60">2nd Cutoff Net:</span><span class="font-semibold text-base-content">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between"><span class="flex justify-between pt-2 border-t border-green-200 font-bold text-green-700">1st Cutoff Net:</span><span class="flex justify-between pt-2 border-t border-green-200 font-bold text-green-700">₱{{ number_format($payroll['first_cutoff_net_pay'] ?? 0, 2) }}</span></div>
+            <div class="flex justify-between"><span class="flex justify-between pt-2 border-t border-green-200 font-bold text-green-700">2nd Cutoff Net:</span><span class="flex justify-between pt-2 border-t border-green-200 font-bold text-green-700">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</span></div>
             <div class="flex justify-between pt-2 border-t border-green-200 font-bold text-green-700"><span>Total Monthly Net:</span><span>₱{{ number_format($payroll['total_monthly_net_pay'] ?? 0, 2) }}</span></div>
         </div>
     </div>
