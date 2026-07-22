@@ -183,6 +183,11 @@ Breadcrumbs::for('payroll.show', function (BreadcrumbTrail $trail, $employee) {
     $trail->push($employee->full_name, route('payroll.show', [$employee]));
 });
 
+Breadcrumbs::for('payroll.payslip', function (BreadcrumbTrail $trail, $employee) {
+    $trail->parent('payroll.show', $employee);
+    $trail->push('Payslip', route('payroll.payslip', [$employee]));
+});
+
 
 //GOV CONTRIBUTIONS
 Breadcrumbs::for('government-contributions.index', function (BreadcrumbTrail $trail) {
@@ -218,9 +223,9 @@ Breadcrumbs::for('employee-attendance.show-employee', function (BreadcrumbTrail 
 $trail->push($employee->full_name . "'s Attendance", route('employee-attendance.show-employee', $employee));
 });
 
-Breadcrumbs::for('employee-attendance.create', function (BreadcrumbTrail $trail, $employee) {
+Breadcrumbs::for('employee-attendance.create', function (BreadcrumbTrail $trail) {
     $trail->parent('employee-attendance.index');
-    $trail->push('Add attendance', route('employee-attendance.create', [$employee]));
+    $trail->push('Add attendance', route('employee-attendance.create'));
 });
 
 
