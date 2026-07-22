@@ -4,7 +4,7 @@
 
 @section('content')
 
-{{-- Header --}}
+{{-- SHINKU PLS COME HOME --}}
 <div class="mb-6">
     <a href="{{ route('manual-payroll-attendance.index') }}"
        class="text-base-content/60 no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
