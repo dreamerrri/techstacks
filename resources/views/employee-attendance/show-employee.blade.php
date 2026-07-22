@@ -1,339 +1,337 @@
 @extends('layouts.app')
 
-@section('title', $employee->full_name . ' - Attendance')
-
-{{-- @section('breadcrumb')
-    <a href="{{ route('dashboard') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Dashboard</a>
-    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
-    <a href="{{ route('employees.index') }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">Employees</a>
-    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
-    <a href="{{ route('employees.show', $employee) }}" style="color:rgba(255,255,255,0.55); text-decoration:none;">{{ $employee->full_name }}</a>
-    <i class="icon-[ph--caret-right-fill]" style="font-size:11px;"></i>
-    <span style="color:white; font-weight:600;">Attendance Records</span>
-@endsection --}}
+@section('title', 'Add Attendance')
 
 @section('content')
 
 @php
-    $user = auth()->user();
+    $user    = auth()->user();
     $isAdmin = $user->isAdmin();
-    $isHR = $user->isHR();
-    $color = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
-    $colorDark = $isAdmin ? '#991b1b' : ($isHR ? '#1e40af' : '#764ba2');
+    $isHR    = $user->isHR();
+    $roleBtnClass = $isAdmin ? 'btn-error' : ($isHR ? 'btn-info' : 'btn-primary');
 @endphp
 
 {{-- Header --}}
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+<div class="mb-6">
+    <a href="{{ route('employee-attendance.index') }}"
+       class="text-base-content/60 no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
+        <i class="icon-[tabler--arrow-left]"></i> Back to Attendance
+    </a>
     <div>
-        <a href="{{ route('employees.show', $employee) }}"
-           style="color:#6b7280; text-decoration:none; font-size:14px; display:inline-flex; align-items:center; gap:6px; margin-bottom:8px;">
-            <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee Profile
-        </a>
-        <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class="icon-[ph--clock-fill]"></i> Attendance Records
-        </div>
-        <h2 style="margin:8px 0 4px 0;">{{ $employee->full_name }}'s Attendance</h2>
-        <p style="color:#6b7280; margin:0;">
-            View daily time-in/time-out records
-        </p>
+        <span class="badge badge-soft badge-info mb-2">
+            <i class="icon-[tabler--plus]"></i> Add Attendance
+        </span>
     </div>
+    <h2 class="text-lg font-bold text-base-content mt-2 mb-1">Record Attendance</h2>
+    <p class="text-base-content/60 m-0">
+        Add your time-in/time-out record for a specific date
+    </p>
 </div>
 
-{{-- Employee Info Card --}}
-<div class="card" style="padding:20px; margin-bottom:24px; display:flex; align-items:center; gap:16px;">
-    <div style="width:50px; height:50px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-        @if($employee->user?->profile_photo)
-            <img src="{{ asset('storage/' . $employee->user->profile_photo) }}"
-                 alt="{{ $employee->full_name }}"
-                 style="width:100%; height:100%; object-fit:cover;">
-        @else
-            <div style="width:50px; height:50px; border-radius:50%; background:linear-gradient(135deg,#dc2626,#991b1b); display:flex; align-items:center; justify-content:center; color:white; font-size:20px; font-weight:700;">
-                {{ strtoupper(substr($employee->first_name, 0, 1)) }}
+<div class="card bg-base-100 border border-base-300 p-0 overflow-hidden max-w-[600px]">
+    <div class="px-6 py-5 border-b border-base-300">
+        <h3 class="text-sm font-bold text-base-content m-0">Attendance Details</h3>
+    </div>
+
+    <form id="attendanceForm" class="p-6">
+        @csrf
+        <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+
+        <div class="mb-5">
+            <label class="label text-sm font-semibold text-base-content">Date</label>
+            <input type="date" name="date" readonly
+                   value="{{ $todayAttendance ? $todayAttendance->date->format('Y-m-d') : '' }}"
+                   class="input input-bordered w-full bg-base-200">
+            <p class="text-base-content/60 text-xs mt-1">Auto-set when you clock in</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-5 mb-5">
+            <div>
+                <label class="label text-sm font-semibold text-base-content">Time In</label>
+                <input type="time" name="time_in"
+                       value="{{ $todayAttendance && $todayAttendance->time_in ? (is_string($todayAttendance->time_in) ? substr($todayAttendance->time_in, 0, 5) : $todayAttendance->time_in->format('H:i')) : '' }}"
+                       {{ $todayAttendance && $todayAttendance->time_in ? 'readonly' : '' }}
+                       class="input input-bordered w-full bg-base-200">
+                <p class="text-base-content/60 text-xs mt-1">Auto-set when you clock in</p>
             </div>
+            <div>
+                <label class="label text-sm font-semibold text-base-content">Time Out</label>
+                <input type="time" name="time_out" readonly
+                       value="{{ $todayAttendance && $todayAttendance->time_out ? (is_string($todayAttendance->time_out) ? substr($todayAttendance->time_out, 0, 5) : $todayAttendance->time_out->format('H:i')) : '' }}"
+                       class="input input-bordered w-full bg-base-200">
+                <p class="text-base-content/60 text-xs mt-1">Auto-set when you clock out</p>
+            </div>
+        </div>
+
+        <div class="flex gap-3 mb-6">
+            <button type="button" id="clockInBtn" onclick="clockIn()"
+                    {{ $todayAttendance && $todayAttendance->time_in ? 'disabled' : '' }}
+                    class="btn btn-success flex-1 disabled:opacity-50">
+                <i class="icon-[tabler--login-2]"></i>
+                {{ $todayAttendance && $todayAttendance->time_in ? 'Clocked In' : 'Clock In' }}
+            </button>
+            <button type="button" id="clockOutBtn" onclick="clockOut()"
+                    {{ $todayAttendance && $todayAttendance->time_out ? 'disabled' : ($todayAttendance && $todayAttendance->time_in ? '' : 'disabled') }}
+                    class="btn btn-warning flex-1 disabled:opacity-50">
+                <i class="icon-[tabler--logout-2]"></i>
+                {{ $todayAttendance && $todayAttendance->time_out ? 'Clocked Out' : 'Clock Out' }}
+            </button>
+        </div>
+
+        @if($todayAttendance && $todayAttendance->time_in && !$todayAttendance->time_out)
+        @php
+            $timeInParts = explode(':', $todayAttendance->time_in);
+            $expectedHours = (intval($timeInParts[0]) + 9) % 24;
+            $expectedMinutes = $timeInParts[1];
+            $period = $expectedHours >= 12 ? 'PM' : 'AM';
+            $displayHours = $expectedHours % 12;
+            $displayHours = $displayHours ? $displayHours : 12;
+            $expectedTimeOut12Hour = $displayHours . ':' . $expectedMinutes . ' ' . $period;
+        @endphp
+        <div class="flex items-center gap-2 mb-6">
+            <div class="tooltip [--placement:top]">
+                <span class="tooltip-toggle text-warning text-2xl cursor-help">
+                    <i class="icon-[tabler--clock]"></i>
+                </span>
+                <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
+                    <span class="tooltip-body bg-neutral/95 shadow-md rounded-lg px-3 py-2.5 text-xs normal-case text-neutral-content font-medium w-64 block">
+                        <span class="block font-semibold mb-1">Expected Clock Out Time</span>
+                        <span class="block text-sm mb-1"><strong>{{ $expectedTimeOut12Hour }}</strong></span>
+                        <span class="block text-neutral-content/70">9 hours after clock in, including 1-hour lunch break</span>
+                        <span class="block mt-2 pt-2 border-t border-neutral-content/20 text-[11px] text-neutral-content/60">
+                            Click "Clock Out" to record actual time
+                        </span>
+                    </span>
+                </span>
+            </div>
+            <span class="text-base-content/60 text-sm">Hover to see expected clock out time</span>
+        </div>
         @endif
-    </div>
-    <div>
-        <div style="font-weight:600; color:#1f2937; font-size:16px;">{{ $employee->full_name }}</div>
-        <div style="color:#6b7280; font-size:13px;">{{ $employee->position }} — {{ $employee->department }}</div>
-        <div style="color:#6b7280; font-size:12px; margin-top:2px;">{{ $employee->employee_id }}</div>
-    </div>
-</div>
 
-{{-- Current Period Summary --}}
-@if($currentPeriod)
-<div class="card" style="padding:24px; margin-bottom:24px;">
-    <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-        <i class="icon-[ph--calendar-fill]" style="color:#6b7280;"></i> Current Payroll Period
-    </h3>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
-        <div style="padding:16px; background:#f9fafb; border-radius:8px; border-left:4px solid #3b82f6;">
-            <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Period</div>
-            <div style="font-size:14px; font-weight:600; color:#1f2937;">
-                {{ $currentPeriod->cutoff_start->format('M d') }} - {{ $currentPeriod->cutoff_end->format('M d, Y') }}
+        <div class="mb-6">
+            <label class="label text-sm font-semibold text-base-content">Remarks</label>
+            <input type="text" name="remarks"
+                   value="{{ $todayAttendance ? $todayAttendance->remarks : '' }}"
+                   placeholder="Optional notes (e.g., worked from home, late arrival, etc.)"
+                   class="input input-bordered w-full">
+        </div>
+
+        <div class="bg-success/10 border border-success/20 rounded-lg p-4 mb-6">
+            <div class="text-sm font-semibold text-success mb-2 flex items-center gap-1.5">
+                <i class="icon-[tabler--info-circle]"></i> Computation Rules
+            </div>
+            <ul class="m-0 pl-5 text-sm text-success/90 list-disc">
+                <li>Less than 4 hours = 0 days</li>
+                <li>4-8 hours = 0.5 days</li>
+                <li>8 hours or more = 1 day</li>
+                <li>1 hour break is automatically deducted for shifts &gt; 4 hours</li>
+            </ul>
+            <div id="hoursDisplay" class="hidden mt-3 pt-3 border-t border-success/20 text-sm font-semibold text-success">
+                <i class="icon-[tabler--calculator]"></i> Rendered Hours: <span id="renderedHoursValue">0.00</span> hrs
             </div>
         </div>
-        <div style="padding:16px; background:#f9fafb; border-radius:8px; border-left:4px solid #10b981;">
-            <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Total Rendered Hours</div>
-            <div style="font-size:18px; font-weight:700; color:#10b981;">
-                {{ number_format($totalHours, 2) }} hrs
-            </div>
-        </div>
-        <div style="padding:16px; background:#f9fafb; border-radius:8px; border-left:4px solid #8b5cf6;">
-            <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">Total Computed Days</div>
-            <div style="font-size:18px; font-weight:700; color:#8b5cf6;">
-                {{ number_format($totalDays, 2) }} days
-            </div>
-        </div>
-    </div>
-</div>
-@endif
 
-{{-- Attendance Records for Current Period --}}
-@if($currentPeriod && $attendances->count() > 0)
-<div class="card" style="padding:0; overflow:hidden; margin-bottom:24px;">
-    <div style="padding:20px 24px; border-bottom:1px solid #e5e7eb;">
-        <h3 style="margin:0;">Attendance Records - Current Period</h3>
-    </div>
-    <div style="overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse;">
-            <thead>
-                <tr style="background:#f9fafb;">
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Date</th>
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Time In</th>
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Time Out</th>
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Rendered Hours</th>
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Computed Days</th>
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Remarks</th>
-                    <th style="padding:12px 16px; text-align:center; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($attendances as $attendance)
-                <tr style="border-bottom:1px solid #e5e7eb;">
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                        {{ $attendance->date->format('M d, Y') }}
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                        {{ $attendance->time_in ? $attendance->time_in : '-' }}
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                        {{ $attendance->time_out ? $attendance->time_out : '-' }}
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937; font-weight:600;">
-                        {{ number_format($attendance->rendered_hours, 2) }} hrs
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937; font-weight:600;">
-                        {{ number_format($attendance->computed_days, 2) }} days
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#6b7280;">
-                        {{ $attendance->remarks ?? '-' }}
-                    </td>
-                    <td style="padding:12px 16px; text-align:center;">
-                        <button onclick="editAttendance({{ $attendance->id }}, '{{ $attendance->date->format('Y-m-d') }}', '{{ $attendance->time_in ?? '' }}', '{{ $attendance->time_out ?? '' }}', '{{ $attendance->remarks ?? '' }}')"
-                                style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; margin-right:4px;">
-                            <i class="icon-[ph--pencil-fill]"></i>
-                        </button>
-                        <button onclick="deleteAttendance({{ $attendance->id }})"
-                                style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-                            <i class="icon-[ph--trash-fill]"></i>
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
-@elseif($currentPeriod)
-<div class="card" style="padding:24px; margin-bottom:24px; text-align:center;">
-    <div style="color:#9ca3af; font-size:14px;">
-        <i class="icon-[ph--calendar-x-fill]" style="font-size:24px; margin-bottom:8px;"></i>
-        <p style="margin:0;">No attendance records for the current payroll period</p>
-    </div>
-</div>
-@endif
+        <div class="bg-warning/10 border border-warning/20 rounded-lg p-4 mb-6">
+            <div class="text-sm font-semibold text-warning mb-2 flex items-center gap-1.5">
+                <i class="icon-[tabler--alert-triangle]"></i> Auto Clock-Out
+            </div>
+            <p class="m-0 text-sm text-warning/90">
+                Attendance will automatically clock out at 9 hours (including 1-hour break). Any time beyond 9 hours will not be recorded.
+            </p>
+        </div>
 
-{{-- Recent Attendance --}}
-@if($recentAttendances->count() > 0)
-<div class="card" style="padding:0; overflow:hidden;">
-    <div style="padding:20px 24px; border-bottom:1px solid #e5e7eb;">
-        <h3 style="margin:0;">Recent Attendance (Last 30 Days)</h3>
-    </div>
-    <div style="overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse;">
-            <thead>
-                <tr style="background:#f9fafb;">
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Date</th>
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Time In</th>
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Time Out</th>
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Rendered Hours</th>
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Computed Days</th>
-                    <th style="padding:12px 16px; text-align:center; font-size:12px; font-weight:600; color:#6b7280; border-bottom:1px solid #e5e7eb;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($recentAttendances as $attendance)
-                <tr style="border-bottom:1px solid #e5e7eb;">
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                        {{ $attendance->date->format('M d, Y') }}
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                        {{ $attendance->time_in ? $attendance->time_in : '-' }}
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                        {{ $attendance->time_out ? $attendance->time_out : '-' }}
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937; font-weight:600;">
-                        {{ number_format($attendance->rendered_hours, 2) }} hrs
-                    </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937; font-weight:600;">
-                        {{ number_format($attendance->computed_days, 2) }} days
-                    </td>
-                    <td style="padding:12px 16px; text-align:center;">
-                        <button onclick="editAttendance({{ $attendance->id }}, '{{ $attendance->date->format('Y-m-d') }}', '{{ $attendance->time_in ?? '' }}', '{{ $attendance->time_out ?? '' }}', '{{ $attendance->remarks ?? '' }}')"
-                                style="padding:6px 12px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; margin-right:4px;">
-                            <i class="icon-[ph--pencil-fill]"></i>
-                        </button>
-                        <button onclick="deleteAttendance({{ $attendance->id }})"
-                                style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-                            <i class="icon-[ph--trash-fill]"></i>
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+        <div class="flex gap-3">
+            <button type="submit" id="saveAttendanceBtn" class="btn {{ $roleBtnClass }} flex-1">
+                <i class="icon-[tabler--device-floppy]"></i> Save Attendance
+            </button>
+            <a href="{{ route('employee-attendance.index') }}" class="btn btn-soft">
+                Cancel
+            </a>
+        </div>
+    </form>
 </div>
-@endif
 
 @endsection
 
 @section('scripts')
 <script>
+const getVisibleElement = (elements) => {
+    for (let element of elements) {
+        if (element.offsetParent !== null) {
+            return element;
+        }
+    }
+    return elements[0];
+};
 
-    function editAttendance(attendanceId, date, timeIn, timeOut, remarks) {
-        Swal.fire({
-            title: 'Edit Attendance',
-            html: `
-                <div style="text-align:left; margin-bottom:15px;">
-                    <label style="display:block; font-weight:600; margin-bottom:5px; font-size:13px;">Date</label>
-                    <input id="editDate" type="date" value="${date}" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; margin-bottom:10px;">
-                    
-                    <label style="display:block; font-weight:600; margin-bottom:5px; font-size:13px;">Time In</label>
-                    <input id="editTimeIn" type="time" value="${timeIn}" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; margin-bottom:10px;">
-                    
-                    <label style="display:block; font-weight:600; margin-bottom:5px; font-size:13px;">Time Out</label>
-                    <input id="editTimeOut" type="time" value="${timeOut}" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; margin-bottom:10px;">
-                    
-                    <label style="display:block; font-weight:600; margin-bottom:5px; font-size:13px;">Remarks</label>
-                    <input id="editRemarks" type="text" value="${remarks}" placeholder="Optional notes" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;">
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonColor: '#3b82f6',
-            cancelButtonColor: '#6b7280',
-            confirmButtonText: 'Save Changes',
-            cancelButtonText: 'Cancel',
-            preConfirm: () => {
-                // Format time to H:i (remove seconds if present)
-                const formatTime = (timeValue) => {
-                    if (!timeValue) return '';
-                    // If time has seconds, remove them
-                    if (timeValue.includes(':') && timeValue.split(':').length === 3) {
-                        return timeValue.substring(0, 5); // Take only HH:MM
-                    }
-                    return timeValue;
-                };
+function clockIn() {
+    const dateInputs = document.querySelectorAll('input[name="date"]');
+    const timeInInputs = document.querySelectorAll('input[name="time_in"]');
+    const clockInBtn = document.getElementById('clockInBtn');
+    const clockOutBtn = document.getElementById('clockOutBtn');
 
-                return {
-                    date: document.getElementById('editDate').value,
-                    time_in: formatTime(document.getElementById('editTimeIn').value),
-                    time_out: formatTime(document.getElementById('editTimeOut').value),
-                    remarks: document.getElementById('editRemarks').value,
-                };
-            }
-        }).then(result => {
-            if (!result.isConfirmed) return;
-
-            const formData = new FormData();
-            formData.append('date', result.value.date);
-            
-            // Only append time_in if it has a non-empty value
-            if (result.value.time_in && result.value.time_in.trim() !== '') {
-                formData.append('time_in', result.value.time_in);
-            }
-            
-            // Only append time_out if it has a non-empty value
-            if (result.value.time_out && result.value.time_out.trim() !== '') {
-                formData.append('time_out', result.value.time_out);
-            }
-            
-            formData.append('remarks', result.value.remarks);
-            formData.append('_method', 'PUT');
-            formData.append('_token', '{{ csrf_token() }}');
-
-            fetch('{{ route('employee-attendance.update', ':id') }}'.replace(':id', attendanceId), {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                },
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    window.notyf.success(data.message);
-                    setTimeout(() => window.location.reload(), 1500);
-                } else {
-                    window.notyf.error(data.message);
-                }
-            })
-            .catch(error => {
-                window.notyf.error('Failed to update attendance: ' + error.message);
-            });
-        });
+    for (let input of dateInputs) {
+        if (input.offsetParent !== null) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            input.value = `${year}-${month}-${day}`;
+            break;
+        }
     }
 
-    function deleteAttendance(attendanceId) {
-    Swal.fire({
-        title: 'Delete Attendance?',
-        text: 'Are you sure you want to delete this attendance record?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Yes, delete it',
-        cancelButtonText: 'Back',
-    }).then(result => {
-        if (!result.isConfirmed) return;
+    for (let input of timeInInputs) {
+        if (input.offsetParent !== null) {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            input.value = `${hours}:${minutes}`;
+            break;
+        }
+    }
 
-        fetch('{{ route('employee-attendance.destroy', ':id') }}'.replace(':id', attendanceId), {
-            method: 'DELETE',
+    if (clockInBtn) {
+        clockInBtn.disabled = true;
+        clockInBtn.classList.add('opacity-50');
+        clockInBtn.innerHTML = '<i class="icon-[tabler--check]"></i> Clocked In';
+    }
+    if (clockOutBtn) {
+        clockOutBtn.disabled = false;
+        clockOutBtn.classList.remove('opacity-50');
+    }
+}
+
+function clockOut() {
+    const timeOutInputs = document.querySelectorAll('input[name="time_out"]');
+    const clockOutBtn = document.getElementById('clockOutBtn');
+
+    for (let input of timeOutInputs) {
+        if (input.offsetParent !== null) {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            input.value = `${hours}:${minutes}`;
+            break;
+        }
+    }
+
+    if (clockOutBtn) {
+        clockOutBtn.disabled = true;
+        clockOutBtn.classList.add('opacity-50');
+        clockOutBtn.innerHTML = '<i class="icon-[tabler--check]"></i> Clocked Out';
+    }
+
+    computeRenderedHours();
+}
+
+function computeRenderedHours() {
+    const timeInInputs = document.querySelectorAll('input[name="time_in"]');
+    const timeOutInputs = document.querySelectorAll('input[name="time_out"]');
+    const hoursDisplay = document.getElementById('hoursDisplay');
+    const renderedHoursValue = document.getElementById('renderedHoursValue');
+
+    let timeIn = null;
+    let timeOut = null;
+
+    for (let input of timeInInputs) {
+        if (input.offsetParent !== null) { timeIn = input; break; }
+    }
+    for (let input of timeOutInputs) {
+        if (input.offsetParent !== null) { timeOut = input; break; }
+    }
+
+    if (timeIn && timeOut && timeIn.value && timeOut.value) {
+        const [inHours, inMinutes] = timeIn.value.split(':').map(Number);
+        const [outHours, outMinutes] = timeOut.value.split(':').map(Number);
+
+        const inTotalMinutes = inHours * 60 + inMinutes;
+        const outTotalMinutes = outHours * 60 + outMinutes;
+
+        let totalMinutes = outTotalMinutes - inTotalMinutes;
+        if (totalMinutes < 0) totalMinutes += 24 * 60;
+
+        let hours = totalMinutes / 60;
+        if (hours > 4) hours -= 1;
+        hours = Math.max(0, hours);
+
+        if (hoursDisplay && renderedHoursValue) {
+            hoursDisplay.classList.remove('hidden');
+            renderedHoursValue.textContent = hours.toFixed(2);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('#attendanceForm');
+    if (forms.length === 0) return;
+
+    const visibleForm = getVisibleElement(forms);
+    if (!visibleForm) return;
+
+    const getVisibleInput = (name) => {
+        const inputs = document.querySelectorAll(`input[name="${name}"]`);
+        for (let input of inputs) {
+            if (input.offsetParent !== null) return input;
+        }
+        return inputs[0];
+    };
+
+    visibleForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const date = getVisibleInput('date');
+        const timeIn = getVisibleInput('time_in');
+        const timeOut = getVisibleInput('time_out');
+        const remarks = getVisibleInput('remarks');
+
+        if (!timeIn || !timeIn.value) {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Please clock in before saving attendance.' });
+            return;
+        }
+
+        const timeInValue = timeIn.value;
+        const timeInRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+        if (!timeInRegex.test(timeInValue)) {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Invalid time format. Please use HH:MM format. Current value: ' + timeInValue });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('date', date ? date.value : '');
+        formData.append('time_in', timeInValue);
+        formData.append('time_out', timeOut ? timeOut.value : '');
+        formData.append('remarks', remarks ? remarks.value : '');
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route('employee-attendance.store') }}', {
+            method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json',
+                'Accept': 'application/json'
             },
+            body: formData
         })
-        .then(res => res.json())
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.notyf.success(data.message);
-                setTimeout(() => window.location.reload(), 1500);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message,
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = '{{ route('employee-attendance.index') }}';
+                });
             } else {
-                window.notyf.error(data.message);
+                Swal.fire({ icon: 'error', title: 'Error', text: data.message });
             }
         })
         .catch(error => {
-            window.notyf.error('Failed to delete attendance: ' + error.message);
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to save attendance: ' + error.message });
         });
     });
-}
-
-
-
-
-
+});
 </script>
 @endsection

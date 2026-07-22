@@ -6,7 +6,7 @@
 <!-- Search Trigger -->
 <button
     type="button"
-    class="input input-bordered flex w-full max-w-xs input-sm items-center gap-2 text-start text-base-content/50 cursor-pointer"
+    class="input input-bordered btn-outline bg-base-200 flex w-full max-w-xs input-sm items-center gap-2 text-start text-base-content/50 cursor-pointer"
     aria-haspopup="dialog"
     aria-expanded="false"
     aria-controls="{{ $id }}"

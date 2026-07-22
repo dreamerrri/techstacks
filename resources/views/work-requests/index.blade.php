@@ -2,38 +2,34 @@
 
 @section('title', 'Work Requests')
 
-
 @section('content')
 
 @php
-    $user = auth()->user();
+    $user  = auth()->user();
     $admin = $user->isAdmin();
-    $hr = $user->isHR();
-    $color = $admin ? '#dc2626' : ($hr ? '#2563eb' : '#667eea');
-    $colorDark = $admin ? '#991b1b' : ($hr ? '#1e40af' : '#764ba2');
+    $hr    = $user->isHR();
 @endphp
 
 <x-table-card action="{{ route('work-requests.index') }}">
     <x-slot:title>
-        <x-dot-loader /> Work Requests
+        <x-dot-loader />
+        <p class="text-base-content"> Work Requests</p>
         <x-info-tooltip>
             {{ $admin || $hr ? 'Manage employee work requests' : 'View and manage your work requests' }}
         </x-info-tooltip>
     </x-slot:title>
 
     <x-slot:actions>
-        <div style="display:flex; gap:8px;">
+        <div class="flex gap-2">
             @if($admin || $hr)
                 @if($pendingCount > 0)
-                    <a href="{{ route('work-requests.pending') }}"
-                       style="padding:12px 20px; background:#f59e0b; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-                        <i class="icon-[ph--clock-fill]"></i> Pending ({{ $pendingCount }})
+                    <a href="{{ route('work-requests.pending') }}" class="btn btn-soft btn-warning btn-sm">
+                        <i class="icon-[tabler--clock]"></i> Pending ({{ $pendingCount }})
                     </a>
                 @endif
             @else
-                <a href="{{ route('work-requests.create') }}"
-                   style="padding:12px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-                    <i class="icon-[ph--plus-fill]"></i> New Request
+                <a href="{{ route('work-requests.create') }}" class="btn btn-soft btn-primary btn-sm">
+                    <i class="icon-[tabler--plus]"></i> New Request
                 </a>
             @endif
         </div>
@@ -41,32 +37,32 @@
 
     {{-- Filters --}}
     <x-slot:filters>
-        <div>
-            <label style="font-size:12px; color:#6b7280; margin-bottom:4px; display:block;">Status</label>
-            <select name="status" style="padding:8px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; min-width:150px;">
-                <option value="">All</option>
-                <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="approved" {{ $status === 'approved' ? 'selected' : '' }}>Approved</option>
-                <option value="rejected" {{ $status === 'rejected' ? 'selected' : '' }}>Rejected</option>
-                <option value="cancelled" {{ $status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-            </select>
-        </div>
-        <div>
-            <label style="font-size:12px; color:#6b7280; margin-bottom:4px; display:block;">Type</label>
-            <select name="type" style="padding:8px 12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; min-width:150px;">
-                <option value="">All</option>
-                <option value="weekend" {{ $type === 'weekend' ? 'selected' : '' }}>Weekend</option>
-                <option value="holiday" {{ $type === 'holiday' ? 'selected' : '' }}>Holiday</option>
-                <option value="overtime" {{ $type === 'overtime' ? 'selected' : '' }}>Overtime</option>
-            </select>
-        </div>
-        <div style="margin-top:20px;">
-            <button type="submit" style="padding:8px 16px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">
-                <i class="icon-[ph--funnel-fill]"></i> Filter
-            </button>
-            <a href="{{ route('work-requests.index') }}" style="padding:8px 16px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-block; margin-left:8px;">
-                Clear
-            </a>
+        <div class="flex flex-wrap items-end gap-2">
+            <div class="fieldset">
+                
+                <select name="status" class="select select-bordered select-sm min-w-[150px]">
+                    <option value="">All</option>
+                    <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="approved" {{ $status === 'approved' ? 'selected' : '' }}>Approved</option>
+                    <option value="rejected" {{ $status === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                    <option value="cancelled" {{ $status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                </select>
+            </div>
+            <div class="fieldset">
+         
+                <select name="type" class="select select-bordered select-sm min-w-[150px]">
+                    <option value="">All</option>
+                    <option value="weekend" {{ $type === 'weekend' ? 'selected' : '' }}>Weekend</option>
+                    <option value="holiday" {{ $type === 'holiday' ? 'selected' : '' }}>Holiday</option>
+                    <option value="overtime" {{ $type === 'overtime' ? 'selected' : '' }}>Overtime</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-soft btn-error btn-sm">
+                    <i class="icon-[tabler--filter]"></i> Filter
+                </button>
+                <a href="{{ route('work-requests.index') }}" class="btn btn-soft btn-sm">Clear</a>
+            </div>
         </div>
     </x-slot:filters>
 
@@ -74,73 +70,80 @@
     @if($workRequests->count() > 0)
         <x-data-table>
             <x-slot:head>
-                <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600;">Date</th>
+                <th>Date</th>
                 @if($admin || $hr)
-                    <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600;">Employee</th>
+                    <th>Employee</th>
                 @endif
-                <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600;">Type</th>
-                <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600;">Work Date</th>
-                <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600;">Time</th>
-                <th style="padding:12px 16px; text-align:left; font-size:12px; font-weight:600;">Status</th>
-                <th style="padding:12px 16px; text-align:center; font-size:12px; font-weight:600;">Actions</th>
+                <th>Type</th>
+                <th>Work Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
             </x-slot:head>
 
             @foreach($workRequests as $request)
-                <tr class="row-hover" style="border-bottom:1px solid #e5e7eb;">
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
+                @php
+                    $typeClass = match($request->request_type) {
+                        'weekend'  => 'badge-soft badge-info',
+                        'holiday'  => 'badge-soft badge-warning',
+                        'overtime' => 'badge-soft badge-secondary',
+                        default    => 'badge-soft',
+                    };
+                    $statusClass = match($request->status) {
+                        'pending'   => 'badge-soft badge-warning',
+                        'approved'  => 'badge-soft badge-success',
+                        'rejected'  => 'badge-soft badge-error',
+                        'cancelled' => 'badge-soft',
+                        default     => 'badge-soft',
+                    };
+                @endphp
+                <tr class="row-hover border-b border-base-300">
+                    <td class="text-base-content">
                         {{ $request->created_at->format('M d, Y') }}
                     </td>
                     @if($admin || $hr)
-                        <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
+                        <td class="text-base-content">
                             {{ $request->employee->full_name }}
                         </td>
                     @endif
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
-                        <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600;
-                            {{ $request->request_type === 'weekend' ? 'background:#dbeafe; color:#1e40af;' :
-                            ($request->request_type === 'holiday' ? 'background:#fef3c7; color:#92400e;' : 'background:#e0e7ff; color:#3730a3;') }}">
-                            {{ ucfirst($request->request_type) }}
-                        </span>
+                    <td>
+                        <span class="badge {{ $typeClass }}">{{ ucfirst($request->request_type) }}</span>
                     </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
+                    <td class="text-base-content">
                         {{ $request->work_date->format('M d, Y') }}
                     </td>
-                    <td style="padding:12px 16px; font-size:14px; color:#6b7280;">
-                        {{ $request->start_time ? $request->start_time : '-' }}
+                    <td class="text-base-content/60">
+                        {{ $request->start_time ?: '-' }}
                         @if($request->end_time) - {{ $request->end_time }}@endif
                     </td>
-                    <td style="padding:12px 16px; font-size:14px;">
-                        <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600;
-                            {{ $request->status === 'pending' ? 'background:#fef3c7; color:#92400e;' :
-                            ($request->status === 'approved' ? 'background:#d1fae5; color:#065f46;' :
-                            ($request->status === 'rejected' ? 'background:#fee2e2; color:#991b1b;' : 'background:#f3f4f6; color:#374151;')) }}">
-                            {{ ucfirst($request->status) }}
-                        </span>
+                    <td>
+                        <span class="badge {{ $statusClass }}">{{ ucfirst($request->status) }}</span>
                     </td>
-                    <td style="padding:12px 16px; text-align:center;">
-                                    <a href="{{ route('work-requests.show', $request) }}" class="btn btn-soft btn-info btn-sm">
-    <i class="icon-[ph--eye-fill]"></i>
-</a>
-                        {{-- Only employees can edit/cancel their own pending requests --}}
-                        @if(!$admin && !$hr && $request->canBeCancelled())
-                            <a href="{{ route('work-requests.edit', $request) }}"
-                               style="padding:6px 12px; background:#f59e0b; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; margin-right:4px;">
-                                <i class="icon-[ph--pencil-fill]"></i>
+                    <td class="text-center">
+                        <div class="flex gap-2 justify-center">
+                            <a href="{{ route('work-requests.show', $request) }}" class="btn btn-soft btn-info btn-sm">
+                                <i class="icon-[tabler--eye]"></i>
                             </a>
-                            <button onclick="cancelRequest({{ $request->id }}, '{{ route('work-requests.destroy', $request) }}')"
-                                    style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:12px;">
-                                <i class="icon-[ph--x]"></i>
-                            </button>
-                        @endif
+                            {{-- Only employees can edit/cancel their own pending requests --}}
+                            @if(!$admin && !$hr && $request->canBeCancelled())
+                                <a href="{{ route('work-requests.edit', $request) }}" class="btn btn-soft btn-warning btn-sm">
+                                    <i class="icon-[tabler--pencil]"></i>
+                                </a>
+                                <button onclick="cancelRequest({{ $request->id }}, '{{ route('work-requests.destroy', $request) }}')"
+                                        class="btn btn-soft btn-error btn-sm">
+                                    <i class="icon-[tabler--x]"></i>
+                                </button>
+                            @endif
+                        </div>
                     </td>
                 </tr>
             @endforeach
         </x-data-table>
     @else
-        <div class="card" style="padding:48px; text-align:center;">
-            <i class="icon-[ph--calendar-x-fill]" style="font-size:48px; color:#d1d5db; margin-bottom:16px;"></i>
-            <h3 style="margin:0 0 8px 0; color:#6b7280;">No Work Requests Found</h3>
-            <p style="color:#9ca3af; margin:0 0 24px 0;">
+        <div class="card p-12 text-center">
+            <i class="icon-[tabler--calendar-off] text-3xl text-base-content/40 mb-4 block"></i>
+            <h3 class="text-base-content/60 font-semibold mb-2">No Work Requests Found</h3>
+            <p class="text-base-content/40 mb-6">
                 @if(!$admin && !$hr)
                     {{ $status || $type ? 'Try adjusting your filters or' : 'Get started by' }} creating a new work request.
                 @else
@@ -148,9 +151,8 @@
                 @endif
             </p>
             @if(!$admin && !$hr)
-                <a href="{{ route('work-requests.create') }}"
-                   style="padding:12px 24px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-                    <i class="icon-[ph--plus-fill]"></i> New Request
+                <a href="{{ route('work-requests.create') }}" class="btn btn-soft btn-primary">
+                    <i class="icon-[tabler--plus]"></i> New Request
                 </a>
             @endif
         </div>
@@ -161,13 +163,17 @@
 @section('scripts')
 <script>
 function cancelRequest(requestId, url) {
+    const style = getComputedStyle(document.documentElement);
+    const errorColor   = style.getPropertyValue('--color-error').trim();
+    const neutralColor = style.getPropertyValue('--color-neutral').trim();
+
     Swal.fire({
         title: 'Cancel Work Request',
         text: 'Are you sure you want to cancel this work request?',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#6b7280',
+        confirmButtonColor: errorColor || '#ef4444',
+        cancelButtonColor: neutralColor || '#6b7280',
         confirmButtonText: 'Yes, Cancel',
         cancelButtonText: 'Keep it'
     }).then((result) => {

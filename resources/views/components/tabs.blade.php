@@ -30,8 +30,8 @@
 --}} {{-- [&_.tab:hover]:text-success [&_.tab:hover]:border-success [&_.tab-active]:border-success [&_.tab-active]:text-success --}}
 @props(['tabs' => []])
 
-<nav class="tabs tabs-bordered "
-     aria-label="Tabs" role="tablist" aria-orientation="horizontal">
+<nav class="tabs tabs-bordered [&_.tab:hover]:text-primary [&_.tab:hover]:border-primary [&_.tab-active]:border-primary [&_.tab-active]:text-primary"
+       aria-label="Tabs" role="tablist" aria-orientation="horizontal">
     @foreach($tabs as $index => $tab)
         <button type="button"
                 class="tab active-tab:tab-active w-full {{ $index === 0 ? 'active' : '' }}"

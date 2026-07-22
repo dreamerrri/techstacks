@@ -50,12 +50,12 @@
     $active  = $s === $sortKey;
     $nextDir = ($active && $d === 'asc') ? 'desc' : 'asc';
     $url     = route($route, array_merge($params, ['sort' => $sortKey, 'direction' => $nextDir]));
-   $upCol   = ($active && $d === 'asc')  ? 'text-accent' : 'text-success-content';
-$dnCol   = ($active && $d === 'desc') ? 'text-accent' : 'text-success-content';
+   $upCol   = ($active && $d === 'asc')  ? '' : 'text-primary-content';
+$dnCol   = ($active && $d === 'desc') ? '' : 'text-primary-content';
 @endphp
 
 <th {{ $attributes->merge(['class' => 'text-' . $align]) }}>
-    <a href="{{ $url }}" class="inline-flex items-center gap-1 tracking-wider text-success-content">
+    <a href="{{ $url }}" class="inline-flex items-center gap-1 tracking-wider text-primary-content">
         {{ $label }}
         <span class="inline-flex flex-col leading-none">
             <i class="icon-[tabler--caret-up] text-[9px] {{ $upCol }}"></i>

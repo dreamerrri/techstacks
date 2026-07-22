@@ -7,11 +7,11 @@
         <nav class="flex items-center justify-end gap-x-1">
             {{-- First --}}
             @if ($paginator->onFirstPage())
-                <button type="button" class="btn btn-disabled" disabled>
-                    <span class="icon-[tabler--chevrons-left] size-5 rtl:rotate-180"></span>
+                <button type="button" class="btn btn-disabled " disabled>
+                    <span class="icon-[tabler--chevrons-left] size-5 rtl:rotate-180 "></span>
                 </button>
             @else
-                <a href="{{ $paginator->url(1) }}" class="btn">
+                <a href="{{ $paginator->url(1) }}" class="btn ">
                     <span class="icon-[tabler--chevrons-left] size-5 rtl:rotate-180"></span>
                 </a>
             @endif

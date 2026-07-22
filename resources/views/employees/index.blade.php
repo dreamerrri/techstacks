@@ -6,7 +6,7 @@
 
     {{-- Stat --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
-        <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
+        <div class="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-primary bg-primary/10">
                 <i class="icon-[tabler--user]"></i>
             </div>
@@ -14,21 +14,21 @@
             <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Total Employees</div>
         </div>
 
-        <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
+        <div class="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-success bg-success/10">
                 <i class="icon-[tabler--circle-check]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\Employee::active()->where('employment_status','Regular')->count() }}</div>
             <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Regular</div>
         </div>
-        <div class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
+        <div class="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-warning bg-warning/10">
                 <i class="icon-[tabler--clock]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\Employee::active()->where('employment_status','Probationary')->count() }}</div>
             <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Probationary</div>
         </div>
-        <a href="{{ route('employees.archived') }}" class="card bg-base-100 shadow-sm p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
+        <a href="{{ route('employees.archived') }}" class="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-base-content/60 bg-base-200">
                 <i class="icon-[tabler--archive]"></i>
             </div>
@@ -47,7 +47,7 @@
         </x-slot:title>
 
         <x-slot:actions>
-            <a href="{{ route('employees.create') }}" class="btn btn-soft btn-error btn-sm">
+            <a href="{{ route('employees.create') }}" class="btn  btn-error btn-sm">
                 <i class="icon-[tabler--plus]"></i> Add Employee
             </a>
         </x-slot:actions>
@@ -55,11 +55,11 @@
         <x-slot:filters>
             {{-- Search group --}}
             <div class="join flex-none w-64 min-w-40">
-                <input type="text" name="search" value="{{ request('search') }}"
-                       placeholder="Search name, ID, email..."
+                <input type="text" name="search" id="search-input" value="{{ request('search') }}"
+                       placeholder="Search name or email..."
                        oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
-                       class="input input-bordered input-sm join-item w-full border-gray-300">
-                <button type="submit" class="btn btn-outline btn-sm join-item border-gray-300">
+                       class="input input-bordered input-sm bg-base-200  join-item w-full ">
+               <button type="submit" class="btn btn-outline btn-primary btn-sm join-item">
                     <i class="icon-[tabler--search]"></i>
                 </button>
             </div>
@@ -79,7 +79,7 @@
                     @endforeach
                 </select>
                 @if(request()->hasAny(['search','department','status']))
-                    <a href="{{ route('employees.index') }}" class="btn btn-soft btn-sm">Clear</a>
+                    <a href="{{ route('employees.index') }}" class="btn  btn-sm">Clear</a>
                 @endif
             </div>
         </x-slot:filters>
@@ -122,10 +122,10 @@
                     <td class="text-base-content/60">{{ $employee->date_hired->format('M d, Y') }}</td>
                     <td>
                         <div class="flex gap-2">
-                            <a href="{{ route('employees.show', $employee) }}" class="btn btn-soft btn-info btn-sm">
+                            <a href="{{ route('employees.show', $employee) }}" class="btn  btn-info btn-sm">
                                 <i class="icon-[tabler--eye]"></i>
                             </a>
-                            <a href="{{ route('employees.edit', $employee) }}" class="btn btn-soft btn-warning btn-sm">
+                            <a href="{{ route('employees.edit', $employee) }}" class="btn  btn-warning btn-sm">
                                 <i class="icon-[tabler--pencil]"></i>
                             </a>
                             <form method="POST" action="{{ route('employees.archive', $employee) }}"
@@ -134,7 +134,7 @@
                                   data-confirm-icon="warning"
                                   data-confirm-btn="Yes, archive">
                                 @csrf @method('PATCH')
-                                <button class="btn btn-soft btn-error btn-sm">
+                                <button class="btn  btn-error btn-sm">
                                     <i class="icon-[tabler--archive]"></i>
                                 </button>
                             </form>
@@ -195,10 +195,10 @@
                     </div>
 
                     <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-300">
-                        <a href="{{ route('employees.show', $employee) }}" class="btn btn-soft btn-info btn-sm">
+                        <a href="{{ route('employees.show', $employee) }}" class="btn  btn-info btn-sm">
                             <i class="icon-[tabler--eye]"></i> View
                         </a>
-                        <a href="{{ route('employees.edit', $employee) }}" class="btn btn-soft btn-warning btn-sm">
+                        <a href="{{ route('employees.edit', $employee) }}" class="btn  btn-warning btn-sm">
                             <i class="icon-[tabler--pencil]"></i> Edit
                         </a>
                         <form method="POST" action="{{ route('employees.archive', $employee) }}"
@@ -207,7 +207,7 @@
                               data-confirm-icon="warning"
                               data-confirm-btn="Yes, archive">
                             @csrf @method('PATCH')
-                            <button class="btn btn-soft btn-error btn-sm">
+                            <button class="btn  btn-error btn-sm">
                                 <i class="icon-[tabler--archive]"></i> Archive
                             </button>
                         </form>

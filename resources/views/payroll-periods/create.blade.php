@@ -4,91 +4,84 @@
 
 @section('content')
 
-
-
 {{-- Header --}}
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+<div class="mb-6">
+    <a href="{{ route('manual-payroll-attendance.index') }}"
+       class="text-base-content/60 no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
+        <i class="icon-[tabler--arrow-left]"></i> Back to Payroll Periods
+    </a>
     <div>
-        <a href="{{ route('manual-payroll-attendance.index') }}"
-           style="color:#6b7280; text-decoration:none; font-size:14px; display:inline-flex; align-items:center; gap:6px; margin-bottom:8px;">
-            <i class="icon-[ph--arrow-left-fill]"></i> Back to Payroll Periods
-        </a>
-        <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
-            <i class=" icon-[ph--calendar-fill]-plus"></i> Create Payroll Period
-        </div>
-        <h2 style="margin:8px 0 4px 0;">New Payroll Period</h2>
-        <p style="color:#6b7280; margin:0;">Pick a start date — end date and pay date are computed automatically</p>
+        <span class="badge badge-soft badge-info mb-2">
+            <i class="icon-[tabler--calendar-plus]"></i> Create Payroll Period
+        </span>
     </div>
+    <h2 class="text-lg font-bold text-base-content mt-2 mb-1">New Payroll Period</h2>
+    <p class="text-base-content/60 m-0">Pick a start date — end date and pay date are computed automatically</p>
 </div>
 
-<div style="max-width:600px;">
-    <div class="card" style="padding:0; overflow:hidden;">
-        <div style="padding:20px 25px; border-bottom:1px solid #e5e7eb; display:flex; align-items:center; justify-content:space-between;">
-            <h3 style="margin:0;">Payroll Period Details</h3>
-            <span id="phase_badge"
-                  style="display:none; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:600;"></span>
+<div class="max-w-[600px]">
+    <div class="card bg-base-100 border border-base-300 p-0 overflow-hidden">
+        <div class="px-6 py-5 border-b border-base-300 flex items-center justify-between">
+            <h3 class="text-sm font-bold text-base-content m-0">Payroll Period Details</h3>
+            <span id="phase_badge" class="badge hidden"></span>
         </div>
 
-        <form action="{{ route('payroll-periods.store') }}" method="POST"
-              style="padding:25px;" data-color="{{ $color }}">
+        <form action="{{ route('payroll-periods.store') }}" method="POST" class="p-6">
             @csrf
 
             {{-- Cutoff Start (only user input) --}}
-            <div style="margin-bottom:20px;">
-                <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">
+            <div class="mb-5">
+                <label class="label text-sm font-semibold text-base-content">
                     Cutoff Start Date
                 </label>
                 <input type="date" name="cutoff_start" id="cutoff_start" required
                        value="{{ old('cutoff_start') }}"
-                       style="width:100%; padding:10px 12px; border:1px solid {{ $errors->has('cutoff_start') ? '#dc2626' : '#d1d5db' }}; border-radius:6px; font-size:14px;">
-                <p style="color:#6b7280; font-size:12px; margin-top:4px;">
+                       class="input input-bordered w-full {{ $errors->has('cutoff_start') ? 'border-error' : '' }}">
+                <p class="text-base-content/60 text-xs mt-1">
                     The period will cover 15 days starting from this date.
                 </p>
                 @error('cutoff_start')
-                    <p style="color:#dc2626; font-size:13px; margin-top:6px;">{{ $message }}</p>
+                    <p class="text-error text-sm mt-1.5">{{ $message }}</p>
                 @enderror
             </div>
 
             {{-- Cutoff End (read-only preview) --}}
-            <div style="margin-bottom:20px;">
-                <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">
+            <div class="mb-5">
+                <label class="label text-sm font-semibold text-base-content">
                     Cutoff End Date
-                    <span style="font-weight:400; color:#9ca3af; font-size:12px;">— auto</span>
+                    <span class="font-normal text-base-content/40 text-xs">— auto</span>
                 </label>
                 <input type="text" id="preview_end" disabled placeholder="Computed after picking start date"
-                       style="width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:6px; font-size:14px; background:#f9fafb; color:#6b7280;">
+                       class="input input-bordered w-full bg-base-200">
             </div>
 
             {{-- Payroll Date (read-only preview) --}}
-            <div style="margin-bottom:28px;">
-                <label style="display:block; font-weight:600; color:#374151; margin-bottom:8px; font-size:14px;">
+            <div class="mb-7">
+                <label class="label text-sm font-semibold text-base-content">
                     Payroll Date
-                    <span style="font-weight:400; color:#9ca3af; font-size:12px;">— auto (5 days after end)</span>
+                    <span class="font-normal text-base-content/40 text-xs">— auto (5 days after end)</span>
                 </label>
                 <input type="text" id="preview_payroll" disabled placeholder="Computed after picking start date"
-                       style="width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:6px; font-size:14px; background:#f9fafb; color:#6b7280;">
+                       class="input input-bordered w-full bg-base-200">
             </div>
 
             {{-- Summary card (hidden until date is picked) --}}
-            <div id="period_summary"
-                 style="display:none; background:#f0f9ff; border:1px solid #bae6fd; border-radius:8px; padding:14px 16px; margin-bottom:24px;">
-                <p style="margin:0 0 6px 0; font-size:13px; font-weight:600; color:#0369a1;">
-                    <i class="icon-[ph--info-fill]"></i> Period Summary
+            <div id="period_summary" class="hidden bg-info/10 border border-info/20 rounded-lg px-4 py-3.5 mb-6">
+                <p class="m-0 mb-1.5 text-sm font-semibold text-info flex items-center gap-1.5">
+                    <i class="icon-[tabler--info-circle]"></i> Period Summary
                 </p>
-                <p id="summary_text" style="margin:0; font-size:13px; color:#0c4a6e; line-height:1.6;"></p>
+                <p id="summary_text" class="m-0 text-sm text-info/90 leading-relaxed"></p>
             </div>
 
             {{-- Hidden fields submitted to backend --}}
             <input type="hidden" name="cutoff_end" id="cutoff_end">
             <input type="hidden" name="payroll_date" id="payroll_date">
 
-            <div style="display:flex; gap:12px;">
-                <button type="submit" id="submit_btn" disabled
-                        style="flex:1; padding:12px 20px; background:#9ca3af; color:white; border:none; border-radius:6px; cursor:not-allowed; font-size:14px; font-weight:600; transition:background 0.2s;">
-                    <i class="icon-[ph--floppy-disk-fill]"></i> Create Payroll Period
+            <div class="flex gap-3">
+                <button type="submit" id="submit_btn" disabled class="btn btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="icon-[tabler--device-floppy]"></i> Create Payroll Period
                 </button>
-                <a href="{{ route('manual-payroll-attendance.index') }}"
-                   style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; font-size:14px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">
+                <a href="{{ route('manual-payroll-attendance.index') }}" class="btn btn-soft">
                     Cancel
                 </a>
             </div>
@@ -98,7 +91,6 @@
 
 <script>
 (function () {
-    var btnColor = '{{ $color }}';
 
     function fmt(d) {
         return d.toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -113,36 +105,37 @@
     function computeDates(val) {
         if (!val) { resetPreviews(); return; }
 
-        var parts   = val.split('-');
-        var year    = parseInt(parts[0]);
-        var month   = parseInt(parts[1]);
-        var day     = parseInt(parts[2]);
+        var parts = val.split('-');
+        var year  = parseInt(parts[0]);
+        var month = parseInt(parts[1]);
+        var day   = parseInt(parts[2]);
 
-        var start   = new Date(year, month - 1, day);
-        var isP1    = day <= 15;
+        var start = new Date(year, month - 1, day);
+        var isP1  = day <= 15;
         var end, payroll;
 
         if (isP1) {
-    // Phase 1: 1st to 15th, payroll on the 20th
-    end     = new Date(year, month - 1, 15);
-    payroll = new Date(year, month - 1, 20);
-} else {
-    // Phase 2: 16th to last day of month, payroll on 5th of next month
-    var lastDay = new Date(year, month, 0);
-    end     = lastDay;
-    payroll = new Date(year, month, 5);
-}
+            // Phase 1: 1st to 15th, payroll on the 20th
+            end     = new Date(year, month - 1, 15);
+            payroll = new Date(year, month - 1, 20);
+        } else {
+            // Phase 2: 16th to last day of month, payroll on 5th of next month
+            var lastDay = new Date(year, month, 0);
+            end     = lastDay;
+            payroll = new Date(year, month, 5);
+        }
 
         document.querySelectorAll('#preview_end').forEach(function(el)   { el.value = fmt(end); });
         document.querySelectorAll('#preview_payroll').forEach(function(el){ el.value = fmt(payroll); });
         document.querySelectorAll('#cutoff_end').forEach(function(el)    { el.value = toInputDate(end); });
         document.querySelectorAll('#payroll_date').forEach(function(el)  { el.value = toInputDate(payroll); });
 
+        // Phase badge: toggle real theme classes instead of setting inline hex —
+        // no JS-side color values to keep in sync with the theme at all.
         document.querySelectorAll('#phase_badge').forEach(function(badge) {
-            badge.textContent      = isP1 ? '1st Half' : '2nd Half';
-            badge.style.display    = 'inline-block';
-            badge.style.background = isP1 ? '#dbeafe' : '#ede9fe';
-            badge.style.color      = isP1 ? '#1e40af' : '#6d28d9';
+            badge.textContent = isP1 ? '1st Half' : '2nd Half';
+            badge.classList.remove('hidden', 'badge-soft', 'badge-info', 'badge-secondary');
+            badge.classList.add('badge-soft', isP1 ? 'badge-info' : 'badge-secondary');
         });
 
         var summaryHTML =
@@ -152,12 +145,10 @@
             '<strong>Phase:</strong> '    + (isP1 ? '1st Half' : '2nd Half');
 
         document.querySelectorAll('#summary_text').forEach(function(el)   { el.innerHTML = summaryHTML; });
-        document.querySelectorAll('#period_summary').forEach(function(el) { el.style.display = 'block'; });
+        document.querySelectorAll('#period_summary').forEach(function(el) { el.classList.remove('hidden'); });
 
         document.querySelectorAll('#submit_btn').forEach(function(btn) {
-            btn.disabled         = false;
-            btn.style.background = btnColor;
-            btn.style.cursor     = 'pointer';
+            btn.disabled = false;
         });
     }
 
@@ -166,13 +157,9 @@
         document.querySelectorAll('#preview_payroll').forEach(function(el){ el.value = ''; });
         document.querySelectorAll('#cutoff_end').forEach(function(el)     { el.value = ''; });
         document.querySelectorAll('#payroll_date').forEach(function(el)   { el.value = ''; });
-        document.querySelectorAll('#phase_badge').forEach(function(el)    { el.style.display = 'none'; });
-        document.querySelectorAll('#period_summary').forEach(function(el) { el.style.display = 'none'; });
-        document.querySelectorAll('#submit_btn').forEach(function(btn) {
-            btn.disabled         = true;
-            btn.style.background = '#9ca3af';
-            btn.style.cursor     = 'not-allowed';
-        });
+        document.querySelectorAll('#phase_badge').forEach(function(el)    { el.classList.add('hidden'); });
+        document.querySelectorAll('#period_summary').forEach(function(el) { el.classList.add('hidden'); });
+        document.querySelectorAll('#submit_btn').forEach(function(btn)    { btn.disabled = true; });
     }
 
     document.querySelectorAll('#cutoff_start').forEach(function(input) {

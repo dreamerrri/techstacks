@@ -74,13 +74,13 @@
                             {{ $request->reason ? \Illuminate\Support\Str::limit($request->reason, 50) : '-' }}
                         </td>
                         <td>
-                          <a href="{{ route('work-requests.show', $request) }}" class="btn btn-soft btn-info btn-sm">
+                          <a href="{{ route('work-requests.show', $request) }}" class="btn  btn-info btn-sm">
     <i class="icon-[ph--eye-fill]"></i>
 </a>
-<button type="button" class="btn btn-soft btn-success btn-sm" onclick="approveRequest({{ $request->id }})">
+<button type="button" class="btn  btn-success btn-sm" onclick="approveRequest({{ $request->id }})">
     <i class="icon-[tabler--check]"></i>
 </button>
-<button type="button" class="btn btn-soft btn-error btn-sm" onclick="showRejectModal({{ $request->id }})">
+<button type="button" class="btn  btn-error btn-sm" onclick="showRejectModal({{ $request->id }})">
     <i class="icon-[ph--x]"></i>
 </button>
                         </td>
