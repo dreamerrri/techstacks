@@ -20,8 +20,8 @@
         <i class="icon-[tabler--info-circle]"></i>
     </span>
     <span class="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
-    <span class="tooltip-body bg-success/90 shadow-md rounded-lg px-3 py-2 text-xs normal-case text-success-content font-medium">
-    {{ $slot }}
+<span class="tooltip-body bg-primary shadow-md rounded-lg px-3 py-2 text-xs normal-case text-primary-content text-m">
+        {{ $slot }}
 </span>
     </span>
 </div>

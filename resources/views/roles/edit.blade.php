@@ -94,10 +94,10 @@
 
             {{-- Actions --}}
             <div class="flex gap-3 flex-wrap pt-4 border-t border-gray-100">
-                <button type="submit" class="btn btn-soft btn-error">
+                <button type="submit" class="btn  btn-error">
                     <i class="icon-[ph--floppy-disk-fill]"></i> Update Role
                 </button>
-                <a href="{{ route('roles.show', $role) }}" class="btn btn-soft">Cancel</a>
+                <a href="{{ route('roles.show', $role) }}" class="btn ">Cancel</a>
             </div>
         </form>
     </div>

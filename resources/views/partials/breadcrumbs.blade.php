@@ -7,27 +7,27 @@
         <span class="breadcrumb-item inline-flex items-center"
               style="animation-delay: {{ $loop->index * 60 }}ms">
 
-@if (!is_null($breadcrumb->url) && !$loop->last)
-    <a href="{{ $breadcrumb->url }}"
-       class="breadcrumb-link no-underline transition-colors duration-200 font-medium">
-        {{ $breadcrumb->title }}
-    </a>
-@elseif($loop->last)
-    <span class="breadcrumb-current font-semibold">
-        {{ $breadcrumb->title }}
-    </span>
-@else
-    <span class="breadcrumb-link font-medium">
-        {{ $breadcrumb->title }}
-    </span>
-@endif
+            @if (!is_null($breadcrumb->url) && !$loop->last)
+                <a href="{{ $breadcrumb->url }}"
+                   class="text-base-content no-underline transition-colors duration-200 hover:text-primary ">
+                    {{ $breadcrumb->title }}
+                </a>
+            @elseif($loop->last)
+                <span class="text-primary font-semibold ">
+                    {{ $breadcrumb->title }}
+                </span>
+            @else
+                <span class="text-base-content">
+                    {{ $breadcrumb->title }}
+                </span>
+            @endif
 
         </span>
 
         @unless ($loop->last)
-<span class="mx-3 inline-flex items-center breadcrumb-separator">
-    <i class="icon-[ph--caret-right-fill] text-xs"></i>
-</span>
+            <span class="mx-3 inline-flex items-center text-base-content">
+                <i class="icon-[tabler--chevron-right] text-xs"></i>
+            </span>
         @endunless
 
     @endforeach

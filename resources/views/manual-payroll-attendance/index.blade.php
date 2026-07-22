@@ -13,7 +13,8 @@
 
 <x-table-card action="{{ route('manual-payroll-attendance.index') }}">
     <x-slot:title>
-        <x-dot-loader /> Payroll Attendance Encoding
+        <x-dot-loader />
+        <p class="text-base-content"> Payroll Attendance Encoding</p>
         <x-info-tooltip>
             Manually encode attendance totals, overtime, allowances, and deductions for payroll processing.
         </x-info-tooltip>
@@ -22,12 +23,12 @@
     <x-slot:actions>
         <div class="flex items-center gap-2">
             @if($isAdmin)
-                <a href="{{ route('payroll-periods.archived') }}" class="btn btn-soft btn-neutral whitespace-nowrap">
+                <a href="{{ route('payroll-periods.archived') }}" class="btn  btn-neutral whitespace-nowrap">
                     <i class="icon-[ph--archive-fill]"></i> Archived
                 </a>
             @endif
             @if($isAdmin || $isHR)
-                <a href="{{ route('payroll-periods.create') }}" class="btn btn-soft btn-error whitespace-nowrap">
+                <a href="{{ route('payroll-periods.create') }}" class="btn  btn-error whitespace-nowrap">
                     <i class="icon-[ph--plus-fill]"></i> Create Payroll Period
                 </a>
             @endif
@@ -94,7 +95,7 @@
                     @foreach($periods as $period)
                         @if($period)
                             <div id="period-row-{{ $period->id }}"
-                                 class="border border-gray-200 rounded-xl p-5 cursor-pointer transition-all hover:border-red-400 hover:shadow-md"
+                                 class="border border-primary rounded-xl p-5 cursor-pointer transition-all hover:border-red-400 hover:shadow-md"
                                  onclick="window.location.href='{{ route('manual-payroll-attendance.period', $period) }}'">
 
                                 <div class="flex justify-between items-start mb-3">
@@ -114,7 +115,7 @@
                                         </span>
                                         @if($isAdmin)
                                         <button onclick="event.stopPropagation(); confirmDelete({{ $period->id }}, '{{ $period->period_label }}', '{{ route('payroll-periods.archive', $period) }}')"
-            class="btn btn-soft btn-error btn-xs">
+            class="btn  btn-error btn-xs">
         <i class="icon-[ph--trash-fill]"></i>
     </button>
                                         @endif
@@ -142,7 +143,7 @@
                 <h3 class="text-base-content/60 m-0 mb-2">No Payroll Periods Found</h3>
                 <p class="text-base-content/40 m-0">Create a payroll period to start encoding attendance.</p>
                 @if($isAdmin || $isHR)
-                    <a href="{{ route('payroll-periods.create') }}" class="btn btn-soft btn-error mt-4">
+                    <a href="{{ route('payroll-periods.create') }}" class="btn  btn-error mt-4">
                         <i class="icon-[ph--plus-fill]"></i> Create Payroll Period
                     </a>
                 @endif

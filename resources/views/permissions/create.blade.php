@@ -75,10 +75,10 @@
             </div>
 
             <div class="flex gap-3 flex-wrap pt-4 border-t border-gray-100">
-                <button type="submit" class="btn btn-soft btn-error">
+                <button type="submit" class="btn  btn-error">
                     <i class="icon-[ph--floppy-disk-fill]"></i> Create Permission
                 </button>
-                <a href="{{ route('permissions.index') }}" class="btn btn-soft">Cancel</a>
+                <a href="{{ route('permissions.index') }}" class="btn ">Cancel</a>
             </div>
         </form>
     </div>

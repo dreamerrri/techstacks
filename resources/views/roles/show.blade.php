@@ -35,7 +35,7 @@
                     <code class="text-xs text-base-content/60 bg-gray-100 px-2 py-0.5 rounded">{{ $role->slug }}</code>
                 </div>
             </div>
-            <a href="{{ route('roles.edit', $role) }}" class="btn btn-soft btn-error btn-sm">
+            <a href="{{ route('roles.edit', $role) }}" class="btn  btn-error btn-sm">
                 <i class="icon-[ph--pencil-fill]"></i> Edit Role
             </a>
         </div>
@@ -112,7 +112,7 @@
                             <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
                         @endforeach
                     </select>
-                    <button type="submit" class="btn btn-soft btn-error btn-sm">
+                    <button type="submit" class="btn  btn-error btn-sm">
                         <i class="icon-[ph--user-plus-fill]"></i> Assign User
                     </button>
                 </form>
@@ -138,7 +138,7 @@
                                       data-confirm-icon="warning"
                                       data-confirm-btn="Yes, remove">
                                     @csrf @method('DELETE')
-                                    <button class="btn btn-soft btn-error btn-sm">
+                                    <button class="btn  btn-error btn-sm">
                                         <i class="icon-[ph--user-minus-fill]"></i> Remove
                                     </button>
                                 </form>

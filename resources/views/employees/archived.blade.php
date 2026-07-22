@@ -48,7 +48,7 @@
                                       data-confirm-icon="question"
                                       data-confirm-btn="Yes, restore">
                                     @csrf @method('PATCH')
-                                    <button class="btn btn-soft btn-success btn-sm">
+                                    <button class="btn  btn-success btn-sm">
                                         <i class="icon-[ph--arrow-counter-clockwise-fill]"></i> Restore
                                     </button>
                                 </form>
@@ -94,7 +94,7 @@
                               data-confirm-icon="question"
                               data-confirm-btn="Yes, restore">
                             @csrf @method('PATCH')
-                            <button class="btn btn-soft btn-success btn-sm">
+                            <button class="btn  btn-success btn-sm">
                                 <i class="icon-[ph--arrow-counter-clockwise-fill]"></i> Restore
                             </button>
                         </form>

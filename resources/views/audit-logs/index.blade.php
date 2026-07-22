@@ -4,9 +4,11 @@
 
 
 @section('content')
+ 
 <x-table-card action="{{ route('audit-logs.index') }}">
     <x-slot:title>
-        <x-dot-loader /> Audit Logs
+        <x-dot-loader /> 
+        <p class="text-base-content">Audit Logs</p> 
          
         <x-info-tooltip>
             Track and review all system activity and changes.
@@ -44,10 +46,10 @@
                        class="input input-bordered input-sm w-full">
             </div>
             <div>
-                <button type="submit" class="btn btn-soft btn-error btn-sm">
+                <button type="submit" class="btn  btn-error btn-sm">
                     <i class="icon-[tabler--filter]"></i> Filter
                 </button>
-                <a href="{{ route('audit-logs.index') }}" class="btn btn-soft btn-sm">Clear</a>
+                <a href="{{ route('audit-logs.index') }}" class="btn  btn-sm">Clear</a>
             </div>
         </div>
     </x-slot:filters>
@@ -88,7 +90,7 @@
                 <td class="text-base-content/60 max-w-[200px] truncate">{{ $log->description }}</td>
                 <td class="text-base-content/60 font-mono text-xs">{{ $log->ip_address ?? '—' }}</td>
                 <td>
-                    <a href="{{ route('audit-logs.show', $log) }}" class="btn btn-soft btn-info btn-sm">
+                    <a href="{{ route('audit-logs.show', $log) }}" class="btn  btn-info btn-sm">
                       <i class="icon-[tabler--eye]"></i>
                     </a>
                 </td>
@@ -138,7 +140,7 @@
                 <div class="text-xs text-base-content/40 mt-1">{{ $log->description }}</div>
 
                 <div class="mt-3 pt-3 border-t border-gray-100">
-                    <a href="{{ route('audit-logs.show', $log) }}" class="btn btn-soft btn-info btn-sm">
+                    <a href="{{ route('audit-logs.show', $log) }}" class="btn  btn-info btn-sm">
   <i class="icon-[tabler--eye]"></i>View Details
                     </a>
                 </div>

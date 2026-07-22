@@ -30,7 +30,7 @@
                     <code class="text-xs text-base-content/60 bg-gray-100 px-2 py-0.5 rounded">{{ $permission->slug }}</code>
                 </div>
             </div>
-            <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft btn-error btn-sm">
+            <a href="{{ route('permissions.edit', $permission) }}" class="btn  btn-error btn-sm">
                 <i class="icon-[ph--pencil-fill]"></i> Edit Permission
             </a>
         </div>
@@ -87,7 +87,7 @@
                                     <code class="text-xs text-base-content/60">{{ $role->slug }}</code>
                                 </div>
                             </div>
-                            <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
+                            <a href="{{ route('roles.show', $role) }}" class="btn  btn-info btn-sm">
                                 <i class="icon-[ph--eye-fill]"></i> View Role
                             </a>
                         </div>

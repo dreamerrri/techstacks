@@ -15,12 +15,12 @@
 {{-- Top nav --}}
 <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
     <a href="{{ route('payroll.index') }}" 
-           class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600 flex items-center gap-1">
-.        <i class="icon-[ph--arrow-left-fill]"></i> Back to Payroll List
+           class="back-link text-base-content/60 no-underline text-sm hover:text-primary flex items-center gap-1">
+      <i class="icon-[ph--arrow-left-fill]"></i> Back to Payroll List
     </a>
     @if(($payroll['gross_pay'] ?? 0) > 0)
         <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-           class="btn btn-soft btn-info btn-sm">
+           class="btn  btn-info btn-sm">
             <i class="icon-[ph--file-arrow-down-fill]"></i> Download Payslip
         </a>
     @endif

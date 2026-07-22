@@ -3,6 +3,7 @@
 }
 @import 'flyonui/variants.css';
 
+
 @plugin "flyonui/theme" {
   name: "techstacks";
   color-scheme: dark;
@@ -10,12 +11,12 @@
   --color-base-100: #313D42; /* Cards */
   --color-base-200: #2B353A; /* Section background */
   --color-base-300: #232C30; /* Main background */
-  --color-base-content: #E0E6E8; /* Primary text */
+  --color-base-content: #FFFFFF; /* Primary text */
   /* Brand colors */
   --color-primary: #24D6AE; /* Mint Green — signature color */
-  --color-primary-content: #0D1515;
-  --color-secondary: #15B79E; /* Teal */
-  --color-secondary-content: #FFFFFF;
+  --color-primary-content: #FFFFFF;
+  --color-secondary: #15B79E; /* Teal #F0F0F0*/
+  --color-secondary-content: #D1D5DB; /* or #F0F0F0 or #F5F5F5*/
   --color-accent: #32C8FF; /* Cyan Accent */
   --color-accent-content: #0D1515;
   --color-neutral: #3E5A55; /* Border color, lifted to match new surfaces */
@@ -52,9 +53,9 @@
   --color-base-content: #1C2427; /* Primary text */
   /* Brand colors */
   --color-primary: #24D6AE; /* Mint Green — signature color */
-  --color-primary-content: #0D1515;
+  --color-primary-content: #FFFFFF;
   --color-secondary: #15B79E; /* Teal */
-  --color-secondary-content: #FFFFFF;
+  --color-secondary-content: #4B5563;
   --color-accent: #32C8FF; /* Cyan Accent */
   --color-accent-content: #0D1515;
   --color-neutral: #C7D2D4; /* Border color, light equivalent */
@@ -129,4 +130,10 @@
 [data-theme="techstacks"] .overlay-backdrop {
   background-color: rgb(17 24 39 / 0.6);
   
+}
+
+[data-theme="techstacks"] .btn-text,
+[data-theme="techstacks-light"] .btn-text {
+    background-color: transparent;
+    color: var(--color-base-content);
 }

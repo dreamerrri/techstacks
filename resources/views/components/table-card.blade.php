@@ -29,7 +29,7 @@
 
             @if($isAdmin || $isHR)
                 <x-slot:actions>
-                    <button onclick="openDeptModal()" class="btn btn-soft btn-error btn-sm">
+                    <button onclick="openDeptModal()" class="btn  btn-error btn-sm">
                         <i class="icon-[ph--stack-fill]"></i> Breakdown
                     </button>
                 </x-slot:actions>
@@ -62,10 +62,10 @@
    --}}
 {{-- resources/views/components/table-card.blade.php --}}
 @props(['action' => null])
+{{-- -on one hand bg-base-200 looks good on dark mode, on the other hand, it sucks on light mode --}}
+<div class="card  border border-base-300  flex flex-col p-0">
 
-<div class="card bg-base-100 shadow-sm flex flex-col p-0">
-
-<div class="sticky top-0  bg-base-100 px-7 pt-5 rounded-t-2xl">
+<div class="sticky top-0   px-7 pt-5 rounded-t-2xl">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
             <h2 class="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
                 {{ $title ?? '' }}

@@ -99,10 +99,10 @@
 
         <div class="px-6 py-4 border-t border-base-300 flex justify-between items-center flex-wrap gap-2">
             <div class="flex gap-2 flex-wrap">
-                <button onclick="printPayrollTable()" class="btn btn-soft btn-info btn-sm">
+                <button onclick="printPayrollTable()" class="btn  btn-info btn-sm">
                     <i class="icon-[tabler--printer]"></i> Print PDF
                 </button>
-                <button onclick="exportPayrollCSV()" class="btn btn-soft btn-success btn-sm">
+                <button onclick="exportPayrollCSV()" class="btn  btn-success btn-sm">
                     <i class="icon-[tabler--file-type-csv]"></i> Export CSV
                 </button>
             </div>
@@ -127,7 +127,7 @@
 
     @if($isAdmin || $isHR)
         <x-slot:actions>
-            <button onclick="openDeptModal()" class="btn btn-soft btn-error btn-sm">
+            <button onclick="openDeptModal()" class="btn  btn-error btn-sm">
                 <i class="icon-[tabler--stack]"></i> Breakdown
             </button>
         </x-slot:actions>
@@ -137,12 +137,11 @@
         @if($isAdmin || $isHR)
             {{-- Search group --}}
             <div class="join flex-none w-64 min-w-40">
-                <input type="text" name="search" value="{{ request('search') }}"
-                       placeholder="Search name, ID, email..."
+                <input type="text" name="search" id="search-input" value="{{ request('search') }}"
+                       placeholder="Search name or email..."
                        oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
-                       class="input input-bordered input-sm join-item w-full border-gray-300">
-
-                <button type="submit" class="btn btn-outline btn-sm join-item border-gray-300">
+                       class="input input-bordered input-sm bg-base-200  join-item w-full ">
+               <button type="submit" class="btn btn-outline btn-primary btn-sm join-item">
                     <i class="icon-[tabler--search]"></i>
                 </button>
             </div>
@@ -198,7 +197,7 @@
                 @endforeach
             </select>
             @if(request()->hasAny(['search', 'department', 'payroll_period_id']))
-                <a href="{{ route('payroll.index') }}" class="btn btn-soft btn-sm">Clear</a>
+                <a href="{{ route('payroll.index') }}" class="btn  btn-sm">Clear</a>
             @endif
         </div>
     </x-slot:filters>
@@ -244,16 +243,16 @@
                 <td class="text-center">
                     <div class="flex gap-2 justify-center">
                         @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
-                            <button class="btn btn-soft btn-sm btn-disabled" title="No payroll data">
+                            <button class="btn  btn-sm btn-disabled" title="No payroll data">
                                 <i class="icon-[tabler--eye]"></i>
                             </button>
                         @else
                             <a href="{{ route('payroll.show', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-                               class="btn btn-soft btn-info btn-sm" title="Full details">
+                               class="btn  btn-info btn-sm" title="Full details">
                                 <i class="icon-[tabler--eye]"></i>
                             </a>
                             <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-                               class="btn btn-soft btn-success btn-sm" title="Download payslip">
+                               class="btn  btn-success btn-sm" title="Download payslip">
                                 <i class="icon-[tabler--file-download]"></i>
                             </a>
                         @endif
@@ -334,16 +333,16 @@
 
                 <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-300">
                     @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
-                        <button class="btn btn-soft btn-sm btn-disabled">
+                        <button class="btn  btn-sm btn-disabled">
                             <i class="icon-[tabler--eye]"></i> View Details
                         </button>
                     @else
                         <a href="{{ route('payroll.show', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-                           class="btn btn-soft btn-info btn-sm">
+                           class="btn  btn-info btn-sm">
                             <i class="icon-[tabler--eye]"></i> View Details
                         </a>
                         <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-                           class="btn btn-soft btn-success btn-sm">
+                           class="btn  btn-success btn-sm">
                             <i class="icon-[tabler--file-download]"></i> Payslip
                         </a>
                     @endif

@@ -12,10 +12,10 @@
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Government Contributions
         </a>
         <div class="flex gap-2">
-            <button onclick="printContributionDetail()" class="btn btn-soft btn-info btn-sm">
+            <button onclick="printContributionDetail()" class="btn  btn-info btn-sm">
                 <i class="icon-[ph--printer-fill]"></i> Print
             </button>
-            <button onclick="exportContributionDetailCSV()" class="btn btn-soft btn-success btn-sm">
+            <button onclick="exportContributionDetailCSV()" class="btn  btn-success btn-sm">
                 <i class="icon-[ph--file-csv-fill]"></i> Export CSV
             </button>
         </div>
@@ -154,7 +154,7 @@
 
         {{-- Save Button --}}
         <div class="mt-6 text-right">
-            <button onclick="saveCustomContributions()" class="btn btn-soft btn-error">
+            <button onclick="saveCustomContributions()" class="btn  btn-error">
                 <i class="icon-[ph--floppy-disk-fill]"></i> Save Custom Contributions
             </button>
         </div>

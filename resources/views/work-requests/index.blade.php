@@ -2,20 +2,18 @@
 
 @section('title', 'Work Requests')
 
-
 @section('content')
 
 @php
-    $user = auth()->user();
+    $user  = auth()->user();
     $admin = $user->isAdmin();
-    $hr = $user->isHR();
-    $color = $admin ? '#dc2626' : ($hr ? '#2563eb' : '#667eea');
-    $colorDark = $admin ? '#991b1b' : ($hr ? '#1e40af' : '#764ba2');
+    $hr    = $user->isHR();
 @endphp
 
 <x-table-card action="{{ route('work-requests.index') }}">
     <x-slot:title>
-        <x-dot-loader /> Work Requests
+        <x-dot-loader />
+        <p class="text-base-content"> Work Requests</p>
         <x-info-tooltip>
             {{ $admin || $hr ? 'Manage employee work requests' : 'View and manage your work requests' }}
         </x-info-tooltip>
@@ -25,15 +23,13 @@
         <div class="flex gap-2">
             @if($admin || $hr)
                 @if($pendingCount > 0)
-                    <a href="{{ route('work-requests.pending') }}"
-                       class="px-5 py-3 bg-amber-500 text-white border-none rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2">
-                        <i class="icon-[ph--clock-fill]"></i> Pending ({{ $pendingCount }})
+                    <a href="{{ route('work-requests.pending') }}" class="btn btn-soft btn-warning btn-sm">
+                        <i class="icon-[tabler--clock]"></i> Pending ({{ $pendingCount }})
                     </a>
                 @endif
             @else
-                <a href="{{ route('work-requests.create') }}"
-                   class="px-5 py-3 text-white border-none rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2" style="background:{{ $color }};">
-                    <i class="icon-[ph--plus-fill]"></i> New Request
+                <a href="{{ route('work-requests.create') }}" class="btn btn-soft btn-primary btn-sm">
+                    <i class="icon-[tabler--plus]"></i> New Request
                 </a>
             @endif
         </div>
@@ -41,32 +37,32 @@
 
     {{-- Filters --}}
     <x-slot:filters>
-        <div>
-            <label class="text-xs text-base-content/60 mb-1 block">Status</label>
-            <select name="status" class="p-2 border border-base-300 rounded-field text-sm min-w-[150px]">
-                <option value="">All</option>
-                <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="approved" {{ $status === 'approved' ? 'selected' : '' }}>Approved</option>
-                <option value="rejected" {{ $status === 'rejected' ? 'selected' : '' }}>Rejected</option>
-                <option value="cancelled" {{ $status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-            </select>
-        </div>
-        <div>
-            <label class="text-xs text-base-content/60 mb-1 block">Type</label>
-            <select name="type" class="p-2 border border-base-300 rounded-field text-sm min-w-[150px]">
-                <option value="">All</option>
-                <option value="weekend" {{ $type === 'weekend' ? 'selected' : '' }}>Weekend</option>
-                <option value="holiday" {{ $type === 'holiday' ? 'selected' : '' }}>Holiday</option>
-                <option value="overtime" {{ $type === 'overtime' ? 'selected' : '' }}>Overtime</option>
-            </select>
-        </div>
-        <div class="mt-5">
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white border-none rounded-field cursor-pointer text-sm font-semibold">
-                <i class="icon-[ph--funnel-fill]"></i> Filter
-            </button>
-            <a href="{{ route('work-requests.index') }}" class="px-4 py-2 bg-base-200 text-base-content border border-base-300 rounded-field cursor-pointer text-sm font-semibold no-underline inline-block ml-2">
-                Clear
-            </a>
+        <div class="flex flex-wrap items-end gap-2">
+            <div class="fieldset">
+                
+                <select name="status" class="select select-bordered select-sm min-w-[150px]">
+                    <option value="">All</option>
+                    <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="approved" {{ $status === 'approved' ? 'selected' : '' }}>Approved</option>
+                    <option value="rejected" {{ $status === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                    <option value="cancelled" {{ $status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                </select>
+            </div>
+            <div class="fieldset">
+         
+                <select name="type" class="select select-bordered select-sm min-w-[150px]">
+                    <option value="">All</option>
+                    <option value="weekend" {{ $type === 'weekend' ? 'selected' : '' }}>Weekend</option>
+                    <option value="holiday" {{ $type === 'holiday' ? 'selected' : '' }}>Holiday</option>
+                    <option value="overtime" {{ $type === 'overtime' ? 'selected' : '' }}>Overtime</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-soft btn-error btn-sm">
+                    <i class="icon-[tabler--filter]"></i> Filter
+                </button>
+                <a href="{{ route('work-requests.index') }}" class="btn btn-soft btn-sm">Clear</a>
+            </div>
         </div>
     </x-slot:filters>
 
@@ -74,68 +70,80 @@
     @if($workRequests->count() > 0)
         <x-data-table>
             <x-slot:head>
-                <th class="px-4 py-3 text-left text-xs font-semibold">Date</th>
+                <th>Date</th>
                 @if($admin || $hr)
-                    <th class="px-4 py-3 text-left text-xs font-semibold">Employee</th>
+                    <th>Employee</th>
                 @endif
-                <th class="px-4 py-3 text-left text-xs font-semibold">Type</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold">Work Date</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold">Time</th>
-                <th class="px-4 py-3 text-left text-xs font-semibold">Status</th>
-                <th class="px-4 py-3 text-center text-xs font-semibold">Actions</th>
+                <th>Type</th>
+                <th>Work Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
             </x-slot:head>
 
             @foreach($workRequests as $request)
+                @php
+                    $typeClass = match($request->request_type) {
+                        'weekend'  => 'badge-soft badge-info',
+                        'holiday'  => 'badge-soft badge-warning',
+                        'overtime' => 'badge-soft badge-secondary',
+                        default    => 'badge-soft',
+                    };
+                    $statusClass = match($request->status) {
+                        'pending'   => 'badge-soft badge-warning',
+                        'approved'  => 'badge-soft badge-success',
+                        'rejected'  => 'badge-soft badge-error',
+                        'cancelled' => 'badge-soft',
+                        default     => 'badge-soft',
+                    };
+                @endphp
                 <tr class="row-hover border-b border-base-300">
-                    <td class="px-4 py-3 text-sm text-base-content">
+                    <td class="text-base-content">
                         {{ $request->created_at->format('M d, Y') }}
                     </td>
                     @if($admin || $hr)
-                        <td class="px-4 py-3 text-sm text-base-content">
+                        <td class="text-base-content">
                             {{ $request->employee->full_name }}
                         </td>
                     @endif
-                    <td class="px-4 py-3 text-sm text-base-content">
-                        <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->request_type === 'weekend' ? 'bg-blue-100 text-blue-800' : ($request->request_type === 'holiday' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800') }}">
-                            {{ ucfirst($request->request_type) }}
-                        </span>
+                    <td>
+                        <span class="badge {{ $typeClass }}">{{ ucfirst($request->request_type) }}</span>
                     </td>
-                    <td class="px-4 py-3 text-sm text-base-content">
+                    <td class="text-base-content">
                         {{ $request->work_date->format('M d, Y') }}
                     </td>
-                    <td class="px-4 py-3 text-sm text-base-content/60">
-                        {{ $request->start_time ? $request->start_time : '-' }}
+                    <td class="text-base-content/60">
+                        {{ $request->start_time ?: '-' }}
                         @if($request->end_time) - {{ $request->end_time }}@endif
                     </td>
-                    <td style="padding:12px 16px; font-size:14px;">
-                        <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->status === 'pending' ? 'bg-amber-100 text-amber-800' : ($request->status === 'approved' ? 'bg-emerald-100 text-emerald-800' : ($request->status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800')) }}">
-                            {{ ucfirst($request->status) }}
-                        </span>
+                    <td>
+                        <span class="badge {{ $statusClass }}">{{ ucfirst($request->status) }}</span>
                     </td>
-                    <td class="px-4 py-3 text-center">
-                                    <a href="{{ route('work-requests.show', $request) }}" class="btn btn-soft btn-info btn-sm">
-    <i class="icon-[ph--eye-fill]"></i>
-</a>
-                        {{-- Only employees can edit/cancel their own pending requests --}}
-                        @if(!$admin && !$hr && $request->canBeCancelled())
-                            <a href="{{ route('work-requests.edit', $request) }}"
-                               class="px-3 py-1.5 bg-amber-500 text-white border-none rounded-field cursor-pointer text-xs no-underline inline-block mr-1">
-                                <i class="icon-[ph--pencil-fill]"></i>
+                    <td class="text-center">
+                        <div class="flex gap-2 justify-center">
+                            <a href="{{ route('work-requests.show', $request) }}" class="btn btn-soft btn-info btn-sm">
+                                <i class="icon-[tabler--eye]"></i>
                             </a>
-                            <button onclick="cancelRequest({{ $request->id }}, '{{ route('work-requests.destroy', $request) }}')"
-                                    class="px-3 py-1.5 bg-red-500 text-white border-none rounded-field cursor-pointer text-xs">
-                                <i class="icon-[ph--x]"></i>
-                            </button>
-                        @endif
+                            {{-- Only employees can edit/cancel their own pending requests --}}
+                            @if(!$admin && !$hr && $request->canBeCancelled())
+                                <a href="{{ route('work-requests.edit', $request) }}" class="btn btn-soft btn-warning btn-sm">
+                                    <i class="icon-[tabler--pencil]"></i>
+                                </a>
+                                <button onclick="cancelRequest({{ $request->id }}, '{{ route('work-requests.destroy', $request) }}')"
+                                        class="btn btn-soft btn-error btn-sm">
+                                    <i class="icon-[tabler--x]"></i>
+                                </button>
+                            @endif
+                        </div>
                     </td>
                 </tr>
             @endforeach
         </x-data-table>
     @else
         <div class="card p-12 text-center">
-            <i class="icon-[ph--calendar-x-fill] text-5xl text-base-content/30 mb-4 block"></i>
-            <h3 class="m-0 mb-2 text-base-content/60">No Work Requests Found</h3>
-            <p class="text-base-content/40 m-0 mb-6">
+            <i class="icon-[tabler--calendar-off] text-3xl text-base-content/40 mb-4 block"></i>
+            <h3 class="text-base-content/60 font-semibold mb-2">No Work Requests Found</h3>
+            <p class="text-base-content/40 mb-6">
                 @if(!$admin && !$hr)
                     {{ $status || $type ? 'Try adjusting your filters or' : 'Get started by' }} creating a new work request.
                 @else
@@ -143,9 +151,8 @@
                 @endif
             </p>
             @if(!$admin && !$hr)
-                <a href="{{ route('work-requests.create') }}"
-                   class="px-5 py-3 text-white border-none rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2" style="background:{{ $color }};">
-                    <i class="icon-[ph--plus-fill]"></i> New Request
+                <a href="{{ route('work-requests.create') }}" class="btn btn-soft btn-primary">
+                    <i class="icon-[tabler--plus]"></i> New Request
                 </a>
             @endif
         </div>
@@ -206,13 +213,17 @@
 @section('scripts')
 <script>
 function cancelRequest(requestId, url) {
+    const style = getComputedStyle(document.documentElement);
+    const errorColor   = style.getPropertyValue('--color-error').trim();
+    const neutralColor = style.getPropertyValue('--color-neutral').trim();
+
     Swal.fire({
         title: 'Cancel Work Request',
         text: 'Are you sure you want to cancel this work request?',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#6b7280',
+        confirmButtonColor: errorColor || '#ef4444',
+        cancelButtonColor: neutralColor || '#6b7280',
         confirmButtonText: 'Yes, Cancel',
         cancelButtonText: 'Keep it'
     }).then((result) => {

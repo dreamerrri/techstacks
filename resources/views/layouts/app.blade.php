@@ -55,7 +55,7 @@
 
     {{-- Sidebar sm:shadow-[inset_-10px_0_12px_-8px_rgba(0,0,0,0.35)] --}}
 <aside id="collapsible-mini-sidebar"
-       class="overlay [--auto-close:sm] overlay-open:translate-x-0 drawer drawer-start hidden sm:fixed sm:inset-y-0 sm:start-0 sm:z-10 sm:flex sm:translate-x-0 overlay-minified:overflow-visible w-[var(--sidebar-w)] overlay-minified:w-[var(--sidebar-w-mini)]"
+       class="overlay [--auto-close:sm]  border-r border-base-300 overlay-open:translate-x-0 drawer drawer-start hidden sm:fixed sm:inset-y-0 sm:start-0 sm:z-10 sm:flex sm:translate-x-0 overlay-minified:overflow-visible w-[var(--sidebar-w)] overlay-minified:w-[var(--sidebar-w-mini)]"
        role="dialog" tabindex="-1">
 
 
@@ -73,7 +73,7 @@
              This block is its own tree; it does not exist in the DOM in any
              form when the sidebar is minified.
         ====================================================================== --}}
-        <nav class="drawer-body px-2 pt-4 overlay-minified:hidden" aria-label="Primary">
+        <nav class="drawer-body px-2 pt-4 overlay-minified:hidden " aria-label="Primary">
             <ul class="menu p-0">
                 <li>
                     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -363,7 +363,7 @@
  <div class="drawer-footer  p-2">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="btn btn-error btn-soft btn-block">
+                <button type="submit" class="btn btn-error  btn-block">
                     <span class="icon-[tabler--logout] size-5"></span>
                     <span class="overlay-minified:hidden">Logout</span>
                 </button>
@@ -388,11 +388,11 @@
     </aside>
 
     {{-- Main column: navbar + page content --}}
-    <div class="flex flex-col flex-1 min-w-0 border-s border-base-content/10">
+    <div class="flex flex-col flex-1 min-w-0">
 
         {{-- Navbar --}}
 
-            <nav class="navbar bg-base-100 gap-4 border-b border-base-content/10 sticky top-0 z-9">{{-- -shadow-base-300/20 shadow-sm  --}}
+            <nav class="navbar bg-base-100 gap-4 border-b border-base-300 shadow-sm sticky top-0 z-9">{{-- -shadow-base-300/20 shadow-sm  --}}
             <div class="navbar-start items-center gap-2 ">
                 <button type="button" class="btn btn-text max-sm:btn-square sm:hidden"
                         aria-haspopup="dialog" aria-expanded="false" aria-controls="collapsible-mini-sidebar"
@@ -429,7 +429,7 @@
                 <x-search-box id="search-modal" />
 
                 {{-- Notifications --}}
-                <div class="dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]">
+                <div class="dropdown  relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]">
                     <button id="notif-dropdown" type="button" class="dropdown-toggle btn btn-text btn-circle relative"
                             aria-haspopup="menu" aria-expanded="false" aria-label="Notifications">
                         <span class="icon-[tabler--bell] size-5"></span>
@@ -459,7 +459,9 @@
                             </div>
                         </div>
                     </button>
-<ul class="dropdown-menu dropdown-open:opacity-100 hidden min-w-60 border border-base-content/10" role="menu" aria-labelledby="dropdown-avatar">                   
+
+
+<ul class="dropdown-menu dropdown-open:opacity-100 hidden min-w-60 border border-base-300" role="menu" aria-labelledby="dropdown-avatar">                   
          <li class="dropdown-header gap-2">
                             <div>
                                 <h6 class="text-base-content text-base font-semibold">{{ $user->name }}</h6>
@@ -480,7 +482,7 @@
                         <li class="dropdown-footer gap-2">
                             <form action="{{ route('logout') }}" method="POST" class="w-full">
                                 @csrf
-                                <button type="submit" class="btn btn-error btn-soft btn-block">
+                                <button type="submit" class="btn btn-error  btn-block">
                                     <span class="icon-[tabler--logout]"></span>
                                     Sign out
                                 </button>

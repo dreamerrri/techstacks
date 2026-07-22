@@ -115,7 +115,7 @@ use Illuminate\Support\Facades\Storage;
                                     @error('address') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-soft btn-info">
+                            <button type="submit" class="btn  btn-info">
                                 <i class="icon-[ph--floppy-disk-fill]"></i> Save Personal Info
                             </button>
                         </form>
@@ -256,7 +256,7 @@ use Illuminate\Support\Facades\Storage;
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-soft btn-error">
+                    <button type="submit" class="btn  btn-error">
                         <i class="icon-[ph--floppy-disk-fill]"></i> Save Changes
                     </button>
                 </form>

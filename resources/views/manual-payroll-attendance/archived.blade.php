@@ -64,7 +64,7 @@
 
                         @if($isAdmin)
                             <button onclick="confirmRestore({{ $period->id }}, '{{ $period->period_label }}', '{{ route('payroll-periods.restore', $period) }}')"
-                                    class="btn btn-soft btn-success btn-sm w-full">
+                                    class="btn  btn-success btn-sm w-full">
                                 <i class="icon-[ph--arrow-counter-clockwise-fill]"></i> Restore
                             </button>
                         @endif
