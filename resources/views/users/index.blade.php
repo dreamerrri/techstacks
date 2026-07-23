@@ -52,7 +52,7 @@
                        placeholder="Search name or email..."
                        oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
                        class="input input-bordered input-sm bg-base-200  join-item w-full ">
-               <button type="submit" class="btn btn-outline btn-primary btn-sm join-item">
+               <button type="submit" class="btn btn-soft btn-primary btn-sm join-item">
                     <i class="icon-[tabler--search]"></i>
                 </button>
             </div>
@@ -73,7 +73,7 @@
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                 </select>
                 @if(request()->hasAny(['search','role','status']))
-                    <a href="{{ route('users.index') }}" class="btn  btn-sm">Clear</a>
+                    <a href="{{ route('users.index') }}" class="btn btn-soft btn-sm">Clear</a>
                 @endif
             </div>
         </x-slot:filters>
@@ -162,7 +162,7 @@
                                   data-confirm-icon="{{ $user->is_active ? 'warning' : 'question' }}"
                                   data-confirm-btn="{{ $user->is_active ? 'Yes, deactivate' : 'Yes, activate' }}">
                                 @csrf @method('PATCH')
-                                <button class="btn  btn-xs {{ $user->is_active ? 'btn-error' : 'btn-success' }}">
+                                <button class="btn btn-soft btn-xs {{ $user->is_active ? 'btn-error' : 'btn-success' }}">
                                     <i class="{{ $user->is_active ? 'icon-[tabler--ban]' : 'icon-[tabler--check]' }}"></i>
                                     {{ $user->is_active ? 'Deactivate' : 'Activate' }}
                                 </button>
@@ -253,7 +253,7 @@
                                   data-confirm-icon="{{ $user->is_active ? 'warning' : 'question' }}"
                                   data-confirm-btn="{{ $user->is_active ? 'Yes, deactivate' : 'Yes, activate' }}">
                                 @csrf @method('PATCH')
-                                <button class="btn  btn-xs {{ $user->is_active ? 'btn-error' : 'btn-success' }}">
+                                <button class="btn btn-soft btn-xs {{ $user->is_active ? 'btn-error' : 'btn-success' }}">
                                     <i class="{{ $user->is_active ? 'icon-[tabler--ban]' : 'icon-[tabler--check]' }}"></i>
                                     {{ $user->is_active ? 'Deactivate' : 'Activate' }}
                                 </button>

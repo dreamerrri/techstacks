@@ -162,25 +162,25 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
 
 @if($isAdmin)
-    <a href="{{ route('employees.create') }}" class="btn btn-outline  flex-col h-auto py-5 gap-2">
+    <a href="{{ route('employees.create') }}" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--user-plus]"></i>
         </div>
         <span class="text-base-content/80">Create Users</span>
     </a>
-    <a href="{{ route('roles.index') }}" class="btn btn-outline flex-col h-auto py-5 gap-2">
+    <a href="{{ route('roles.index') }}" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--lock]"></i>
         </div>
         <span class="text-base-content/80">Manage Roles</span>
     </a>
-    <a href="#" class="btn btn-outline flex-col h-auto py-5 gap-2">
+    <a href="#" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--database]"></i>
         </div>
         <span class="text-base-content/80">System Backup</span>
     </a>
-    <a href="{{ route('audit-logs.index') }}" class="btn btn-outline flex-col h-auto py-5 gap-2">
+    <a href="{{ route('audit-logs.index') }}" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--history]"></i>
         </div>
@@ -188,25 +188,25 @@
     </a>
 
 @elseif($isHR)
-    <a href="{{ route('employees.create') }}" class="btn btn-outline flex-col h-auto py-5 gap-2">
+    <a href="{{ route('employees.create') }}" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--user-plus]"></i>
         </div>
         <span class="text-base-content/80">Add Employee</span>
     </a>
-    <a href="{{ route('payroll.index') }}" class="btn btn-outline flex-col h-auto py-5 gap-2">
+    <a href="{{ route('payroll.index') }}" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--calculator]"></i>
         </div>
         <span class="text-base-content/80">Payroll</span>
     </a>
-    <a href="#" class="btn btn-outline flex-col h-auto py-5 gap-2">
+    <a href="#" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--inbox]"></i>
         </div>
         <span class="text-base-content/80">Leave Requests</span>
     </a>
-    <a href="#" class="btn btn-outline flex-col h-auto py-5 gap-2">
+    <a href="#" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--file-type-pdf]"></i>
         </div>
@@ -214,25 +214,25 @@
     </a>
 
 @else
-    <a href="{{ route('profile.show') }}" class="btn btn-outline flex-col h-auto py-5 gap-2">
+    <a href="{{ route('profile.show') }}" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--user]"></i>
         </div>
         <span class="text-base-content/80">My Profile</span>
     </a>
-    <a href="{{ route('payroll.index') }}" class="btn btn-outline flex-col h-auto py-5 gap-2">
+    <a href="{{ route('payroll.index') }}" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--receipt]"></i>
         </div>
         <span class="text-base-content/80">Payslips</span>
     </a>
-    <a href="#" class="btn btn-outline flex-col h-auto py-5 gap-2">
+    <a href="#" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--calendar-off]"></i>
         </div>
         <span class="text-base-content/80">Leave Request</span>
     </a>
-    <a href="#" class="btn btn-outline flex-col h-auto py-5 gap-2">
+    <a href="#" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--clock]"></i>
         </div>

@@ -6,7 +6,7 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('employees.show', $employee) }}" class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600">
+        <a href="{{ route('employees.index', $employee) }}" class="back-link text-base-content no-underline text-sm hover:text-primary">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee Profile
         </a>
     </div>
@@ -20,10 +20,10 @@
             @csrf @method('PUT')
             @include('employees.form')
             <div class="flex gap-3 flex-wrap mt-6">
-                <button type="submit" class="btn  btn-error">
+                <button type="submit" class="btn btn-soft  btn-error">
                     <i class="icon-[ph--floppy-disk-fill]"></i> Update Employee
                 </button>
-                <a href="{{ route('employees.show', $employee) }}" class="btn ">Cancel</a>
+                <a href="{{ route('employees.show', $employee) }}" class="btn btn-soft btn-success">Cancel</a>
             </div>
         </form>
     </div>

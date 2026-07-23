@@ -10,7 +10,7 @@
         </a>
     </div>
 
-    <div class="card bg-base-100 shadow-sm p-6">
+    <div class="card bg-base-100 shadow-md p-6">
         <h2 class="text-base font-bold text-base-content mb-6 flex items-center gap-2">
             <i class="icon-[tabler--id-badge] text-error"></i> Create New Role
         </h2>
@@ -96,7 +96,7 @@
                 <button type="submit" class="btn btn-soft btn-error">
                     <i class="icon-[tabler--device-floppy]"></i> Create Role
                 </button>
-                <a href="{{ route('roles.index') }}" class="btn btn-soft">Cancel</a>
+                <a href="{{ route('roles.index') }}" class="btn btn-success btn-soft">Cancel</a>
             </div>
         </form>
     </div>

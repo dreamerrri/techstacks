@@ -141,7 +141,7 @@
                        placeholder="Search name or email..."
                        oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
                        class="input input-bordered input-sm bg-base-200  join-item w-full ">
-               <button type="submit" class="btn btn-outline btn-primary btn-sm join-item">
+               <button type="submit" class="btn btn-soft btn-primary btn-sm join-item">
                     <i class="icon-[tabler--search]"></i>
                 </button>
             </div>

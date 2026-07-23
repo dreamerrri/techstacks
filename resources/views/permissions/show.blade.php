@@ -6,7 +6,7 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('permissions.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600">
+        <a href="{{ route('permissions.index') }}" class="back-link text-base-content no-underline text-sm hover:text-primary">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Permissions
         </a>
     </div>
@@ -27,10 +27,10 @@
                 </div>
                 <div>
                     <h2 class="text-xl font-bold text-base-content m-0">{{ $permission->name }}</h2>
-                    <code class="text-xs text-base-content/60 bg-gray-100 px-2 py-0.5 rounded">{{ $permission->slug }}</code>
+                    <code class="text-xs text-error bg-base-content px-2 py-0.5 rounded">{{ $permission->slug }}</code>
                 </div>
             </div>
-            <a href="{{ route('permissions.edit', $permission) }}" class="btn  btn-error btn-sm">
+            <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft btn-error btn-sm">
                 <i class="icon-[ph--pencil-fill]"></i> Edit Permission
             </a>
         </div>
@@ -87,7 +87,7 @@
                                     <code class="text-xs text-base-content/60">{{ $role->slug }}</code>
                                 </div>
                             </div>
-                            <a href="{{ route('roles.show', $role) }}" class="btn  btn-info btn-sm">
+                            <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
                                 <i class="icon-[ph--eye-fill]"></i> View Role
                             </a>
                         </div>
