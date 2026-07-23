@@ -45,6 +45,11 @@ class ManualPayrollAttendanceController extends Controller
         }
     }
 
+    // Apply status filter
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
     try {
         $periods = $query->with('payrollInputs')
             ->orderByDesc('cutoff_start')
@@ -203,14 +208,9 @@ class ManualPayrollAttendanceController extends Controller
         $overtimeHours = $approvedRequests->where('request_type', 'overtime')->sum('calculated_overtime_hours');
         $holidayDays = $approvedRequests->where('request_type', 'holiday')->count();
 
-        // If payroll input exists, use approved request values as defaults (don't save to DB)
-        // This allows HR to see the auto-populated values and decide whether to use them
-        if ($payrollInput) {
-            // Override with approved request values for display purposes
-            $payrollInput->weekends_worked = $weekendsWorked;
-            $payrollInput->overtime_hours = $overtimeHours;
-            $payrollInput->holiday_days = $holidayDays;
-        }
+        // If payroll input exists, use the actual saved values from database
+        // Work request values are shown as reference in the approved requests section above
+        // HR can manually override these values as needed
 
         return view('manual-payroll-attendance.employee-form', compact(
             'payrollPeriod',
@@ -459,6 +459,25 @@ $withholdingTax = $taxResult['tax'];
                     ->whereBetween('date', [$period->cutoff_start->toDateString(), $period->cutoff_end->toDateString()])
                     ->sum('computed_days');
                 $validated['days_worked'] = $computedDaysFromAttendance > 0 ? $computedDaysFromAttendance : 0;
+            }
+
+            // If special work fields are null or empty, use approved work request values
+            $approvedRequests = \App\Models\WorkRequest::where('employee_id', $validated['employee_id'])
+                ->where('status', 'approved')
+                ->whereBetween('work_date', [$period->cutoff_start->toDateString(), $period->cutoff_end->toDateString()])
+                ->where('work_date', '<=', now()->toDateString())
+                ->get();
+
+            if (!isset($validated['weekends_worked']) || $validated['weekends_worked'] === '' || $validated['weekends_worked'] === null) {
+                $validated['weekends_worked'] = $approvedRequests->where('request_type', 'weekend')->count();
+            }
+
+            if (!isset($validated['overtime_hours']) || $validated['overtime_hours'] === '' || $validated['overtime_hours'] === null) {
+                $validated['overtime_hours'] = $approvedRequests->where('request_type', 'overtime')->sum('calculated_overtime_hours');
+            }
+
+            if (!isset($validated['holiday_days']) || $validated['holiday_days'] === '' || $validated['holiday_days'] === null) {
+                $validated['holiday_days'] = $approvedRequests->where('request_type', 'holiday')->count();
             }
 
             // Check if payroll input already exists
