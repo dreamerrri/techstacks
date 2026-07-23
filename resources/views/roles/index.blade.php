@@ -10,14 +10,14 @@
     
 <x-table-card>
  <x-slot:title>
-        <x-dot-loader /> Roles Management
+        <x-dot-loader /> <p class="text-base-content">Roles Management</p>
         <x-info-tooltip>
-            Manage all system roles and their assigned permissions.
+           Manage all system roles and their assigned permissions.
         </x-info-tooltip>
     </x-slot:title>
 
     <x-slot:actions>
-        <a href="{{ route('roles.create') }}" class="btn  btn-error btn-sm">
+        <a href="{{ route('roles.create') }}" class="btn btn-soft btn-error btn-sm">
             <i class="icon-[ph--plus-fill]"></i> Create Role
         </a>
     </x-slot:actions>
@@ -50,10 +50,10 @@
             </td>
             <td class="text-right">
                 <div class="flex gap-2 items-center justify-end">
-                    <a href="{{ route('roles.show', $role) }}" class="btn  btn-info btn-sm">
+                    <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
                         <i class="icon-[ph--eye-fill]"></i>
                     </a>
-                    <a href="{{ route('roles.edit', $role) }}" class="btn  btn-warning btn-sm">
+                    <a href="{{ route('roles.edit', $role) }}" class="btn btn-soft btn-warning btn-sm">
                         <i class="icon-[ph--pencil-fill]"></i>
                     </a>
                     @if($role->users_count == 0)
@@ -63,7 +63,7 @@
                               data-confirm-icon="warning"
                               data-confirm-btn="Yes, delete">
                             @csrf @method('DELETE')
-                            <button class="btn  btn-error btn-sm">
+                            <button class="btn btn-soft btn-error btn-sm">
                                 <i class="icon-[ph--trash-fill]"></i>
                             </button>
                         </form>
@@ -116,10 +116,10 @@
                     @endif
 
                     <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
-                        <a href="{{ route('roles.show', $role) }}" class="btn  btn-info btn-sm">
+                        <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
                             <i class="icon-[ph--eye-fill]"></i> View
                         </a>
-                        <a href="{{ route('roles.edit', $role) }}" class="btn  btn-warning btn-sm">
+                        <a href="{{ route('roles.edit', $role) }}" class="btn btn-soft btn-warning btn-sm">
                             <i class="icon-[ph--pencil-fill]"></i> Edit
                         </a>
                         @if($role->users_count == 0)
@@ -129,7 +129,7 @@
                                   data-confirm-icon="warning"
                                   data-confirm-btn="Yes, delete">
                                 @csrf @method('DELETE')
-                                <button class="btn  btn-error btn-sm">
+                                <button class="btn btn-soft btn-error btn-sm">
                                     <i class="icon-[ph--trash-fill]"></i> Delete
                                 </button>
                             </form>

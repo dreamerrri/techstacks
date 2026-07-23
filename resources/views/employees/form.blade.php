@@ -1,6 +1,6 @@
 {{-- Personal Information --}}
 <div class="mb-8">
-    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
+    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content border-b-2 border-base-300 pb-2 mb-4">
         <i class="icon-[tabler--user] text-red-600"></i> Personal Information
     </h3>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -97,7 +97,7 @@
 
 {{-- Employment Details --}}
 <div class="mb-8">
-    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
+    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content border-b-2 border-base-200 pb-2 mb-4">
         <i class="icon-[ph--briefcase-fill] text-red-600"></i> Employment Details
     </h3>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -174,7 +174,7 @@
 
 {{-- Government Contributions --}}
 <div class="mb-4">
-    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-2">
+    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content border-b-2 border-base-200 pb-2 mb-2">
         <i class="icon-[ph--identification-card-fill] text-red-600"></i> Government Contributions
     </h3>
     <p class="text-xs text-base-content/40 mb-4">

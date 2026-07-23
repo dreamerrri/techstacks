@@ -7,14 +7,14 @@
 
 <x-table-card>
     <x-slot:title>
-        <x-dot-loader /> Permissions Management
+        <x-dot-loader /> <p class="text-base-content">Permissions Management</p> 
         <x-info-tooltip>
             Manage all system permissions and assigned roles.
         </x-info-tooltip>
     </x-slot:title>
 
     <x-slot:actions>
-        <a href="{{ route('permissions.create') }}" class="btn  btn-error btn-sm">
+        <a href="{{ route('permissions.create') }}" class="btn btn-soft  btn-error btn-sm">
             <i class="icon-[ph--plus-fill]"></i> Create Permission
         </a>
     </x-slot:actions>
@@ -61,10 +61,10 @@
                         </td>
                         <td class="text-right">
                             <div class="flex gap-2 items-center justify-end">
-                                <a href="{{ route('permissions.show', $permission) }}" class="btn  btn-info btn-sm">
+                                <a href="{{ route('permissions.show', $permission) }}" class="btn btn-soft btn-info btn-sm">
                                     <i class="icon-[ph--eye-fill]"></i>
                                 </a>
-                                <a href="{{ route('permissions.edit', $permission) }}" class="btn  btn-warning btn-sm">
+                                <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft  btn-warning btn-sm">
                                     <i class="icon-[ph--pencil-fill]"></i>
                                 </a>
                                 @if($permission->roles->count() == 0)
@@ -74,7 +74,7 @@
                                           data-confirm-icon="warning"
                                           data-confirm-btn="Yes, delete">
                                         @csrf @method('DELETE')
-                                        <button class="btn  btn-error btn-sm">
+                                        <button class="btn btn-soft btn-error btn-sm">
                                             <i class="icon-[ph--trash-fill]"></i>
                                         </button>
                                     </form>
@@ -124,10 +124,10 @@
                         @endif
 
                         <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
-                            <a href="{{ route('permissions.show', $permission) }}" class="btn  btn-info btn-sm">
+                            <a href="{{ route('permissions.show', $permission) }}" class="btn btn-soft btn-info btn-sm">
                                 <i class="icon-[ph--eye-fill]"></i> View
                             </a>
-                            <a href="{{ route('permissions.edit', $permission) }}" class="btn  btn-warning btn-sm">
+                            <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft btn-warning btn-sm">
                                 <i class="icon-[ph--pencil-fill]"></i> Edit
                             </a>
                             @if($permission->roles->count() == 0)
@@ -137,7 +137,7 @@
                                       data-confirm-icon="warning"
                                       data-confirm-btn="Yes, delete">
                                     @csrf @method('DELETE')
-                                    <button class="btn  btn-error btn-sm">
+                                    <button class="btn btn-soft btn-error btn-sm">
                                         <i class="icon-[ph--trash-fill]"></i> Delete
                                     </button>
                                 </form>

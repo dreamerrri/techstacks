@@ -13,102 +13,102 @@
 @endphp
 
 {{-- Header --}}
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+<div class="flex items-center justify-between mb-4">
     <div>
-        <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
+        <div class="inline-block font-semibold text-xs text-info bg-info/10 rounded-lg p-4 mb-4">
             <i class=" icon-[ph--calendar-fill]-plus"></i> New Request
         </div>
-        <h2 style="margin:8px 0 4px 0;">Create Work Request</h2>
-        <p class="text-base-content/60 m-0">
+        <h2 class="text-base-content">Create Work Request</h2>
+        <p class="text-base-content/60">
             Submit a request for weekend, holiday, or overtime work
         </p>
     </div>
     <a href="{{ route('work-requests.index') }}"
-       class="px-5 py-3 bg-base-200 text-base-content border border-base-300 rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2">
+       class="inline-flex items-center font-semibold text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-4 gap-3 cursor-pointer no-underline">
         <i class="icon-[ph--arrow-left-fill]"></i> Back to Requests
     </a>
 </div>
 
 {{-- Form --}}
-<div class="card" style="padding:32px; max-width:800px;">
+<div class="card p-4">
     <form id="workRequestForm">
         @csrf
         
         {{-- Request Type --}}
-        <div class="mb-6">
-            <label class="block text-sm font-semibold text-base-content mb-2">
-                Request Type <span class="text-red-500">*</span>
+        <div class="mb-4">
+            <label class="font-semibold text-sm text-base-content mb-4">
+                Request Type <span class="text-error">*</span>
             </label>
             <select name="request_type" id="request_type" required
-                    class="w-full p-3 border border-base-300 rounded-field text-sm">
+                    class="w-full text-sm border border-base-300 rounded-lg p-4">
                 <option value="">Select type...</option>
                 <option value="weekend">Weekend Work</option>
                 <option value="holiday">Holiday Work</option>
                 <option value="overtime">Overtime</option>
                 <option value="half_day">Half Day</option>
             </select>
-            <p class="text-xs text-base-content/60 mt-1">
+            <p class="text-xs text-base-content/60 mt-2">
                 Choose the type of work you're requesting
             </p>
         </div>
 
         {{-- Work Date --}}
-        <div class="mb-6">
-            <label class="block text-sm font-semibold text-base-content mb-2">
-                Work Date <span class="text-red-500">*</span>
+        <div class="mb-4">
+            <label class="font-semibold text-sm text-base-content mb-4">
+                Work Date <span class="text-error">*</span>
             </label>
             <input type="date" name="work_date" id="work_date" required min="{{ now()->toDateString() }}"
-                   class="w-full p-3 border border-base-300 rounded-field text-sm">
-            <p class="text-xs text-base-content/60 mt-1">
+                   class="w-full text-sm border border-base-300 rounded-lg p-4">
+            <p class="text-xs text-base-content/60 mt-2">
                 Date must be today or in the future
             </p>
         </div>
 
         {{-- Time Range --}}
-        <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="grid mb-4 gap-3">
             <div>
-                <label class="block text-sm font-semibold text-base-content mb-2">
+                <label class="font-semibold text-sm text-base-content mb-4">
                     Start Time
                 </label>
                 <input type="time" name="start_time" id="start_time"
-                       class="w-full p-3 border border-base-300 rounded-field text-sm">
+                       class="w-full text-sm border border-base-300 rounded-lg p-4">
             </div>
             <div>
-                <label class="block text-sm font-semibold text-base-content mb-2">
+                <label class="font-semibold text-sm text-base-content mb-4">
                     End Time
                 </label>
                 <input type="time" name="end_time" id="end_time"
-                       class="w-full p-3 border border-base-300 rounded-field text-sm">
+                       class="w-full text-sm border border-base-300 rounded-lg p-4">
             </div>
         </div>
 
         {{-- Estimated Hours --}}
-        <div class="mb-6">
-            <label class="block text-sm font-semibold text-base-content mb-2">
+        <div class="mb-4">
+            <label class="font-semibold text-sm text-base-content mb-4">
                 Estimated Hours
             </label>
             <input type="number" name="estimated_hours" id="estimated_hours" min="0" max="24" step="0.5"
-                   class="w-full p-3 border border-base-300 rounded-field text-sm">
-            <p class="text-xs text-base-content/60 mt-1">
+                   class="w-full text-sm border border-base-300 rounded-lg p-4">
+            <p class="text-xs text-base-content/60 mt-2">
                 Estimated duration of work (optional)
             </p>
-            <div id="overtime_hours_display" class="hidden mt-2 p-2 bg-base-200 rounded-field border-l-4 border-l-blue-600">
-                <span class="text-xs font-semibold text-primary">
-                    <i class="icon-[ph--clock-fill]" style="margin-right:4px;"></i>
+            <div id="overtime_hours_display" class="hidden bg-info/10 border-s-4 border-primary rounded-lg p-4 mt-2">
+                <span class="font-semibold text-xs text-info">
+                    <i class="icon-[ph--clock-fill] text-base-content"></i>
                     Approximate Overtime Hours: <span id="calculated_overtime_hours">0</span>
                 </span>
             </div>
         </div>
 
         {{-- Reason --}}
-        <div class="mb-8">
-            <label class="block text-sm font-semibold text-base-content mb-2">
+        <div class="mb-4">
+            <label class="font-semibold text-sm text-base-content mb-4">
                 Reason
             </label>
             <textarea name="reason" id="reason" rows="4" maxlength="500"
-                      class="w-full p-3 border border-base-300 rounded-field text-sm resize-vertical"
+                      class="w-full text-sm border border-base-300 rounded-lg p-4 resize-y"
                       placeholder="Provide a reason for this work request..."></textarea>
-            <p class="text-xs text-base-content/60 mt-1">
+            <p class="text-xs text-base-content/60 mt-2">
                 Maximum 500 characters
             </p>
         </div>
@@ -116,11 +116,11 @@
         {{-- Submit Button --}}
         <div class="flex gap-3">
             <button type="submit"
-                    class="px-8 py-3 text-white border-none rounded-field cursor-pointer text-sm font-semibold" style="background:{{ $color }};">
+                    class="font-semibold text-sm bg-primary rounded-lg p-4 cursor-pointer">
                 <i class="icon-[ph--paper-plane-fill]-plane"></i> Submit Request
             </button>
             <a href="{{ route('work-requests.index') }}"
-               class="px-8 py-3 bg-base-200 text-base-content border border-base-300 rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center">
+               class="inline-flex items-center font-semibold text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-4 cursor-pointer no-underline">
                 Cancel
             </a>
         </div>
@@ -129,17 +129,17 @@
 
 {{-- Upcoming Holidays Reference --}}
 @if($upcomingHolidays->count() > 0)
-<div class="card p-6 mt-6">
-    <h3 class="m-0 mb-4 flex items-center gap-2">
+<div class="card p-4 mt-2">
+    <h3 class="flex items-center gap-3">
         <i class="icon-[ph--calendar-fill] text-base-content/60"></i> Upcoming Holidays
     </h3>
-    <div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
+    <div class="grid gap-3">
         @foreach($upcomingHolidays as $holiday)
-        <div class="p-3 bg-base-200 rounded-field border-l-4 {{ $holiday->type === 'regular' ? 'border-l-amber-500' : 'border-l-blue-500' }};">
-            <div class="text-sm font-semibold text-base-content">{{ $holiday->name }}</div>
-            <div class="text-xs text-base-content/60 mt-1">{{ $holiday->date->format('M d, Y') }}</div>
-            <div class="text-[11px] text-base-content/60 mt-0.5">
-                <span class="px-1.5 py-0.5 rounded font-semibold bg-base-300">
+        <div class="bg-base-200 border-s-4 border-primary rounded-lg p-4">
+            <div class="font-semibold text-sm text-base-content">{{ $holiday->name }}</div>
+            <div class="text-xs text-base-content/60 mt-2">{{ $holiday->date->format('M d, Y') }}</div>
+            <div class="text-base-content/60 mt-2">
+                <span class="font-semibold rounded-lg p-4">
                     {{ ucfirst($holiday->type) }}
                 </span>
             </div>

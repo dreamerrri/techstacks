@@ -46,7 +46,7 @@
                 </div>
                 <div class="text-xs text-base-content/60 mt-1" id="contribModalMeta">—</div>
             </div>
-            <button onclick="closeContribModal()" class="btn btn-error btn-sm btn-circle">
+            <button onclick="closeContribModal()" class="btn btn-soft btn-error btn-sm btn-circle">
                 <i class="icon-[tabler--x]"></i>
             </button>
         </div>
@@ -79,10 +79,10 @@
         {{-- Modal footer --}}
         <div class="px-6 py-4 border-t border-base-300 flex justify-between items-center flex-wrap gap-2">
             <div class="flex gap-2 flex-wrap">
-                <button onclick="printContribBreakdown()" class="btn  btn-info btn-sm">
+                <button onclick="printContribBreakdown()" class="btn btn-soft btn-info btn-sm">
                     <i class="icon-[tabler--printer]"></i> Print PDF
                 </button>
-                <button onclick="exportContribBreakdownCSV()" class="btn  btn-success btn-sm">
+                <button onclick="exportContribBreakdownCSV()" class="btn btn-soft  btn-success btn-sm">
                     <i class="icon-[tabler--csv]"></i> Export CSV
                 </button>
             </div>
@@ -100,7 +100,7 @@
     </x-slot:title>
 
     <x-slot:actions>
-        <button onclick="openContribModal()" class="btn  btn-error btn-sm">
+        <button onclick="openContribModal()" class="btn btn-soft btn-error btn-sm">
             <i class="icon-[tabler--stack]"></i> Breakdown
         </button>
     </x-slot:actions>
@@ -112,7 +112,7 @@
                        placeholder="Search name or email..."
                        oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
                        class="input input-bordered input-sm bg-base-200  join-item w-full ">
-               <button type="submit" class="btn btn-outline btn-primary btn-sm join-item">
+               <button type="submit" class="btn btn-soft btn-primary btn-sm join-item">
                     <i class="icon-[tabler--search]"></i>
                 </button>
             </div>
@@ -133,7 +133,7 @@
                 @endforeach
             </select>
             @if(request()->hasAny(['search','department','status']))
-                <a href="{{ route('government-contributions.index') }}" class="btn  btn-sm">Clear</a>
+                <a href="{{ route('government-contributions.index') }}" class="btn btn-soft btn-sm">Clear</a>
             @endif
         </div>
     </x-slot:filters>
@@ -172,7 +172,7 @@
                 <td><span class="badge {{ $statusClass }}">{{ $employee->employment_status }}</span></td>
                 <td class="text-center">
                     <a href="{{ route('government-contributions.show', $employee) }}"
-                       class="btn  btn-info btn-sm">
+                       class="btn btn-soft  btn-info btn-sm">
                         <i class="icon-[tabler--eye]"></i>
                     </a>
                 </td>
@@ -201,7 +201,7 @@
                     default        => 'badge-soft',
                 };
             @endphp
-            <div class="card bg-base-100 border border-gray-200 p-4">
+            <div class="card bg-base-100 border border-base-200 p-4">
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
@@ -232,9 +232,9 @@
                     <span><i class="icon-[tabler--cash] w-3.5"></i> ₱{{ number_format($employee->basic_salary, 2) }}</span>
                 </div>
 
-                <div class="mt-3 pt-3 border-t border-gray-100">
+                <div class="mt-3 pt-3 border-t border-base-200">
                     <a href="{{ route('government-contributions.show', $employee) }}"
-                       class="btn  btn-info btn-sm">
+                       class="btn btn-soft  btn-info btn-sm">
                         <i class="icon-[tabler--eye]"></i> View Contributions
                     </a>
                 </div>
@@ -248,7 +248,7 @@
     </div>
 
     {{-- Pagination --}}
-    <div class="px-6 py-4 border-t border-gray-200">
+    <div class="px-6 py-4 border-t border-base-300">
         {{ $employees->links('vendor.pagination.pagination') }}
     </div>
 </x-table-card>

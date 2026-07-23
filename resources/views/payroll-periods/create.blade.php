@@ -5,11 +5,14 @@
 @section('content')
 
 {{-- SHINKU PLS COME HOME --}}
-<div class="mb-6">
-    <a href="{{ route('manual-payroll-attendance.index') }}"
-       class="text-base-content/60 no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
-        <i class="icon-[tabler--arrow-left]"></i> Back to Payroll Periods
-    </a>
+
+  <div class="mb-5">
+        <a href="{{ route('manual-payroll-attendance.index') }}" 
+        class="text-base-content/60 no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
+             <i class="icon-[tabler--arrow-left]"></i> Back to Payroll Periods
+        </a>
+    </div>
+
     <div>
         <span class="badge badge-soft badge-info mb-2">
             <i class="icon-[tabler--calendar-plus]"></i> Create Payroll Period
@@ -78,10 +81,10 @@
             <input type="hidden" name="payroll_date" id="payroll_date">
 
             <div class="flex gap-3">
-                <button type="submit" id="submit_btn" disabled class="btn btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button type="submit" id="submit_btn" disabled class="btn btn-soft btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="icon-[tabler--device-floppy]"></i> Create Payroll Period
                 </button>
-                <a href="{{ route('manual-payroll-attendance.index') }}" class="btn btn-soft">
+                <a href="{{ route('manual-payroll-attendance.index') }}" class="btn btn-soft btn-error">
                     Cancel
                 </a>
             </div>

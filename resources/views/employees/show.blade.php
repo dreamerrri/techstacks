@@ -7,11 +7,11 @@
 
     {{-- Top nav --}}
     <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
-        <a href="{{ route('employees.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600">
+        <a href="{{ route('employees.index') }}" class="back-link text-base-content no-underline text-sm hover:text-primary">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee List
         </a>
         <div class="flex gap-2 flex-wrap">
-            <a href="{{ route('employees.edit', $employee) }}" class="btn  btn-warning btn-sm">
+            <a href="{{ route('employees.edit', $employee) }}" class="btn btn-soft btn-warning btn-sm">
                 <i class="icon-[ph--pencil-fill]"></i> Edit
             </a>
             <form method="POST" action="{{ route('employees.archive', $employee) }}"
@@ -20,7 +20,7 @@
                   data-confirm-icon="warning"
                   data-confirm-btn="Yes, archive">
                 @csrf @method('PATCH')
-                <button class="btn  btn-error btn-sm">
+                <button class="btn btn-soft  btn-error btn-sm">
                     <i class="icon-[ph--archive-fill]"></i> Archive
                 </button>
             </form>
@@ -118,25 +118,25 @@
                 $netPay        = $payrollInput->net_pay ?? 0;
                 $period        = $payrollInput ? $payrollInput->payrollPeriod : null;
             @endphp
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex justify-between items-center  mb-4">
                 <h2 class="text-sm font-bold text-base-content m-0 flex items-center gap-2">
                     <i class="icon-[ph--clock-fill] text-red-600"></i> Payroll Input Summary
                 </h2>
                 @if(auth()->user()->isAdmin() || auth()->user()->isHR())
                     @if($payrollInput)
                         <a href="{{ route('manual-payroll-attendance.employee-form', [$payrollInput->payrollPeriod, $employee]) }}"
-                           class="btn  btn-info btn-xs">
+                           class="btn btn-soft  btn-info btn-xs">
                             <i class="icon-[ph--pencil-fill]"></i> Edit
                         </a>
                     @else
                         <a href="{{ route('manual-payroll-attendance.index') }}"
-                           class="btn  btn-success btn-xs">
+                           class="btn btn-soft  btn-success btn-xs">
                             <i class="icon-[ph--plus-fill]"></i> Add Payroll Input
                         </a>
                     @endif
                 @endif
             </div>
-            <div class="bg-gray-50 rounded-xl p-5">
+            <div class="bg-base-200 rounded-xl p-5">
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
                     @foreach([
                         ['Days Worked',    number_format($daysWorked, 1).' Days',   'text-base-content'],
@@ -174,7 +174,7 @@
                     </h2>
                     <p class="text-base-content/60 text-xs mt-1 mb-0">View and manage government contribution rates for this employee.</p>
                 </div>
-                <a href="{{ route('government-contributions.show', $employee) }}" class="btn  btn-info btn-sm">
+                <a href="{{ route('government-contributions.show', $employee) }}" class="btn btn-soft btn-info btn-sm">
                     <i class="icon-[ph--eye-fill]"></i> View Contributions
                 </a>
             </div>
@@ -189,7 +189,7 @@
                     </h2>
                     <p class="text-base-content/60 text-xs mt-1 mb-0">View daily time-in/time-out records and attendance history for this employee.</p>
                 </div>
-                <a href="{{ route('employee-attendance.show-employee', $employee) }}" class="btn  btn-success btn-sm">
+                <a href="{{ route('employee-attendance.show-employee', $employee) }}" class="btn btn-soft btn-success btn-sm">
                     <i class="icon-[ph--eye-fill]"></i> View Attendance
                 </a>
             </div>
@@ -205,12 +205,12 @@
                 <div class="flex gap-2">
                     <button type="button"
                             id="showAllowanceBtn"
-                            class="btn  btn-success btn-xs">
+                            class="btn btn-soft btn-success btn-xs">
                         <i class="icon-[ph--plus-fill]"></i> Add Allowance
                     </button>
                     <button type="button"
                             id="showBenefitBtn"
-                            class="btn  btn-info btn-xs">
+                            class="btn btn-soft  btn-info btn-xs">
                         <i class="icon-[ph--plus-fill]"></i> Add Benefit
                     </button>
                 </div>
@@ -222,7 +222,7 @@
                 @if($employee->activeAllowances()->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         @foreach($employee->activeAllowances as $allowance)
-                            <div class="bg-gray-50 p-3 rounded-lg border-l-4 border-emerald-500">
+                            <div class="bg-base-200 p-3 rounded-lg border-l-4 border-emerald-500">
                                 <div class="flex justify-between items-start">
                                     <div>
                                         <div class="font-semibold text-base-content text-sm">{{ $allowance->name }}</div>
@@ -239,7 +239,7 @@
                                               data-confirm-title="Delete Allowance?"
                                               data-confirm-btn="Yes, delete it">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="btn  btn-error btn-xs">
+                                            <button type="submit" class="btn btn-soft btn-error btn-xs">
                                                 <i class="icon-[ph--trash-fill]"></i>
                                             </button>
                                         </form>
@@ -249,7 +249,7 @@
                         @endforeach
                     </div>
                 @else
-                    <div class="py-3 bg-gray-50 rounded-lg text-center text-base-content/40 text-xs">No allowances added</div>
+                    <div class="py-3 bg-base-200 rounded-lg text-center text-base-content/40 text-xs">No allowances added</div>
                 @endif
             </div>
 
@@ -259,7 +259,7 @@
                 @if($employee->activeBenefits->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         @foreach($employee->activeBenefits as $benefit)
-                            <div class="bg-gray-50 p-3 rounded-lg border-l-4 border-blue-500">
+                            <div class="bg-base-200 p-3 rounded-lg border-l-4 border-blue-500">
                                 <div class="flex justify-between items-start">
                                     <div>
                                         <div class="font-semibold text-base-content text-sm">{{ $benefit->name }}</div>
@@ -276,7 +276,7 @@
                                               data-confirm-title="Delete Benefit?"
                                               data-confirm-btn="Yes, delete it">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="btn  btn-error btn-xs">
+                                            <button type="submit" class="btn btn-soft  btn-error btn-xs">
                                                 <i class="icon-[ph--trash-fill]"></i>
                                             </button>
                                         </form>
@@ -286,12 +286,12 @@
                         @endforeach
                     </div>
                 @else
-                    <div class="py-3 bg-gray-50 rounded-lg text-center text-base-content/40 text-xs">No benefits added</div>
+                    <div class="py-3 bg-base-200 rounded-lg text-center text-base-content/40 text-xs">No benefits added</div>
                 @endif
             </div>
 
             {{-- Add Allowance Form --}}
-            <div id="allowanceForm" class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-200" style="display: none;">
+            <div id="allowanceForm" class="hidden mt-4 p-4 bg-success/10 rounded-xl border border-success/30">
                 <h4 class="text-sm font-bold text-emerald-800 mb-3">Add Allowance</h4>
                 <form method="POST" action="{{ route('allowances.store', $employee) }}">
                     @csrf
@@ -317,18 +317,18 @@
                         <textarea name="description" rows="2" class="textarea textarea-bordered textarea-sm w-full"></textarea>
                     </div>
                     <div class="flex gap-2">
-                        <button type="submit" class="btn  btn-success btn-sm">
+                        <button type="submit" class="btn btn-soft btn-success btn-sm">
                             <i class="icon-[ph--floppy-disk-fill]"></i> Save Allowance
                         </button>
                         <button type="button"
                                 id="hideAllowanceBtn"
-                                class="btn  btn-sm">Cancel</button>
+                                class="btn btn-soft  btn-sm">Cancel</button>
                     </div>
                 </form>
             </div>
 
             {{-- Add Benefit Form --}}
-            <div id="benefitForm" class="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200" style="display: none;">
+            <div id="benefitForm" class="hidden mt-4 p-4 bg-info/10 rounded-xl border border-info/30">
                 <h4 class="text-sm font-bold text-blue-800 mb-3">Add Benefit</h4>
                 <form method="POST" action="{{ route('benefits.store', $employee) }}">
                     @csrf
@@ -354,12 +354,12 @@
                         <textarea name="description" rows="2" class="textarea textarea-bordered textarea-sm w-full"></textarea>
                     </div>
                     <div class="flex gap-2">
-                        <button type="submit" class="btn  btn-info btn-sm">
+                        <button type="submit" class="btn btn-soft  btn-info btn-sm">
                             <i class="icon-[ph--floppy-disk-fill]"></i> Save Benefit
                         </button>
                         <button type="button"
                                 id="hideBenefitBtn"
-                                class="btn  btn-sm">Cancel</button>
+                                class="btn btn-soft btn-sm">Cancel</button>
                     </div>
                 </form>
             </div>

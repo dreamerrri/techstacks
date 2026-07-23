@@ -137,3 +137,9 @@
     background-color: transparent;
     color: var(--color-base-content);
 }
+
+[data-theme="techstacks"] .badge,
+[data-theme="techstacks-light"] .badge {
+
+    color: var(--color-base-content);
+}

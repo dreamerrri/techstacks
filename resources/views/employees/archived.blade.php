@@ -5,12 +5,12 @@
 
 @section('content')
 
- <a href="{{ route('employees.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600">
+ <a href="{{ route('employees.index') }}" class="back-link text-base-content no-underline text-sm hover:text-primary">
                 <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee page
             </a>
 <x-table-card>
     <x-slot:title>
-        <x-dot-loader /> Archived Employees
+        <x-dot-loader /> <p class="text-base-content">Archived Employees</p>
         <x-info-tooltip>
            Manage archived employees
         </x-info-tooltip>
@@ -48,7 +48,7 @@
                                       data-confirm-icon="question"
                                       data-confirm-btn="Yes, restore">
                                     @csrf @method('PATCH')
-                                    <button class="btn  btn-success btn-sm">
+                                    <button class="btn btn-soft btn-success btn-sm">
                                         <i class="icon-[ph--arrow-counter-clockwise-fill]"></i> Restore
                                     </button>
                                 </form>

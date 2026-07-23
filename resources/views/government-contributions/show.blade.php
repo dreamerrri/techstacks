@@ -8,14 +8,14 @@
     {{-- Top nav --}}
     <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
         <a href="{{ route('government-contributions.index') }}"
-           class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600 flex items-center gap-1">
+           class="back-link text-base-content no-underline text-sm hover:text-primary flex items-center gap-1">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Government Contributions
         </a>
         <div class="flex gap-2">
-            <button onclick="printContributionDetail()" class="btn  btn-info btn-sm">
+            <button onclick="printContributionDetail()" class="btn btn-soft btn-info btn-sm">
                 <i class="icon-[ph--printer-fill]"></i> Print
             </button>
-            <button onclick="exportContributionDetailCSV()" class="btn  btn-success btn-sm">
+            <button onclick="exportContributionDetailCSV()" class="btn btn-soft btn-success btn-sm">
                 <i class="icon-[ph--file-csv-fill]"></i> Export CSV
             </button>
         </div>
@@ -81,11 +81,11 @@
                 <i class="icon-[ph--calculator-fill]"></i> SSS Contribution (Circular No. 2024-006)
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-sm">
+                <div class="bg-base-200 p-4 rounded-xl shadow-sm">
                     <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Monthly Salary Credit</div>
                     <div class="font-bold text-base-content text-lg">₱{{ number_format($sssContribution['salary_credit'], 2) }}</div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm">
+                <div class="bg-base-200 p-4 rounded-xl shadow-sm">
                     <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Employee Share</div>
                     <input type="number" name="custom_sss_contribution" id="custom_sss_contribution"
                            value="{{ $employee->custom_sss_contribution ?? $sssContribution['employee_share'] }}"
@@ -93,7 +93,7 @@
                            class="input input-bordered w-full font-bold text-red-600 text-lg">
                     <div class="text-xs text-base-content/60 mt-1 italic">Leave blank to use calculated contribution based on salary</div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm">
+                <div class="bg-base-200 p-4 rounded-xl shadow-sm">
                     <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Total Contribution</div>
                     <div class="font-bold text-base-content text-lg">₱{{ number_format($sssContribution['total'], 2) }}</div>
                 </div>
@@ -106,15 +106,15 @@
                 <i class="icon-[ph--heartbeat-fill]"></i> PhilHealth Contribution (2025/2026)
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-sm">
+                <div class="bg-base-200 p-4 rounded-xl shadow-sm">
                     <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Salary Basis</div>
                     <div class="font-bold text-base-content text-lg">₱{{ number_format($philHealthContribution['salary_basis'], 2) }}</div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm">
+                <div class="bg-base-200 p-4 rounded-xl shadow-sm">
                     <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Employee Rate</div>
                     <div class="font-bold text-base-content text-lg">{{ number_format($philHealthContribution['employee_rate'] * 100, 1) }}%</div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm">
+                <div class="bg-base-200 p-4 rounded-xl shadow-sm">
                     <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Employee Share</div>
                     <input type="number" name="custom_philhealth_contribution" id="custom_philhealth_contribution"
                            value="{{ $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'] }}"
@@ -131,17 +131,17 @@
                 <i class="icon-[ph--house-fill]"></i> Pag-IBIG Contribution (2026)
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-sm">
+                <div class="bg-base-200 p-4 rounded-xl shadow-sm">
                     <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Monthly Salary</div>
                     <div class="font-bold text-base-content text-lg">₱{{ number_format($pagIbigContribution['salary'], 2) }}</div>
                 </div>
                 @if($pagIbigContribution['employee_rate'] !== null)
-                    <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <div class="bg-base-200 p-4 rounded-xl shadow-sm">
                         <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Employee Rate</div>
                         <div class="font-bold text-base-content text-lg">{{ number_format($pagIbigContribution['employee_rate'] * 100, 1) }}%</div>
                     </div>
                 @endif
-                <div class="bg-white p-4 rounded-xl shadow-sm">
+                <div class="bg-base-200 p-4 rounded-xl shadow-sm">
                     <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Employee Share</div>
                     <input type="number" name="custom_pagibig_contribution" id="custom_pagibig_contribution"
                            value="{{ $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'] }}"
@@ -154,7 +154,7 @@
 
         {{-- Save Button --}}
         <div class="mt-6 text-right">
-            <button onclick="saveCustomContributions()" class="btn  btn-error">
+            <button onclick="saveCustomContributions()" class="btn btn-soft btn-error">
                 <i class="icon-[ph--floppy-disk-fill]"></i> Save Custom Contributions
             </button>
         </div>

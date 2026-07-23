@@ -6,7 +6,7 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('permissions.show', $permission) }}" class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600">
+        <a href="{{ route('permissions.index', $permission) }}" class="back-link text-base-content no-underline text-sm hover:text-primary">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Permission
         </a>
     </div>
@@ -72,10 +72,10 @@
             </div>
 
             <div class="flex gap-3 flex-wrap pt-4 border-t border-gray-100">
-                <button type="submit" class="btn  btn-error">
+                <button type="submit" class="btn btn-soft  btn-error">
                     <i class="icon-[ph--floppy-disk-fill]"></i> Update Permission
                 </button>
-                <a href="{{ route('permissions.show', $permission) }}" class="btn ">Cancel</a>
+                <a href="{{ route('permissions.show', $permission) }}" class="btn btn-soft btn-success">Cancel</a>
             </div>
         </form>
     </div>

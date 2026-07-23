@@ -6,7 +6,7 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('roles.show', $role) }}" class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600">
+        <a href="{{ route('roles.show', $role) }}" class="back-link text-base-content    no-underline text-sm hover:text-primary">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Role
         </a>
     </div>
@@ -64,14 +64,14 @@
 
             {{-- Permissions --}}
             <div class="mb-8">
-                <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
+                <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content border-b-2 border-red-200 pb-2 mb-4">
                     <i class="icon-[ph--key-fill] text-red-600"></i> Permissions
                 </h3>
 
                 @if($permissions->count())
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         @foreach($permissions as $module => $modulePermissions)
-                            <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                            <div class="bg-base-200 border border-base-200 rounded-xl p-4">
                                 <div class="text-xs font-bold text-base-content/60 uppercase tracking-widest mb-3">
                                     {{ ucfirst($module) }}
                                 </div>
@@ -94,10 +94,10 @@
 
             {{-- Actions --}}
             <div class="flex gap-3 flex-wrap pt-4 border-t border-gray-100">
-                <button type="submit" class="btn  btn-error">
+                <button type="submit" class="btn btn-soft btn-error">
                     <i class="icon-[ph--floppy-disk-fill]"></i> Update Role
                 </button>
-                <a href="{{ route('roles.show', $role) }}" class="btn ">Cancel</a>
+                <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-success">Cancel</a>
             </div>
         </form>
     </div>

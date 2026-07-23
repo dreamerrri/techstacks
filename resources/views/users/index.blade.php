@@ -11,28 +11,28 @@
                 <i class="icon-[tabler--users]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\User::count() }}</div>
-            <div class="text-xs text-secondary-content uppercase tracking-widest font-medium">Total Users</div>
+            <div class="text-xs text-base-content/80 uppercase tracking-widest font-medium">Total Users</div>
         </div>
         <div class="card bg-base-100 border border-base-300  p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-error bg-error/10">
                 <i class="icon-[tabler--shield-check]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\User::where('role','admin')->count() }}</div>
-            <div class="text-xs text-secondary-content uppercase tracking-widest font-medium">Admins</div>
+            <div class="text-xs text-base-content/80 uppercase tracking-widest font-medium">Admins</div>
         </div>
         <div class="card bg-base-100 border border-base-300  p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-warning bg-warning/10">
                 <i class="icon-[tabler--user]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\User::where('role','hr')->count() }}</div>
-            <div class="text-xs text-secondary-content uppercase tracking-widest font-medium">HR Personnel</div>
+            <div class="text-xs text-base-content/80 uppercase tracking-widest font-medium">HR Personnel</div>
         </div>
         <div class="card bg-base-100 border border-base-300  p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-success bg-success/10">
                 <i class="icon-[tabler--circle-check]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\User::where('is_active', true)->count() }}</div>
-            <div class="text-xs text-secondary-content uppercase tracking-widest font-medium">Active Accounts</div>
+            <div class="text-xs text-base-content/80 uppercase tracking-widest font-medium">Active Accounts</div>
         </div>
     </div>
 
@@ -52,7 +52,7 @@
                        placeholder="Search name or email..."
                        oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
                        class="input input-bordered input-sm bg-base-200  join-item w-full ">
-               <button type="submit" class="btn btn-outline btn-primary btn-sm join-item">
+               <button type="submit" class="btn btn-soft btn-primary btn-sm join-item">
                     <i class="icon-[tabler--search]"></i>
                 </button>
             </div>
@@ -73,7 +73,7 @@
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                 </select>
                 @if(request()->hasAny(['search','role','status']))
-                    <a href="{{ route('users.index') }}" class="btn  btn-sm">Clear</a>
+                    <a href="{{ route('users.index') }}" class="btn btn-soft btn-sm">Clear</a>
                 @endif
             </div>
         </x-slot:filters>
@@ -162,19 +162,19 @@
                                   data-confirm-icon="{{ $user->is_active ? 'warning' : 'question' }}"
                                   data-confirm-btn="{{ $user->is_active ? 'Yes, deactivate' : 'Yes, activate' }}">
                                 @csrf @method('PATCH')
-                                <button class="btn  btn-xs {{ $user->is_active ? 'btn-error' : 'btn-success' }}">
+                                <button class="btn btn-soft btn-xs {{ $user->is_active ? 'btn-error' : 'btn-success' }}">
                                     <i class="{{ $user->is_active ? 'icon-[tabler--ban]' : 'icon-[tabler--check]' }}"></i>
                                     {{ $user->is_active ? 'Deactivate' : 'Activate' }}
                                 </button>
                             </form>
                         @else
-                            <span class="text-secondary-content text-xs">—</span>
+                            <span class="text-base-content/80 text-xs">—</span>
                         @endif
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="py-10 text-center text-secondary-content">
+                    <td colspan="6" class="py-10 text-center text-base-content/80">
                         <i class="icon-[tabler--user] text-3xl mb-2 block"></i>
                         No users found.
                     </td>
@@ -242,7 +242,7 @@
                             </select>
                         </form>
 
-                        <span class="text-xs text-secondary-content">
+                        <span class="text-xs text-base-content/80">
                             {{ $user->last_login_at ? $user->last_login_at->format('M d, Y h:i A') : 'Never logged in' }}
                         </span>
 
@@ -253,18 +253,18 @@
                                   data-confirm-icon="{{ $user->is_active ? 'warning' : 'question' }}"
                                   data-confirm-btn="{{ $user->is_active ? 'Yes, deactivate' : 'Yes, activate' }}">
                                 @csrf @method('PATCH')
-                                <button class="btn  btn-xs {{ $user->is_active ? 'btn-error' : 'btn-success' }}">
+                                <button class="btn btn-soft btn-xs {{ $user->is_active ? 'btn-error' : 'btn-success' }}">
                                     <i class="{{ $user->is_active ? 'icon-[tabler--ban]' : 'icon-[tabler--check]' }}"></i>
                                     {{ $user->is_active ? 'Deactivate' : 'Activate' }}
                                 </button>
                             </form>
                         @else
-                            <span class="text-secondary-content text-xs">—</span>
+                            <span class="text-base-content/80 text-xs">—</span>
                         @endif
                     </div>
                 </div>
             @empty
-                <div class="py-10 text-center text-secondary-content">
+                <div class="py-10 text-center text-base-content/80">
                     <i class="icon-[tabler--user] text-3xl mb-2 block"></i>
                     No users found.
                 </div>
