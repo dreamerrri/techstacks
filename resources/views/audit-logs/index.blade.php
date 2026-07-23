@@ -154,7 +154,7 @@
     </div>
 
     {{-- Pagination --}}
-    <div class="px-6 py-4 border-t border-gray-200">
+    <div class="px-6 py-4 border-t border-base-300">
         {{ $logs->links('vendor.pagination.pagination') }}
     </div>
 </x-table-card>
