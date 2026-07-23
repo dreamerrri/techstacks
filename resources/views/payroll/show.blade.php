@@ -5,6 +5,140 @@
 
 @section('content')
 
+<style>
+.payroll-stat-card {
+  width: min(300px, 100%);
+  margin: auto;
+  background-color: var(--color-base-200);
+  text-align: center;
+  border-top-left-radius: 4rem;
+  border: 2px solid var(--color-base-200);
+  position: relative;
+  --ribbon-color: #393e7f;
+  --ribbon-dark-color: #191c39;
+}
+
+.payroll-stat-card.payroll-stat-green {
+  --ribbon-color: var(--color-success);
+  --ribbon-dark-color: var(--color-success-content);
+}
+
+.payroll-stat-card.payroll-stat-red {
+  --ribbon-color: var(--color-error);
+  --ribbon-dark-color: var(--color-error-content);
+}
+
+.payroll-stat-card.payroll-stat-net {
+  --ribbon-color: var(--color-success);
+  --ribbon-dark-color: var(--color-success-content);
+}
+
+.payroll-stat-card::before {
+  content: "";
+  position: absolute;
+  height: 30px;
+  width: 120px;
+  background-color: var(--ribbon-color);
+  top: 32px;
+  right: -2.5px;
+  -webkit-clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.payroll-stat-card__body {
+  padding: 2rem 1.5rem;
+  max-width: 25ch;
+  margin: auto;
+}
+
+.payroll-stat-card__title {
+  font-weight: 800;
+  color: var(--color-base-content);
+  font-size: 1.25rem;
+  margin-block: 1.5rem 0.75rem;
+}
+
+.payroll-stat-card__paragraph {
+  color: var(--color-base-content);
+  font-size: 1.5rem;
+}
+
+.payroll-stat-card__ribbon {
+  margin-top: 1.5rem;
+  display: grid;
+  place-items: center;
+  height: 50px;
+  background-color: var(--ribbon-color);
+  position: relative;
+  width: 110%;
+  left: -5%;
+  top: 10px;
+  position: relative;
+  border-radius: 0 0 2rem 2rem;
+}
+
+.payroll-stat-card__ribbon::after,
+.payroll-stat-card__ribbon::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  aspect-ratio: 1/1;
+  bottom: 100%;
+  z-index: -2;
+  background-color: var(--ribbon-dark-color);
+}
+
+.payroll-stat-card__ribbon::before {
+  left: 0;
+  transform-origin: left bottom;
+  transform: rotate(45deg);
+}
+
+.payroll-stat-card__ribbon::after {
+  right: 0;
+  transform-origin: right bottom;
+  transform: rotate(-45deg);
+}
+
+.payroll-stat-card__ribbon-label {
+  display: block;
+  width: 84px;
+  aspect-ratio: 1/1;
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+  position: relative;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  border: 8px solid var(--ribbon-color);
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  line-height: 1;
+  font-size: 1.5rem;
+}
+
+.payroll-stat-card__ribbon-label::before,
+.payroll-stat-card__ribbon-label::after {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  bottom: 50%;
+}
+
+.payroll-stat-card__ribbon-label::before {
+  right: calc(100% + 4px);
+  border-bottom-right-radius: 20px;
+  box-shadow: 5px 5px 0 var(--ribbon-color);
+}
+
+.payroll-stat-card__ribbon-label::after {
+  left: calc(100% + 4px);
+  border-bottom-left-radius: 20px;
+  box-shadow: -5px 5px 0 var(--ribbon-color);
+}
+</style>
+
 @php
     $user    = auth()->user();
     $isAdmin = $user->isAdmin();
@@ -76,23 +210,92 @@
 
 {{-- Stat Cards --}}
 <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
-    <div class="card-stat card-stat-green">
-        <div class="stat-icon-wrap"><i class="icon-[ph--coins-fill]"></i></div>
-        <div class="stat-label">Gross Pay</div>
-        <div class="stat-value text-2xl font-bold text-emerald-600">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</div>
-        <div class="stat-sub">For this cutoff</div>
+    <div class="payroll-stat-card payroll-stat-green">
+      <div class="payroll-stat-card__body">
+        <div class="payroll-stat-card__icon">
+          <svg
+            height="32"
+            width="32"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"
+              stroke-linejoin="round"
+              stroke-linecap="round"
+            ></path>
+          </svg>
+        </div>
+        <p class="payroll-stat-card__title">Gross Pay</p>
+        <p class="payroll-stat-card__paragraph">
+          ₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}
+        </p>
+        <div class="text-base-content/60">For this cutoff</div>
+      </div>
+      <div class="payroll-stat-card__ribbon">
+        <label class="payroll-stat-card__ribbon-label">01</label>
+      </div>
     </div>
-    <div class="card-stat card-stat-red">
-        <div class="stat-icon-wrap"><i class="icon-[ph--minus-circle-fill]"></i></div>
-        <div class="stat-label">Total Deductions</div>
-        <div class="stat-value text-2xl font-bold text-red-600">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</div>
-        <div class="stat-sub">Gov't & Manual Deductions</div>
+    <div class="payroll-stat-card payroll-stat-red">
+      <div class="payroll-stat-card__body">
+        <div class="payroll-stat-card__icon">
+          <svg
+            height="32"
+            width="32"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 12H6M6 12l-3 3m3-3l-3-3M18 12l3 3m-3-3l3-3"
+              stroke-linejoin="round"
+              stroke-linecap="round"
+            ></path>
+          </svg>
+        </div>
+        <p class="payroll-stat-card__title">Total Deductions</p>
+        <p class="payroll-stat-card__paragraph">
+          -₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}
+        </p>
+        <div class="text-base-content/60">Gov't & Manual Deductions</div>
+      </div>
+      <div class="payroll-stat-card__ribbon">
+        <label class="payroll-stat-card__ribbon-label">02</label>
+      </div>
     </div>
-    <div class="card-stat card-stat-net">
-        <div class="stat-icon-wrap"><i class="icon-[ph--wallet-fill]"></i></div>
-        <div class="stat-label">Net Pay</div>
-        <div class="stat-value text-2xl font-bold text-emerald-600">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</div>
-        <div class="stat-sub">Take-home for this cutoff</div>
+    <div class="payroll-stat-card payroll-stat-net">
+      <div class="payroll-stat-card__body">
+        <div class="payroll-stat-card__icon">
+          <svg
+            height="32"
+            width="32"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M21 12V7a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 7v5m18 0v5a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 17v-5m18 0h-18"
+              stroke-linejoin="round"
+              stroke-linecap="round"
+            ></path>
+          </svg>
+        </div>
+        <p class="payroll-stat-card__title">Net Pay</p>
+        <p class="payroll-stat-card__paragraph">
+          ₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}
+        </p>
+        <div class="text-base-content/60">Take-home for this cutoff</div>
+      </div>
+      <div class="payroll-stat-card__ribbon">
+        <label class="payroll-stat-card__ribbon-label">03</label>
+      </div>
     </div>
 </div>
 
@@ -156,7 +359,7 @@
             @endforeach
         </div>
         <div class="flex justify-between items-center mt-3 pt-3 border-t-2 border-gray-200 font-bold text-sm">
-            <span class="text-base-300">Total Earnings</span>
+            <span class="text-base-content">Total Earnings</span>
             <span class="text-emerald-600">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['benefits'] ?? 0), 2) }}</span>
         </div>
     </div>
