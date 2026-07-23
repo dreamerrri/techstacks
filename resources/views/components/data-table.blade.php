@@ -1,6 +1,6 @@
 @props(['maxHeight' => '60vh'])
 
-<div class="overflow-x-auto overflow-y-auto hidden md:block isolate relative " style="max-height: {{ $maxHeight }}">
+<div class="overflow-x-auto overflow-y-auto hidden md:block isolate relative max-w-full" style="max-height: {{ $maxHeight }}">
     <table class="table table-hover table-fixed w-full text-sm">
         <thead class="[&>tr>th]:sticky [&>tr>th]:top-0 [&>tr>th]:z-20 [&>tr>th]:bg-primary [&>tr>th]:text-primary-content [&>tr>th]:text-xs border-x border-base-300">
             <tr>

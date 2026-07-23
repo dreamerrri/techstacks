@@ -107,7 +107,7 @@
 
     <x-slot:filters>
       {{-- Search group --}}
-            <div class="join flex-none w-64 min-w-40">
+            <div class="join w-full sm:w-64 sm:flex-none min-w-0">
                 <input type="text" name="search" id="search-input" value="{{ request('search') }}"
                        placeholder="Search name or email..."
                        oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
@@ -117,16 +117,16 @@
                 </button>
             </div>
         {{-- Filters group --}}
-        <div class="flex flex-row gap-2 md:ml-auto">
+        <div class="flex flex-wrap gap-2 md:ml-auto">
             <select name="department" id="department-select" onchange="this.closest('form').submit()"
-                    class="select select-bordered select-sm">
+                    class="select select-bordered select-sm w-full sm:w-auto">
                 <option value="">All Departments</option>
                 @foreach($departments as $dept)
                     <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
                 @endforeach
             </select>
             <select name="status" id="status-select" onchange="this.closest('form').submit()"
-                    class="select select-bordered select-sm">
+                    class="select select-bordered select-sm w-full sm:w-auto">
                 <option value="">All Status</option>
                 @foreach(['Regular','Probationary','Contractual','Part-time'] as $s)
                     <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
