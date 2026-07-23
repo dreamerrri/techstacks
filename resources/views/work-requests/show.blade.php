@@ -14,44 +14,38 @@
 @endphp
 
 {{-- Header --}}
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+<div class="flex items-center justify-between mb-4">
     <div>
-        <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
+        <div class="inline-block font-semibold text-xs text-info bg-info/10 rounded-lg p-4 mb-4">
             <i class="icon-[ph--file-fill]"></i> Request Details
         </div>
-        <h2 style="margin:8px 0 4px 0;">Work Request #{{ $workRequest->id }}</h2>
-        <p style="color:#6b7280; margin:0;">
+        <h2 class="text-base-content">Work Request #{{ $workRequest->id }}</h2>
+        <p class="text-base-content/60">
             Submitted on {{ $workRequest->created_at->format('M d, Y \a\t g:i A') }}
         </p>
     </div>
     <a href="{{ route('work-requests.index') }}"
-       style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+       class="inline-flex items-center font-semibold text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-4 gap-3 cursor-pointer no-underline">
         <i class="icon-[ph--arrow-left-fill]"></i> Back to Requests
     </a>
 </div>
 
 {{-- Status Banner --}}
-<div style="padding:16px 24px; border-radius:8px; margin-bottom:24px; 
-    {{ $workRequest->status === 'pending' ? 'background:#fef3c7; border:1px solid #f59e0b;' :
-       ($workRequest->status === 'approved' ? 'background:#d1fae5; border:1px solid #10b981;' :
-       ($workRequest->status === 'rejected' ? 'background:#fee2e2; border:1px solid #ef4444;' : 'background:#f3f4f6; border:1px solid #d1d5db;')) }}">
-    <div style="display:flex; align-items:center; gap:12px;">
+<div class="p-4 rounded-lg mb-6 border
+    {{ $workRequest->status === 'pending' ? 'bg-warning/10 border-warning text-warning-content' :
+       ($workRequest->status === 'approved' ? 'bg-success/10 border-success text-success-content' :
+       ($workRequest->status === 'rejected' ? 'bg-error/10 border-error text-error-content' : 'bg-base-200 border-base-300')) }}">
+    <div class="flex items-center gap-3">
         <i class="fas {{ $workRequest->status === 'pending' ? 'fa-clock' : 
                           ($workRequest->status === 'approved' ? 'fa-check-circle' : 
                           ($workRequest->status === 'rejected' ? 'fa-times-circle' : 'fa-ban')) }}" 
-           style="font-size:24px; 
-           {{ $workRequest->status === 'pending' ? 'color:#92400e;' :
-              ($workRequest->status === 'approved' ? 'color:#065f46;' :
-              ($workRequest->status === 'rejected' ? 'color:#991b1b;' : 'color:#374151;')) }}"></i>
+           class="text-2xl"></i>
         <div>
-            <div style="font-size:16px; font-weight:700; 
-                {{ $workRequest->status === 'pending' ? 'color:#92400e;' :
-                   ($workRequest->status === 'approved' ? 'color:#065f46;' :
-                   ($workRequest->status === 'rejected' ? 'color:#991b1b;' : 'color:#374151;')) }}">
+            <div class="text-base font-bold">
                 {{ ucfirst($workRequest->status) }}
             </div>
             @if($workRequest->status === 'approved' && $workRequest->approved_at)
-                <div style="font-size:12px; color:#6b7280;">
+                <div class="text-xs text-base-content/60">
                     Approved on {{ $workRequest->approved_at->format('M d, Y \a\t g:i A') }}
                     @if($workRequest->approvedBy)
                         by {{ $workRequest->approvedBy->name }}
@@ -59,7 +53,7 @@
                 </div>
             @endif
             @if($workRequest->status === 'rejected' && $workRequest->rejection_reason)
-                <div style="font-size:12px; color:#991b1b; margin-top:4px;">
+                <div class="text-xs mt-2">
                     Reason: {{ $workRequest->rejection_reason }}
                 </div>
             @endif
@@ -68,59 +62,59 @@
 </div>
 
 {{-- Request Details --}}
-<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px; margin-bottom:24px;">
+<div class="grid mb-4 gap-3">
     {{-- Employee Info --}}
     @if($isAdmin || $isHR)
-    <div class="card" style="padding:24px;">
-        <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-            <i class="icon-[tabler--user]" style="color:#6b7280;"></i> Employee
+    <div class="card p-4">
+        <h3 class="flex items-center gap-3">
+            <i class="icon-[tabler--user] text-base-content/60"></i> Employee
         </h3>
-        <div style="font-size:14px; font-weight:600; color:#1f2937;">
+        <div class="font-semibold text-sm text-base-content">
             {{ $workRequest->employee->full_name }}
         </div>
-        <div style="font-size:12px; color:#6b7280; margin-top:4px;">
+        <div class="text-xs text-base-content/60 mt-2">
             {{ $workRequest->employee->employee_id }}
         </div>
-        <div style="font-size:12px; color:#6b7280; margin-top:2px;">
+        <div class="text-xs text-base-content/60 mt-2">
             {{ $workRequest->employee->position }}
         </div>
     </div>
     @endif
 
     {{-- Request Type --}}
-    <div class="card" style="padding:24px;">
-        <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-            <i class="icon-[ph--tag-fill]" style="color:#6b7280;"></i> Request Type
+    <div class="card p-4">
+        <h3 class="flex items-center gap-3">
+            <i class="icon-[ph--tag-fill] text-base-content/60"></i> Request Type
         </h3>
-        <span style="padding:6px 12px; border-radius:12px; font-size:14px; font-weight:600; display:inline-block;
-            {{ $workRequest->request_type === 'weekend' ? 'background:#dbeafe; color:#1e40af;' : 
-               ($workRequest->request_type === 'holiday' ? 'background:#fef3c7; color:#92400e;' : 'background:#e0e7ff; color:#3730a3;') }}">
+        <span class="badge badge-info badge-sm
+            {{ $workRequest->request_type === 'weekend' ? 'badge-info' :
+               ($workRequest->request_type === 'holiday' ? 'badge-warning' : 'badge-primary') }}">
             {{ ucfirst($workRequest->request_type) }} Work
         </span>
     </div>
 
     {{-- Work Date --}}
-    <div class="card" style="padding:24px;">
-        <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-            <i class=" icon-[ph--calendar-fill]" style="color:#6b7280;"></i> Work Date
+    <div class="card p-4">
+        <h3 class="flex items-center gap-3">
+            <i class=" icon-[ph--calendar-fill] text-base-content/60"></i> Work Date
         </h3>
-        <div style="font-size:14px; font-weight:600; color:#1f2937;">
+        <div class="font-semibold text-sm text-base-content">
             {{ $workRequest->work_date->format('l, F d, Y') }}
         </div>
     </div>
 
     {{-- Time Range --}}
     @if($workRequest->start_time || $workRequest->end_time)
-    <div class="card" style="padding:24px;">
-        <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-            <i class="icon-[ph--clock-fill]" style="color:#6b7280;"></i> Time Range
+    <div class="card p-4">
+        <h3 class="flex items-center gap-3">
+            <i class="icon-[ph--clock-fill] text-base-content/60"></i> Time Range
         </h3>
-        <div style="font-size:14px; font-weight:600; color:#1f2937;">
+        <div class="font-semibold text-sm text-base-content">
             {{ $workRequest->start_time ? $workRequest->start_time : 'Not specified' }}
             @if($workRequest->end_time) - {{ $workRequest->end_time }}@endif
         </div>
         @if($workRequest->estimated_hours)
-        <div style="font-size:12px; color:#6b7280; margin-top:4px;">
+        <div class="text-xs text-base-content/60 mt-2">
             Estimated: {{ number_format($workRequest->estimated_hours, 2) }} hours
         </div>
         @endif
@@ -130,11 +124,11 @@
 
 {{-- Reason --}}
 @if($workRequest->reason)
-<div class="card" style="padding:24px; margin-bottom:24px;">
-    <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-        <i class="icon-[ph--chat-text-fill]" style="color:#6b7280;"></i> Reason
+<div class="card p-4 mb-4">
+    <h3 class="flex items-center gap-3">
+        <i class="icon-[ph--chat-text-fill] text-base-content/60"></i> Reason
     </h3>
-    <div style="font-size:14px; color:#374151; line-height:1.6; white-space:pre-wrap;">
+    <div class="text-sm text-base-content">
         {{ $workRequest->reason }}
     </div>
 </div>
@@ -142,17 +136,17 @@
 
 {{-- Actions --}}
 @if($workRequest->canBeCancelled() || ($isAdmin || $isHR && $workRequest->canBeApproved()))
-<div class="card" style="padding:24px;">
-    <h3 style="margin:0 0 16px 0;">Actions</h3>
-    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+<div class="card p-4">
+    <h3 class="text-base-content">Actions</h3>
+    <div class="flex flex-wrap gap-3">
         {{-- Employee actions: edit and cancel own pending requests --}}
         @if(!$isAdmin && !$isHR && $workRequest->canBeCancelled())
             <a href="{{ route('work-requests.edit', $workRequest) }}"
-               style="padding:12px 24px; background:#f59e0b; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+               class="inline-flex items-center font-semibold text-sm rounded-lg p-4 gap-3 cursor-pointer no-underline">
                 <i class="icon-[ph--pencil-fill]"></i> Edit Request
             </a>
             <button onclick="cancelRequest({{ $workRequest->id }})"
-                    style="padding:12px 24px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
+                    class="inline-flex items-center font-semibold text-sm rounded-lg p-4 gap-3 cursor-pointer">
                 <i class="icon-[ph--x]"></i> Cancel Request
             </button>
         @endif
@@ -160,11 +154,11 @@
         @if($isAdmin || $isHR && $workRequest->canBeApproved())
         @if($workRequest->status === 'pending')
     <button onclick="approveRequest({{ $workRequest->id }})"
-                    style="padding:12px 24px; background:#10b981; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
+                    class="inline-flex items-center font-semibold text-sm rounded-lg p-4 gap-3 cursor-pointer">
                 <i class="icon-[tabler--check]"></i> Approve
             </button>
             <button onclick="showRejectModal({{ $workRequest->id }})"
-                    style="padding:12px 24px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px;">
+                    class="inline-flex items-center font-semibold text-sm rounded-lg p-4 gap-3 cursor-pointer">
                 <i class="icon-[ph--x]"></i> Reject
             </button>
 @endif

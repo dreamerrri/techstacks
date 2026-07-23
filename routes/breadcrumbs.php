@@ -121,6 +121,7 @@ Breadcrumbs::for('manual-payroll-attendance.index', function (BreadcrumbTrail $t
     $trail->parent('manage-employees');
     $trail->push('Attendance', route('manual-payroll-attendance.index'));
 });
+
 //why is this on payroll-periods? ask vincent
 Breadcrumbs::for('payroll-periods.archived', function (BreadcrumbTrail $trail) {
     $trail->parent('manual-payroll-attendance.index');
@@ -128,7 +129,8 @@ Breadcrumbs::for('payroll-periods.archived', function (BreadcrumbTrail $trail) {
 });
 
 Breadcrumbs::for('payroll-periods.create', function (BreadcrumbTrail $trail) {
-    $trail->parent('manual-payroll-attendance.index');
+    $trail->parent('manual-payroll-attendance.index' );
+    
     $trail->push('Create Payroll period',route('payroll-periods.create'));
 });
 

@@ -26,7 +26,7 @@
 
 <x-slot:actions>
           <a href="{{ route('work-requests.index') }}"
-           style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+           class="inline-flex items-center font-semibold text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-4 gap-3 cursor-pointer no-underline">
             <i class="icon-[ph--list-fill]"></i> All Requests
         </a>
 </x-slot:actions>
@@ -53,34 +53,34 @@
                             <div>{{ $request->employee->position }}</div>
                         </td>
                         <td>
-                            <span style="padding:4px 8px; border-radius:12px; font-size:12px; font-weight:600; 
-                                {{ $request->request_type === 'weekend' ? 'background:#dbeafe; color:#1e40af;' : 
-                                   ($request->request_type === 'holiday' ? 'background:#fef3c7; color:#92400e;' : 'background:#e0e7ff; color:#3730a3;') }}">
+                            <span class="badge badge-sm font-semibold
+                                {{ $request->request_type === 'weekend' ? 'badge-info' :
+                                   ($request->request_type === 'holiday' ? 'badge-warning' : 'badge-primary') }}">
                                 {{ ucfirst($request->request_type) }}
                             </span>
                         </td>
-                        <td style="padding:12px 16px; font-size:14px; color:#1f2937;">
+                        <td class="text-sm text-base-content p-4">
                             {{ $request->work_date->format('M d, Y') }}
-                            <div style="font-size:12px; color:#6b7280;">{{ $request->work_date->format('l') }}</div>
+                            <div class="text-xs text-base-content/60">{{ $request->work_date->format('l') }}</div>
                         </td>
                         <td>
                             {{ $request->start_time ? $request->start_time : '-' }} 
                             @if($request->end_time) - {{ $request->end_time }}@endif
                             @if($request->estimated_hours)
-                            <div style="font-size:12px; color:#6b7280;">{{ number_format($request->estimated_hours, 2) }} hrs</div>
+                            <div class="text-xs text-base-content/60">{{ number_format($request->estimated_hours, 2) }} hrs</div>
                             @endif
                         </td>
                         <td>
                             {{ $request->reason ? \Illuminate\Support\Str::limit($request->reason, 50) : '-' }}
                         </td>
                         <td>
-                          <a href="{{ route('work-requests.show', $request) }}" class="btn  btn-info btn-sm">
+                          <a href="{{ route('work-requests.show', $request) }}" class="btn btn-soft  btn-info btn-sm">
     <i class="icon-[ph--eye-fill]"></i>
 </a>
-<button type="button" class="btn  btn-success btn-sm" onclick="approveRequest({{ $request->id }})">
+<button type="button" class="btn btn-soft btn-success btn-sm" onclick="approveRequest({{ $request->id }})">
     <i class="icon-[tabler--check]"></i>
 </button>
-<button type="button" class="btn  btn-error btn-sm" onclick="showRejectModal({{ $request->id }})">
+<button type="button" class="btn btn-soft btn-error btn-sm" onclick="showRejectModal({{ $request->id }})">
     <i class="icon-[ph--x]"></i>
 </button>
                         </td>
@@ -91,14 +91,14 @@
         </div>
     </div>
 @else
-    <div class="card" style="padding:48px; text-align:center;">
-        <i class="icon-[tabler--circle-check]" style="font-size:48px; color:#10b981; margin-bottom:16px;"></i>
-        <h3 style="margin:0 0 8px 0; color:#6b7280;">All Caught Up!</h3>
-        <p style="color:#9ca3af; margin:0 0 24px 0;">
+    <div class="card text-center p-4">
+        <i class="icon-[tabler--circle-check] text-success mb-4"></i>
+        <h3 class="text-base-content/60">All Caught Up!</h3>
+        <p class="text-base-content/60">
             There are no pending work requests to review.
         </p>
         <a href="{{ route('work-requests.index') }}"
-           style="padding:12px 24px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+           class="inline-flex items-center font-semibold text-sm bg-primary rounded-lg p-4 gap-3 cursor-pointer no-underline">
             <i class="icon-[ph--list-fill]"></i> View All Requests
         </a>
     </div>

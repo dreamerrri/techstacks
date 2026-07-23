@@ -291,7 +291,7 @@
             </div>
 
             {{-- Add Allowance Form --}}
-            <div id="allowanceForm" class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-200" style="display: none;">
+            <div id="allowanceForm" class="hidden mt-4 p-4 bg-success/10 rounded-xl border border-success/30">
                 <h4 class="text-sm font-bold text-emerald-800 mb-3">Add Allowance</h4>
                 <form method="POST" action="{{ route('allowances.store', $employee) }}">
                     @csrf
@@ -328,7 +328,7 @@
             </div>
 
             {{-- Add Benefit Form --}}
-            <div id="benefitForm" class="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200" style="display: none;">
+            <div id="benefitForm" class="hidden mt-4 p-4 bg-info/10 rounded-xl border border-info/30">
                 <h4 class="text-sm font-bold text-blue-800 mb-3">Add Benefit</h4>
                 <form method="POST" action="{{ route('benefits.store', $employee) }}">
                     @csrf

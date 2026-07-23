@@ -8,12 +8,12 @@
               style="animation-delay: {{ $loop->index * 60 }}ms">
 
             @if (!is_null($breadcrumb->url) && !$loop->last)
-                <a href="{{ $breadcrumb->url }}"
-                   class="text-base-content no-underline transition-colors duration-200 hover:text-primary ">
-                    {{ $breadcrumb->title }}
-                </a>
+            <a href="{{ $breadcrumb->url }}"
+ class="text-base-content no-underline transition-colors duration-200 hover:text-primary">
+      {{ $breadcrumb->title }}
+  </a>
             @elseif($loop->last)
-                <span class="text-primary font-semibold ">
+                <span class="text-primary font-semibold">
                     {{ $breadcrumb->title }}
                 </span>
             @else

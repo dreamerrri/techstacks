@@ -13,114 +13,114 @@
 @endphp
 
 {{-- Header --}}
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+<div class="flex items-center justify-between mb-4">
     <div>
-        <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
+        <div class="inline-block font-semibold text-xs text-info bg-info/10 rounded-lg p-4 mb-4">
             <i class=" icon-[ph--calendar-fill]-plus"></i> New Request
         </div>
-        <h2 style="margin:8px 0 4px 0;">Create Work Request</h2>
-        <p style="color:#6b7280; margin:0;">
+        <h2 class="text-base-content">Create Work Request</h2>
+        <p class="text-base-content/60">
             Submit a request for weekend, holiday, or overtime work
         </p>
     </div>
     <a href="{{ route('work-requests.index') }}"
-       style="padding:12px 20px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+       class="inline-flex items-center font-semibold text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-4 gap-3 cursor-pointer no-underline">
         <i class="icon-[ph--arrow-left-fill]"></i> Back to Requests
     </a>
 </div>
 
 {{-- Form --}}
-<div class="card" style="padding:32px; max-width:800px;">
+<div class="card p-4">
     <form id="workRequestForm">
         @csrf
         
         {{-- Request Type --}}
-        <div style="margin-bottom:24px;">
-            <label style="display:block; font-size:14px; font-weight:600; color:#374151; margin-bottom:8px;">
-                Request Type <span style="color:#ef4444;">*</span>
+        <div class="mb-4">
+            <label class="font-semibold text-sm text-base-content mb-4">
+                Request Type <span class="text-error">*</span>
             </label>
             <select name="request_type" id="request_type" required
-                    style="width:100%; padding:12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;">
+                    class="w-full text-sm border border-base-300 rounded-lg p-4">
                 <option value="">Select type...</option>
                 <option value="weekend">Weekend Work</option>
                 <option value="holiday">Holiday Work</option>
                 <option value="overtime">Overtime</option>
                 <option value="half_day">Half Day</option>
             </select>
-            <p style="font-size:12px; color:#6b7280; margin-top:4px;">
+            <p class="text-xs text-base-content/60 mt-2">
                 Choose the type of work you're requesting
             </p>
         </div>
 
         {{-- Work Date --}}
-        <div style="margin-bottom:24px;">
-            <label style="display:block; font-size:14px; font-weight:600; color:#374151; margin-bottom:8px;">
-                Work Date <span style="color:#ef4444;">*</span>
+        <div class="mb-4">
+            <label class="font-semibold text-sm text-base-content mb-4">
+                Work Date <span class="text-error">*</span>
             </label>
             <input type="date" name="work_date" id="work_date" required min="{{ now()->toDateString() }}"
-                   style="width:100%; padding:12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;">
-            <p style="font-size:12px; color:#6b7280; margin-top:4px;">
+                   class="w-full text-sm border border-base-300 rounded-lg p-4">
+            <p class="text-xs text-base-content/60 mt-2">
                 Date must be today or in the future
             </p>
         </div>
 
         {{-- Time Range --}}
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;">
+        <div class="grid mb-4 gap-3">
             <div>
-                <label style="display:block; font-size:14px; font-weight:600; color:#374151; margin-bottom:8px;">
+                <label class="font-semibold text-sm text-base-content mb-4">
                     Start Time
                 </label>
                 <input type="time" name="start_time" id="start_time"
-                       style="width:100%; padding:12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;">
+                       class="w-full text-sm border border-base-300 rounded-lg p-4">
             </div>
             <div>
-                <label style="display:block; font-size:14px; font-weight:600; color:#374151; margin-bottom:8px;">
+                <label class="font-semibold text-sm text-base-content mb-4">
                     End Time
                 </label>
                 <input type="time" name="end_time" id="end_time"
-                       style="width:100%; padding:12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;">
+                       class="w-full text-sm border border-base-300 rounded-lg p-4">
             </div>
         </div>
 
         {{-- Estimated Hours --}}
-        <div style="margin-bottom:24px;">
-            <label style="display:block; font-size:14px; font-weight:600; color:#374151; margin-bottom:8px;">
+        <div class="mb-4">
+            <label class="font-semibold text-sm text-base-content mb-4">
                 Estimated Hours
             </label>
             <input type="number" name="estimated_hours" id="estimated_hours" min="0" max="24" step="0.5"
-                   style="width:100%; padding:12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px;">
-            <p style="font-size:12px; color:#6b7280; margin-top:4px;">
+                   class="w-full text-sm border border-base-300 rounded-lg p-4">
+            <p class="text-xs text-base-content/60 mt-2">
                 Estimated duration of work (optional)
             </p>
-            <div id="overtime_hours_display" style="display:none; margin-top:8px; padding:8px 12px; background:#dbeafe; border-radius:6px; border-left:4px solid #2563eb;">
-                <span style="font-size:13px; font-weight:600; color:#1e40af;">
-                    <i class="icon-[ph--clock-fill]" style="margin-right:4px;"></i>
+            <div id="overtime_hours_display" class="hidden bg-info/10 border-s-4 border-primary rounded-lg p-4 mt-2">
+                <span class="font-semibold text-xs text-info">
+                    <i class="icon-[ph--clock-fill] text-base-content"></i>
                     Approximate Overtime Hours: <span id="calculated_overtime_hours">0</span>
                 </span>
             </div>
         </div>
 
         {{-- Reason --}}
-        <div style="margin-bottom:32px;">
-            <label style="display:block; font-size:14px; font-weight:600; color:#374151; margin-bottom:8px;">
+        <div class="mb-4">
+            <label class="font-semibold text-sm text-base-content mb-4">
                 Reason
             </label>
             <textarea name="reason" id="reason" rows="4" maxlength="500"
-                      style="width:100%; padding:12px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; resize:vertical;"
+                      class="w-full text-sm border border-base-300 rounded-lg p-4 resize-y"
                       placeholder="Provide a reason for this work request..."></textarea>
-            <p style="font-size:12px; color:#6b7280; margin-top:4px;">
+            <p class="text-xs text-base-content/60 mt-2">
                 Maximum 500 characters
             </p>
         </div>
 
         {{-- Submit Button --}}
-        <div style="display:flex; gap:12px;">
+        <div class="flex gap-3">
             <button type="submit"
-                    style="padding:12px 32px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">
+                    class="font-semibold text-sm bg-primary rounded-lg p-4 cursor-pointer">
                 <i class="icon-[ph--paper-plane-fill]-plane"></i> Submit Request
             </button>
             <a href="{{ route('work-requests.index') }}"
-               style="padding:12px 32px; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center;">
+               class="inline-flex items-center font-semibold text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-4 cursor-pointer no-underline">
                 Cancel
             </a>
         </div>
@@ -129,17 +129,17 @@
 
 {{-- Upcoming Holidays Reference --}}
 @if($upcomingHolidays->count() > 0)
-<div class="card" style="padding:24px; margin-top:24px;">
-    <h3 style="margin:0 0 16px 0; display:flex; align-items:center; gap:8px;">
-        <i class="icon-[ph--calendar-fill]" style="color:#6b7280;"></i> Upcoming Holidays
+<div class="card p-4 mt-2">
+    <h3 class="flex items-center gap-3">
+        <i class="icon-[ph--calendar-fill] text-base-content/60"></i> Upcoming Holidays
     </h3>
-    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:12px;">
+    <div class="grid gap-3">
         @foreach($upcomingHolidays as $holiday)
-        <div style="padding:12px; background:#f9fafb; border-radius:6px; border-left:4px solid {{ $holiday->type === 'regular' ? '#f59e0b' : '#3b82f6' }};">
-            <div style="font-size:14px; font-weight:600; color:#1f2937;">{{ $holiday->name }}</div>
-            <div style="font-size:12px; color:#6b7280; margin-top:4px;">{{ $holiday->date->format('M d, Y') }}</div>
-            <div style="font-size:11px; color:#6b7280; margin-top:2px;">
-                <span style="padding:2px 6px; border-radius:4px; background:#e5e7eb; font-weight:600;">
+        <div class="bg-base-200 border-s-4 border-primary rounded-lg p-4">
+            <div class="font-semibold text-sm text-base-content">{{ $holiday->name }}</div>
+            <div class="text-xs text-base-content/60 mt-2">{{ $holiday->date->format('M d, Y') }}</div>
+            <div class="text-base-content/60 mt-2">
+                <span class="font-semibold rounded-lg p-4">
                     {{ ucfirst($holiday->type) }}
                 </span>
             </div>
