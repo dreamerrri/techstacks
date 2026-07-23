@@ -105,16 +105,18 @@
   width: 84px;
   aspect-ratio: 1/1;
   background-color: var(--color-base-100);
-  color: var(--color-base-content);
   position: relative;
   transform: translateY(-50%);
   border-radius: 50%;
   border: 8px solid var(--ribbon-color);
   display: grid;
   place-items: center;
-  font-weight: 900;
-  line-height: 1;
-  font-size: 1.5rem;
+  padding: 12px;
+}
+
+.payroll-stat-card__ribbon-label svg {
+  width: 100%;
+  height: 100%;
 }
 
 .payroll-stat-card__ribbon-label::before,
@@ -236,7 +238,12 @@
         <div class="text-base-content/60">For this cutoff</div>
       </div>
       <div class="payroll-stat-card__ribbon">
-        <label class="payroll-stat-card__ribbon-label">01</label>
+        <div class="payroll-stat-card__ribbon-label">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1813 1441">
+            <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fill-rule="evenodd" fill="var(--ribbon-color)"/>
+            <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fill-rule="evenodd" fill="var(--ribbon-color)"/>
+          </svg>
+        </div>
       </div>
     </div>
     <div class="payroll-stat-card payroll-stat-red">
@@ -265,7 +272,12 @@
         <div class="text-base-content/60">Gov't & Manual Deductions</div>
       </div>
       <div class="payroll-stat-card__ribbon">
-        <label class="payroll-stat-card__ribbon-label">02</label>
+        <div class="payroll-stat-card__ribbon-label">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1813 1441">
+            <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fill-rule="evenodd" fill="var(--ribbon-color)"/>
+            <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fill-rule="evenodd" fill="var(--ribbon-color)"/>
+          </svg>
+        </div>
       </div>
     </div>
     <div class="payroll-stat-card payroll-stat-net">
@@ -294,7 +306,12 @@
         <div class="text-base-content/60">Take-home for this cutoff</div>
       </div>
       <div class="payroll-stat-card__ribbon">
-        <label class="payroll-stat-card__ribbon-label">03</label>
+        <div class="payroll-stat-card__ribbon-label">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1813 1441">
+            <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fill-rule="evenodd" fill="var(--ribbon-color)"/>
+            <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fill-rule="evenodd" fill="var(--ribbon-color)"/>
+          </svg>
+        </div>
       </div>
     </div>
 </div>
