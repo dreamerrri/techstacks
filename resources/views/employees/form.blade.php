@@ -1,17 +1,17 @@
 {{-- Personal Information --}}
 <div class="mb-8">
-    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
-        <i class="icon-[tabler--user] text-red-600"></i> Personal Information
+    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+        <i class="icon-[tabler--user] text-error"></i> Personal Information
     </h3>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">First Name <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">First Name <span class="text-error">*</span></label>
             <input type="text" name="first_name" id="first_name"
                    value="{{ old('first_name', $employee->first_name ?? '') }}"
                    class="input input-bordered w-full" data-validate="required|alpha">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('first_name') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('first_name') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset">
@@ -19,77 +19,77 @@
             <input type="text" name="middle_name" id="middle_name"
                    value="{{ old('middle_name', $employee->middle_name ?? '') }}"
                    class="input input-bordered w-full" data-validate="alpha">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
         </div>
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Last Name <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Last Name <span class="text-error">*</span></label>
             <input type="text" name="last_name" id="last_name"
                    value="{{ old('last_name', $employee->last_name ?? '') }}"
                    class="input input-bordered w-full" data-validate="required|alpha">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('last_name') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('last_name') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Birthdate <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Birthdate <span class="text-error">*</span></label>
             <input type="date" name="birthdate" id="birthdate"
                    value="{{ old('birthdate', isset($employee) ? $employee->birthdate->format('Y-m-d') : '') }}"
                    class="input input-bordered w-full" data-validate="required|past_date"
                    max="{{ date('Y-m-d', strtotime('-1 day')) }}">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('birthdate') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('birthdate') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Gender <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Gender <span class="text-error">*</span></label>
             <select name="gender" id="gender" class="select select-bordered w-full" data-validate="required">
                 <option value="">Select Gender</option>
                 @foreach(['Male','Female','Other'] as $g)
                     <option value="{{ $g }}" {{ old('gender', $employee->gender ?? '') == $g ? 'selected' : '' }}>{{ $g }}</option>
                 @endforeach
             </select>
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('gender') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('gender') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Civil Status <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Civil Status <span class="text-error">*</span></label>
             <select name="civil_status" id="civil_status" class="select select-bordered w-full" data-validate="required">
                 <option value="">Select Civil Status</option>
                 @foreach(['Single','Married','Widowed','Separated'] as $cs)
                     <option value="{{ $cs }}" {{ old('civil_status', $employee->civil_status ?? '') == $cs ? 'selected' : '' }}>{{ $cs }}</option>
                 @endforeach
             </select>
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('civil_status') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('civil_status') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Contact Number <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Contact Number <span class="text-error">*</span></label>
             <input type="text" name="contact_number" id="contact_number"
                    value="{{ old('contact_number', $employee->contact_number ?? '') }}"
                    placeholder="09XXXXXXXXX"
                    class="input input-bordered w-full" data-validate="required|ph_mobile" maxlength="11">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('contact_number') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('contact_number') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Email Address <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Email Address <span class="text-error">*</span></label>
             <input type="email" name="email" id="email"
                    value="{{ old('email', $employee->email ?? '') }}"
                    class="input input-bordered w-full" data-validate="required|email">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('email') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('email') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset md:col-span-2 lg:col-span-3">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Address <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Address <span class="text-error">*</span></label>
             <textarea name="address" id="address" rows="2"
                       class="textarea textarea-bordered w-full" data-validate="required">{{ old('address', $employee->address ?? '') }}</textarea>
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('address') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('address') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
     </div>
@@ -97,76 +97,76 @@
 
 {{-- Employment Details --}}
 <div class="mb-8">
-    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
-        <i class="icon-[ph--briefcase-fill] text-red-600"></i> Employment Details
+    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+        <i class="icon-[ph--briefcase-fill] text-error"></i> Employment Details
     </h3>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Department <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Department <span class="text-error">*</span></label>
             <select name="department" id="Department" class="select select-bordered w-full" data-validate="required">
                 <option value="">Select Department</option>
                 @foreach(['Sales','Marketing','Human Resources','Information Technology'] as $dept)
                     <option value="{{ $dept }}" {{ old('department', $employee->department ?? '') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
                 @endforeach
             </select>
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('department') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('department') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Position <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Position <span class="text-error">*</span></label>
             <select name="position" id="position" class="select select-bordered w-full" data-validate="required">
                 <option value="">Select Position</option>
                 @foreach(['Manager','Supervisor','Employee'] as $pos)
                     <option value="{{ $pos }}" {{ old('position', $employee->position ?? '') == $pos ? 'selected' : '' }}>{{ $pos }}</option>
                 @endforeach
             </select>
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('position') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('position') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Employment Status <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Employment Status <span class="text-error">*</span></label>
             <select name="employment_status" id="employment_status" class="select select-bordered w-full" data-validate="required">
                 <option value="">Select Status</option>
                 @foreach(['Regular','Probationary','Contractual','Part-time'] as $es)
                     <option value="{{ $es }}" {{ old('employment_status', $employee->employment_status ?? '') == $es ? 'selected' : '' }}>{{ $es }}</option>
                 @endforeach
             </select>
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('employment_status') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('employment_status') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Date Hired <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Date Hired <span class="text-error">*</span></label>
             <input type="date" name="date_hired" id="date_hired"
                    value="{{ old('date_hired', isset($employee) ? $employee->date_hired->format('Y-m-d') : '') }}"
                    class="input input-bordered w-full" data-validate="required" max="{{ date('Y-m-d') }}">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('date_hired') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('date_hired') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Salary Type <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Salary Type <span class="text-error">*</span></label>
             <select name="salary_type" id="salary_type" class="select select-bordered w-full" data-validate="required">
                 <option value="">Select Salary Type</option>
                 @foreach(['Monthly','Daily','Hourly'] as $st)
                     <option value="{{ $st }}" {{ old('salary_type', $employee->salary_type ?? '') == $st ? 'selected' : '' }}>{{ $st }}</option>
                 @endforeach
             </select>
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('salary_type') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('salary_type') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
         <div class="fieldset">
-            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Basic Salary (PHP) <span class="text-red-600">*</span></label>
+            <label class="label text-xs font-semibold uppercase tracking-wider text-base-content/60">Basic Salary (PHP) <span class="text-error">*</span></label>
             <input type="number" name="basic_salary" id="basic_salary"
                    step="0.01" min="0"
                    value="{{ old('basic_salary', $employee->basic_salary ?? '') }}"
                    class="input input-bordered w-full" data-validate="required|min_salary">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
-            @error('basic_salary') <p class="label text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
+            @error('basic_salary') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
         </div>
 
     </div>
@@ -174,8 +174,8 @@
 
 {{-- Government Contributions --}}
 <div class="mb-4">
-    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-2">
-        <i class="icon-[ph--identification-card-fill] text-red-600"></i> Government Contributions
+    <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-2">
+        <i class="icon-[ph--identification-card-fill] text-error"></i> Government Contributions
     </h3>
     <p class="text-xs text-base-content/40 mb-4">
         <i class="icon-[ph--info-fill]"></i> These fields are optional but must follow the correct format if provided.
@@ -188,7 +188,7 @@
                    value="{{ old('sss_number', $employee->sss_number ?? '') }}"
                    placeholder="XX-XXXXXXX-X"
                    class="input input-bordered w-full" data-validate="sss" maxlength="12">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
             <p class="text-base-content/40 text-xs mt-1">Format: XX-XXXXXXX-X</p>
         </div>
 
@@ -198,7 +198,7 @@
                    value="{{ old('philhealth_number', $employee->philhealth_number ?? '') }}"
                    placeholder="XX-XXXXXXXXX-X"
                    class="input input-bordered w-full" data-validate="philhealth" maxlength="14">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
             <p class="text-base-content/40 text-xs mt-1">Format: XX-XXXXXXXXX-X</p>
         </div>
 
@@ -208,7 +208,7 @@
                    value="{{ old('pagibig_number', $employee->pagibig_number ?? '') }}"
                    placeholder="XXXX-XXXX-XXXX"
                    class="input input-bordered w-full" data-validate="pagibig" maxlength="14">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
             <p class="text-base-content/40 text-xs mt-1">Format: XXXX-XXXX-XXXX</p>
         </div>
 
@@ -218,7 +218,7 @@
                    value="{{ old('tin_number', $employee->tin_number ?? '') }}"
                    placeholder="XXX-XXX-XXX"
                    class="input input-bordered w-full" data-validate="tin" maxlength="11">
-            <p class="field-error label text-red-600 text-xs mt-1 hidden"></p>
+            <p class="field-error label text-error text-xs mt-1 hidden"></p>
             <p class="text-base-content/40 text-xs mt-1">Format: XXX-XXX-XXX</p>
         </div>
 

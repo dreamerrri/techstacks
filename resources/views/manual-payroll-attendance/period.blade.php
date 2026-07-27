@@ -34,7 +34,7 @@
     <div style="display:flex; gap:10px;">
         @if($payrollPeriod->isDraft() && $payrollPeriod->payrollInputs && $payrollPeriod->payrollInputs->count() > 0)
         <button onclick="finalizePayroll()"
-                class="px-5 py-2.5 bg-emerald-500 text-white border-none rounded-field cursor-pointer text-sm inline-flex items-center gap-2">
+                class="px-5 py-2.5 bg-success text-white border-none rounded-field cursor-pointer text-sm inline-flex items-center gap-2">
             <i class="icon-[tabler--circle-check]"></i> Finalize Payroll
         </button>
         @endif
@@ -54,15 +54,15 @@
     </div>
     <div class="bg-base-100 border border-base-300 rounded-xl p-5">
         <div class="text-base-content/60 text-xs mb-1">Total Gross Pay</div>
-        <div class="text-2xl font-bold text-emerald-500" id="totalGrossPay">₱{{ number_format($payrollPeriod->total_gross_pay ?? 0, 2) }}</div>
+        <div class="text-2xl font-bold text-success" id="totalGrossPay">₱{{ number_format($payrollPeriod->total_gross_pay ?? 0, 2) }}</div>
     </div>
     <div class="bg-base-100 border border-base-300 rounded-xl p-5">
         <div class="text-base-content/60 text-xs mb-1">Total Net Pay</div>
-        <div class="text-2xl font-bold text-blue-600" id="totalNetPay">₱{{ number_format($payrollPeriod->total_net_pay ?? 0, 2) }}</div>
+        <div class="text-2xl font-bold text-info" id="totalNetPay">₱{{ number_format($payrollPeriod->total_net_pay ?? 0, 2) }}</div>
     </div>
     <div class="bg-base-100 border border-base-300 rounded-xl p-5">
         <div class="text-base-content/60 text-xs mb-1">Total Deductions</div>
-        <div class="text-2xl font-bold text-red-600" id="totalDeductions">₱{{ number_format($payrollPeriod->total_deductions ?? 0, 2) }}</div>
+        <div class="text-2xl font-bold text-error" id="totalDeductions">₱{{ number_format($payrollPeriod->total_deductions ?? 0, 2) }}</div>
     </div>
 </div>
 
@@ -107,10 +107,10 @@
                     <td class="px-3 py-3 text-right">{{ number_format($input->days_worked ?? 0, 1) }}</td>
                     <td class="px-3 py-3 text-right">{{ number_format($input->overtime_hours ?? 0, 1) }}</td>
                     <td class="px-3 py-3 text-right">{{ number_format($input->late_hours ?? 0, 1) }}</td>
-                    <td class="px-3 py-3 text-right text-emerald-500">₱{{ number_format($input->allowances ?? 0, 2) }}</td>
-                    <td class="px-3 py-3 text-right text-red-600">₱{{ number_format($input->deductions ?? 0, 2) }}</td>
+                    <td class="px-3 py-3 text-right text-success">₱{{ number_format($input->allowances ?? 0, 2) }}</td>
+                    <td class="px-3 py-3 text-right text-error">₱{{ number_format($input->deductions ?? 0, 2) }}</td>
                     <td class="px-3 py-3 text-right font-semibold text-base-content">₱{{ number_format($input->gross_pay ?? 0, 2) }}</td>
-                    <td class="px-3 py-3 text-right font-bold text-emerald-500">₱{{ number_format($input->net_pay ?? 0, 2) }}</td>
+                    <td class="px-3 py-3 text-right font-bold text-success">₱{{ number_format($input->net_pay ?? 0, 2) }}</td>
                     <td class="px-3 py-3 text-center">
                         @if($payrollPeriod->isDraft())
                         <a href="{{ route('manual-payroll-attendance.employee-form', [$payrollPeriod, $input->employee]) }}"

@@ -38,7 +38,7 @@
         {{-- Request Type --}}
         <div class="mb-6">
             <label class="block text-sm font-semibold text-base-content mb-2">
-                Request Type <span class="text-red-500">*</span>
+                Request Type <span class="text-error">*</span>
             </label>
             <select name="request_type" id="request_type" required
                     class="w-full p-3 border border-base-300 rounded-field text-sm">
@@ -53,7 +53,7 @@
         {{-- Work Date --}}
         <div class="mb-6">
             <label class="block text-sm font-semibold text-base-content mb-2">
-                Work Date <span class="text-red-500">*</span>
+                Work Date <span class="text-error">*</span>
             </label>
             <input type="date" name="work_date" id="work_date" required min="{{ now()->toDateString() }}"
                    value="{{ $workRequest->work_date->format('Y-m-d') }}"

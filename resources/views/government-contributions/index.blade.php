@@ -201,7 +201,7 @@
                     default        => 'badge-soft',
                 };
             @endphp
-            <div class="card bg-base-100 border border-gray-200 p-4">
+            <div class="card bg-base-100 border border-base-300 p-4">
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
@@ -232,7 +232,7 @@
                     <span><i class="icon-[tabler--cash] w-3.5"></i> ₱{{ number_format($employee->basic_salary, 2) }}</span>
                 </div>
 
-                <div class="mt-3 pt-3 border-t border-gray-100">
+                <div class="mt-3 pt-3 border-t border-base-200">
                     <a href="{{ route('government-contributions.show', $employee) }}"
                        class="btn  btn-info btn-sm">
                         <i class="icon-[tabler--eye]"></i> View Contributions
@@ -248,7 +248,7 @@
     </div>
 
     {{-- Pagination --}}
-    <div class="px-6 py-4 border-t border-gray-200">
+    <div class="px-6 py-4 border-t border-base-300">
         {{ $employees->links('vendor.pagination.pagination') }}
     </div>
 </x-table-card>

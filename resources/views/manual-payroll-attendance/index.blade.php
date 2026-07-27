@@ -95,7 +95,7 @@
                     @foreach($periods as $period)
                         @if($period)
                             <div id="period-row-{{ $period->id }}"
-                                 class="border border-primary rounded-xl p-5 cursor-pointer transition-all hover:border-red-400 hover:shadow-md"
+                                 class="border border-primary rounded-xl p-5 cursor-pointer transition-all hover:border-error hover:shadow-md"
                                  onclick="window.location.href='{{ route('manual-payroll-attendance.period', $period) }}'">
 
                                 <div class="flex justify-between items-start mb-3">
@@ -122,14 +122,14 @@
                                     </div>
                                 </div>
 
-                                <div class="flex gap-4 mt-3 pt-3 border-t border-gray-100 text-xs">
+                                <div class="flex gap-4 mt-3 pt-3 border-t border-base-200 text-xs">
                                     <div>
                                         <span class="text-base-content/60">Employees Encoded:</span>
                                         <span class="font-semibold text-base-content ml-1">{{ $period->payrollInputs ? $period->payrollInputs->count() : 0 }}</span>
                                     </div>
                                     <div>
                                         <span class="text-base-content/60">Total Gross:</span>
-                                        <span class="font-semibold text-emerald-600 ml-1">₱{{ number_format($period->total_gross_pay ?? 0, 2) }}</span>
+                                        <span class="font-semibold text-success ml-1">₱{{ number_format($period->total_gross_pay ?? 0, 2) }}</span>
                                     </div>
                                 </div>
                             </div>

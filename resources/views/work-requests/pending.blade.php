@@ -53,7 +53,7 @@
                             <div>{{ $request->employee->position }}</div>
                         </td>
                         <td>
-                            <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->request_type === 'weekend' ? 'bg-blue-100 text-blue-800' : ($request->request_type === 'holiday' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800') }}">
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->request_type === 'weekend' ? 'bg-info/10 text-info' : ($request->request_type === 'holiday' ? 'bg-warning/10 text-warning' : 'bg-secondary/10 text-secondary') }}">
                                 {{ ucfirst($request->request_type) }}
                             </span>
                         </td>
@@ -90,13 +90,13 @@
     </div>
 @else
     <div class="card p-12 text-center">
-        <i class="icon-[tabler--circle-check] text-5xl text-emerald-500 mb-4 block"></i>
+        <i class="icon-[tabler--circle-check] text-5xl text-success mb-4 block"></i>
         <h3 class="m-0 mb-2 text-base-content/60">All Caught Up!</h3>
         <p class="text-base-content/40 m-0 mb-6">
             There are no pending work requests to review.
         </p>
         <a href="{{ route('work-requests.index') }}"
-           class="px-5 py-3 text-white border-none rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2" style="background:{{ $color }};">
+           class="px-5 py-3 text-white border-none rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2 btn-primary">
             <i class="icon-[ph--list-fill]"></i> View All Requests
         </a>
     </div>
@@ -117,7 +117,7 @@
                             <div class="text-xs text-base-content/60">{{ $request->employee->employee_id }}</div>
                             <div class="text-xs text-base-content/60">{{ $request->employee->position }}</div>
                         </div>
-                        <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->request_type === 'weekend' ? 'bg-blue-100 text-blue-800' : ($request->request_type === 'holiday' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800') }}">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->request_type === 'weekend' ? 'bg-info/10 text-info' : ($request->request_type === 'holiday' ? 'bg-warning/10 text-warning' : 'bg-primary/10 text-primary') }}">
                             {{ ucfirst($request->request_type) }}
                         </span>
                     </div>

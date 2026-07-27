@@ -7,7 +7,7 @@
 
     {{-- Top nav --}}
     <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
-        <a href="{{ route('employees.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600">
+        <a href="{{ route('employees.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-success">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee List
         </a>
         <div class="flex gap-2 flex-wrap">
@@ -62,7 +62,7 @@
         {{-- Personal Info --}}
         <div class="card bg-base-100 shadow-sm p-5">
             <h2 class="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
-                <i class="icon-[tabler--user] text-red-600"></i> Personal Information
+                <i class="icon-[tabler--user] text-error"></i> Personal Information
             </h2>
             <div class="flex flex-col text-sm">
                 @foreach([
@@ -85,7 +85,7 @@
         {{-- Employment Details --}}
         <div class="card bg-base-100 shadow-sm p-5">
             <h2 class="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
-                <i class="icon-[ph--briefcase-fill] text-red-600"></i> Employment Details
+                <i class="icon-[ph--briefcase-fill] text-error"></i> Employment Details
             </h2>
             <div class="flex flex-col text-sm">
                 @foreach([
@@ -101,7 +101,7 @@
                 @endforeach
                 <div class="flex justify-between items-center py-2">
                     <span class="text-base-content/40">Basic Salary</span>
-                    <span class="font-bold text-red-600 text-base">₱{{ number_format($employee->basic_salary, 2) }}</span>
+                    <span class="font-bold text-error text-base">₱{{ number_format($employee->basic_salary, 2) }}</span>
                 </div>
             </div>
         </div>
@@ -120,7 +120,7 @@
             @endphp
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-sm font-bold text-base-content m-0 flex items-center gap-2">
-                    <i class="icon-[ph--clock-fill] text-red-600"></i> Payroll Input Summary
+                    <i class="icon-[ph--clock-fill] text-error"></i> Payroll Input Summary
                 </h2>
                 @if(auth()->user()->isAdmin() || auth()->user()->isHR())
                     @if($payrollInput)
@@ -136,15 +136,15 @@
                     @endif
                 @endif
             </div>
-            <div class="bg-gray-50 rounded-xl p-5">
+            <div class="bg-base-200 rounded-xl p-5">
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
                     @foreach([
                         ['Days Worked',    number_format($daysWorked, 1).' Days',   'text-base-content'],
-                        ['Overtime Hours', number_format($overtimeHours, 1).' Hrs', 'text-red-600'],
-                        ['Late Hours',     number_format($lateHours, 1).' Hrs',     'text-red-600'],
-                        ['Allowances',     '₱'.number_format($allowances, 2),       'text-emerald-600'],
-                        ['Deductions',     '₱'.number_format($deductions, 2),       'text-red-600'],
-                        ['Net Pay',        '₱'.number_format($netPay, 2),           'text-emerald-600'],
+                        ['Overtime Hours', number_format($overtimeHours, 1).' Hrs', 'text-error'],
+                        ['Late Hours',     number_format($lateHours, 1).' Hrs',     'text-error'],
+                        ['Allowances',     '₱'.number_format($allowances, 2),       'text-success'],
+                        ['Deductions',     '₱'.number_format($deductions, 2),       'text-error'],
+                        ['Net Pay',        '₱'.number_format($netPay, 2),           'text-success'],
                     ] as [$label, $value, $cls])
                         <div>
                             <div class="text-xs text-base-content/60 mb-1">{{ $label }}</div>
@@ -153,12 +153,12 @@
                     @endforeach
                 </div>
                 @if($payrollInput && $period)
-                    <div class="mt-4 px-4 py-2 bg-blue-50 rounded-lg text-xs text-blue-700 text-center">
+                    <div class="mt-4 px-4 py-2 bg-info/10 rounded-lg text-xs text-info text-center">
                         <i class="icon-[ph--info-fill]"></i>
                         Showing payroll input for period: {{ $period->cutoff_start->format('M d') }} - {{ $period->cutoff_end->format('M d, Y') }}
                     </div>
                 @else
-                    <div class="mt-4 px-4 py-2 bg-amber-50 rounded-lg text-xs text-amber-700 text-center">
+                    <div class="mt-4 px-4 py-2 bg-warning/10 rounded-lg text-xs text-warning text-center">
                         <i class="icon-[ph--info-fill]"></i> No payroll input data found
                     </div>
                 @endif
@@ -170,7 +170,7 @@
             <div class="flex justify-between items-center">
                 <div>
                     <h2 class="text-sm font-bold text-base-content m-0 flex items-center gap-2">
-                        <i class="icon-[ph--identification-card-fill] text-red-600"></i> Government Contributions
+                        <i class="icon-[ph--identification-card-fill] text-error"></i> Government Contributions
                     </h2>
                     <p class="text-base-content/60 text-xs mt-1 mb-0">View and manage government contribution rates for this employee.</p>
                 </div>
@@ -185,7 +185,7 @@
             <div class="flex justify-between items-center">
                 <div>
                     <h2 class="text-sm font-bold text-base-content m-0 flex items-center gap-2">
-                        <i class="icon-[ph--clock-fill] text-red-600"></i> Attendance Records
+                        <i class="icon-[ph--clock-fill] text-error"></i> Attendance Records
                     </h2>
                     <p class="text-base-content/60 text-xs mt-1 mb-0">View daily time-in/time-out records and attendance history for this employee.</p>
                 </div>
@@ -200,7 +200,7 @@
         <div class="card bg-base-100 shadow-sm p-5 md:col-span-2">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-sm font-bold text-base-content m-0 flex items-center gap-2">
-                    <i class="icon-[ph--gift-fill] text-red-600"></i> Allowances & Benefits
+                    <i class="icon-[ph--gift-fill] text-error"></i> Allowances & Benefits
                 </h2>
                 <div class="flex gap-2">
                     <button type="button"
@@ -222,7 +222,7 @@
                 @if($employee->activeAllowances()->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         @foreach($employee->activeAllowances as $allowance)
-                            <div class="bg-gray-50 p-3 rounded-lg border-l-4 border-emerald-500">
+                            <div class="bg-base-200 p-3 rounded-lg border-l-4 border-success">
                                 <div class="flex justify-between items-start">
                                     <div>
                                         <div class="font-semibold text-base-content text-sm">{{ $allowance->name }}</div>
@@ -232,7 +232,7 @@
                                         @endif
                                     </div>
                                     <div class="text-right">
-                                        <div class="font-bold text-emerald-600 text-sm">₱{{ number_format($allowance->amount, 2) }}</div>
+                                        <div class="font-bold text-success text-sm">₱{{ number_format($allowance->amount, 2) }}</div>
                                         <form method="POST" action="{{ route('allowances.destroy', [$employee, $allowance]) }}"
                                               class="mt-1"
                                               data-confirm="This allowance will be permanently deleted."
@@ -249,7 +249,7 @@
                         @endforeach
                     </div>
                 @else
-                    <div class="py-3 bg-gray-50 rounded-lg text-center text-base-content/40 text-xs">No allowances added</div>
+                    <div class="py-3 bg-base-200 rounded-lg text-center text-base-content/40 text-xs">No allowances added</div>
                 @endif
             </div>
 
@@ -259,7 +259,7 @@
                 @if($employee->activeBenefits->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         @foreach($employee->activeBenefits as $benefit)
-                            <div class="bg-gray-50 p-3 rounded-lg border-l-4 border-blue-500">
+                            <div class="bg-base-200 p-3 rounded-lg border-l-4 border-info">
                                 <div class="flex justify-between items-start">
                                     <div>
                                         <div class="font-semibold text-base-content text-sm">{{ $benefit->name }}</div>
@@ -269,7 +269,7 @@
                                         @endif
                                     </div>
                                     <div class="text-right">
-                                        <div class="font-bold text-blue-600 text-sm">₱{{ number_format($benefit->amount, 2) }}</div>
+                                        <div class="font-bold text-info text-sm">₱{{ number_format($benefit->amount, 2) }}</div>
                                         <form method="POST" action="{{ route('benefits.destroy', [$employee, $benefit]) }}"
                                               class="mt-1"
                                               data-confirm="This benefit will be permanently deleted."
@@ -286,13 +286,13 @@
                         @endforeach
                     </div>
                 @else
-                    <div class="py-3 bg-gray-50 rounded-lg text-center text-base-content/40 text-xs">No benefits added</div>
+                    <div class="py-3 bg-base-200 rounded-lg text-center text-base-content/40 text-xs">No benefits added</div>
                 @endif
             </div>
 
             {{-- Add Allowance Form --}}
-            <div id="allowanceForm" class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-200" style="display: none;">
-                <h4 class="text-sm font-bold text-emerald-800 mb-3">Add Allowance</h4>
+            <div id="allowanceForm" class="mt-4 p-4 bg-success/10 rounded-xl border border-success/20" style="display: none;">
+                <h4 class="text-sm font-bold text-success mb-3">Add Allowance</h4>
                 <form method="POST" action="{{ route('allowances.store', $employee) }}">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
@@ -328,8 +328,8 @@
             </div>
 
             {{-- Add Benefit Form --}}
-            <div id="benefitForm" class="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200" style="display: none;">
-                <h4 class="text-sm font-bold text-blue-800 mb-3">Add Benefit</h4>
+            <div id="benefitForm" class="mt-4 p-4 bg-info/10 rounded-xl border border-info/20" style="display: none;">
+                <h4 class="text-sm font-bold text-info mb-3">Add Benefit</h4>
                 <form method="POST" action="{{ route('benefits.store', $employee) }}">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">

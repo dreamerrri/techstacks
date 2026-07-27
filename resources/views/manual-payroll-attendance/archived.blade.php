@@ -9,7 +9,7 @@
     $user    = auth()->user();
     $isAdmin = $user->isAdmin();
 @endphp
- <a href="{{ route('manual-payroll-attendance.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-emerald-600">
+ <a href="{{ route('manual-payroll-attendance.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-success">
                 <i class="icon-[ph--arrow-left-fill]"></i> Back to Attendance page
             </a>
 
@@ -24,7 +24,7 @@
 
 {{-- Archived Periods List --}}
 
-    <div class="px-6 py-5 border-b border-gray-200">
+    <div class="px-6 py-5 border-b border-base-300">
         <h2 class="text-base font-bold text-base-content m-0">Archived Periods</h2>
         <p class="text-base-content/60 text-sm mt-1 mb-0">{{ $periods->count() }} archived payroll {{ Str::plural('period', $periods->count()) }}</p>
     </div>
@@ -34,7 +34,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach($periods as $period)
                     <div id="period-row-{{ $period->id }}"
-                         class="border border-gray-200 rounded-xl p-5 transition-all hover:border-gray-400 hover:shadow-md">
+                         class="border border-base-300 rounded-xl p-5 transition-all hover:border-base-400 hover:shadow-md">
 
                         <div class="flex justify-between items-start mb-3">
                             <div>
@@ -51,14 +51,14 @@
                             <span class="badge badge-soft badge-neutral whitespace-nowrap">Archived</span>
                         </div>
 
-                        <div class="flex gap-4 mt-3 pt-3 border-t border-gray-100 text-xs mb-4">
+                        <div class="flex gap-4 mt-3 pt-3 border-t border-base-200 text-xs mb-4">
                             <div>
                                 <span class="text-base-content/60">Employees Encoded:</span>
                                 <span class="font-semibold text-base-content ml-1">{{ $period->payrollInputs ? $period->payrollInputs->count() : 0 }}</span>
                             </div>
                             <div>
                                 <span class="text-base-content/60">Total Gross:</span>
-                                <span class="font-semibold text-emerald-600 ml-1">₱{{ number_format($period->total_gross_pay ?? 0, 2) }}</span>
+                                <span class="font-semibold text-success ml-1">₱{{ number_format($period->total_gross_pay ?? 0, 2) }}</span>
                             </div>
                         </div>
 

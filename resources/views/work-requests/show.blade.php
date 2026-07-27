@@ -16,7 +16,7 @@
 {{-- Header --}}
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
     <div>
-        <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
+        <div class="inline-block bg-info/10 text-info px-3.5 py-1.5 rounded-full text-xs font-semibold mb-2">
             <i class="icon-[ph--file-fill]"></i> Request Details
         </div>
         <h2 style="margin:8px 0 4px 0;">Work Request #{{ $workRequest->id }}</h2>
@@ -31,18 +31,18 @@
 </div>
 
 {{-- Status Banner --}}
-<div class="p-4 rounded-lg mb-6 {{ $workRequest->status === 'pending' ? 'bg-amber-100 border border-amber-500' : ($workRequest->status === 'approved' ? 'bg-emerald-100 border border-emerald-500' : ($workRequest->status === 'rejected' ? 'bg-red-100 border border-red-500' : 'bg-base-200 border border-base-300')) }}">
+<div class="p-4 rounded-lg mb-6 {{ $workRequest->status === 'pending' ? 'bg-warning/10 border border-warning' : ($workRequest->status === 'approved' ? 'bg-success/10 border border-success' : ($workRequest->status === 'rejected' ? 'bg-error/10 border border-error' : 'bg-base-200 border border-base-300')) }}">
     <div style="display:flex; align-items:center; gap:12px;">
         <i class="fas {{ $workRequest->status === 'pending' ? 'fa-clock' : 
                           ($workRequest->status === 'approved' ? 'fa-check-circle' : 
                           ($workRequest->status === 'rejected' ? 'fa-times-circle' : 'fa-ban')) }} text-2xl
-           {{ $workRequest->status === 'pending' ? 'text-amber-800' :
-              ($workRequest->status === 'approved' ? 'text-emerald-800' :
-              ($workRequest->status === 'rejected' ? 'text-red-800' : 'text-base-content')) }}"></i>
+           {{ $workRequest->status === 'pending' ? 'text-warning' :
+              ($workRequest->status === 'approved' ? 'text-success' :
+              ($workRequest->status === 'rejected' ? 'text-error' : 'text-base-content')) }}"></i>
         <div>
-            <div class="text-base font-bold {{ $workRequest->status === 'pending' ? 'text-amber-800' :
-                   ($workRequest->status === 'approved' ? 'text-emerald-800' :
-                   ($workRequest->status === 'rejected' ? 'text-red-800' : 'text-base-content')) }}">
+            <div class="text-base font-bold {{ $workRequest->status === 'pending' ? 'text-warning' :
+                   ($workRequest->status === 'approved' ? 'text-success' :
+                   ($workRequest->status === 'rejected' ? 'text-error' : 'text-base-content')) }}">
                 {{ ucfirst($workRequest->status) }}
             </div>
             @if($workRequest->status === 'approved' && $workRequest->approved_at)
@@ -54,7 +54,7 @@
                 </div>
             @endif
             @if($workRequest->status === 'rejected' && $workRequest->rejection_reason)
-                <div class="text-xs text-red-800 mt-1">
+                <div class="text-xs text-error mt-1">
                     Reason: {{ $workRequest->rejection_reason }}
                 </div>
             @endif
@@ -87,7 +87,7 @@
         <h3 class="m-0 mb-4 flex items-center gap-2">
             <i class="icon-[ph--tag-fill] text-base-content/60"></i> Request Type
         </h3>
-        <span class="px-3 py-1.5 rounded-full text-sm font-semibold inline-block {{ $workRequest->request_type === 'weekend' ? 'bg-blue-100 text-blue-800' : ($workRequest->request_type === 'holiday' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800') }}">
+        <span class="px-3 py-1.5 rounded-full text-sm font-semibold inline-block {{ $workRequest->request_type === 'weekend' ? 'bg-info/10 text-info' : ($workRequest->request_type === 'holiday' ? 'bg-warning/10 text-warning' : 'bg-secondary/10 text-secondary') }}">
             {{ ucfirst($workRequest->request_type) }} Work
         </span>
     </div>
@@ -141,11 +141,11 @@
         {{-- Employee actions: edit and cancel own pending requests --}}
         @if(!$isAdmin && !$isHR && $workRequest->canBeCancelled())
             <a href="{{ route('work-requests.edit', $workRequest) }}"
-               class="px-6 py-3 bg-amber-500 text-white border-none rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2">
+               class="px-6 py-3 bg-warning text-white border-none rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2">
                 <i class="icon-[ph--pencil-fill]"></i> Edit Request
             </a>
             <button onclick="cancelRequest({{ $workRequest->id }})"
-                    class="px-6 py-3 bg-red-500 text-white border-none rounded-field cursor-pointer text-sm font-semibold inline-flex items-center gap-2">
+                    class="px-6 py-3 bg-error text-white border-none rounded-field cursor-pointer text-sm font-semibold inline-flex items-center gap-2">
                 <i class="icon-[ph--x]"></i> Cancel Request
             </button>
         @endif
@@ -153,11 +153,11 @@
         @if($isAdmin || $isHR && $workRequest->canBeApproved())
         @if($workRequest->status === 'pending')
     <button onclick="approveRequest({{ $workRequest->id }})"
-                    class="px-6 py-3 bg-emerald-500 text-white border-none rounded-field cursor-pointer text-sm font-semibold inline-flex items-center gap-2">
+                    class="px-6 py-3 bg-success text-white border-none rounded-field cursor-pointer text-sm font-semibold inline-flex items-center gap-2">
                 <i class="icon-[tabler--check]"></i> Approve
             </button>
             <button onclick="showRejectModal({{ $workRequest->id }})"
-                    class="px-6 py-3 bg-red-500 text-white border-none rounded-field cursor-pointer text-sm font-semibold inline-flex items-center gap-2">
+                    class="px-6 py-3 bg-error text-white border-none rounded-field cursor-pointer text-sm font-semibold inline-flex items-center gap-2">
                 <i class="icon-[ph--x]"></i> Reject
             </button>
 @endif

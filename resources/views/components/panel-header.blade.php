@@ -7,12 +7,12 @@
     Props:
         icon  (string, required) Iconify class, e.g. 'icon-[ph--briefcase-fill]'
         color (string, optional) Icon text color class. Default: 'text-base-content/60'
-        bg    (string, optional) Icon square background class. Default: 'bg-gray-100'
+        bg    (string, optional) Icon square background class. Default: 'bg-base-200'
 
     Slot: heading text.
 
     Example:
-        <x-panel-header icon="icon-[ph--briefcase-fill]" color="text-emerald-600" bg="bg-emerald-100">
+        <x-panel-header icon="icon-[ph--briefcase-fill]" color="text-success" bg="bg-success/10">
             Employment Information
         </x-panel-header>
 --}}

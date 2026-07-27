@@ -118,10 +118,10 @@
                     default  => 'badge-soft',
                 };
             @endphp
-            <div class="card bg-base-100 border border-gray-200 p-4">
+            <div class="card bg-base-100 border border-base-300 p-4">
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-500 to-gray-700 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-neutral to-neutral/80 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                             {{ $log->user ? strtoupper(substr($log->user->name, 0, 1)) : 'S' }}
                         </div>
                         <div>
@@ -139,7 +139,7 @@
 
                 <div class="text-xs text-base-content/40 mt-1">{{ $log->description }}</div>
 
-                <div class="mt-3 pt-3 border-t border-gray-100">
+                <div class="mt-3 pt-3 border-t border-base-200">
                     <a href="{{ route('audit-logs.show', $log) }}" class="btn  btn-info btn-sm">
   <i class="icon-[tabler--eye]"></i>View Details
                     </a>
@@ -154,7 +154,7 @@
     </div>
 
     {{-- Pagination --}}
-    <div class="px-6 py-4 border-t border-gray-200">
+    <div class="px-6 py-4 border-t border-base-300">
         {{ $logs->links('vendor.pagination.pagination') }}
     </div>
 </x-table-card>
