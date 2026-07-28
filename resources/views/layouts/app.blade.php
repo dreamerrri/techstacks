@@ -22,7 +22,7 @@
     }
 </style>
 </head>
-<body class="bg-base-200 text-base-content"> {{-- remove mo nalng balang araw --}}
+<body class="bg-base-200 text-base-content min-h-dvh"> {{-- remove mo nalng balang araw --}}
     
 
 @php

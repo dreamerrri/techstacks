@@ -25,10 +25,10 @@
     </x-slot:title>
 
 <x-slot:actions>
-          <a href="{{ route('work-requests.index') }}"
-           class="inline-flex items-center font-semibold text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-4 gap-3 cursor-pointer no-underline">
-            <i class="icon-[ph--list-fill]"></i> All Requests
-        </a>
+     
+         <a href="{{ route('work-requests.index') }}" class="btn btn-soft btn-warning btn-sm">
+                        <i class="icon-[tabler--clock]"></i> All Requests
+                    </a>
 </x-slot:actions>
 
 
