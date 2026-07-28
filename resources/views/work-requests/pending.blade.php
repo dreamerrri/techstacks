@@ -25,10 +25,10 @@
     </x-slot:title>
 
 <x-slot:actions>
-          <a href="{{ route('work-requests.index') }}"
-           class="px-5 py-3 bg-base-200 text-base-content border border-base-300 rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2">
-            <i class="icon-[ph--list-fill]"></i> All Requests
-        </a>
+     
+         <a href="{{ route('work-requests.index') }}" class="btn btn-soft btn-warning btn-sm">
+                        <i class="icon-[tabler--clock]"></i> All Requests
+                    </a>
 </x-slot:actions>
 
 
@@ -53,11 +53,13 @@
                             <div>{{ $request->employee->position }}</div>
                         </td>
                         <td>
-                            <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->request_type === 'weekend' ? 'bg-info/10 text-info' : ($request->request_type === 'holiday' ? 'bg-warning/10 text-warning' : 'bg-secondary/10 text-secondary') }}">
+                            <span class="badge badge-sm font-semibold
+                                {{ $request->request_type === 'weekend' ? 'badge-info' :
+                                   ($request->request_type === 'holiday' ? 'badge-warning' : 'badge-primary') }}">
                                 {{ ucfirst($request->request_type) }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 text-sm text-base-content">
+                        <td class="text-sm text-base-content p-4">
                             {{ $request->work_date->format('M d, Y') }}
                             <div class="text-xs text-base-content/60">{{ $request->work_date->format('l') }}</div>
                         </td>
@@ -72,13 +74,13 @@
                             {{ $request->reason ? \Illuminate\Support\Str::limit($request->reason, 50) : '-' }}
                         </td>
                         <td>
-                          <a href="{{ route('work-requests.show', $request) }}" class="btn  btn-info btn-sm">
+                          <a href="{{ route('work-requests.show', $request) }}" class="btn btn-soft  btn-info btn-sm">
     <i class="icon-[ph--eye-fill]"></i>
 </a>
-<button type="button" class="btn  btn-success btn-sm" onclick="approveRequest({{ $request->id }})">
+<button type="button" class="btn btn-soft btn-success btn-sm" onclick="approveRequest({{ $request->id }})">
     <i class="icon-[tabler--check]"></i>
 </button>
-<button type="button" class="btn  btn-error btn-sm" onclick="showRejectModal({{ $request->id }})">
+<button type="button" class="btn btn-soft btn-error btn-sm" onclick="showRejectModal({{ $request->id }})">
     <i class="icon-[ph--x]"></i>
 </button>
                         </td>
@@ -89,14 +91,14 @@
         </div>
     </div>
 @else
-    <div class="card p-12 text-center">
-        <i class="icon-[tabler--circle-check] text-5xl text-success mb-4 block"></i>
-        <h3 class="m-0 mb-2 text-base-content/60">All Caught Up!</h3>
-        <p class="text-base-content/40 m-0 mb-6">
+    <div class="card text-center p-4">
+        <i class="icon-[tabler--circle-check] text-success mb-4"></i>
+        <h3 class="text-base-content/60">All Caught Up!</h3>
+        <p class="text-base-content/60">
             There are no pending work requests to review.
         </p>
         <a href="{{ route('work-requests.index') }}"
-           class="px-5 py-3 text-white border-none rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2 btn-primary">
+           class="inline-flex items-center font-semibold text-sm bg-primary rounded-lg p-4 gap-3 cursor-pointer no-underline">
             <i class="icon-[ph--list-fill]"></i> View All Requests
         </a>
     </div>

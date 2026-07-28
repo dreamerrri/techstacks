@@ -17,11 +17,11 @@
             <div class="auth-image-content">
 
                 <!-- 3D Logo Canvas -->
-<div id="logo3d-container" style="width: 320px; height: 320px; margin-bottom: 16px;">
+<div id="logo3d-container" class="w-80 h-80 mb-4">
     
-    <canvas id="logo3d" style="width: 100%; height: 100%;"></canvas>
+    <canvas id="logo3d" class="w-full h-full"></canvas>
                 </div>
-<p style="font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; opacity: 0.75; margin-bottom: 20px;">Techstacks</p>
+<p class="text-sm font-semibold tracking-[2px] uppercase opacity-75 mb-5">Techstacks</p>
                 <h2>LogiPay</h2>
                 <p>Streamline your human resources and payroll operations with our comprehensive management platform.</p>
             </div>

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
         default  => 'badge-soft badge-success',
     };
 @endphp
-
+<div class="card bg-base-100 border border-base-300 p-6">
 <div class=" w-full mt-16 mb-6">
     <div class="px-6">
         <div class="flex flex-wrap justify-center">
@@ -296,7 +296,7 @@ use Illuminate\Support\Facades\Storage;
 
 </div>
 </div>
-
+</div>
 <script>
 document.querySelectorAll('#theme-picker input[data-theme-select]').forEach(input => {
     input.addEventListener('change', (e) => {

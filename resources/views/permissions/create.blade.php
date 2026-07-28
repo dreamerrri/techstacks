@@ -78,7 +78,7 @@
                 <button type="submit" class="btn  btn-error">
                     <i class="icon-[ph--floppy-disk-fill]"></i> Create Permission
                 </button>
-                <a href="{{ route('permissions.index') }}" class="btn ">Cancel</a>
+                <a href="{{ route('permissions.index') }}" class="btn btn-soft btn-success ">Cancel</a>
             </div>
         </form>
     </div>

@@ -156,7 +156,7 @@
     </a>
     @if(($payroll['gross_pay'] ?? 0) > 0)
         <a href="{{ route('payroll.payslip', [$employee->id, 'payroll_period_id' => optional($selectedPeriod)->id]) }}"
-           class="btn  btn-info btn-sm">
+           class="btn btn-soft btn-info btn-sm">
             <i class="icon-[ph--file-arrow-down-fill]"></i> Download Payslip
         </a>
     @endif
@@ -437,7 +437,7 @@
                 <span class="font-semibold text-error ml-4">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</span>
             </div>
         </div>
-        <div class="mt-4 p-4 bg-base-200 rounded-xl text-xs text-base-content/60 leading-relaxed">
+        <div class="mt-4 p-4 bg-base-300 rounded-xl text-xs text-base-content/60 leading-relaxed">
             <strong class="text-base-content/80">Tax Bracket Reference:</strong><br>
             • ₱0 – ₱20,832: 0%<br>
             • ₱20,833 – ₱33,333: 20%<br>

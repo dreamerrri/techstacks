@@ -2,7 +2,6 @@
 
 @section('title', 'Role Details')
 
-
 @section('content')
 
     <div class="mb-5">
@@ -35,8 +34,8 @@
                     <code class="text-xs text-base-content/60 bg-base-200 px-2 py-0.5 rounded">{{ $role->slug }}</code>
                 </div>
             </div>
-            <a href="{{ route('roles.edit', $role) }}" class="btn  btn-error btn-sm">
-                <i class="icon-[ph--pencil-fill]"></i> Edit Role
+            <a href="{{ route('roles.edit', $role) }}" class="btn btn-soft btn-error btn-sm">
+                <i class="icon-[tabler--pencil]"></i> Edit Role
             </a>
         </div>
 
@@ -46,28 +45,25 @@
                 <i class="icon-[tabler--user] text-error"></i> Role Information
             </h3>
             <div class="flex flex-col">
-                <div class="flex justify-between items-center py-3 border-b border-base-200">
-                    <span class="text-base-content/40 font-medium">Description</span>
-                    <span class="text-base-content/80 text-right">{{ $role->description ?? '—' }}</span>
-                </div>
-                <div class="flex justify-between items-center py-3 border-b border-base-200">
-                    <span class="text-base-content/40 font-medium">Status</span>
-                    <span>
-                        @if($role->is_active)
-                            <span class="badge badge-soft badge-success"><i class="icon-[tabler--circle-check]"></i> Active</span>
-                        @else
-                            <span class="badge badge-soft badge-error"><i class="icon-[tabler--circle-x]"></i> Inactive</span>
-                        @endif
-                    </span>
-                </div>
-                <div class="flex justify-between items-center py-3 border-b border-base-200">
-                    <span class="text-base-content/40 font-medium">Total Users</span>
-                    <span class="font-semibold text-base-content">{{ $role->users->count() }}</span>
-                </div>
-                <div class="flex justify-between items-center py-3">
-                    <span class="text-base-content/40 font-medium">Total Permissions</span>
-                    <span class="font-semibold text-base-content">{{ $role->permissions->count() }}</span>
-                </div>
+                <x-detail-row label="Description">
+                    <span class="text-base-content/80">{{ $role->description ?? '—' }}</span>
+                </x-detail-row>
+
+                <x-detail-row label="Status">
+                    @if($role->is_active)
+                        <span class="badge badge-soft badge-success"><i class="icon-[tabler--circle-check]"></i> Active</span>
+                    @else
+                        <span class="badge badge-soft badge-error"><i class="icon-[tabler--circle-x]"></i> Inactive</span>
+                    @endif
+                </x-detail-row>
+
+                <x-detail-row label="Total Users">
+                    {{ $role->users->count() }}
+                </x-detail-row>
+
+                <x-detail-row label="Total Permissions" :border="false">
+                    {{ $role->permissions->count() }}
+                </x-detail-row>
             </div>
         </div>
 
@@ -106,14 +102,14 @@
             @if($availableUsers->count() > 0)
                 <form method="POST" action="{{ route('roles.assign.user', $role) }}" class="flex gap-2 items-center flex-wrap mb-5">
                     @csrf
-                    <select name="user_id" required class="select select-bordered  select-sm flex-1 min-w-48">
+                    <select name="user_id" required class="select select-bordered select-sm flex-1 min-w-48">
                         <option value="">Select a user to assign...</option>
                         @foreach($availableUsers as $user)
                             <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
                         @endforeach
                     </select>
-                    <button type="submit" class="btn  btn-error btn-sm">
-                        <i class="icon-[ph--user-plus-fill]"></i> Assign User
+                    <button type="submit" class="btn btn-soft btn-error btn-sm">
+                        <i class="icon-[tabler--user-plus]"></i> Assign User
                     </button>
                 </form>
             @endif
@@ -138,8 +134,8 @@
                                       data-confirm-icon="warning"
                                       data-confirm-btn="Yes, remove">
                                     @csrf @method('DELETE')
-                                    <button class="btn  btn-error btn-sm">
-                                        <i class="icon-[ph--user-minus-fill]"></i> Remove
+                                    <button class="btn btn-soft btn-error btn-sm">
+                                        <i class="icon-[tabler--user-minus]"></i> Remove
                                     </button>
                                 </form>
                             @endif

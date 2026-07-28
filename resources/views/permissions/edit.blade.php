@@ -75,7 +75,7 @@
                 <button type="submit" class="btn  btn-error">
                     <i class="icon-[ph--floppy-disk-fill]"></i> Update Permission
                 </button>
-                <a href="{{ route('permissions.show', $permission) }}" class="btn ">Cancel</a>
+                <a href="{{ route('permissions.show', $permission) }}" class="btn btn-soft btn-success">Cancel</a>
             </div>
         </form>
     </div>

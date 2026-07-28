@@ -15,42 +15,34 @@
 @endphp
 
 {{-- Header --}}
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+<div class="flex items-center justify-between mb-4">
     <div>
         <a href="{{ route('manual-payroll-attendance.period', $payrollPeriod) }}"
-           class="text-base-content/60 no-underline text-sm inline-flex items-center gap-1.5 mb-2">
+           class="inline-flex items-center text-sm text-base-content/60 mb-4 gap-3 no-underline">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Period
         </a>
-        <div class="inline-block bg-info/10 text-info px-3.5 py-1.5 rounded-full text-xs font-semibold mb-2">
+        <div class="inline-block font-semibold text-xs text-info bg-info/10 rounded-lg p-4 mb-4">
             <i class="icon-[tabler--user]-edit"></i> {{ $isEdit ? 'Edit' : 'Encode' }} Attendance
         </div>
-        <h2 style="margin:8px 0 4px 0;">
+        <h2 class="text-base-content">
             {{ $employee->first_name ?? 'Employee' }} {{ $employee->last_name ?? '' }}
         </h2>
-        <p class="text-base-content/60 m-0">
+        <p class="text-base-content/60">
             {{ $employee->employee_id ?? 'N/A' }} | {{ $employee->position ?? 'N/A' }} | {{ $employee->department ?? 'N/A' }} |
             Period: {{ $payrollPeriod->cutoff_start->format('M d') }} - {{ $payrollPeriod->cutoff_end->format('M d, Y') }}
         </p>
     </div>
 </div>
 
-<style>
-    @media (max-width: 768px) {
-        .payroll-form-grid {
-            grid-template-columns: 1fr !important;
-        }
-    }
-</style>
-
-<div class="payroll-form-grid" style="display:grid; grid-template-columns:1fr 350px; gap:24px;">
+<div class="payroll-form-grid grid gap-3">
     {{-- Attendance Encoding Form --}}
-    <div class="card" style="padding:0; overflow:hidden;">
-        <div style="padding:20px 25px; border-bottom:1px solid #e5e7eb;">
-            <h3 style="margin:0;">Attendance Details</h3>
-            <p class="text-base-content/60 mt-2 mb-0 text-sm">Enter attendance totals for the payroll period</p>
+    <div class="card overflow-hidden p-4">
+        <div class="border-base-300 p-4">
+            <h3 class="text-base-content">Attendance Details</h3>
+            <p class="text-sm text-base-content/60">Enter attendance totals for the payroll period</p>
         </div>
 
-        <form id="attendanceForm" style="padding:25px;">
+        <form id="attendanceForm" class="p-4">
             @csrf
             <input type="hidden" name="payroll_period_id" value="{{ $payrollPeriod->id }}">
             <input type="hidden" name="employee_id" value="{{ $employee->id }}">
@@ -64,9 +56,9 @@
                     ->get();
             @endphp
             @if($approvedRequests->count() > 0)
-            <div class="mb-6 p-4 bg-success/10 border border-success rounded-lg">
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                    <i class="icon-[ph--calendar-check-fill] text-success"></i>
+            <div class="bg-success/10 border border-base-300 rounded-lg p-4 mb-4">
+                <div class="flex items-center mb-4 gap-3">
+                    <i class=" icon-[ph--calendar-fill]-check text-success"></i>
                     <span class="font-semibold text-success">Approved Work Requests ({{ $approvedRequests->count() }})</span>
                 </div>
                 <div class="text-sm text-success-content">
@@ -91,85 +83,82 @@
             </div>
             @endif
 
-            <div style="margin-bottom:20px;">
-                <label class="block font-semibold text-base-content mb-2 text-sm">Rate Type</label>
-                <div class="p-2.5 bg-base-200 border border-base-300 rounded-field text-sm text-base-content">
+            <div class="mb-4">
+                <label class="font-semibold text-sm text-base-content mb-4">Rate Type</label>
+                <div class="text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-4">
                     <input type="hidden" name="rate_type" value="daily">
-                    <span style="font-weight:600;">Daily Rate</span>
-                    <span class="text-base-content/60 ml-2">(computed using BSM X 12 / 52 / 40 X 8)</span>
+                    <span class="font-semibold">Daily Rate</span>
+                    <span class="text-base-content/60">(computed using BSM X 12 / 52 / 40 X 8)</span>
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+            <div class="grid mb-4 gap-3">
                 <div>
-                    <label class="block font-semibold text-base-content mb-2 text-sm">Daily Rate</label>
+                    <label class="font-semibold text-sm text-base-content mb-4">Daily Rate</label>
                     <input type="number" name="daily_rate" step="0.01" min="0" required
                            value="{{ $isEdit ? $payrollInput->daily_rate : $dailyRate }}"
-                           class="w-full p-2.5 border border-base-300 rounded-field text-sm"
-                           oninput="window.dailyRateValue = this.value; triggerAutoPreview();">
-                    <p class="text-base-content/60 text-xs mt-1">Based on basic salary (₱{{ number_format($employee->basic_salary ?? 0, 2) }})</p>
+                           class="w-full text-sm border border-base-300 rounded-lg p-4"
+                           oninput="window.dailyRateValue = this.value">
+                    <p class="text-xs text-base-content/60 mt-2">Based on basic salary (₱{{ number_format($employee->basic_salary ?? 0, 2) }})</p>
                 </div>
                 <div>
-                    <label class="block font-semibold text-base-content mb-2 text-sm">Days Worked</label>
+                    <label class="font-semibold text-sm text-base-content mb-4">Days Worked</label>
                     <input type="number" name="days_worked" step="0.5" min="0" max="31"
                            value="{{ $isEdit ? $payrollInput->days_worked : ($computedDaysFromAttendance ?? '0') }}"
-                           class="w-full p-2.5 border border-base-300 rounded-field text-sm"
-                           oninput="window.daysWorkedValue = this.value; triggerAutoPreview();"
+                           class="w-full text-sm border border-base-300 rounded-lg p-4"
+                           oninput="window.daysWorkedValue = this.value"
                            placeholder="{{ $computedDaysFromAttendance ? 'Leave blank to use ' . number_format($computedDaysFromAttendance, 2) . ' days from attendance' : 'Enter days worked' }}">
-                    <p class="text-base-content/60 text-xs mt-1">@if($computedDaysFromAttendance) Leave blank to use {{ number_format($computedDaysFromAttendance, 2) }} days from attendance records, or enter a custom value. @else Enter days worked for the period. @endif</p>
+                    <p class="text-xs text-base-content/60 mt-2">@if($computedDaysFromAttendance) Leave blank to use {{ number_format($computedDaysFromAttendance, 2) }} days from attendance records, or enter a custom value. @else Enter days worked for the period. @endif</p>
                 </div>
             </div>
 
-            <div style="margin-bottom:20px;">
-                <label class="block font-semibold text-base-content mb-2 text-sm">Weekends Worked</label>
+            <div class="mb-4">
+                <label class="font-semibold text-sm text-base-content mb-4">Weekends Worked</label>
                 <input type="number" name="weekends_worked" step="0.5" min="0"
-                       value="{{ $isEdit ? ($payrollInput->weekends_worked ?? '') : '' }}"
-                       placeholder="{{ $weekendsWorked > 0 ? $weekendsWorked . ' from approved work requests' : 'Enter weekends worked' }}"
-                       class="w-full p-2.5 border border-base-300 rounded-field text-sm"
-                       oninput="window.weekendsWorkedValue = this.value; triggerAutoPreview();">
-                <p class="text-base-content/60 text-xs mt-1">Number of weekend days worked (paid at 30% premium of daily rate). Leave blank to use {{ $weekendsWorked }} from approved work requests.</p>
+                       value="{{ $isEdit ? ($payrollInput->weekends_worked ?? '0') : ($weekendsWorked ?? '0') }}"
+                       class="w-full text-sm border border-base-300 rounded-lg p-4"
+                       oninput="window.weekendsWorkedValue = this.value">
+                <p class="text-xs text-base-content/60 mt-2">Number of weekend days worked (paid at 30% premium of daily rate)</p>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+            <div class="grid mb-4 gap-3">
                 <div>
-                    <label class="block font-semibold text-base-content mb-2 text-sm">Overtime Hours</label>
+                    <label class="font-semibold text-sm text-base-content mb-4">Overtime Hours</label>
                     <input type="number" name="overtime_hours" step="0.5" min="0"
-                           value="{{ $isEdit ? $payrollInput->overtime_hours : '' }}"
-                           placeholder="{{ $overtimeHours > 0 ? number_format($overtimeHours, 1) . ' from approved work requests' : 'Enter overtime hours' }}"
-                           class="w-full p-2.5 border border-base-300 rounded-field text-sm"
-                           oninput="window.overtimeHoursValue = this.value; triggerAutoPreview();">
+                           value="{{ $isEdit ? $payrollInput->overtime_hours : ($overtimeHours ?? '0') }}"
+                           class="w-full text-sm border border-base-300 rounded-lg p-4"
+                           oninput="window.overtimeHoursValue = this.value">
                 </div>
                 <div>
-                    <label class="block font-semibold text-base-content mb-2 text-sm">Late Hours</label>
+                    <label class="font-semibold text-sm text-base-content mb-4">Late Hours</label>
                     <input type="number" name="late_hours" step="0.5" min="0"
                            value="{{ $isEdit ? $payrollInput->late_hours : '0' }}"
-                           class="w-full p-2.5 border border-base-300 rounded-field text-sm"
-                           oninput="window.lateHoursValue = this.value; triggerAutoPreview();">
+                           class="w-full text-sm border border-base-300 rounded-lg p-4"
+                           oninput="window.lateHoursValue = this.value">
                 </div>
             </div>
 
-            <div style="margin-bottom:24px;">
-                <label class="block font-semibold text-base-content mb-2 text-sm">Holiday Days Worked</label>
+            <div class="mb-4">
+                <label class="font-semibold text-sm text-base-content mb-4">Holiday Days Worked</label>
                 <input type="number" name="holiday_days" step="0.5" min="0"
-                       value="{{ $isEdit ? ($payrollInput->holiday_days ?? '') : '' }}"
-                       placeholder="{{ $holidayDays > 0 ? $holidayDays . ' from approved work requests' : 'Enter holiday days' }}"
-                       class="w-full p-2.5 border border-base-300 rounded-field text-sm"
-                       oninput="window.holidayDaysValue = this.value; triggerAutoPreview();">
-                <p class="text-base-content/60 text-xs mt-1">Number of regular holidays worked (paid at 200% of daily rate). Leave blank to use {{ $holidayDays }} from approved work requests.</p>
+                       value="{{ $isEdit ? ($payrollInput->holiday_days ?? '0') : ($holidayDays ?? '0') }}"
+                       class="w-full text-sm border border-base-300 rounded-lg p-4"
+                       oninput="window.holidayDaysValue = this.value">
+                <p class="text-xs text-base-content/60 mt-2">Number of regular holidays worked (paid at 200% of daily rate)</p>
             </div>
 
-            <div style="margin-bottom:24px;">
-                <label class="block font-semibold text-base-content mb-2 text-sm">Night Differential Hours</label>
+            <div class="mb-4">
+                <label class="font-semibold text-sm text-base-content mb-4">Night Differential Hours</label>
                 <input type="number" name="night_differential_hours" step="0.5" min="0"
                        value="{{ $isEdit ? ($payrollInput->night_differential_hours ?? '0') : '0' }}"
-                       class="w-full p-2.5 border border-base-300 rounded-field text-sm"
-                       oninput="window.nightDifferentialHoursValue = this.value; triggerAutoPreview();">
-                <p class="text-base-content/60 text-xs mt-1">Hours worked during night shift (paid at 10% premium of hourly rate)</p>
+                       class="w-full text-sm border border-base-300 rounded-lg p-4"
+                       oninput="window.nightDifferentialHoursValue = this.value">
+                <p class="text-xs text-base-content/60 mt-2">Hours worked during night shift (paid at 10% premium of hourly rate)</p>
             </div>
 
             {{-- Allowances & Benefits Section --}}
-            <div style="margin-bottom:24px;">
-                <label class="block font-semibold text-base-content mb-3 text-sm">Allowances & Benefits</label>
+            <div class="mb-4">
+                <label class="font-semibold text-sm text-base-content mb-4">Allowances & Benefits</label>
                 
                 @php
                     $totalAllowances = $employee->activeAllowances->sum('amount');
@@ -179,34 +168,34 @@
                     $totalBenefitsPerCutoff = round($totalBenefits / 2, 2);
                 @endphp
                 
-                <div class="bg-base-200 border border-base-300 rounded-field p-4">
+                <div class="bg-base-200 border border-base-300 rounded-lg p-4">
                     @if($employee->activeAllowances->count() > 0 || $employee->activeBenefits->count() > 0)
-                        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:12px;">
+                        <div class="grid mb-4 gap-3">
                             @foreach($employee->activeAllowances as $allowance)
-                                <div class="bg-base-100 p-2.5 rounded border-l-[3px] border-l-emerald-500 flex justify-between items-center">
+                                <div class="flex items-center justify-between bg-base-100 border-s-4 border-primary rounded-lg p-4">
                                     <div>
-                                        <div class="font-semibold text-base-content text-xs">{{ $allowance->name }}</div>
-                                        <div class="text-base-content/60 text-[11px]">{{ $allowance->type }}</div>
+                                        <div class="font-semibold text-xs text-base-content">{{ $allowance->name }}</div>
+                                        <div class="text-base-content/60">{{ $allowance->type }}</div>
                                     </div>
                                     <div class="font-bold text-success text-sm">₱{{ number_format(round($allowance->amount / 2, 2), 2) }}</div>
                                 </div>
                             @endforeach
                             @foreach($employee->activeBenefits as $benefit)
-                                <div class="bg-base-100 p-2.5 rounded border-l-[3px] border-l-blue-500 flex justify-between items-center">
+                                <div class="flex items-center justify-between bg-base-100 border-s-4 border-primary rounded-lg p-4">
                                     <div>
-                                        <div class="font-semibold text-base-content text-xs">{{ $benefit->name }}</div>
-                                        <div class="text-base-content/60 text-[11px]">{{ $benefit->type }}</div>
+                                        <div class="font-semibold text-xs text-base-content">{{ $benefit->name }}</div>
+                                        <div class="text-base-content/60">{{ $benefit->type }}</div>
                                     </div>
-                                    <div class="font-bold text-info text-sm">₱{{ number_format(round($benefit->amount / 2, 2), 2) }}</div>
+                                    <div class="font-bold text-sm">₱{{ number_format(round($benefit->amount / 2, 2), 2) }}</div>
                                 </div>
                             @endforeach
                         </div>
-                        <div class="pt-3 border-t border-base-300 flex justify-between items-center">
-                            <span class="font-semibold text-base-content text-sm">Total Allowances & Benefits (per cutoff):</span>
-                            <span class="font-bold text-success text-base">₱{{ number_format($totalAllowancesAndBenefits, 2) }}</span>
+                        <div class="flex items-center justify-between border-base-300">
+                            <span class="font-semibold text-sm text-base-content">Total Allowances & Benefits (per cutoff):</span>
+                            <span class="font-bold text-success">₱{{ number_format($totalAllowancesAndBenefits, 2) }}</span>
                         </div>
                     @else
-                        <div class="text-center text-base-content/40 text-xs p-2">
+                        <div class="text-center text-xs text-base-content/60 p-4">
                             No allowances or benefits configured for this employee.
                         </div>
                     @endif
@@ -214,40 +203,40 @@
                 <input type="hidden" name="allowances" value="{{ $totalAllowancesAndBenefits }}">
             </div>
 
-            <div style="margin-bottom:24px;">
-                <label class="block font-semibold text-base-content mb-2 text-sm">Deductions</label>
+            <div class="mb-4">
+                <label class="font-semibold text-sm text-base-content mb-4">Deductions</label>
                 <input type="number" name="deductions" step="0.01" min="0"
                        value="{{ $isEdit ? $payrollInput->deductions : '0' }}"
-                       class="w-full p-2.5 border border-base-300 rounded-field text-sm"
-                       oninput="window.deductionsValue = this.value; triggerAutoPreview();">
+                       class="w-full text-sm border border-base-300 rounded-lg p-4"
+                       oninput="window.deductionsValue = this.value">
                 <input type="text" name="deductions_remarks"
                        value="{{ $isEdit ? ($payrollInput->deductions_remarks ?? '') : '' }}"
                        placeholder="Remarks (optional)"
-                       class="w-full p-2.5 border border-base-300 rounded-field text-sm mt-2"
+                       class="w-full text-sm border border-base-300 rounded-lg p-4 mt-2"
                        oninput="window.deductionsRemarksValue = this.value">
             </div>
 
-            <div style="margin-bottom:24px;">
-                <label class="block font-semibold text-base-content mb-2 text-sm">Reimbursements</label>
+            <div class="mb-4">
+                <label class="font-semibold text-sm text-base-content mb-4">Reimbursements</label>
                 <input type="number" name="reimbursements" step="0.01" min="0"
                        value="{{ $isEdit ? ($payrollInput->reimbursements ?? '0') : '0' }}"
-                       class="w-full p-2.5 border border-base-300 rounded-field text-sm"
-                       oninput="window.reimbursementsValue = this.value; triggerAutoPreview();">
+                       class="w-full text-sm border border-base-300 rounded-lg p-4"
+                       oninput="window.reimbursementsValue = this.value">
                 <input type="text" name="reimbursements_remarks"
                        value="{{ $isEdit ? ($payrollInput->reimbursements_remarks ?? '') : '' }}"
                        placeholder="Remarks (optional)"
-                       class="w-full p-2.5 border border-base-300 rounded-field text-sm mt-2"
+                       class="w-full text-sm border border-base-300 rounded-lg p-4 mt-2"
                        oninput="window.reimbursementsRemarksValue = this.value">
-                <p class="text-base-content/60 text-xs mt-1">Expense reimbursements to be added to net pay</p>
+                <p class="text-xs text-base-content/60 mt-2">Expense reimbursements to be added to net pay</p>
             </div>
 
-            <div style="display:flex; gap:12px;">
+            <div class="flex gap-3">
                 <button type="submit" id="saveAttendanceBtn" onclick="handleSaveAttendance(event)"
-                        style="flex:1; padding:12px 20px; background:{{ $color }}; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; pointer-events:auto !important; z-index:1000 !important;">
+                        class="font-semibold text-sm bg-primary rounded-lg p-4 cursor-pointer">
                     <i class="icon-[ph--floppy-disk-fill]"></i> {{ $isEdit ? 'Update' : 'Save' }} Attendance
                 </button>
                 <button type="button" id="previewBtn" onclick="previewPayroll(); return false;"
-                        class="px-5 py-3 bg-base-200 text-base-content border border-base-300 rounded-field cursor-pointer text-sm">
+                        class="text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-4 cursor-pointer">
                     <i class="icon-[ph--calculator-fill]"></i> Preview
                 </button>
             </div>
@@ -255,17 +244,17 @@
     </div>
 
     {{-- Payroll Preview Panel --}}
-    <div class="card" style="padding:0; overflow:hidden; height:fit-content;">
-        <div class="p-5 border-b border-base-300 bg-base-200">
-            <h3 style="margin:0; display:flex; align-items:center; gap:8px;">
+    <div class="card overflow-hidden p-4">
+        <div class="bg-base-200 border-base-300 p-4">
+            <h3 class="flex items-center gap-3">
                 <i class="icon-[ph--receipt-fill] text-base-content/60"></i> Payroll Preview
             </h3>
         </div>
 
-        <div style="padding:25px;" id="previewPanel">
-            <div class="text-center p-10 text-base-content/40">
-                <i class="icon-[ph--calculator-fill]" style="font-size:32px; margin-bottom:12px; display:block;"></i>
-                <p class="m-0 text-sm">Click "Preview" to see payroll computation</p>
+        <div class="p-4" id="previewPanel">
+            <div class="text-center text-base-content/60 p-4">
+                <i class="icon-[ph--calculator-fill] text-2xl mb-4"></i>
+                <p class="text-sm">Click "Preview" to see payroll computation</p>
             </div>
         </div>
     </div>
@@ -389,113 +378,113 @@ function previewPayroll() {
                 previewPanels.forEach((previewPanel, index) => {
                     previewPanel.innerHTML = `
                         <div class="mb-4">
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">Basic Salary:</span>
                                 <span class="font-semibold text-base-content">₱${previewData.basic_salary ? previewData.basic_salary.toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">Weekend Rate:</span>
                                 <span class="text-success">+₱${previewData.weekend_pay ? previewData.weekend_pay.toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">Overtime Rate:</span>
                                 <span class="text-success">+₱${previewData.overtime_pay ? previewData.overtime_pay.toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">Holiday Rate:</span>
                                 <span class="text-success">+₱${previewData.holiday_pay ? previewData.holiday_pay.toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">Night Differential:</span>
                                 <span class="text-success">+₱${previewData.night_differential ? previewData.night_differential.toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">Allowances:</span>
                                 <span class="text-success">+₱${previewData.allowances ? previewData.allowances.toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">Late Deduction:</span>
                                 <span class="text-error">-₱${previewData.late_deduction ? previewData.late_deduction.toFixed(2) : '0.00'}</span>
                             </div>
                         </div>
-                        <div class="p-3 bg-base-200 rounded-field mb-4">
-                            <div class="flex justify-between text-sm font-bold text-base-content">
+                        <div class="bg-base-200 rounded-lg p-4 mb-4">
+                            <div class="flex justify-between font-bold text-sm text-base-content">
                                 <span>Gross Pay:</span>
                                 <span>₱${previewData.gross_pay.toFixed(2)}</span>
                             </div>
                         </div>
                         ${window.isSecondHalfOfMonth && (previewData.first_cutoff_gross_pay > 0 || previewData.second_cutoff_gross_pay > 0) ? `
-                        <div class="p-3 bg-base-200 rounded-field mb-4 border border-base-300">
-                            <div class="text-xs font-semibold text-primary mb-2 uppercase tracking-wider">Monthly Cutoff Breakdown</div>
-                            <div class="flex justify-between mb-1.5 text-xs">
+                        <div class="bg-info/10 border border-base-300 rounded-lg p-4 mb-4">
+                            <div class="font-semibold text-xs text-info mb-4">Monthly Cutoff Breakdown</div>
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">1st Cutoff Pay:</span>
                                 <span class="font-semibold text-base-content">₱${previewData.first_cutoff_gross_pay ? parseFloat(previewData.first_cutoff_gross_pay).toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between mb-1.5 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">2nd Cutoff Pay:</span>
                                 <span class="font-semibold text-base-content">₱${previewData.second_cutoff_gross_pay ? parseFloat(previewData.second_cutoff_gross_pay).toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between pt-1.5 border-t border-base-300 text-sm font-bold text-primary">
+                            <div class="flex justify-between font-bold text-sm text-info border-base-300">
                                 <span>Total Monthly Gross:</span>
                                 <span>₱${previewData.total_monthly_gross_pay ? parseFloat(previewData.total_monthly_gross_pay).toFixed(2) : '0.00'}</span>
                             </div>
                         </div>
                         ` : ''}
                         <div class="mb-4">
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">SSS Contribution:</span>
                                 <span class="text-error">-₱${previewData.sss_contribution ? parseFloat(previewData.sss_contribution).toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">PhilHealth Contribution:</span>
                                 <span class="text-error">-₱${previewData.philhealth_contribution ? parseFloat(previewData.philhealth_contribution).toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">Pag-IBIG Contribution:</span>
                                 <span class="text-error">-₱${previewData.pagibig_contribution ? parseFloat(previewData.pagibig_contribution).toFixed(2) : '0.00'}</span>
                             </div>
                             ${window.isSecondHalfOfMonth ? `
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">Withholding Tax:</span>
                                 <span class="text-error">-₱${previewData.withholding_tax ? parseFloat(previewData.withholding_tax).toFixed(2) : '0.00'}</span>
                             </div>
                             ` : ''}
                             @if($isEdit)
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">Manual Deductions:</span>
                                 <span class="text-error">-₱${previewData.manual_deductions ? parseFloat(previewData.manual_deductions).toFixed(2) : '0.00'}</span>
                             </div>
                             @endif
-                            <div class="flex justify-between mb-2 text-xs font-semibold text-base-content pt-2 border-t border-base-300">
+                            <div class="flex justify-between font-semibold text-xs text-base-content border-base-300 mb-4">
                                 <span>Total Deductions:</span>
                                 <span class="text-error">-₱${previewData.deductions ? parseFloat(previewData.deductions).toFixed(2) : '0.00'}</span>
                             </div>
                         </div>
                         <div class="mb-4">
-                            <div class="flex justify-between mb-2 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">Reimbursements:</span>
                                 <span class="text-success">+₱${window.reimbursementsValue ? parseFloat(window.reimbursementsValue).toFixed(2) : '0.00'}</span>
                             </div>
                         </div>
                         ${window.isSecondHalfOfMonth && (previewData.first_cutoff_net_pay > 0 || previewData.second_cutoff_net_pay > 0) ? `
-                        <div class="p-3 bg-base-200 rounded-field mb-4 border border-base-300">
-                            <div class="text-xs font-semibold text-success mb-2 uppercase tracking-wider">Monthly Net Pay Breakdown</div>
-                            <div class="flex justify-between mb-1.5 text-xs">
+                        <div class="bg-success/10 border border-base-300 rounded-lg p-4 mb-4">
+                            <div class="font-semibold text-xs mb-4">Monthly Net Pay Breakdown</div>
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">1st Cutoff Net:</span>
                                 <span class="font-semibold text-base-content">₱${previewData.first_cutoff_net_pay ? parseFloat(previewData.first_cutoff_net_pay).toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between mb-1.5 text-xs">
+                            <div class="flex justify-between text-xs mb-4">
                                 <span class="text-base-content/60">2nd Cutoff Net:</span>
                                 <span class="font-semibold text-base-content">₱${previewData.second_cutoff_net_pay ? parseFloat(previewData.second_cutoff_net_pay).toFixed(2) : '0.00'}</span>
                             </div>
-                            <div class="flex justify-between pt-1.5 border-t border-base-300 text-sm font-bold text-success">
+                            <div class="flex justify-between font-bold text-sm border-base-300">
                                 <span>Total Monthly Net:</span>
                                 <span>₱${previewData.total_monthly_net_pay ? parseFloat(previewData.total_monthly_net_pay).toFixed(2) : '0.00'}</span>
                             </div>
                         </div>
                         ` : ''}
-                        <div class="p-4 rounded-field" style="background:linear-gradient(135deg,{{ $color }},{{ $colorDark }});">
-                            <div class="flex justify-between text-lg font-bold text-white">
+                        <div class="rounded-lg p-4">
+                            <div class="flex justify-between font-bold">
                                 <span>Net Pay:</span>
                                 <span>₱${(parseFloat(previewData.net_pay) + parseFloat(window.reimbursementsValue || 0)).toFixed(2)}</span>
                             </div>
@@ -525,4 +514,3 @@ function triggerAutoPreview() {
 }
 </script>
 @endsection
-

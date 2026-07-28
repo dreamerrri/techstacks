@@ -9,13 +9,18 @@
     $user    = auth()->user();
     $isAdmin = $user->isAdmin();
 @endphp
- <a href="{{ route('manual-payroll-attendance.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-success">
-                <i class="icon-[ph--arrow-left-fill]"></i> Back to Attendance page
-            </a>
+
+              <div class="mb-5">
+        <a href="{{ route('manual-payroll-attendance.index') }}" 
+        class="text-base-content/60 no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
+             <i class="icon-[tabler--arrow-left]"></i> Back to Attendance page
+        </a>
+    </div>
+            
 
 <x-table-card>
     <x-slot:title>
-        <x-dot-loader/> Arhived Payroll Periods
+        <x-dot-loader/><p class="text-base-content"> Arhived Payroll Periods</p>
         <x-info-tooltip>
            Archived periods are read-only and can be restored if needed
         </x-info-tooltip>
@@ -64,7 +69,7 @@
 
                         @if($isAdmin)
                             <button onclick="confirmRestore({{ $period->id }}, '{{ $period->period_label }}', '{{ route('payroll-periods.restore', $period) }}')"
-                                    class="btn  btn-success btn-sm w-full">
+                                    class="btn btn-soft  btn-success btn-sm w-full">
                                 <i class="icon-[ph--arrow-counter-clockwise-fill]"></i> Restore
                             </button>
                         @endif

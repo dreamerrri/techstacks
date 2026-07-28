@@ -17,11 +17,11 @@
             <div class="auth-image-content">
 
                 <!-- 3D Logo Canvas -->
-<div id="logo3d-container" style="width: 320px; height: 320px; margin-bottom: 16px;">
+<div id="logo3d-container" class="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 mb-4">
     
-    <canvas id="logo3d" style="width: 100%; height: 100%;"></canvas>
+    <canvas id="logo3d" class="w-full h-full"></canvas>
                 </div>
-<p style="font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; opacity: 0.75; margin-bottom: 20px;">Techstacks</p>
+<p class="text-sm font-semibold tracking-[2px] uppercase opacity-75 mb-5">Techstacks</p>
                 <h2>LogiPay</h2>
                 <p>Streamline your human resources and payroll operations with our comprehensive management platform.</p>
             </div>
@@ -79,18 +79,17 @@
                         <label for="password">
                             <i class="icon-[ph--lock-fill]"></i> Password
                         </label>
-                        <div style="position: relative;">
+                        <div class="relative">
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
                                 placeholder="••••••••"
                                 required
-                                style="width: 100%; padding-right: 45px;"
+                                class="w-full pe-12"
                             >
                             <button type="button" onclick="togglePassword()"
-                                    style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
-                                           background:none; border:none; cursor:pointer; color:#6b7280; padding:0;">
+                                    class="absolute end-3 top-1/2 -translate-y-1/2 bg-transparent border-0 cursor-pointer text-base-content/60 p-0">
                                 <i class="icon-[ph--eye-fill]" id="eyeIcon"></i>
                             </button>
                         </div>

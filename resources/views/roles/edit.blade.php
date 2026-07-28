@@ -97,7 +97,7 @@
                 <button type="submit" class="btn  btn-error">
                     <i class="icon-[ph--floppy-disk-fill]"></i> Update Role
                 </button>
-                <a href="{{ route('roles.show', $role) }}" class="btn ">Cancel</a>
+                <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-success">Cancel</a>
             </div>
         </form>
     </div>

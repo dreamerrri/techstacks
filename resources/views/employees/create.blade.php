@@ -6,7 +6,7 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('employees.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-success">
+        <a href="{{ route('employees.index') }}" class="back-link text-base-content no-underline text-sm hover:text-primary">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee List
         </a>
     </div>
@@ -20,10 +20,10 @@
             @csrf
             @include('employees.form')
             <div class="flex gap-3 flex-wrap mt-6">
-                <button type="submit" class="btn  btn-error">
+                <button type="submit" class="btn btn-soft btn-error">
                     <i class="icon-[ph--floppy-disk-fill]"></i> Save Employee
                 </button>
-                <a href="{{ route('employees.index') }}" class="btn ">Cancel</a>
+                <a href="{{ route('employees.index') }}" class="btn btn-success btn-soft">Cancel</a>
             </div>
         </form>
     </div>

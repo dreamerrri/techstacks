@@ -22,7 +22,7 @@
     }
 </style>
 </head>
-<body>
+<body class="bg-base-200 text-base-content min-h-dvh"> {{-- remove mo nalng balang araw --}}
     
 
 @php
@@ -392,8 +392,8 @@
 
         {{-- Navbar --}}
 
-            <nav class="navbar bg-base-100 gap-4 border-b border-base-300 shadow-sm sticky top-0 z-9">{{-- -shadow-base-300/20 shadow-sm  --}}
-            <div class="navbar-start items-center gap-2 ">
+            <nav class="navbar bg-base-100 gap-2 sm:gap-4 border-b border-base-300 shadow-sm sticky top-0 z-9">{{-- -shadow-base-300/20 shadow-sm  --}}
+            <div class="navbar-start min-w-0 items-center gap-2 ">
                 <button type="button" class="btn btn-text max-sm:btn-square sm:hidden"
                         aria-haspopup="dialog" aria-expanded="false" aria-controls="collapsible-mini-sidebar"
                         data-overlay="#collapsible-mini-sidebar">
@@ -424,7 +424,7 @@
             </div>
             
 
-            <div class="navbar-end flex items-center gap-4">
+            <div class="navbar-end min-w-0 flex items-center gap-2 sm:gap-4">
 
                 <x-search-box id="search-modal" />
 
@@ -494,7 +494,7 @@
         </nav>
 
         {{-- Page content --}}
-        <main class="p-4">
+        <main class="min-w-0 p-3 sm:p-4 overflow-x-hidden">
          {{--   {{ \Diglactic\Breadcrumbs\Breadcrumbs::render() }}- MOBILE ONLY--}}  
             @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>

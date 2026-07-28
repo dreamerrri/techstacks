@@ -9,39 +9,38 @@
     $user = auth()->user();
     $isAdmin = $user->isAdmin();
     $isHR = $user->isHR();
-    $color = $isAdmin ? '#dc2626' : ($isHR ? '#2563eb' : '#667eea');
 @endphp
 
 {{-- Header --}}
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+<div class="flex flex-wrap justify-between items-center gap-4 mb-6">
     <div>
-        <div style="display:inline-block; background:#dbeafe; color:#1e40af; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:8px;">
+        <div class="badge badge-info gap-1 mb-2">
             <i class="icon-[ph--pencil-fill]"></i> Edit Request
         </div>
-        <h2 style="margin:8px 0 4px 0;">Edit Work Request #{{ $workRequest->id }}</h2>
+        <h2 class="text-2xl font-bold text-base-content mt-2 mb-1">Edit Work Request #{{ $workRequest->id }}</h2>
         <p class="text-base-content/60 m-0">
             Modify your pending work request
         </p>
     </div>
     <a href="{{ route('work-requests.show', $workRequest) }}"
-       class="px-5 py-3 bg-base-200 text-base-content border border-base-300 rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2">
+       class="btn btn-soft gap-2">
         <i class="icon-[ph--arrow-left-fill]"></i> Back to Request
     </a>
 </div>
 
 {{-- Form --}}
-<div class="card" style="padding:32px; max-width:800px;">
+<div class="card bg-base-100 border border-base-300 p-8 max-w-3xl">
     <form id="workRequestForm">
         @csrf
         @method('PUT')
         
         {{-- Request Type --}}
         <div class="mb-6">
-            <label class="block text-sm font-semibold text-base-content mb-2">
+            <label class="label text-sm font-semibold text-base-content mb-2">
                 Request Type <span class="text-error">*</span>
             </label>
             <select name="request_type" id="request_type" required
-                    class="w-full p-3 border border-base-300 rounded-field text-sm">
+                    class="select select-bordered w-full">
                 <option value="">Select type...</option>
                 <option value="weekend" {{ $workRequest->request_type === 'weekend' ? 'selected' : '' }}>Weekend Work</option>
                 <option value="holiday" {{ $workRequest->request_type === 'holiday' ? 'selected' : '' }}>Holiday Work</option>
@@ -57,38 +56,38 @@
             </label>
             <input type="date" name="work_date" id="work_date" required min="{{ now()->toDateString() }}"
                    value="{{ $workRequest->work_date->format('Y-m-d') }}"
-                   class="w-full p-3 border border-base-300 rounded-field text-sm">
+                   class="input input-bordered w-full">
         </div>
 
         {{-- Time Range --}}
-        <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <div>
-                <label class="block text-sm font-semibold text-base-content mb-2">
+                <label class="label text-sm font-semibold text-base-content mb-2">
                     Start Time
                 </label>
                 <input type="time" name="start_time" id="start_time" value="{{ $workRequest->start_time }}"
-                       class="w-full p-3 border border-base-300 rounded-field text-sm">
+                       class="input input-bordered w-full">
             </div>
             <div>
-                <label class="block text-sm font-semibold text-base-content mb-2">
+                <label class="label text-sm font-semibold text-base-content mb-2">
                     End Time
                 </label>
                 <input type="time" name="end_time" id="end_time" value="{{ $workRequest->end_time }}"
-                       class="w-full p-3 border border-base-300 rounded-field text-sm">
+                       class="input input-bordered w-full">
             </div>
         </div>
 
         {{-- Estimated Hours --}}
         <div class="mb-6">
-            <label class="block text-sm font-semibold text-base-content mb-2">
+            <label class="label text-sm font-semibold text-base-content mb-2">
                 Estimated Hours
             </label>
             <input type="number" name="estimated_hours" id="estimated_hours" min="0" max="24" step="0.5"
                    value="{{ $workRequest->estimated_hours }}"
-                   class="w-full p-3 border border-base-300 rounded-field text-sm">
-            <div id="overtime_hours_display" class="hidden mt-2 p-2 bg-base-200 rounded-field border-l-4 border-l-blue-600">
-                <span class="text-xs font-semibold text-primary">
-                    <i class="icon-[ph--clock-fill]" style="margin-right:4px;"></i>
+                   class="input input-bordered w-full">
+            <div id="overtime_hours_display" class="hidden mt-2 p-2 px-3 bg-info/10 rounded-lg border-s-4 border-info">
+                <span class="text-xs font-semibold text-info">
+                    <i class="icon-[ph--clock-fill] me-1"></i>
                     Approximate Overtime Hours: <span id="calculated_overtime_hours">0</span>
                 </span>
             </div>
@@ -96,22 +95,21 @@
 
         {{-- Reason --}}
         <div class="mb-8">
-            <label class="block text-sm font-semibold text-base-content mb-2">
+            <label class="label text-sm font-semibold text-base-content mb-2">
                 Reason
             </label>
             <textarea name="reason" id="reason" rows="4" maxlength="500"
-                      class="w-full p-3 border border-base-300 rounded-field text-sm resize-vertical"
+                      class="textarea textarea-bordered w-full resize-y"
                       placeholder="Provide a reason for this work request...">{{ $workRequest->reason }}</textarea>
         </div>
 
         {{-- Submit Button --}}
         <div class="flex gap-3">
             <button type="submit"
-                    class="px-8 py-3 text-white border-none rounded-field cursor-pointer text-sm font-semibold" style="background:{{ $color }};">
+                    class="btn btn-soft btn-primary">
                 <i class="icon-[ph--floppy-disk-fill]"></i> Update Request
             </button>
-            <a href="{{ route('work-requests.show', $workRequest) }}"
-               class="px-8 py-3 bg-base-200 text-base-content border border-base-300 rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center">
+            <a href="{{ route('work-requests.show', $workRequest) }}" class="btn btn-soft btn-outline">
                 Cancel
             </a>
         </div>
@@ -120,17 +118,17 @@
 
 {{-- Upcoming Holidays Reference --}}
 @if($upcomingHolidays->count() > 0)
-<div class="card p-6 mt-6">
+<div class="card bg-base-100 border border-base-300 p-6 mt-6">
     <h3 class="m-0 mb-4 flex items-center gap-2">
         <i class="icon-[ph--calendar-fill] text-base-content/60"></i> Upcoming Holidays
     </h3>
     <div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
         @foreach($upcomingHolidays as $holiday)
-        <div class="p-3 bg-base-200 rounded-field border-l-4 {{ $holiday->type === 'regular' ? 'border-l-amber-500' : 'border-l-blue-500' }};">
+        <div class="p-3 bg-base-200 rounded-lg border-s-4 {{ $holiday->type === 'regular' ? 'border-warning' : 'border-info' }}">
             <div class="text-sm font-semibold text-base-content">{{ $holiday->name }}</div>
             <div class="text-xs text-base-content/60 mt-1">{{ $holiday->date->format('M d, Y') }}</div>
             <div class="text-[11px] text-base-content/60 mt-0.5">
-                <span class="px-1.5 py-0.5 rounded font-semibold bg-base-300">
+                <span class="badge badge-neutral badge-sm font-semibold">
                     {{ ucfirst($holiday->type) }}
                 </span>
             </div>

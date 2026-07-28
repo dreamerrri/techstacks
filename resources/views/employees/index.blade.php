@@ -47,39 +47,39 @@
         </x-slot:title>
 
         <x-slot:actions>
-            <a href="{{ route('employees.create') }}" class="btn  btn-error btn-sm">
+            <a href="{{ route('employees.create') }}" class="btn btn-soft  btn-error btn-sm">
                 <i class="icon-[tabler--plus]"></i> Add Employee
             </a>
         </x-slot:actions>
 
         <x-slot:filters>
             {{-- Search group --}}
-            <div class="join flex-none w-64 min-w-40">
+            <div class="join w-full sm:w-64 sm:flex-none min-w-0">
                 <input type="text" name="search" id="search-input" value="{{ request('search') }}"
                        placeholder="Search name or email..."
                        oninput="clearTimeout(this._t); this._t = setTimeout(() => this.closest('form').submit(), 400)"
                        class="input input-bordered input-sm bg-base-200  join-item w-full ">
-               <button type="submit" class="btn btn-outline btn-primary btn-sm join-item">
+               <button type="submit" class="btn btn-soft btn-primary btn-sm join-item">
                     <i class="icon-[tabler--search]"></i>
                 </button>
             </div>
 
             {{-- Filters group --}}
-            <div class="flex flex-row gap-2 md:ml-auto">
-                <select name="department" onchange="this.closest('form').submit()" class="select select-bordered select-sm">
+            <div class="flex flex-wrap gap-2 md:ml-auto">
+                <select name="department" onchange="this.closest('form').submit()" class="select select-bordered select-sm w-full sm:w-auto">
                     <option value="">All Departments</option>
                     @foreach($departments as $dept)
                         <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
                     @endforeach
                 </select>
-                <select name="status" onchange="this.closest('form').submit()" class="select select-bordered select-sm">
+                <select name="status" onchange="this.closest('form').submit()" class="select select-bordered select-sm w-full sm:w-auto">
                     <option value="">All Status</option>
                     @foreach(['Regular','Probationary','Contractual','Part-time'] as $s)
                         <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
                     @endforeach
                 </select>
                 @if(request()->hasAny(['search','department','status']))
-                    <a href="{{ route('employees.index') }}" class="btn  btn-sm">Clear</a>
+                    <a href="{{ route('employees.index') }}" class="btn btn-soft  btn-sm">Clear</a>
                 @endif
             </div>
         </x-slot:filters>
@@ -122,10 +122,10 @@
                     <td class="text-base-content/60">{{ $employee->date_hired->format('M d, Y') }}</td>
                     <td>
                         <div class="flex gap-2">
-                            <a href="{{ route('employees.show', $employee) }}" class="btn  btn-info btn-sm">
+                            <a href="{{ route('employees.show', $employee) }}" class="btn btn-soft btn-info btn-sm">
                                 <i class="icon-[tabler--eye]"></i>
                             </a>
-                            <a href="{{ route('employees.edit', $employee) }}" class="btn  btn-warning btn-sm">
+                            <a href="{{ route('employees.edit', $employee) }}" class="btn btn-soft btn-warning btn-sm">
                                 <i class="icon-[tabler--pencil]"></i>
                             </a>
                             <form method="POST" action="{{ route('employees.archive', $employee) }}"
@@ -134,7 +134,7 @@
                                   data-confirm-icon="warning"
                                   data-confirm-btn="Yes, archive">
                                 @csrf @method('PATCH')
-                                <button class="btn  btn-error btn-sm">
+                                <button class="btn btn-soft btn-error btn-sm">
                                     <i class="icon-[tabler--archive]"></i>
                                 </button>
                             </form>
@@ -195,10 +195,10 @@
                     </div>
 
                     <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-300">
-                        <a href="{{ route('employees.show', $employee) }}" class="btn  btn-info btn-sm">
+                        <a href="{{ route('employees.show', $employee) }}" class="btn btn-soft  btn-info btn-sm">
                             <i class="icon-[tabler--eye]"></i> View
                         </a>
-                        <a href="{{ route('employees.edit', $employee) }}" class="btn  btn-warning btn-sm">
+                        <a href="{{ route('employees.edit', $employee) }}" class="btn btn-soft  btn-warning btn-sm">
                             <i class="icon-[tabler--pencil]"></i> Edit
                         </a>
                         <form method="POST" action="{{ route('employees.archive', $employee) }}"
@@ -207,7 +207,7 @@
                               data-confirm-icon="warning"
                               data-confirm-btn="Yes, archive">
                             @csrf @method('PATCH')
-                            <button class="btn  btn-error btn-sm">
+                            <button class="btn btn-soft btn-error btn-sm">
                                 <i class="icon-[tabler--archive]"></i> Archive
                             </button>
                         </form>

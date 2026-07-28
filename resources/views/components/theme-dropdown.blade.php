@@ -27,7 +27,7 @@
     <button
         id="{{ $dropdownId }}"
         type="button"
-        class="dropdown-toggle btn btn-outline btn-primary btn-sm rounded-full gap-2"
+        class="dropdown-toggle btn btn-soft btn-primary btn-sm rounded-full gap-2"
         aria-haspopup="menu"
         aria-expanded="false"
         aria-label="{{ $label }} switcher"
