@@ -139,7 +139,8 @@
         </h2>
         <div class="flex flex-col text-sm">
             @foreach([
-                ['Base Pay',           $payroll['attendance_data']['regular_hours'] ?? 0 .' hrs × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['base_pay'] ?? 0, 'text-base-content', ''],
+                ['Base Pay',           $payroll['attendance_data']['regular_hours'] ?? 0 .' hrs × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['base_pay'] ?? 0, 'text-emerald-600', ''],
+                ['Weekend Pay',        ($payroll['attendance_data']['weekends_worked'] ?? 0) .' weekend days × 0.30 × ₱'. number_format($payroll['daily_rate'] ?? 0, 2) .'/day', $payroll['weekend_pay'] ?? 0, 'text-emerald-600', '+'],
                 ['Overtime Pay',       ($payroll['attendance_data']['overtime_hours'] ?? 0) .' OT hrs × 1.25 × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['overtime_pay'] ?? 0, 'text-emerald-600', '+'],
                 ['Night Differential', ($payroll['attendance_data']['night_diff_hours'] ?? 0) .' ND hrs × 1.10 × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['night_differential_pay'] ?? 0, 'text-emerald-600', '+'],
                 ['Holiday Pay',        ($payroll['attendance_data']['holiday_days'] ?? 0) .' holiday days × 2 × ₱'. number_format($payroll['daily_rate'] ?? 0, 2) .'/day', $payroll['holiday_pay'] ?? 0, 'text-emerald-600', '+'],
@@ -155,7 +156,7 @@
             @endforeach
         </div>
         <div class="flex justify-between items-center mt-3 pt-3 border-t-2 border-gray-200 font-bold text-sm">
-            <span class="text-base-content">Total Earnings</span>
+            <span class="text-base-300">Total Earnings</span>
             <span class="text-emerald-600">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['benefits'] ?? 0), 2) }}</span>
         </div>
     </div>
@@ -228,13 +229,13 @@
     </div>
 
     {{-- Pay Summary (full width) --}}
-    <div class="card bg-base-100 shadow-sm p-5 md:col-span-3">
+    <div class="card bg-base-300 shadow-sm p-5 md:col-span-3">
         <h2 class="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
             <i class="icon-[ph--receipt-fill] text-red-600"></i> Pay Summary
         </h2>
         <div class="flex flex-col text-sm">
             <div class="flex justify-between items-center py-3 border-b border-gray-100">
-                <span class="text-base-content/60">Gross Pay</span>
+                <span class="text-base-content">Gross Pay</span>
                 <span class="font-semibold text-base-content">₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}</span>
             </div>
             <div class="flex justify-between items-center py-3 border-b border-gray-100">
