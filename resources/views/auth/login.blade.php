@@ -17,7 +17,7 @@
             <div class="auth-image-content">
 
                 <!-- 3D Logo Canvas -->
-<div id="logo3d-container" class="w-80 h-80 mb-4">
+<div id="logo3d-container" class="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 mb-4">
     
     <canvas id="logo3d" class="w-full h-full"></canvas>
                 </div>

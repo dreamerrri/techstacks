@@ -394,7 +394,11 @@ body {
     }
 
     .auth-form-panel {
-        padding: 60px 24px;
+        padding: 32px 16px;
         min-height: 100vh;
+    }
+
+    .auth-form-inner {
+        max-width: min(400px, 100%);
     }
 }
