@@ -20,6 +20,7 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\WorkRequestController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SearchController;
 
 Route::get('/test', function () {
     return 'ok';
@@ -57,6 +58,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
  Route::patch('/settings/theme', [SettingsController::class, 'updateTheme'])->name('settings.theme');
+ Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 
  
