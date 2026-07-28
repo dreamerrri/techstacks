@@ -4,11 +4,14 @@ import { initBurger } from './burger.js';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 import 'flyonui/flyonui';
+import Alpine from 'alpinejs';
 import Swal from 'sweetalert2';
 
 // ── Make Swal globally available ───────────────────────────────
 window.Swal = Swal;
 
+window.Alpine = Alpine;
+Alpine.start();
 
 // ── Global Notyf instance ─────────────────────────────────────
 window.notyf = new Notyf({
