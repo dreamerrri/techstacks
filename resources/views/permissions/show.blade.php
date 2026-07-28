@@ -6,7 +6,7 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('permissions.index') }}" class="back-link text-base-content no-underline text-sm hover:text-primary">
+        <a href="{{ route('permissions.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-success">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Permissions
         </a>
     </div>
@@ -22,12 +22,12 @@
         {{-- Header --}}
         <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
             <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-xl flex-shrink-0">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-error to-error/80 flex items-center justify-center text-white text-xl flex-shrink-0">
                     <i class="icon-[ph--key-fill]"></i>
                 </div>
                 <div>
                     <h2 class="text-xl font-bold text-base-content m-0">{{ $permission->name }}</h2>
-                    <code class="text-xs text-error bg-base-content px-2 py-0.5 rounded">{{ $permission->slug }}</code>
+                    <code class="text-xs text-base-content/60 bg-base-200 px-2 py-0.5 rounded">{{ $permission->slug }}</code>
                 </div>
             </div>
             <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft btn-error btn-sm">
@@ -37,8 +37,8 @@
 
         {{-- Permission Information --}}
         <div class="mb-8">
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="icon-[ph--info-fill] text-red-600"></i> Permission Information
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+                <i class="icon-[ph--info-fill] text-error"></i> Permission Information
             </h3>
             <div class="flex flex-col">
                 <div class="flex justify-between items-center py-3 border-b border-base-200">
@@ -70,16 +70,16 @@
 
         {{-- Roles with this Permission --}}
         <div>
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-red-200 pb-2 mb-4">
-                <i class="icon-[tabler--user]-tag text-red-600"></i> Roles with this Permission ({{ $permission->roles->count() }})
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+                <i class="icon-[tabler--user]-tag text-error"></i> Roles with this Permission ({{ $permission->roles->count() }})
             </h3>
 
             @if($permission->roles->count() > 0)
                 <div class="flex flex-col gap-2">
                     @foreach($permission->roles as $role)
-                        <div class="flex justify-between items-center p-3 border border-gray-200 rounded-xl hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-center p-3 border border-base-300 rounded-xl hover:shadow-md transition-shadow">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white font-bold flex-shrink-0">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-error to-error/80 flex items-center justify-center text-white font-bold flex-shrink-0">
                                     {{ strtoupper(substr($role->name, 0, 1)) }}
                                 </div>
                                 <div>

@@ -37,7 +37,7 @@
     @forelse($roles as $role)
         <tr class="row-hover">
             <td class="font-semibold text-base-content">{{ $role->name }}</td>
-            <td><code class="bg-gray-100 text-red-600 text-xs px-1.5 py-0.5 rounded">{{ $role->slug }}</code></td>
+            <td><code class="bg-base-200 text-error text-xs px-1.5 py-0.5 rounded">{{ $role->slug }}</code></td>
             <td class="text-base-content/60 truncate">{{ $role->description ?? '—' }}</td>
             <td class="text-base-content/60 text-right">{{ $role->users_count }}</td>
             <td class="text-base-content/60 text-right">{{ $role->permissions->count() }}</td>
@@ -88,10 +88,10 @@
         {{-- Mobile Cards --}}
         <div class="md:hidden p-4 flex flex-col gap-3">
             @forelse($roles as $role)
-                <div class="card bg-base-100 border border-gray-200 p-4">
+                <div class="card bg-base-100 border border-base-300 p-4">
                     <div class="flex justify-between items-start mb-2">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-error to-error/80 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                                 {{ strtoupper(substr($role->name, 0, 1)) }}
                             </div>
                             <div>
@@ -115,8 +115,8 @@
                         <div class="text-xs text-base-content/40 mt-1">{{ $role->description }}</div>
                     @endif
 
-                    <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-gray-100">
-                        <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
+                    <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-200">
+                        <a href="{{ route('roles.show', $role) }}" class="btn  btn-info btn-sm">
                             <i class="icon-[ph--eye-fill]"></i> View
                         </a>
                         <a href="{{ route('roles.edit', $role) }}" class="btn btn-soft btn-warning btn-sm">

@@ -8,7 +8,7 @@
     {{-- Top nav --}}
     <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
         <a href="{{ route('government-contributions.index') }}"
-           class="back-link text-base-content no-underline text-sm hover:text-primary flex items-center gap-1">
+           class="back-link text-base-content/60 no-underline text-sm hover:text-success flex items-center gap-1">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Government Contributions
         </a>
         <div class="flex gap-2">
@@ -29,7 +29,7 @@
                      alt="{{ $employee->full_name }}"
                      class="w-full h-full object-cover">
             @else
-                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white text-2xl font-bold">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-error to-error/80 flex items-center justify-center text-white text-2xl font-bold">
                     {{ strtoupper(substr($employee->first_name, 0, 1)) }}
                 </div>
             @endif
@@ -54,16 +54,16 @@
     {{-- Government Contributions --}}
     <div class="card bg-base-100 shadow-sm p-6">
         <h2 class="text-sm font-bold text-base-content mb-5 flex items-center gap-2">
-            <i class="icon-[ph--identification-card-fill] text-red-600"></i> Government Contributions
+            <i class="icon-[ph--identification-card-fill] text-error"></i> Government Contributions
         </h2>
 
         {{-- ID Numbers Grid --}}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
     @foreach([
-        ['SSS Number',   $employee->sss_number,        'icon-[tabler--shield-check]', 'text-emerald-600', 'bg-emerald-100'],
-        ['PhilHealth',   $employee->philhealth_number,  'icon-[ph--heart-fill]',        'text-blue-600',    'bg-blue-100'],
-        ['Pag-IBIG',     $employee->pagibig_number,     'icon-[ph--house-fill]',        'text-amber-500',   'bg-amber-100'],
-        ['TIN Number',   $employee->tin_number,         'icon-[ph--receipt-fill]',      'text-violet-600',  'bg-violet-100'],
+        ['SSS Number',   $employee->sss_number,        'icon-[tabler--shield-check]', 'text-success', 'bg-success/10'],
+        ['PhilHealth',   $employee->philhealth_number,  'icon-[ph--heart-fill]',        'text-info',    'bg-info/10'],
+        ['Pag-IBIG',     $employee->pagibig_number,     'icon-[ph--house-fill]',        'text-notification',   'bg-notification/10'],
+        ['TIN Number',   $employee->tin_number,         'icon-[ph--receipt-fill]',      'text-secondary',  'bg-secondary/100'],
     ] as [$label, $value, $icon, $color, $bg])
         <div class="card bg-base-100 shadow-sm p-4 text-center">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 {{ $color }} {{ $bg }}">
@@ -76,8 +76,8 @@
 </div>
 
         {{-- SSS --}}
-        <div class="mt-4 p-5 bg-blue-50 rounded-2xl border border-blue-200">
-            <h4 class="text-xs font-bold text-blue-800 uppercase tracking-widest mb-4">
+        <div class="mt-4 p-5 bg-info/10 rounded-2xl border border-info/20">
+            <h4 class="text-xs font-bold text-info uppercase tracking-widest mb-4">
                 <i class="icon-[ph--calculator-fill]"></i> SSS Contribution (Circular No. 2024-006)
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -90,7 +90,7 @@
                     <input type="number" name="custom_sss_contribution" id="custom_sss_contribution"
                            value="{{ $employee->custom_sss_contribution ?? $sssContribution['employee_share'] }}"
                            step="0.01" min="0"
-                           class="input input-bordered w-full font-bold text-red-600 text-lg">
+                           class="input input-bordered w-full font-bold text-error text-lg">
                     <div class="text-xs text-base-content/60 mt-1 italic">Leave blank to use calculated contribution based on salary</div>
                 </div>
                 <div class="bg-base-200 p-4 rounded-xl shadow-sm">
@@ -101,8 +101,8 @@
         </div>
 
         {{-- PhilHealth --}}
-        <div class="mt-4 p-5 bg-emerald-50 rounded-2xl border border-emerald-200">
-            <h4 class="text-xs font-bold text-emerald-800 uppercase tracking-widest mb-4">
+        <div class="mt-4 p-5 bg-success/10 rounded-2xl border border-success/20">
+            <h4 class="text-xs font-bold text-success uppercase tracking-widest mb-4">
                 <i class="icon-[ph--heartbeat-fill]"></i> PhilHealth Contribution (2025/2026)
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -119,15 +119,15 @@
                     <input type="number" name="custom_philhealth_contribution" id="custom_philhealth_contribution"
                            value="{{ $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'] }}"
                            step="0.01" min="0"
-                           class="input input-bordered w-full font-bold text-red-600 text-lg">
+                           class="input input-bordered w-full font-bold text-error text-lg">
                     <div class="text-xs text-base-content/60 mt-1 italic">Leave blank to use calculated contribution based on salary</div>
                 </div>
             </div>
         </div>
 
         {{-- Pag-IBIG --}}
-        <div class="mt-4 p-5 bg-amber-50 rounded-2xl border border-amber-200">
-            <h4 class="text-xs font-bold text-amber-800 uppercase tracking-widest mb-4">
+        <div class="mt-4 p-5 bg-warning/10 rounded-2xl border border-warning/20">
+            <h4 class="text-xs font-bold text-warning uppercase tracking-widest mb-4">
                 <i class="icon-[ph--house-fill]"></i> Pag-IBIG Contribution (2026)
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -146,7 +146,7 @@
                     <input type="number" name="custom_pagibig_contribution" id="custom_pagibig_contribution"
                            value="{{ $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'] }}"
                            step="0.01" min="0"
-                           class="input input-bordered w-full font-bold text-red-600 text-lg">
+                           class="input input-bordered w-full font-bold text-error text-lg">
                     <div class="text-xs text-base-content/60 mt-1 italic">Leave blank to use calculated contribution based on salary</div>
                 </div>
             </div>

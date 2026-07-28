@@ -34,7 +34,7 @@
     <div class="flex gap-3">
         @if($payrollPeriod->isDraft() && $payrollPeriod->payrollInputs && $payrollPeriod->payrollInputs->count() > 0)
         <button onclick="finalizePayroll()"
-                class="inline-flex items-center text-sm rounded-lg p-4 gap-3 cursor-pointer">
+                class="px-5 py-2.5 bg-success text-white border-none rounded-field cursor-pointer text-sm inline-flex items-center gap-2">
             <i class="icon-[tabler--circle-check]"></i> Finalize Payroll
         </button>
         @endif
@@ -52,17 +52,17 @@
         <div class="text-xs text-base-content/60 mb-4">Total Employees</div>
         <div class="font-bold text-2xl text-base-content" id="totalEmployees">{{ $payrollPeriod->payrollInputs ? $payrollPeriod->payrollInputs->count() : 0 }}</div>
     </div>
-    <div class="bg-base-100 border border-base-300 rounded-lg p-4">
-        <div class="text-xs text-base-content/60 mb-4">Total Gross Pay</div>
-        <div class="font-bold text-2xl text-success" id="totalGrossPay">₱{{ number_format($payrollPeriod->total_gross_pay ?? 0, 2) }}</div>
+    <div class="bg-base-100 border border-base-300 rounded-xl p-5">
+        <div class="text-base-content/60 text-xs mb-1">Total Gross Pay</div>
+        <div class="text-2xl font-bold text-success" id="totalGrossPay">₱{{ number_format($payrollPeriod->total_gross_pay ?? 0, 2) }}</div>
     </div>
-    <div class="bg-base-100 border border-base-300 rounded-lg p-4">
-        <div class="text-xs text-base-content/60 mb-4">Total Net Pay</div>
-        <div class="font-bold text-2xl text-info" id="totalNetPay">₱{{ number_format($payrollPeriod->total_net_pay ?? 0, 2) }}</div>
+    <div class="bg-base-100 border border-base-300 rounded-xl p-5">
+        <div class="text-base-content/60 text-xs mb-1">Total Net Pay</div>
+        <div class="text-2xl font-bold text-info" id="totalNetPay">₱{{ number_format($payrollPeriod->total_net_pay ?? 0, 2) }}</div>
     </div>
-    <div class="bg-base-100 border border-base-300 rounded-lg p-4">
-        <div class="text-xs text-base-content/60 mb-4">Total Deductions</div>
-        <div class="font-bold text-2xl text-error" id="totalDeductions">₱{{ number_format($payrollPeriod->total_deductions ?? 0, 2) }}</div>
+    <div class="bg-base-100 border border-base-300 rounded-xl p-5">
+        <div class="text-base-content/60 text-xs mb-1">Total Deductions</div>
+        <div class="text-2xl font-bold text-error" id="totalDeductions">₱{{ number_format($payrollPeriod->total_deductions ?? 0, 2) }}</div>
     </div>
 </div>
 

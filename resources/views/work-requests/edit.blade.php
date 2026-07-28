@@ -51,7 +51,7 @@
 
         {{-- Work Date --}}
         <div class="mb-6">
-            <label class="label text-sm font-semibold text-base-content mb-2">
+            <label class="block text-sm font-semibold text-base-content mb-2">
                 Work Date <span class="text-error">*</span>
             </label>
             <input type="date" name="work_date" id="work_date" required min="{{ now()->toDateString() }}"

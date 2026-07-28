@@ -39,8 +39,8 @@
                 @if($isAdmin || $isHR)
                     <div class="join flex-none w-64 min-w-40">
                         <input type="text" name="search" value="{{ request('search') }}"
-                               class="input input-bordered input-sm join-item w-full border-gray-300">
-                        <button type="submit" class="btn btn-soft btn-sm join-item border-gray-300">
+                               class="input input-bordered input-sm join-item w-full border-base-300">
+                        <button type="submit" class="btn btn-outline btn-sm join-item border-base-300">
                             <i class="icon-[tabler--search]"></i>
                         </button>
                     </div>

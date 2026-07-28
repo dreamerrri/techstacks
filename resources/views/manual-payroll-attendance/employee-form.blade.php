@@ -61,10 +61,10 @@
                     <i class=" icon-[ph--calendar-fill]-check text-success"></i>
                     <span class="font-semibold text-success">Approved Work Requests ({{ $approvedRequests->count() }})</span>
                 </div>
-                <div class="text-xs text-success">
+                <div class="text-sm text-success-content">
                     @foreach($approvedRequests as $request)
-                    <div class="border-base-300 p-4">
-                        <span class="font-semibold">{{ ucfirst($request->request_type) }}</span>
+                    <div class="py-2 border-b border-success/20">
+                        <span style="font-weight:600;">{{ ucfirst($request->request_type) }}</span>
                         <span class="text-base-content/60">|</span>
                         <span>{{ $request->work_date->format('M d, Y') }}</span>
                         @if($request->request_type === 'overtime' && $request->calculated_overtime_hours)
@@ -77,7 +77,7 @@
                     </div>
                     @endforeach
                 </div>
-                <p class="text-xs text-success mb-4 mt-2">
+                <p class="text-xs text-success-content mt-2 mb-0">
                     These requests have been auto-populated to the payroll fields below.
                 </p>
             </div>
@@ -177,7 +177,7 @@
                                         <div class="font-semibold text-xs text-base-content">{{ $allowance->name }}</div>
                                         <div class="text-base-content/60">{{ $allowance->type }}</div>
                                     </div>
-                                    <div class="font-bold text-sm text-success">₱{{ number_format(round($allowance->amount / 2, 2), 2) }}</div>
+                                    <div class="font-bold text-success text-sm">₱{{ number_format(round($allowance->amount / 2, 2), 2) }}</div>
                                 </div>
                             @endforeach
                             @foreach($employee->activeBenefits as $benefit)
@@ -289,23 +289,23 @@ function handleSaveAttendance(event) {
         return;
     }
     
-    // Use stored values from global variables instead of reading from input elements
+    // Read values directly from input elements for reliability
     const formData = new FormData();
     formData.append('payroll_period_id', form.querySelector('[name="payroll_period_id"]').value);
     formData.append('employee_id', form.querySelector('[name="employee_id"]').value);
-    formData.append('daily_rate', window.dailyRateValue);
+    formData.append('daily_rate', form.querySelector('[name="daily_rate"]').value);
     formData.append('rate_type', form.querySelector('[name="rate_type"]').value);
-    formData.append('days_worked', window.daysWorkedValue);
-    formData.append('weekends_worked', window.weekendsWorkedValue);
-    formData.append('overtime_hours', window.overtimeHoursValue);
-    formData.append('late_hours', window.lateHoursValue);
-    formData.append('holiday_days', window.holidayDaysValue);
-    formData.append('night_differential_hours', window.nightDifferentialHoursValue);
-    formData.append('allowances', window.allowancesValue);
-    formData.append('deductions', window.deductionsValue);
-    formData.append('deductions_remarks', window.deductionsRemarksValue);
-    formData.append('reimbursements', window.reimbursementsValue);
-    formData.append('reimbursements_remarks', window.reimbursementsRemarksValue);
+    formData.append('days_worked', form.querySelector('[name="days_worked"]').value);
+    formData.append('weekends_worked', form.querySelector('[name="weekends_worked"]').value);
+    formData.append('overtime_hours', form.querySelector('[name="overtime_hours"]').value);
+    formData.append('late_hours', form.querySelector('[name="late_hours"]').value);
+    formData.append('holiday_days', form.querySelector('[name="holiday_days"]').value);
+    formData.append('night_differential_hours', form.querySelector('[name="night_differential_hours"]').value);
+    formData.append('allowances', form.querySelector('[name="allowances"]').value);
+    formData.append('deductions', form.querySelector('[name="deductions"]').value);
+    formData.append('deductions_remarks', form.querySelector('[name="deductions_remarks"]').value);
+    formData.append('reimbursements', form.querySelector('[name="reimbursements"]').value);
+    formData.append('reimbursements_remarks', form.querySelector('[name="reimbursements_remarks"]').value);
     formData.append('_token', '{{ csrf_token() }}');
     
     fetch('{{ route('manual-payroll-attendance.save') }}', {
@@ -331,6 +331,8 @@ function handleSaveAttendance(event) {
         window.notyf.error('Error saving attendance: ' + error.message);
     });
 }
+
+let previewTimeout = null;
 
 function previewPayroll() {
     const form = document.getElementById('attendanceForm');
@@ -499,6 +501,16 @@ function previewPayroll() {
     .catch(error => {
         window.notyf.error('Error previewing payroll: ' + error.message);
     });
+}
+
+// Auto-preview on input change with debounce
+function triggerAutoPreview() {
+    if (previewTimeout) {
+        clearTimeout(previewTimeout);
+    }
+    previewTimeout = setTimeout(() => {
+        previewPayroll();
+    }, 500);
 }
 </script>
 @endsection

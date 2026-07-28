@@ -42,11 +42,21 @@
         </div>
     </div>
 
-    {{-- Status Banner --}}
-    <div class="alert alert-soft alert-{{ $statusMeta['color'] }} mb-6">
-        <span class="icon-[{{ $statusMeta['icon'] }}] size-6"></span>
+{{-- Status Banner --}}
+<div class="p-4 rounded-lg mb-6 {{ $workRequest->status === 'pending' ? 'bg-warning/10 border border-warning' : ($workRequest->status === 'approved' ? 'bg-success/10 border border-success' : ($workRequest->status === 'rejected' ? 'bg-error/10 border border-error' : 'bg-base-200 border border-base-300')) }}">
+    <div style="display:flex; align-items:center; gap:12px;">
+        <i class="fas {{ $workRequest->status === 'pending' ? 'fa-clock' : 
+                          ($workRequest->status === 'approved' ? 'fa-check-circle' : 
+                          ($workRequest->status === 'rejected' ? 'fa-times-circle' : 'fa-ban')) }} text-2xl
+           {{ $workRequest->status === 'pending' ? 'text-warning' :
+              ($workRequest->status === 'approved' ? 'text-success' :
+              ($workRequest->status === 'rejected' ? 'text-error' : 'text-base-content')) }}"></i>
         <div>
-            <div class="text-base font-bold">{{ ucfirst($workRequest->status) }}</div>
+            <div class="text-base font-bold {{ $workRequest->status === 'pending' ? 'text-warning' :
+                   ($workRequest->status === 'approved' ? 'text-success' :
+                   ($workRequest->status === 'rejected' ? 'text-error' : 'text-base-content')) }}">
+                {{ ucfirst($workRequest->status) }}
+            </div>
             @if($workRequest->status === 'approved' && $workRequest->approved_at)
                 <div class="text-xs text-base-content/80">
                     Approved on {{ $workRequest->approved_at->format('M d, Y \a\t g:i A') }}
@@ -56,7 +66,9 @@
                 </div>
             @endif
             @if($workRequest->status === 'rejected' && $workRequest->rejection_reason)
-                <div class="text-xs mt-2">Reason: {{ $workRequest->rejection_reason }}</div>
+                <div class="text-xs text-error mt-1">
+                    Reason: {{ $workRequest->rejection_reason }}
+                </div>
             @endif
         </div>
     </div>
@@ -72,10 +84,15 @@
             </span>
             @endif
 
-            <span class="badge badge-soft badge-{{ $typeColor }} gap-1.5">
-                <span class="icon-[tabler--tag] size-4"></span>
-                {{ ucfirst($workRequest->request_type) }} Work
-            </span>
+    {{-- Request Type --}}
+    <div class="card p-6">
+        <h3 class="m-0 mb-4 flex items-center gap-2">
+            <i class="icon-[ph--tag-fill] text-base-content/60"></i> Request Type
+        </h3>
+        <span class="px-3 py-1.5 rounded-full text-sm font-semibold inline-block {{ $workRequest->request_type === 'weekend' ? 'bg-info/10 text-info' : ($workRequest->request_type === 'holiday' ? 'bg-warning/10 text-warning' : 'bg-secondary/10 text-secondary') }}">
+            {{ ucfirst($workRequest->request_type) }} Work
+        </span>
+    </div>
 
             <span class="badge badge-soft badge-neutral gap-1.5">
                 <span class="icon-[tabler--calendar] size-4"></span>
@@ -114,29 +131,35 @@
     </div>
     @endif
 
-    {{-- Actions --}}
-    @if($workRequest->canBeCancelled() || $canApprove)
-    <div class="card shadow-sm p-4">
-        <h3 class="text-base-content mb-3">Actions</h3>
-        <div class="flex flex-wrap gap-3">
-            @if(!$isAdmin && !$isHR && $workRequest->canBeCancelled())
-                <a href="{{ route('work-requests.edit', $workRequest) }}" class="btn btn-soft btn-primary">
-                    <span class="icon-[tabler--pencil] size-4"></span> Edit Request
-                </a>
-                <button type="button" onclick="cancelRequest({{ $workRequest->id }})" class="btn btn-soft btn-error">
-                    <span class="icon-[tabler--x] size-4"></span> Cancel Request
-                </button>
-            @endif
-
-            @if($canApprove && $workRequest->status === 'pending')
-                <button type="button" onclick="approveRequest({{ $workRequest->id }})" class="btn btn-soft btn-success">
-                    <span class="icon-[tabler--check] size-4"></span> Approve
-                </button>
-                <button type="button" onclick="showRejectModal({{ $workRequest->id }})" class="btn btn-soft btn-error">
-                    <span class="icon-[tabler--x] size-4"></span> Reject
-                </button>
-            @endif
-        </div>
+{{-- Actions --}}
+@if($workRequest->canBeCancelled() || ($isAdmin || $isHR && $workRequest->canBeApproved()))
+<div class="card p-6">
+    <h3 class="m-0 mb-4">Actions</h3>
+    <div class="flex gap-3 flex-wrap">
+        {{-- Employee actions: edit and cancel own pending requests --}}
+        @if(!$isAdmin && !$isHR && $workRequest->canBeCancelled())
+            <a href="{{ route('work-requests.edit', $workRequest) }}"
+               class="px-6 py-3 bg-warning text-white border-none rounded-field cursor-pointer text-sm font-semibold no-underline inline-flex items-center gap-2">
+                <i class="icon-[ph--pencil-fill]"></i> Edit Request
+            </a>
+            <button onclick="cancelRequest({{ $workRequest->id }})"
+                    class="px-6 py-3 bg-error text-white border-none rounded-field cursor-pointer text-sm font-semibold inline-flex items-center gap-2">
+                <i class="icon-[ph--x]"></i> Cancel Request
+            </button>
+        @endif
+        {{-- HR/Admin actions: approve/reject pending requests --}}
+        @if($isAdmin || $isHR && $workRequest->canBeApproved())
+        @if($workRequest->status === 'pending')
+    <button onclick="approveRequest({{ $workRequest->id }})"
+                    class="px-6 py-3 bg-success text-white border-none rounded-field cursor-pointer text-sm font-semibold inline-flex items-center gap-2">
+                <i class="icon-[tabler--check]"></i> Approve
+            </button>
+            <button onclick="showRejectModal({{ $workRequest->id }})"
+                    class="px-6 py-3 bg-error text-white border-none rounded-field cursor-pointer text-sm font-semibold inline-flex items-center gap-2">
+                <i class="icon-[ph--x]"></i> Reject
+            </button>
+@endif
+        @endif
     </div>
     @endif
 </div>

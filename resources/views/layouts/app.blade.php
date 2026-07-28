@@ -178,6 +178,12 @@
                             <span>Attendance</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('work-requests.index') }}" class="{{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
+                            <span class="icon-[tabler--notes] size-5"></span>
+                            <span class="overlay-minified:hidden">Work Requests</span>
+                        </a>
+                    </li>
                 @endif
             </ul>
         </nav>
@@ -433,7 +439,7 @@
                             </span>
                         @endif
                     </button>
-                    <div class="dropdown-menu dropdown-open:opacity-100 hidden min-w-72" role="menu" aria-labelledby="notif-dropdown">
+                    <div class="dropdown-menu dropdown-open:opacity-100 hidden min-w-72 z-50" role="menu" aria-labelledby="notif-dropdown">
                         @include('partials.notifications-list')
                     </div>
                 </div>

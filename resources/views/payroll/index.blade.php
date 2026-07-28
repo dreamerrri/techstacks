@@ -10,9 +10,9 @@
     $isAdmin = $user->isAdmin();
     $isHR    = $user->isHR();
 
-    $avatarClass = $isAdmin ? 'from-red-600 to-red-800'
-                 : ($isHR   ? 'from-blue-600 to-blue-800'
-                            : 'from-violet-500 to-violet-700');
+    $avatarClass = $isAdmin ? 'from-error to-error/80'
+                 : ($isHR   ? 'from-info to-info/80'
+                            : 'from-secondary to-secondary/80');
 
     $deptBreakdownData = [];
     foreach ($employees as $emp) {
@@ -148,7 +148,7 @@
         @endif
 
         @if($selectedPeriod ?? null)
-            <div class="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-blue-700">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-info">
                 <div class="flex items-center gap-2 flex-wrap">
                     <i class="icon-[tabler--calendar]"></i>
 
@@ -166,7 +166,7 @@
                 {{-- Hide separator on mobile --}}
                 <span class="hidden sm:inline text-base-content">|</span>
 
-                <span class="text-red-400">
+                <span class="text-error/80">
                     <strong>Payroll date: {{ $selectedPeriod->payroll_date->format('M d, Y') }}</strong>
                 </span>
             </div>
@@ -226,7 +226,7 @@
                         </div>
                         <div class="min-w-0">
                             <a href="{{ route('employees.show', $employee) }}"
-                               class="font-semibold text-base-content no-underline hover:text-emerald-600 truncate block">
+                               class="font-semibold text-base-content no-underline hover:text-success truncate block">
                                 {{ $employee->full_name }}
                             </a>
                             <div class="text-xs text-base-content font-mono">{{ $employee->employee_id }}</div>
@@ -236,10 +236,10 @@
                 <td class="text-base-content truncate">{{ $employee->department }}</td>
                 <td class="text-right font-semibold text-base-content">₱{{ number_format($payroll['base_pay'] ?? 0, 2) }}</td>
                 <td class="text-center font-semibold text-base-content">{{ $payroll['attendance_data']['days_worked'] ?? 0 }}</td>
-                <td class="text-center font-semibold text-amber-500">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</td>
-                <td class="text-center font-semibold text-violet-500">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</td>
-                <td class="text-right font-semibold text-red-600">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
-                <td class="text-right font-semibold text-emerald-600">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
+                <td class="text-center font-semibold text-warning">{{ $payroll['attendance_data']['overtime_hours'] ?? 0 }}</td>
+                <td class="text-center font-semibold text-secondary">{{ $payroll['attendance_data']['holiday_days'] ?? 0 }}</td>
+                <td class="text-right font-semibold text-error">-₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}</td>
+                <td class="text-right font-semibold text-success">₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</td>
                 <td class="text-center">
                     <div class="flex gap-2 justify-center">
                         @if(($payroll['gross_pay'] ?? 0) == 0 && empty($payroll['attendance_data']['days_worked']))
@@ -283,7 +283,7 @@
                         </div>
                         <div>
                             <a href="{{ route('employees.show', $employee) }}"
-                               class="font-semibold text-base-content no-underline text-sm hover:text-emerald-600">
+                               class="font-semibold text-base-content no-underline text-sm hover:text-success">
                                 {{ $employee->full_name }}
                             </a>
                             <div class="text-xs text-base-content font-mono">{{ $employee->employee_id }}</div>
@@ -308,23 +308,23 @@
                     <div class="pb-1 flex flex-col gap-2 text-xs">
                         @foreach([
                             ['Days Worked',          $payroll['attendance_data']['days_worked'] ?? 0,               'text-base-content font-semibold'],
-                            ['Overtime Hours',        $payroll['attendance_data']['overtime_hours'] ?? 0,            'text-amber-500'],
-                            ['Holiday Days',          $payroll['attendance_data']['holiday_days'] ?? 0,              'text-violet-500'],
+                            ['Overtime Hours',        $payroll['attendance_data']['overtime_hours'] ?? 0,            'text-warning'],
+                            ['Holiday Days',          $payroll['attendance_data']['holiday_days'] ?? 0,              'text-secondary'],
                             ['Basic Pay',             '₱'.number_format($payroll['base_pay'] ?? 0, 2),              'text-base-content font-semibold'],
                             ['Gross Pay',             '₱'.number_format($payroll['gross_pay'] ?? 0, 2),             'text-base-content font-semibold'],
-                            ['Allowance & Benefits',  '+₱'.number_format($payroll['allowance_benefits'] ?? 0, 2),   'text-emerald-600'],
-                            ['SSS',                   '-₱'.number_format($payroll['sss_contribution'] ?? 0, 2),     'text-red-600'],
-                            ['PhilHealth',            '-₱'.number_format($payroll['philhealth_contribution'] ?? 0, 2), 'text-red-600'],
-                            ['Pag-IBIG',              '-₱'.number_format($payroll['pagibig_contribution'] ?? 0, 2), 'text-red-600'],
-                            ['Tax',                   '-₱'.number_format($payroll['withholding_tax'] ?? 0, 2),      'text-red-600'],
-                            ['Total Deductions',      '-₱'.number_format($payroll['total_deductions'] ?? 0, 2),     'text-red-600 font-semibold'],
+                            ['Allowance & Benefits',  '+₱'.number_format($payroll['allowance_benefits'] ?? 0, 2),   'text-success'],
+                            ['SSS',                   '-₱'.number_format($payroll['sss_contribution'] ?? 0, 2),     'text-error'],
+                            ['PhilHealth',            '-₱'.number_format($payroll['philhealth_contribution'] ?? 0, 2), 'text-error'],
+                            ['Pag-IBIG',              '-₱'.number_format($payroll['pagibig_contribution'] ?? 0, 2), 'text-error'],
+                            ['Tax',                   '-₱'.number_format($payroll['withholding_tax'] ?? 0, 2),      'text-error'],
+                            ['Total Deductions',      '-₱'.number_format($payroll['total_deductions'] ?? 0, 2),     'text-error font-semibold'],
                         ] as [$label, $val, $cls])
                             <div class="flex justify-between items-center">
                                 <span class="text-base-content">{{ $label }}:</span>
                                 <span class="{{ $cls }}">{{ $val }}</span>
                             </div>
                         @endforeach
-                        <div class="flex justify-between items-center text-sm font-bold text-emerald-600 pt-1 border-t border-base-300">
+                        <div class="flex justify-between items-center text-sm font-bold text-success pt-1 border-t border-base-300">
                             <span>Net Pay:</span>
                             <span>₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}</span>
                         </div>
@@ -418,12 +418,12 @@ function openDeptModal() {
                 <td class="text-right text-base-content">${fmt(emp.allowance_benefits)}</td>
                 <td class="text-right text-base-content">${fmt(emp.overtime_pay)}</td>
                 <td class="text-right font-semibold text-base-content">${fmt(emp.gross_pay)}</td>
-                <td class="text-right text-red-600">${fmt(emp.sss_contribution)}</td>
-                <td class="text-right text-red-600">${fmt(emp.philhealth_contribution)}</td>
-                <td class="text-right text-red-600">${fmt(emp.pagibig_contribution)}</td>
-                <td class="text-right text-red-600">${fmt(emp.withholding_tax)}</td>
-                <td class="text-right font-semibold text-red-600">${fmt(emp.total_deductions)}</td>
-                <td class="text-right font-bold text-emerald-700 text-sm">${fmt(emp.net_pay)}</td>
+                <td class="text-right text-error">${fmt(emp.sss_contribution)}</td>
+                <td class="text-right text-error">${fmt(emp.philhealth_contribution)}</td>
+                <td class="text-right text-error">${fmt(emp.pagibig_contribution)}</td>
+                <td class="text-right text-error">${fmt(emp.withholding_tax)}</td>
+                <td class="text-right font-semibold text-error">${fmt(emp.total_deductions)}</td>
+                <td class="text-right font-bold text-success text-sm">${fmt(emp.net_pay)}</td>
             </tr>`;
     }).join('');
 

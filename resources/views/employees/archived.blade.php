@@ -5,7 +5,7 @@
 
 @section('content')
 
- <a href="{{ route('employees.index') }}" class="back-link text-base-content no-underline text-sm hover:text-primary">
+ <a href="{{ route('employees.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-success">
                 <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee page
             </a>
 <x-table-card>
@@ -68,10 +68,10 @@
         {{-- Mobile Cards --}}
         <div class="md:hidden p-4 flex flex-col gap-3">
             @forelse($employees as $employee)
-                <div class="card bg-base-100 border border-gray-200 p-4">
+                <div class="card bg-base-100 border border-base-300 p-4">
                     <div class="flex justify-between items-start mb-2">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-500 to-gray-700 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-neutral to-neutral/80 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                                 {{ strtoupper(substr($employee->full_name, 0, 1)) }}
                             </div>
                             <div>
@@ -87,7 +87,7 @@
                         <span><i class="icon-[ph--briefcase-fill] w-3.5"></i> {{ $employee->position }}</span>
                     </div>
 
-                    <div class="mt-3 pt-3 border-t border-gray-100">
+                    <div class="mt-3 pt-3 border-t border-base-200">
                         <form method="POST" action="{{ route('employees.restore', $employee) }}"
                               data-confirm="This employee will be restored to the active list."
                               data-confirm-title="Restore Employee?"

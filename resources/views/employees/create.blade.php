@@ -13,7 +13,7 @@
 
     <div class="card bg-base-100 shadow-sm p-6">
         <h2 class="text-base font-bold text-base-content mb-6 flex items-center gap-2">
-            <i class="icon-[tabler--user]-plus text-red-600"></i> Add New Employee
+            <i class="icon-[tabler--user]-plus text-error"></i> Add New Employee
         </h2>
 
         <form method="POST" action="{{ route('employees.store') }}">
