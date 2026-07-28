@@ -17,11 +17,6 @@
 
 
 
-/* ── Layout: app shell, topbar, sidebar, navigation ── */
-@import './layout/shell.css';
-@import './layout/topbar.css';
-@import './layout/sidebar.css';
-@import './layout/navigation.css';
 
 /* ── Components ── */
 @import './components/notifications.css';

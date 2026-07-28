@@ -4,7 +4,10 @@ import { initBurger } from './burger.js';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 import 'flyonui/flyonui';
+import Alpine from 'alpinejs';
 
+window.Alpine = Alpine;
+Alpine.start();
 
 // ── Global Notyf instance ─────────────────────────────────────
 window.notyf = new Notyf({
