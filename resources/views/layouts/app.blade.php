@@ -63,7 +63,7 @@
         @php
             // Route-group "open" flags, shared by both nav builds below.
             $userMgmtOpen    = request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('permissions.*');
-            $empMgmtOpen     = request()->routeIs('employees.*') || $attendanceActive || request()->routeIs('work-requests.*');
+            $empMgmtOpen     = request()->routeIs('employees.*') || $attendanceActive || request()->routeIs('work-requests.*') || request()->routeIs('financial-requests.*');
             $payrollMgmtOpen = request()->routeIs('payroll.*') || request()->routeIs('government-contributions.*');
             $monitoringOpen  = request()->routeIs('audit-logs.*') || request()->routeIs('reports.*');
         @endphp
@@ -106,6 +106,7 @@
                             <li><a href="{{ route('employees.index') }}" class="{{ request()->routeIs('employees.*') ? 'active' : '' }}"><span class="icon-[tabler--id] size-5"></span>Employees</a></li>
                             <li><a href="{{ route('manual-payroll-attendance.index') }}" class="{{ $attendanceActive ? 'active' : '' }}"><span class="icon-[tabler--calendar-check] size-5"></span>Attendance</a></li>
                             <li><a href="{{ route('work-requests.index') }}" class="{{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><span class="icon-[tabler--notes] size-5"></span><span class="">Work Requests</span></a></li>
+                            <li><a href="{{ route('financial-requests.index') }}" class="{{ request()->routeIs('financial-requests.*') ? 'active' : '' }}"><span class="icon-[tabler--cash] size-5"></span><span class="">Financial Requests</span></a></li>
                         </ul>
                     </li>
 
@@ -144,6 +145,7 @@
                             <li><a href="{{ route('employees.index') }}" class="{{ request()->routeIs('employees.*') ? 'active' : '' }}"><span class="icon-[tabler--id] size-5"></span>Employees</a></li>
                             <li><a href="{{ route('manual-payroll-attendance.index') }}" class="{{ $attendanceActive ? 'active' : '' }}"><span class="icon-[tabler--calendar-check] size-5"></span>Attendance</a></li>
                             <li><a href="{{ route('work-requests.index') }}" class="{{ request()->routeIs('work-requests.*') ? 'active' : '' }}"><span class="icon-[tabler--notes] size-5"></span><span class="">Work Requests</span></a></li>
+                            <li><a href="{{ route('financial-requests.index') }}" class="{{ request()->routeIs('financial-requests.*') ? 'active' : '' }}"><span class="icon-[tabler--cash] size-5"></span><span class="">Financial Requests</span></a></li>
                         </ul>
                     </li>
 
@@ -182,6 +184,12 @@
                         <a href="{{ route('work-requests.index') }}" class="{{ request()->routeIs('work-requests.*') ? 'active' : '' }}">
                             <span class="icon-[tabler--notes] size-5"></span>
                             <span class="overlay-minified:hidden">Work Requests</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('financial-requests.index') }}" class="{{ request()->routeIs('financial-requests.*') ? 'active' : '' }}">
+                            <span class="icon-[tabler--cash] size-5"></span>
+                            <span class="overlay-minified:hidden">Financial Requests</span>
                         </a>
                     </li>
                 @endif
@@ -256,6 +264,14 @@
                         </span>
                     </li>
                     <li class="tooltip [--placement:right]">
+                        <a href="{{ route('financial-requests.index') }}" class="tooltip-toggle {{ request()->routeIs('financial-requests.*') ? 'active' : '' }}" aria-label="Financial Requests">
+                            <span class="icon-[tabler--cash] size-5"></span>
+                        </a>
+                        <span class="tooltip-content tooltip-shown:opacity-100 z-999  tooltip-shown:visible" role="tooltip">
+                            <span class="tooltip-body">Financial Requests</span>
+                        </span>
+                    </li>
+                    <li class="tooltip [--placement:right]">
                         <a href="{{ route('payroll.index') }}" class="tooltip-toggle {{ request()->routeIs('payroll.*') ? 'active' : '' }}" aria-label="Payroll">
                             <span class="icon-[tabler--cash] size-5"></span>
                         </a>
@@ -314,6 +330,14 @@
                         </span>
                     </li>
                     <li class="tooltip [--placement:right]">
+                        <a href="{{ route('financial-requests.index') }}" class="tooltip-toggle {{ request()->routeIs('financial-requests.*') ? 'active' : '' }}" aria-label="Financial Requests">
+                            <span class="icon-[tabler--cash] size-5"></span>
+                        </a>
+                        <span class="tooltip-content tooltip-shown:opacity-100 z-999  tooltip-shown:visible" role="tooltip">
+                            <span class="tooltip-body">Financial Requests</span>
+                        </span>
+                    </li>
+                    <li class="tooltip [--placement:right]">
                         <a href="{{ route('payroll.index') }}" class="tooltip-toggle {{ request()->routeIs('payroll.*') ? 'active' : '' }}" aria-label="Payroll">
                             <span class="icon-[tabler--cash] size-5"></span>
                         </a>
@@ -327,6 +351,14 @@
                         </a>
                         <span class="tooltip-content tooltip-shown:opacity-100 z-999 tooltip-shown:visible" role="tooltip">
                             <span class="tooltip-body">Gov. Contributions</span>
+                        </span>
+                    </li>
+                    <li class="tooltip [--placement:right]">
+                        <a href="{{ route('financial-requests.index') }}" class="tooltip-toggle {{ request()->routeIs('financial-requests.*') ? 'active' : '' }}" aria-label="Financial Requests">
+                            <span class="icon-[tabler--cash] size-5"></span>
+                        </a>
+                        <span class="tooltip-content tooltip-shown:opacity-100 z-999 tooltip-shown:visible" role="tooltip">
+                            <span class="tooltip-body">Financial Requests</span>
                         </span>
                     </li>
 

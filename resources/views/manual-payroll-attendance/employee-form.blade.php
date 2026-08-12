@@ -58,7 +58,7 @@
             @if($approvedRequests->count() > 0)
             <div class="bg-success/10 border border-base-300 rounded-lg p-4 mb-4">
                 <div class="flex items-center mb-4 gap-3">
-                    <i class=" icon-[ph--calendar-fill]-check text-success"></i>
+                    <i class="icon-[ph--calendar-check] text-success"></i>
                     <span class="font-semibold text-success">Approved Work Requests ({{ $approvedRequests->count() }})</span>
                 </div>
                 <div class="text-sm text-success-content">
@@ -80,6 +80,92 @@
                 <p class="text-xs text-success-content mt-2 mb-0">
                     These requests have been auto-populated to the payroll fields below.
                 </p>
+            </div>
+            @endif
+
+            {{-- Cash Advance Information --}}
+            @php
+                $allCashAdvances = \App\Models\FinancialRequest::where('employee_id', $employee->id)
+                    ->where('request_type', 'cash_advance')
+                    ->where('status', 'approved')
+                    ->get();
+                $outstandingCashAdvances = $allCashAdvances->filter(function($request) {
+                    return $request->amount_paid < $request->amount;
+                });
+                $fullyPaidCashAdvances = $allCashAdvances->filter(function($request) {
+                    return $request->amount_paid >= $request->amount;
+                });
+                $totalOutstandingBalance = $outstandingCashAdvances->sum(function($request) {
+                    return $request->amount - $request->amount_paid;
+                });
+                
+                // Check if payments already made for this period
+                $existingPeriodPayments = \App\Models\CashAdvancePayment::where('payroll_period_id', $payrollPeriod->id)
+                    ->whereHas('financialRequest', function($query) use ($employee) {
+                        $query->where('employee_id', $employee->id);
+                    })
+                    ->exists();
+            @endphp
+            @if($fullyPaidCashAdvances->count() > 0)
+            <div class="bg-success/10 border border-success rounded-lg p-4 mb-4">
+                <div class="flex items-center mb-4 gap-3">
+                    <i class="icon-[ph--check-circle-fill] text-success"></i>
+                    <span class="font-semibold text-success">Fully Paid Cash Advances ({{ $fullyPaidCashAdvances->count() }})</span>
+                </div>
+                <div class="text-sm text-success-content">
+                    @foreach($fullyPaidCashAdvances as $cashAdvance)
+                    <div class="py-2 border-b border-success/20">
+                        <span class="font-semibold">₱{{ number_format($cashAdvance->amount, 2) }}</span>
+                        <span class="text-base-content/60">|</span>
+                        <span>{{ $cashAdvance->request_date->format('M d, Y') }}</span>
+                        <span class="text-base-content/60">|</span>
+                        <span class="font-semibold text-success">Fully Paid: ₱{{ number_format($cashAdvance->amount_paid, 2) }}</span>
+                    </div>
+                    @endforeach
+                </div>
+                <p class="text-xs text-success-content mt-2 mb-0">
+                    These cash advances have been fully repaid and no further deductions will be made.
+                </p>
+            </div>
+            @endif
+            @if($outstandingCashAdvances->count() > 0)
+            <div class="bg-warning/10 border border-warning rounded-lg p-4 mb-4">
+                <div class="flex items-center mb-4 gap-3">
+                    <i class="icon-[ph--money-fill] text-warning"></i>
+                    <span class="font-semibold text-warning">Outstanding Cash Advances ({{ $outstandingCashAdvances->count() }})</span>
+                </div>
+                <div class="text-sm text-warning-content">
+                    @foreach($outstandingCashAdvances as $cashAdvance)
+                    <div class="py-2 border-b border-warning/20">
+                        <span class="font-semibold">₱{{ number_format($cashAdvance->amount, 2) }}</span>
+                        <span class="text-base-content/60">|</span>
+                        <span>{{ $cashAdvance->request_date->format('M d, Y') }}</span>
+                        <span class="text-base-content/60">|</span>
+                        <span>Paid: ₱{{ number_format($cashAdvance->amount_paid, 2) }}</span>
+                        <span class="text-base-content/60">|</span>
+                        <span class="font-semibold text-warning">Balance: ₱{{ number_format($cashAdvance->amount - $cashAdvance->amount_paid, 2) }}</span>
+                    </div>
+                    @endforeach
+                </div>
+                <div class="flex items-center justify-between mt-3 pt-3 border-t border-warning/30">
+                    <span class="text-xs text-warning-content font-semibold">Total Outstanding Balance:</span>
+                    <span class="text-sm font-bold text-warning">₱{{ number_format($totalOutstandingBalance, 2) }}</span>
+                </div>
+                @if($existingPeriodPayments)
+                <div class="mt-3 pt-3 border-t border-warning/30">
+                    <div class="flex items-center gap-2 text-xs text-success">
+                        <i class="icon-[ph--check-circle-fill]"></i>
+                        <span class="font-semibold">Payment already processed for this cutoff</span>
+                    </div>
+                    <p class="text-xs text-warning-content mt-1 mb-0">
+                        Cash advance payment has already been deducted for this payroll period.
+                    </p>
+                </div>
+                @else
+                <p class="text-xs text-warning-content mt-2 mb-0">
+                    50% of net pay will be automatically deducted for cash advance repayment.
+                </p>
+                @endif
             </div>
             @endif
 
@@ -455,10 +541,27 @@ function previewPayroll() {
                                 <span class="text-error">-₱${previewData.manual_deductions ? parseFloat(previewData.manual_deductions).toFixed(2) : '0.00'}</span>
                             </div>
                             @endif
+                            ${previewData.cash_advance_deduction && previewData.cash_advance_deduction > 0 ? `
+                            <div class="flex justify-between text-xs mb-4">
+                                <span class="text-base-content/60">Cash Advance Deduction:</span>
+                                <span class="text-error">-₱${parseFloat(previewData.cash_advance_deduction).toFixed(2)}</span>
+                            </div>
+                            ` : ''}
                             <div class="flex justify-between font-semibold text-xs text-base-content border-base-300 mb-4">
                                 <span>Total Deductions:</span>
                                 <span class="text-error">-₱${previewData.deductions ? parseFloat(previewData.deductions).toFixed(2) : '0.00'}</span>
                             </div>
+                            ${previewData.cash_advance_deduction && previewData.cash_advance_deduction > 0 ? `
+                            <div class="bg-warning/10 border border-warning rounded-lg p-4 mb-4">
+                                <div class="flex items-center gap-2 text-xs text-warning mb-2">
+                                    <i class="icon-[ph--warning-circle-fill]"></i>
+                                    <span class="font-semibold">Cash Advance Payment</span>
+                                </div>
+                                <div class="text-xs text-warning-content">
+                                    ₱${parseFloat(previewData.cash_advance_deduction).toFixed(2)} deducted from this payroll (50% of net pay)
+                                </div>
+                            </div>
+                            ` : ''}
                         </div>
                         <div class="mb-4">
                             <div class="flex justify-between text-xs mb-4">

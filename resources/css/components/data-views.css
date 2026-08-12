@@ -158,32 +158,42 @@
 }
 
 /* ── Payroll form grid ── */
+.payroll-form-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .payroll-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (min-width: 769px) {
     .payroll-form-grid {
-        grid-template-columns: 1fr 350px !important;
-        display: grid !important;
-        width: 100% !important;
-        gap: 24px !important;
+        grid-template-columns: 1fr 350px;
     }
-    .payroll-form-grid > div:nth-child(2) {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        width: 350px !important;
-        min-width: 350px !important;
-        height: auto !important;
-    }
-    #previewPanel {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        min-height: 100px !important;
-        height: auto !important;
-        overflow: visible !important;
-    }
-    #previewPanel > * {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
+}
+
+/* Payroll form specific styles */
+.payroll-form-grid label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.payroll-form-grid input[type="number"],
+.payroll-form-grid input[type="text"],
+.payroll-form-grid select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.payroll-form-grid input:focus,
+.payroll-form-grid select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }

@@ -155,6 +155,12 @@ protected static function boot()
         return $this->hasMany(\App\Models\WorkRequest::class);
     }
 
+    // Relationship: financial requests (cash advances and reimbursements)
+    public function financialRequests()
+    {
+        return $this->hasMany(\App\Models\FinancialRequest::class);
+    }
+
     // Get attendance for a specific period
     public function attendancesForPeriod($startDate, $endDate)
     {

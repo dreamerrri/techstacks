@@ -208,4 +208,51 @@ class NotificationService
             'data' => ['work_request_id' => $workRequest->id],
         ]);
     }
+
+    public static function notifyFinancialRequestSubmitted($employee, $financialRequest): void
+    {
+        // Notify HR/Admin
+        Notification::createForHrAdmin([
+            'title' => 'New Financial Request Submitted',
+            'message' => "{$employee->full_name} submitted a {$financialRequest->request_type} request for ₱" . number_format($financialRequest->amount, 2),
+            'type' => 'info',
+            'link' => route('financial-requests.index', [], false),
+            'data' => ['financial_request_id' => $financialRequest->id, 'employee_id' => $employee->id],
+        ]);
+
+        // Notify employee (confirmation)
+        Notification::createForEmployee([
+            'title' => 'Financial Request Submitted',
+            'message' => "Your {$financialRequest->request_type} request for ₱" . number_format($financialRequest->amount, 2) . " has been submitted and is pending approval",
+            'type' => 'success',
+            'link' => route('financial-requests.index', [], false),
+            'user_id' => $employee->user_id,
+            'data' => ['financial_request_id' => $financialRequest->id],
+        ]);
+    }
+
+    public static function notifyFinancialRequestApproved($employee, $financialRequest): void
+    {
+        Notification::createForEmployee([
+            'title' => 'Financial Request Approved',
+            'message' => "Your {$financialRequest->request_type} request for ₱" . number_format($financialRequest->amount, 2) . " has been approved",
+            'type' => 'success',
+            'link' => route('financial-requests.index', [], false),
+            'user_id' => $employee->user_id,
+            'data' => ['financial_request_id' => $financialRequest->id],
+        ]);
+    }
+
+    public static function notifyFinancialRequestRejected($employee, $financialRequest): void
+    {
+        $reason = $financialRequest->rejection_reason ?? 'No reason provided';
+        Notification::createForEmployee([
+            'title' => 'Financial Request Rejected',
+            'message' => "Your {$financialRequest->request_type} request for ₱" . number_format($financialRequest->amount, 2) . " was rejected: {$reason}",
+            'type' => 'error',
+            'link' => route('financial-requests.index', [], false),
+            'user_id' => $employee->user_id,
+            'data' => ['financial_request_id' => $financialRequest->id, 'rejection_reason' => $reason],
+        ]);
+    }
 }

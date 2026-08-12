@@ -19,6 +19,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\WorkRequestController;
+use App\Http\Controllers\FinancialRequestController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SearchController;
 
@@ -237,6 +238,24 @@ Route::middleware('permission:manage.payroll.periods')->prefix('payroll-periods'
         Route::get('/{workRequest}/edit', [WorkRequestController::class, 'edit'])->name('edit');
         Route::put('/{workRequest}', [WorkRequestController::class, 'update'])->name('update');
         Route::delete('/{workRequest}', [WorkRequestController::class, 'destroy'])->name('destroy');
+    });
+
+    // Financial Request Routes (Cash Advances and Reimbursements)
+    Route::prefix('financial-requests')->name('financial-requests.')->group(function () {
+        Route::get('/', [FinancialRequestController::class, 'index'])->name('index');
+        Route::get('/create', [FinancialRequestController::class, 'create'])->name('create');
+        Route::post('/', [FinancialRequestController::class, 'store'])->name('store');
+        
+        // HR/Admin only routes - must come before parameterized routes
+        Route::middleware('permission:view.employees')->group(function () {
+            Route::post('/{financialRequest}/approve', [FinancialRequestController::class, 'approve'])->name('approve');
+            Route::post('/{financialRequest}/reject', [FinancialRequestController::class, 'reject'])->name('reject');
+        });
+        
+        Route::get('/{financialRequest}', [FinancialRequestController::class, 'show'])->name('show');
+        Route::get('/{financialRequest}/edit', [FinancialRequestController::class, 'edit'])->name('edit');
+        Route::put('/{financialRequest}', [FinancialRequestController::class, 'update'])->name('update');
+        Route::delete('/{financialRequest}', [FinancialRequestController::class, 'destroy'])->name('destroy');
     });
 });
 

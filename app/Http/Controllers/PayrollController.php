@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PayrollInput;
 use App\Models\Employee;
 use App\Models\PayrollPeriod;
+use App\Models\CashAdvancePayment;
 use App\Services\Payroll\PayrollComputationEngine;
 use App\Services\SssContributionService;
 use App\Services\PhilHealthContributionService;
@@ -329,8 +330,55 @@ class PayrollController extends Controller
         $manualDeductions = $payrollInput ? ($payrollInput->deductions ?? 0) : 0;
         $reimbursements = $payrollInput ? ($payrollInput->reimbursements ?? 0) : 0;
 
+        // Cash advance payment deduction (50% of net pay per cutoff)
+        $cashAdvancePayment = 0;
+        $approvedCashAdvances = $employee->financialRequests()
+            ->where('request_type', 'cash_advance')
+            ->where('status', 'approved')
+            ->where('amount_paid', '<', \DB::raw('amount'))
+            ->get();
+
+        if ($approvedCashAdvances->isNotEmpty()) {
+            // Calculate total outstanding balance
+            $totalOutstanding = $approvedCashAdvances->sum(function($request) {
+                return $request->amount - $request->amount_paid;
+            });
+
+            // Second pass: compute net pay with all deductions (except cash advance)
+            $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax, $manualDeductions];
+            $result     = $engine->compute($employeeData, $attendanceData, $deductions, $benefits, $allowances, [], false, $cutoffStart, $cutoffEnd);
+            $netPayBeforeCashAdvance = $result['net_pay'] + $reimbursements;
+
+            // Calculate payment as 50% of net pay (or remaining balance, whichever is lower)
+            $cashAdvancePayment = min($netPayBeforeCashAdvance * 0.5, $totalOutstanding);
+            $cashAdvancePayment = round($cashAdvancePayment, 2);
+
+            // Update cash advance payment records
+            if ($cashAdvancePayment > 0) {
+                $remainingPayment = $cashAdvancePayment;
+                foreach ($approvedCashAdvances as $cashAdvance) {
+                    if ($remainingPayment <= 0) break;
+                    
+                    $balance = $cashAdvance->amount - $cashAdvance->amount_paid;
+                    $payment = min($remainingPayment, $balance);
+                    
+                    $cashAdvance->increment('amount_paid', $payment);
+                    
+                    // Record payment history
+                    CashAdvancePayment::create([
+                        'financial_request_id' => $cashAdvance->id,
+                        'payroll_period_id' => $period ? $period->id : null,
+                        'amount' => $payment,
+                        'description' => 'Automatic payment deduction (50% of net pay)',
+                    ]);
+                    
+                    $remainingPayment -= $payment;
+                }
+            }
+        }
+
         // Second pass: compute net pay with all deductions
-        $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax, $manualDeductions];
+        $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax, $manualDeductions, $cashAdvancePayment];
         $result     = $engine->compute($employeeData, $attendanceData, $deductions, $benefits, $allowances, [], false, $cutoffStart, $cutoffEnd);
 
         $currentCutoffNetPay = $result['net_pay'] + $reimbursements;

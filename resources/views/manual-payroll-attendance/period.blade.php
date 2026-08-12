@@ -191,14 +191,14 @@
     </div>
 
     <div class="p-4">
-        <div id="employeeGrid" class="grid gap-3">
+        <div id="employeeGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             @foreach($unencodedEmployees as $employee)
             @if($employee)
-            <div class="employee-card" data-name="{{ strtolower($employee->first_name ?? '') }} {{ strtolower($employee->last_name ?? '') }}"
+            <div class="employee-card flex items-center justify-between border border-base-300 rounded-lg p-4"
+                 data-name="{{ strtolower($employee->first_name ?? '') }} {{ strtolower($employee->last_name ?? '') }}"
                  data-employee-id="{{ strtolower($employee->employee_id ?? '') }}"
                  data-department="{{ $employee->department ?? '' }}"
-                 data-status="{{ $employee->employment_status ?? '' }}"
-                 class="flex items-center justify-between border border-base-300 rounded-lg p-4">
+                 data-status="{{ $employee->employment_status ?? '' }}">
                 <div class="flex items-center gap-3">
                     <div class="flex items-center justify-center font-bold text-xs text-base-content/60 bg-base-200 rounded-lg">
                         {{ strtoupper(substr($employee->first_name ?? '?', 0, 1)) }}

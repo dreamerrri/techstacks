@@ -7,14 +7,15 @@ use App\Models\PayrollPeriod;
 use App\Models\PayrollInput;
 use App\Models\PayrollAdjustment;
 use App\Models\WorkRequest;
+use App\Models\FinancialRequest;
+use App\Models\CashAdvancePayment;
 use App\Services\Payroll\PayrollComputationEngine;
 use App\Services\SssContributionService;
 use App\Services\PhilHealthContributionService;
 use App\Services\PagIbigContributionService;
+use App\Services\WithholdingTaxService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
-use App\Services\WithholdingTaxService;
 
 class ManualPayrollAttendanceController extends Controller
 {
@@ -367,10 +368,45 @@ $withholdingTax = $taxResult['tax'];
         // Add manual deductions
         $manualDeductions = $validated['deductions'] ?? 0;
 
-        // Total deductions
-        $totalDeductions = $governmentDeductions + $manualDeductions;
+        // Cash advance payment deduction (50% of net pay per cutoff)
+        $cashAdvancePayment = 0;
+        $cashAdvanceDeduction = 0;
+        $approvedCashAdvances = $employee->financialRequests()
+            ->where('request_type', 'cash_advance')
+            ->where('status', 'approved')
+            ->where('amount_paid', '<', \DB::raw('amount'))
+            ->get();
 
-        // Calculate final payroll with all deductions
+        if ($approvedCashAdvances->isNotEmpty()) {
+            // Check if cash advance payments have already been processed for this payroll period
+            $existingPayments = CashAdvancePayment::where('payroll_period_id', $period->id ?? null)
+                ->whereHas('financialRequest', function($query) use ($employee) {
+                    $query->where('employee_id', $employee->id);
+                })
+                ->exists();
+
+            if (!$existingPayments) {
+                // Calculate total outstanding balance
+                $totalOutstanding = $approvedCashAdvances->sum(function($request) {
+                    return $request->amount - $request->amount_paid;
+                });
+
+                // Calculate net pay before cash advance deduction
+                $deductionsBeforeCashAdvance = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax, $manualDeductions];
+                $resultBeforeCashAdvance = $engine->compute($employeeData, $attendance, $deductionsBeforeCashAdvance, $benefits, $allowances, [], false, $cutoffStart, $cutoffEnd);
+                $netPayBeforeCashAdvance = $resultBeforeCashAdvance['net_pay'] + ($validated['reimbursements'] ?? 0);
+
+                // Calculate payment as 50% of net pay (or remaining balance, whichever is lower)
+                $cashAdvancePayment = min($netPayBeforeCashAdvance * 0.5, $totalOutstanding);
+                $cashAdvancePayment = round($cashAdvancePayment, 2);
+                $cashAdvanceDeduction = $cashAdvancePayment;
+            }
+        }
+
+        // Total deductions
+        $totalDeductions = $governmentDeductions + $manualDeductions + $cashAdvanceDeduction;
+
+        // Calculate final payroll with all deductions (including cash advance)
         $result = $engine->compute(
             $employeeData,
             $attendance,
@@ -390,6 +426,7 @@ $withholdingTax = $taxResult['tax'];
         $result['withholding_tax'] = $withholdingTax;
         $result['government_deductions'] = $governmentDeductions;
         $result['manual_deductions'] = $manualDeductions;
+        $result['cash_advance_deduction'] = $cashAdvanceDeduction;
         $result['reimbursements'] = $validated['reimbursements'] ?? 0;
         
         // Add cutoff pay breakdown
@@ -485,6 +522,9 @@ $withholdingTax = $taxResult['tax'];
                 ->where('employee_id', $validated['employee_id'])
                 ->first();
 
+            // Get employee for cash advance processing
+            $employee = Employee::findOrFail($validated['employee_id']);
+
             if ($payrollInput) {
                 \Log::info('Updating existing payroll input', ['payroll_input_id' => $payrollInput->id]);
                 // Update existing
@@ -503,7 +543,22 @@ $withholdingTax = $taxResult['tax'];
                     'reimbursements' => $validated['reimbursements'] ?? 0,
                     'reimbursements_remarks' => $validated['reimbursements_remarks'] ?? '',
                 ]);
+                // First compute payroll to get net pay
                 $payrollInput->computePay()->save();
+                
+                // Process cash advance payments after computing payroll
+                $cashAdvanceDeduction = $this->processCashAdvancePayments($employee, $period, $payrollInput);
+                
+                // Add cash advance deduction to manual deductions if applicable
+                if ($cashAdvanceDeduction > 0) {
+                    $currentDeductions = $payrollInput->deductions ?? 0;
+                    $payrollInput->deductions = $currentDeductions + $cashAdvanceDeduction;
+                    $payrollInput->deductions_remarks = trim(($payrollInput->deductions_remarks ?? '') . ' Cash advance deduction: ₱' . number_format($cashAdvanceDeduction, 2));
+                    
+                    // Recompute payroll with cash advance deduction included
+                    $payrollInput->computePay()->save();
+                }
+                
                 \Log::info('Payroll input updated successfully', ['payroll_input_id' => $payrollInput->id]);
             } else {
                 \Log::info('Creating new payroll input');
@@ -525,7 +580,23 @@ $withholdingTax = $taxResult['tax'];
                     'reimbursements' => $validated['reimbursements'] ?? 0,
                     'reimbursements_remarks' => $validated['reimbursements_remarks'] ?? '',
                 ]);
+                
+                // First compute payroll to get net pay
                 $payrollInput->computePay()->save();
+                
+                // Process cash advance payments after computing payroll
+                $cashAdvanceDeduction = $this->processCashAdvancePayments($employee, $period, $payrollInput);
+                
+                // Add cash advance deduction to manual deductions if applicable
+                if ($cashAdvanceDeduction > 0) {
+                    $currentDeductions = $payrollInput->deductions ?? 0;
+                    $payrollInput->deductions = $currentDeductions + $cashAdvanceDeduction;
+                    $payrollInput->deductions_remarks = trim(($payrollInput->deductions_remarks ?? '') . ' Cash advance deduction: ₱' . number_format($cashAdvanceDeduction, 2));
+                    
+                    // Recompute payroll with cash advance deduction included
+                    $payrollInput->computePay()->save();
+                }
+                
                 \Log::info('Payroll input created successfully', ['payroll_input_id' => $payrollInput->id]);
             }
 
@@ -604,6 +675,90 @@ $withholdingTax = $taxResult['tax'];
             'success' => true,
             'message' => 'Adjustment deleted successfully.',
         ]);
+    }
+
+    /**
+     * Process cash advance payments for an employee
+     * This method handles the automatic deduction and recording of cash advance payments
+     */
+    protected function processCashAdvancePayments(Employee $employee, PayrollPeriod $period, PayrollInput $payrollInput)
+    {
+        // Check if cash advance payments have already been processed for this payroll period and employee
+        $existingPayments = CashAdvancePayment::where('payroll_period_id', $period->id)
+            ->whereHas('financialRequest', function($query) use ($employee) {
+                $query->where('employee_id', $employee->id);
+            })
+            ->exists();
+
+        if ($existingPayments) {
+            // Payments already processed for this period, skip to avoid duplication
+            return 0;
+        }
+
+        // Get approved cash advances with remaining balance
+        $approvedCashAdvances = $employee->financialRequests()
+            ->where('request_type', 'cash_advance')
+            ->where('status', 'approved')
+            ->where('amount_paid', '<', \DB::raw('amount'))
+            ->get();
+
+        if ($approvedCashAdvances->isEmpty()) {
+            return 0;
+        }
+
+        // Check if any cash advances are already fully paid
+        $fullyPaidAdvances = $approvedCashAdvances->filter(function($request) {
+            return $request->amount_paid >= $request->amount;
+        });
+
+        if ($fullyPaidAdvances->isNotEmpty()) {
+            // Remove fully paid advances from the list
+            $approvedCashAdvances = $approvedCashAdvances->reject(function($request) {
+                return $request->amount_paid >= $request->amount;
+            });
+        }
+
+        if ($approvedCashAdvances->isEmpty()) {
+            // All cash advances are fully paid
+            return 0;
+        }
+
+        // Calculate total outstanding balance
+        $totalOutstanding = $approvedCashAdvances->sum(function($request) {
+            return $request->amount - $request->amount_paid;
+        });
+
+        // Calculate net pay for cash advance deduction (50% of net pay)
+        $netPay = $payrollInput->net_pay + ($payrollInput->reimbursements ?? 0);
+        $cashAdvancePayment = min($netPay * 0.5, $totalOutstanding);
+        $cashAdvancePayment = round($cashAdvancePayment, 2);
+
+        if ($cashAdvancePayment <= 0) {
+            return 0;
+        }
+
+        // Update cash advance payment records
+        $remainingPayment = $cashAdvancePayment;
+        foreach ($approvedCashAdvances as $cashAdvance) {
+            if ($remainingPayment <= 0) break;
+            
+            $balance = $cashAdvance->amount - $cashAdvance->amount_paid;
+            $payment = min($remainingPayment, $balance);
+            
+            $cashAdvance->increment('amount_paid', $payment);
+            
+            // Record payment history
+            CashAdvancePayment::create([
+                'financial_request_id' => $cashAdvance->id,
+                'payroll_period_id' => $period->id,
+                'amount' => $payment,
+                'description' => 'Automatic payment deduction (50% of net pay)',
+            ]);
+            
+            $remainingPayment -= $payment;
+        }
+
+        return $cashAdvancePayment;
     }
 
     /**
