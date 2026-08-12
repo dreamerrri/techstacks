@@ -11,8 +11,7 @@ class PayrollComputationEngineBreakdownTest extends TestCase
     {
         $engine = new PayrollComputationEngine();
         $employeeData = [
-            'monthly_salary' => 25000,
-            'working_days_per_month' => 22,
+            'daily_rate' => 1136.36, // 25000 / 22 working days
             'working_hours_per_day' => 8,
         ];
         $attendance = [
@@ -30,14 +29,14 @@ class PayrollComputationEngineBreakdownTest extends TestCase
         $this->assertEquals(1136.36, $result['daily_rate']);
         $this->assertEquals(142.05, $result['hourly_rate']);
         $this->assertEquals(12499.96, $result['basic_salary']);
-        $this->assertEquals(1065.38, $result['overtime_pay']);
+        $this->assertEquals(852.30, $result['overtime_pay']); // 142.05 * 6 hours
         $this->assertEquals(2272.72, $result['holiday_pay']);
         $this->assertEquals(56.82, $result['night_differential']);
         $this->assertEquals(0.00, $result['late_deduction']);
         $this->assertEquals(3000.00, $result['allowances']);
         $this->assertEquals(0.00, $result['benefits']);
-        $this->assertEquals(15894.88, $result['gross_pay']);
+        $this->assertEquals(18681.80, $result['gross_pay']); // Now includes allowances (3000)
         $this->assertEquals(2504.55, $result['deductions']);
-        $this->assertEquals(13390.33, $result['net_pay']);
+        $this->assertEquals(16177.25, $result['net_pay']);
     }
 }

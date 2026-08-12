@@ -18,7 +18,7 @@ class WithholdingTaxCalculationTest extends TestCase
         // We'll use a local function that mirrors the implementation
         
         $calculateTax = function(float $totalMonthlyGross, float $totalMonthlyContributions, float $currentCutoffAllowances = 0): float {
-            // Allowances are considered as advance paychecks and should be deducted from taxable income
+            // Allowances are included in gross pay but deducted from taxable income for withholding tax computation
             // Only current cutoff allowances are used (not total monthly to avoid doubling)
             $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $currentCutoffAllowances;
             $taxablePay = $taxableIncome - 33333;

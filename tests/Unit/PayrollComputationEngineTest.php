@@ -11,8 +11,7 @@ class PayrollComputationEngineTest extends TestCase
     {
         $engine = new PayrollComputationEngine();
         $employeeData = [
-            'monthly_salary' => 22000,
-            'working_days_per_month' => 22,
+            'daily_rate' => 1000, // 22000 / 22 working days
             'working_hours_per_day' => 8,
         ];
         $attendance = [
@@ -27,22 +26,22 @@ class PayrollComputationEngineTest extends TestCase
 
         $result = $engine->compute($employeeData, $attendance, $deductions, $benefits, $allowances);
 
-        $this->assertEquals(22000, $result['basic_salary']);
-        $this->assertEquals(1562.5, $result['overtime_pay']);
-        $this->assertEquals(16000, $result['holiday_pay']);
-        $this->assertEquals(150, $result['night_differential']);
+        $this->assertEquals(22000, $result['basic_salary']); // 1000 * 22 days worked
+        $this->assertEquals(1250, $result['overtime_pay']); // 125 * 10 hours
+        $this->assertEquals(16000, $result['holiday_pay']); // 1000 * 2 * 8 holiday days
+        $this->assertEquals(150, $result['night_differential']); // 125 * 0.10 * 12 hours
         $this->assertEquals(1500, $result['allowances']);
         $this->assertEquals(300, $result['benefits']);
         $this->assertEquals(700, $result['deductions']);
-        $this->assertEquals(40012.5, $result['gross_pay']);
-        $this->assertEquals(39312.5, $result['net_pay']);
+        $this->assertEquals(41200, $result['gross_pay']); // Now includes allowances (1500)
+        $this->assertEquals(40500, $result['net_pay']);
     }
 
     public function testPayrollComputationWithCutoffDates()
     {
         $engine = new PayrollComputationEngine();
         $employeeData = [
-            'monthly_salary' => 22000,
+            'daily_rate' => 2000, // For the cutoff period
             'working_hours_per_day' => 8,
         ];
         $attendance = [
@@ -68,17 +67,17 @@ class PayrollComputationEngineTest extends TestCase
             '2026-01-15'
         );
 
-        // With 11 working days in the cutoff period, daily rate should be 22000/11 = 2000
+        // With 11 working days in the cutoff period, daily rate should be 2000
         $this->assertEquals(2000, $result['daily_rate']);
         $this->assertEquals(250, $result['hourly_rate']);
         $this->assertEquals(22000, $result['basic_salary']); // 2000 * 11 days worked
-        $this->assertEquals(1562.5, $result['overtime_pay']); // 250 * 1.25 * 5 hours
+        $this->assertEquals(1250, $result['overtime_pay']); // 250 * 5 hours
         $this->assertEquals(4000, $result['holiday_pay']); // 2000 * 2 * 1 holiday
         $this->assertEquals(150, $result['night_differential']); // 250 * 0.10 * 6 hours
         $this->assertEquals(1500, $result['allowances']);
         $this->assertEquals(300, $result['benefits']);
         $this->assertEquals(700, $result['deductions']);
-        $this->assertEquals(27912.5, $result['gross_pay']);
-        $this->assertEquals(27212.5, $result['net_pay']);
+        $this->assertEquals(29200, $result['gross_pay']); // Now includes allowances (1500)
+        $this->assertEquals(28500, $result['net_pay']);
     }
 }

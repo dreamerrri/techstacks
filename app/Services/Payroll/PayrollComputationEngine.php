@@ -74,8 +74,8 @@ class PayrollComputationEngine
         $manualSubtract = isset($manualAdjustments['subtract']) ? (float)$manualAdjustments['subtract'] : 0.0;
 
         // 8. Gross Pay
-        // Allowances are advance paychecks and should not be included in gross pay
-        $grossPay = $basicSalary + $weekendPay + $overtimePay + $holidayPay + $nightDiff + $totalBenefits + $manualAdd - $manualSubtract - $lateDeduction;
+        // Allowances are included in gross pay but subtracted from taxable income for withholding tax
+        $grossPay = $basicSalary + $weekendPay + $overtimePay + $holidayPay + $nightDiff + $totalBenefits + $totalAllowances + $manualAdd - $manualSubtract - $lateDeduction;
         $grossPay = round($grossPay, 2);
 
         // 9. Deductions

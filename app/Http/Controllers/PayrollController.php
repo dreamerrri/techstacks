@@ -377,7 +377,7 @@ class PayrollController extends Controller
     private function calculateTax(float $totalMonthlyGross, float $totalMonthlyContributions, float $totalMonthlyAllowances = 0): float
 {
     // Calculate taxable income: Total Gross - Total Monthly Contributions - Total Monthly Allowances
-    // Allowances are considered as advance paychecks and should be deducted from taxable income
+    // Allowances are included in gross pay but deducted from taxable income for withholding tax computation
     $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $totalMonthlyAllowances;
 
     // Bracket 1: ₱0 - ₱20,833 -> exempt

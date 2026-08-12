@@ -365,6 +365,7 @@
                 ['Night Differential', ($payroll['attendance_data']['night_diff_hours'] ?? 0) .' ND hrs × 1.10 × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['night_differential_pay'] ?? 0, 'text-success', '+'],
                 ['Holiday Pay',        ($payroll['attendance_data']['holiday_days'] ?? 0) .' holiday days × 2 × ₱'. number_format($payroll['daily_rate'] ?? 0, 2) .'/day', $payroll['holiday_pay'] ?? 0, 'text-success', '+'],
                 ['Benefits',           'Total active benefits', $payroll['benefits'] ?? 0, 'text-success', '+'],
+                ['Allowances',         'Total active allowances', $payroll['allowances'] ?? 0, 'text-success', '+'],
             ] as [$label, $sub, $val, $cls, $prefix])
                 <div class="flex justify-between items-start py-2.5 border-b border-base-200">
                     <div>
@@ -377,7 +378,7 @@
         </div>
         <div class="flex justify-between items-center mt-3 pt-3 border-t-2 border-base-300 font-bold text-sm">
             <span class="text-base-content">Total Earnings</span>
-            <span class="text-success">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['benefits'] ?? 0), 2) }}</span>
+            <span class="text-success">₱{{ number_format(($payroll['base_pay'] ?? 0) + ($payroll['overtime_pay'] ?? 0) + ($payroll['night_differential_pay'] ?? 0) + ($payroll['holiday_pay'] ?? 0) + ($payroll['benefits'] ?? 0) + ($payroll['allowances'] ?? 0), 2) }}</span>
         </div>
     </div>
 
@@ -395,7 +396,6 @@
                 ['PhilHealth Contribution',"2.25% of gross pay (capped at ₱1,500)",             $payroll['philhealth_contribution'] ?? 0],
                 ['Pag-IBIG Contribution',  "2% of gross pay (capped at ₱100)",                  $payroll['pagibig_contribution'] ?? 0],
                 ['Late Deduction',         ($payroll['attendance_data']['late_hours'] ?? 0) .' late hrs × ₱'. number_format($payroll['hourly_rate'] ?? 0, 2) .'/hr', $payroll['late_deduction'] ?? 0],
-                ['Allowances',             'Total active allowances',                            $payroll['allowances'] ?? 0],
                 ['Manual Deductions',      'Deductions from manual payroll attendance',          $payroll['manual_deductions'] ?? 0],
             ] as [$label, $sub, $val])
                 <div class="flex justify-between items-start py-2.5 border-b border-base-200">
@@ -409,7 +409,7 @@
         </div>
         <div class="flex justify-between items-center mt-3 pt-3 border-t-2 border-base-300 font-bold text-sm">
             <span class="text-base-content">Net Contributions & Deductions</span>
-            <span class="text-error">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['late_deduction'] ?? 0) + ($payroll['manual_deductions'] ?? 0) + ($payroll['allowances'] ?? 0), 2) }}</span>
+            <span class="text-error">-₱{{ number_format(($payroll['sss_contribution'] ?? 0) + ($payroll['philhealth_contribution'] ?? 0) + ($payroll['pagibig_contribution'] ?? 0) + ($payroll['late_deduction'] ?? 0) + ($payroll['manual_deductions'] ?? 0), 2) }}</span>
         </div>
     </div>
 
@@ -438,6 +438,7 @@
             </div>
         </div>
         <div class="mt-4 p-4 bg-base-300 rounded-xl text-xs text-base-content/60 leading-relaxed">
+            <strong class="text-base-content/80">Note:</strong> Allowances are included in gross pay but deducted from taxable income for withholding tax computation.<br>
             <strong class="text-base-content/80">Tax Bracket Reference:</strong><br>
             • ₱0 – ₱20,832: 0%<br>
             • ₱20,833 – ₱33,333: 20%<br>
