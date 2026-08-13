@@ -148,6 +148,11 @@ Route::prefix('payroll')->name('payroll.')->group(function () {
     Route::get('/',                        [PayrollController::class, 'index'])->name('index');
     Route::get('/{employee}/payslip',      [PayrollController::class, 'downloadPayslip'])->name('payslip');
     Route::get('/{employee}',              [PayrollController::class, 'show'])->name('show');
+    
+    // Cash advance deductions - admin and HR only
+    Route::middleware('permission:edit.attendance')->group(function () {
+        Route::post('/{employee}/apply-cash-advance-deductions', [PayrollController::class, 'applyCashAdvanceDeductions'])->name('apply-cash-advance-deductions');
+    });
 });
 
     // Manual Payroll Attendance Encoding — admin and HR only

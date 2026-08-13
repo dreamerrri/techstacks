@@ -82,10 +82,10 @@ class PayrollController extends Controller
 
         $departments = Employee::active()->distinct()->pluck('department');
 
-        // Calculate payroll for each employee using the selected period
+        // Calculate payroll for each employee using the selected period (preview mode - no deductions applied)
         $payrollData = [];
         foreach ($employees as $employee) {
-            $payrollData[$employee->id] = $this->calculatePayroll($employee, $selectedPeriod);
+            $payrollData[$employee->id] = $this->calculatePayroll($employee, $selectedPeriod, false);
         }
 
         // In-memory sort by computed payroll fields (these aren't DB columns)
@@ -147,7 +147,7 @@ class PayrollController extends Controller
             'benefits'      => fn($q) => $q->where('is_active', true),
         ]);
 
-        $payrollData = $this->calculatePayroll($employee, $selectedPeriod);
+        $payrollData = $this->calculatePayroll($employee, $selectedPeriod, false);
 
         return view('payroll.show', compact('employee', 'payrollData', 'isAdmin', 'isHR', 'selectedPeriod'));
     }
@@ -156,8 +156,10 @@ class PayrollController extends Controller
      * Calculate payroll for an employee using PayrollComputationEngine.
      * If a specific PayrollPeriod is given, data is scoped to that period.
      * Otherwise falls back to current → latest input.
+     * 
+     * @param bool $applyCashAdvanceDeductions If true, applies cash advance deductions to database records
      */
-    private function calculatePayroll(Employee $employee, ?PayrollPeriod $period = null): array
+    private function calculatePayroll(Employee $employee, ?PayrollPeriod $period = null, bool $applyCashAdvanceDeductions = false): array
     {
         $basicSalary = $employee->basic_salary;
         $salaryType = $employee->salary_type;
@@ -353,8 +355,8 @@ class PayrollController extends Controller
             $cashAdvancePayment = min($netPayBeforeCashAdvance * 0.5, $totalOutstanding);
             $cashAdvancePayment = round($cashAdvancePayment, 2);
 
-            // Update cash advance payment records
-            if ($cashAdvancePayment > 0) {
+            // Update cash advance payment records only if confirmation is provided
+            if ($cashAdvancePayment > 0 && $applyCashAdvanceDeductions) {
                 $remainingPayment = $cashAdvancePayment;
                 foreach ($approvedCashAdvances as $cashAdvance) {
                     if ($remainingPayment <= 0) break;
@@ -404,6 +406,7 @@ class PayrollController extends Controller
             'withholding_tax'         => $withholdingTax,
             'manual_deductions'       => $manualDeductions,
             'reimbursements'          => $reimbursements,
+            'cash_advance_deduction'  => $cashAdvancePayment,
             'total_deductions'        => $result['deductions'],
             'net_pay'                 => $currentCutoffNetPay,
             'taxable_income'          => $taxableIncome,
@@ -504,7 +507,7 @@ class PayrollController extends Controller
             }
         }
 
-        $payrollData = $this->calculatePayroll($employee, $selectedPeriod);
+        $payrollData = $this->calculatePayroll($employee, $selectedPeriod, false);
 
         $pdf = Pdf::loadView('payroll.payslip', [
     'employee'            => $employee,
@@ -515,5 +518,32 @@ class PayrollController extends Controller
 ])->setPaper('a4', 'portrait');
 
         return $pdf->download("payslip-{$employee->employee_id}.pdf");
+    }
+
+    /**
+     * Apply cash advance deductions for an employee
+     * This requires explicit confirmation from the user
+     */
+    public function applyCashAdvanceDeductions(Request $request, Employee $employee)
+    {
+        $user = Auth::user();
+        $isAdmin = $user->isAdmin();
+        $isHR = $user->isHR();
+
+        // Only admin and HR can apply cash advance deductions
+        if (!$isAdmin && !$isHR) {
+            return back()->with('error', 'You do not have permission to apply cash advance deductions.');
+        }
+
+        // Get the selected period
+        $selectedPeriod = null;
+        if ($request->filled('payroll_period_id')) {
+            $selectedPeriod = PayrollPeriod::find($request->payroll_period_id);
+        }
+
+        // Calculate payroll with deductions applied
+        $payrollData = $this->calculatePayroll($employee, $selectedPeriod, true);
+
+        return back()->with('success', 'Cash advance deductions applied successfully.');
     }
 }

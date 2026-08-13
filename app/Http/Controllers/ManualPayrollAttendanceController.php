@@ -546,18 +546,8 @@ $withholdingTax = $taxResult['tax'];
                 // First compute payroll to get net pay
                 $payrollInput->computePay()->save();
                 
-                // Process cash advance payments after computing payroll
-                $cashAdvanceDeduction = $this->processCashAdvancePayments($employee, $period, $payrollInput);
-                
-                // Add cash advance deduction to manual deductions if applicable
-                if ($cashAdvanceDeduction > 0) {
-                    $currentDeductions = $payrollInput->deductions ?? 0;
-                    $payrollInput->deductions = $currentDeductions + $cashAdvanceDeduction;
-                    $payrollInput->deductions_remarks = trim(($payrollInput->deductions_remarks ?? '') . ' Cash advance deduction: ₱' . number_format($cashAdvanceDeduction, 2));
-                    
-                    // Recompute payroll with cash advance deduction included
-                    $payrollInput->computePay()->save();
-                }
+                // Cash advance payments are now only applied via manual confirmation in PayrollController
+                // Removed automatic processing to prevent unintended deductions
                 
                 \Log::info('Payroll input updated successfully', ['payroll_input_id' => $payrollInput->id]);
             } else {
@@ -584,18 +574,8 @@ $withholdingTax = $taxResult['tax'];
                 // First compute payroll to get net pay
                 $payrollInput->computePay()->save();
                 
-                // Process cash advance payments after computing payroll
-                $cashAdvanceDeduction = $this->processCashAdvancePayments($employee, $period, $payrollInput);
-                
-                // Add cash advance deduction to manual deductions if applicable
-                if ($cashAdvanceDeduction > 0) {
-                    $currentDeductions = $payrollInput->deductions ?? 0;
-                    $payrollInput->deductions = $currentDeductions + $cashAdvanceDeduction;
-                    $payrollInput->deductions_remarks = trim(($payrollInput->deductions_remarks ?? '') . ' Cash advance deduction: ₱' . number_format($cashAdvanceDeduction, 2));
-                    
-                    // Recompute payroll with cash advance deduction included
-                    $payrollInput->computePay()->save();
-                }
+                // Cash advance payments are now only applied via manual confirmation in PayrollController
+                // Removed automatic processing to prevent unintended deductions
                 
                 \Log::info('Payroll input created successfully', ['payroll_input_id' => $payrollInput->id]);
             }
