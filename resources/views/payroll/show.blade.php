@@ -161,21 +161,6 @@
                 <i class="icon-[ph--file-arrow-down-fill]"></i> Download Payslip
             </a>
         @endif
-        @if(($isAdmin || $isHR) && ($payroll['cash_advance_deduction'] ?? 0) > 0)
-            <form method="POST" action="{{ route('payroll.apply-cash-advance-deductions', $employee) }}"
-                  data-confirm="This will deduct ₱{{ number_format($payroll['cash_advance_deduction'], 2) }} from the employee's cash advance balance. This action cannot be undone."
-                  data-confirm-title="Apply Cash Advance Deduction?"
-                  data-confirm-icon="warning"
-                  data-confirm-btn="Yes, apply deduction">
-                @csrf
-                @if($selectedPeriod)
-                    <input type="hidden" name="payroll_period_id" value="{{ $selectedPeriod->id }}">
-                @endif
-                <button type="submit" class="btn btn-soft btn-warning btn-sm">
-                    <i class="icon-[ph--money-fill]"></i> Apply Cash Advance Deduction
-                </button>
-            </form>
-        @endif
     </div>
 </div>
 

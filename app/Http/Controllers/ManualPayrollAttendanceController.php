@@ -781,6 +781,42 @@ $withholdingTax = $taxResult['tax'];
         return response()->json($summary);
     }
 
+    /**
+     * POST /manual-payroll-attendance/period/{payrollPeriod}/employee/{employee}/apply-cash-advance-deductions
+     * Apply cash advance deductions for an employee from manual payroll attendance
+     */
+    public function applyCashAdvanceDeductions(Request $request, PayrollPeriod $payrollPeriod, Employee $employee)
+    {
+        // Authorization: Only admin and HR can apply cash advance deductions
+        if (!auth()->user()->isAdmin() && !auth()->user()->isHR()) {
+            return back()->with('error', 'You do not have permission to apply cash advance deductions.');
+        }
+
+        // Get or create payroll input for this employee and period
+        $payrollInput = PayrollInput::where('payroll_period_id', $payrollPeriod->id)
+            ->where('employee_id', $employee->id)
+            ->first();
+
+        if (!$payrollInput) {
+            return back()->with('error', 'Payroll input must be saved before applying cash advance deductions.');
+        }
+
+        // Process cash advance payments
+        $cashAdvanceDeduction = $this->processCashAdvancePayments($employee, $payrollPeriod, $payrollInput);
+
+        if ($cashAdvanceDeduction > 0) {
+            // Add cash advance deduction to manual deductions
+            $currentDeductions = $payrollInput->deductions ?? 0;
+            $payrollInput->deductions = $currentDeductions + $cashAdvanceDeduction;
+            $payrollInput->deductions_remarks = trim(($payrollInput->deductions_remarks ?? '') . ' Cash advance deduction: ₱' . number_format($cashAdvanceDeduction, 2));
+            
+            // Recompute payroll with cash advance deduction included
+            $payrollInput->computePay()->save();
+        }
+
+        return back()->with('success', 'Cash advance deduction of ₱' . number_format($cashAdvanceDeduction, 2) . ' applied successfully.');
+    }
+
     // ── Private helpers ────────────────────────────────────────
 
     /**

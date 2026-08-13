@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'files' => dirname(__DIR__) . '/routes/breadcrumbs.php',
+    'files' => base_path('routes/breadcrumbs.php'),
 
     /*
     |--------------------------------------------------------------------------

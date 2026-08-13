@@ -162,9 +162,14 @@
                     </p>
                 </div>
                 @else
-                <p class="text-xs text-warning-content mt-2 mb-0">
-                    50% of net pay will be automatically deducted for cash advance repayment.
-                </p>
+                <div class="mt-3 pt-3 border-t border-warning/30">
+                    <p class="text-xs text-warning-content mb-2">
+                        50% of net pay will be deducted for cash advance repayment upon confirmation.
+                    </p>
+                    <button type="button" onclick="confirmCashAdvanceDeduction()" class="btn btn-soft btn-warning btn-xs">
+                        <i class="icon-[ph--money-fill]"></i> Apply Cash Advance Deduction
+                    </button>
+                </div>
                 @endif
             </div>
             @endif
@@ -172,7 +177,7 @@
             <div class="mb-4">
                 <label class="font-semibold text-sm text-base-content mb-4">Rate Type</label>
                 <div class="text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-4">
-                    <input type="hidden" name="rate_type" value="daily">
+                    <input type="hidden" name="rate_type" value="daily" id="rate-type-hidden">
                     <span class="font-semibold">Daily Rate</span>
                     <span class="text-base-content/60">(computed using BSM X 12 / 52 / 40 X 8)</span>
                 </div>
@@ -218,9 +223,9 @@
                 <div>
                     <label class="font-semibold text-sm text-base-content mb-4">Late Hours</label>
                     <input type="number" name="late_hours" step="0.5" min="0"
-                           value="{{ $isEdit ? $payrollInput->late_hours : '0' }}"
-                           class="w-full text-sm border border-base-300 rounded-lg p-4"
-                           oninput="window.lateHoursValue = this.value">
+                       value="{{ $isEdit ? $payrollInput->late_hours : '0' }}"
+                       class="w-full text-sm border border-base-300 rounded-lg p-4"
+                       oninput="window.lateHoursValue = this.value">
                 </div>
             </div>
 
@@ -316,6 +321,9 @@
                 <p class="text-xs text-base-content/60 mt-2">Expense reimbursements to be added to net pay</p>
             </div>
 
+            {{-- Hidden field for allowances to pass the calculated value --}}
+            <input type="hidden" name="allowances" value="{{ $totalAllowancesAndBenefits }}" id="allowances-hidden">
+
             <div class="flex gap-3">
                 <button type="submit" id="saveAttendanceBtn" onclick="handleSaveAttendance(event)"
                         class="font-semibold text-sm bg-primary rounded-lg p-4 cursor-pointer">
@@ -367,31 +375,46 @@ window.reimbursementsValue = '{{ $isEdit ? ($payrollInput->reimbursements ?? '0'
 window.reimbursementsRemarksValue = '{{ $isEdit ? ($payrollInput->reimbursements_remarks ?? '') : '' }}';
 window.isSecondHalfOfMonth = {{ $isSecondHalfOfMonth ? 'true' : 'false' }};
 
+// Initialize allowances value from hidden field on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const allowancesHidden = document.getElementById('allowances-hidden');
+    if (allowancesHidden) {
+        window.allowancesValue = allowancesHidden.value;
+    }
+});
+
 function handleSaveAttendance(event) {
     event.preventDefault();
     
     const form = document.getElementById('attendanceForm');
     if (!form) {
+        window.notyf.error('Form not found');
         return;
     }
     
+    // Helper function to safely get form value
+    const getFormValue = (name) => {
+        const element = form.querySelector(`[name="${name}"]`);
+        return element ? element.value : '';
+    };
+    
     // Read values directly from input elements for reliability
     const formData = new FormData();
-    formData.append('payroll_period_id', form.querySelector('[name="payroll_period_id"]').value);
-    formData.append('employee_id', form.querySelector('[name="employee_id"]').value);
-    formData.append('daily_rate', form.querySelector('[name="daily_rate"]').value);
-    formData.append('rate_type', form.querySelector('[name="rate_type"]').value);
-    formData.append('days_worked', form.querySelector('[name="days_worked"]').value);
-    formData.append('weekends_worked', form.querySelector('[name="weekends_worked"]').value);
-    formData.append('overtime_hours', form.querySelector('[name="overtime_hours"]').value);
-    formData.append('late_hours', form.querySelector('[name="late_hours"]').value);
-    formData.append('holiday_days', form.querySelector('[name="holiday_days"]').value);
-    formData.append('night_differential_hours', form.querySelector('[name="night_differential_hours"]').value);
-    formData.append('allowances', form.querySelector('[name="allowances"]').value);
-    formData.append('deductions', form.querySelector('[name="deductions"]').value);
-    formData.append('deductions_remarks', form.querySelector('[name="deductions_remarks"]').value);
-    formData.append('reimbursements', form.querySelector('[name="reimbursements"]').value);
-    formData.append('reimbursements_remarks', form.querySelector('[name="reimbursements_remarks"]').value);
+    formData.append('payroll_period_id', getFormValue('payroll_period_id'));
+    formData.append('employee_id', getFormValue('employee_id'));
+    formData.append('daily_rate', getFormValue('daily_rate') || window.dailyRateValue);
+    formData.append('rate_type', getFormValue('rate_type') || document.getElementById('rate-type-hidden')?.value || 'daily');
+    formData.append('days_worked', getFormValue('days_worked') || window.daysWorkedValue);
+    formData.append('weekends_worked', getFormValue('weekends_worked') || window.weekendsWorkedValue);
+    formData.append('overtime_hours', getFormValue('overtime_hours') || window.overtimeHoursValue);
+    formData.append('late_hours', getFormValue('late_hours') || window.lateHoursValue);
+    formData.append('holiday_days', getFormValue('holiday_days') || window.holidayDaysValue);
+    formData.append('night_differential_hours', getFormValue('night_differential_hours') || window.nightDifferentialHoursValue);
+    formData.append('allowances', getFormValue('allowances') || document.getElementById('allowances-hidden')?.value || window.allowancesValue);
+    formData.append('deductions', getFormValue('deductions') || window.deductionsValue);
+    formData.append('deductions_remarks', getFormValue('deductions_remarks') || window.deductionsRemarksValue);
+    formData.append('reimbursements', getFormValue('reimbursements') || window.reimbursementsValue);
+    formData.append('reimbursements_remarks', getFormValue('reimbursements_remarks') || window.reimbursementsRemarksValue);
     formData.append('_token', '{{ csrf_token() }}');
     
     fetch('{{ route('manual-payroll-attendance.save') }}', {
@@ -423,25 +446,32 @@ let previewTimeout = null;
 function previewPayroll() {
     const form = document.getElementById('attendanceForm');
     if (!form) {
+        window.notyf.error('Form not found');
         return;
     }
 
+    // Helper function to safely get form value
+    const getFormValue = (name) => {
+        const element = form.querySelector(`[name="${name}"]`);
+        return element ? element.value : '';
+    };
+
     const formData = new FormData();
-    formData.append('payroll_period_id', form.querySelector('[name="payroll_period_id"]').value);
-    formData.append('employee_id', form.querySelector('[name="employee_id"]').value);
-    formData.append('daily_rate', window.dailyRateValue);
-    formData.append('rate_type', form.querySelector('[name="rate_type"]').value);
-    formData.append('days_worked', window.daysWorkedValue);
-    formData.append('weekends_worked', window.weekendsWorkedValue);
-    formData.append('overtime_hours', window.overtimeHoursValue);
-    formData.append('late_hours', window.lateHoursValue);
-    formData.append('holiday_days', window.holidayDaysValue);
-    formData.append('night_differential_hours', window.nightDifferentialHoursValue);
-    formData.append('allowances', window.allowancesValue);
-    formData.append('deductions', window.deductionsValue);
-    formData.append('deductions_remarks', window.deductionsRemarksValue);
-    formData.append('reimbursements', window.reimbursementsValue);
-    formData.append('reimbursements_remarks', window.reimbursementsRemarksValue);
+    formData.append('payroll_period_id', getFormValue('payroll_period_id'));
+    formData.append('employee_id', getFormValue('employee_id'));
+    formData.append('daily_rate', getFormValue('daily_rate') || window.dailyRateValue);
+    formData.append('rate_type', getFormValue('rate_type') || document.getElementById('rate-type-hidden')?.value || 'daily');
+    formData.append('days_worked', getFormValue('days_worked') || window.daysWorkedValue);
+    formData.append('weekends_worked', getFormValue('weekends_worked') || window.weekendsWorkedValue);
+    formData.append('overtime_hours', getFormValue('overtime_hours') || window.overtimeHoursValue);
+    formData.append('late_hours', getFormValue('late_hours') || window.lateHoursValue);
+    formData.append('holiday_days', getFormValue('holiday_days') || window.holidayDaysValue);
+    formData.append('night_differential_hours', getFormValue('night_differential_hours') || window.nightDifferentialHoursValue);
+    formData.append('allowances', getFormValue('allowances') || document.getElementById('allowances-hidden')?.value || window.allowancesValue);
+    formData.append('deductions', getFormValue('deductions') || window.deductionsValue);
+    formData.append('deductions_remarks', getFormValue('deductions_remarks') || window.deductionsRemarksValue);
+    formData.append('reimbursements', getFormValue('reimbursements') || window.reimbursementsValue);
+    formData.append('reimbursements_remarks', getFormValue('reimbursements_remarks') || window.reimbursementsRemarksValue);
     formData.append('_token', '{{ csrf_token() }}');
 
     fetch('{{ route('manual-payroll-attendance.preview') }}', {
@@ -603,6 +633,37 @@ function previewPayroll() {
     })
     .catch(error => {
         window.notyf.error('Error previewing payroll: ' + error.message);
+    });
+}
+
+function confirmCashAdvanceDeduction() {
+    const totalOutstandingBalance = parseFloat('{{ $totalOutstandingBalance ?? 0 }}');
+    const employeeName = '{{ $employee->full_name }}';
+    
+    Swal.fire({
+        title: 'Apply Cash Advance Deduction?',
+        text: 'This will deduct cash advance payments from ' + employeeName + '\'s net pay (50% of net pay up to ₱' + totalOutstandingBalance.toFixed(2) + '). This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, apply deduction',
+        cancelButtonText: 'Cancel',
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route('manual-payroll-attendance.apply-cash-advance-deductions', [$payrollPeriod, $employee]) }}';
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '{{ csrf_token() }}';
+            form.appendChild(csrfToken);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
     });
 }
 

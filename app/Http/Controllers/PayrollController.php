@@ -519,31 +519,4 @@ class PayrollController extends Controller
 
         return $pdf->download("payslip-{$employee->employee_id}.pdf");
     }
-
-    /**
-     * Apply cash advance deductions for an employee
-     * This requires explicit confirmation from the user
-     */
-    public function applyCashAdvanceDeductions(Request $request, Employee $employee)
-    {
-        $user = Auth::user();
-        $isAdmin = $user->isAdmin();
-        $isHR = $user->isHR();
-
-        // Only admin and HR can apply cash advance deductions
-        if (!$isAdmin && !$isHR) {
-            return back()->with('error', 'You do not have permission to apply cash advance deductions.');
-        }
-
-        // Get the selected period
-        $selectedPeriod = null;
-        if ($request->filled('payroll_period_id')) {
-            $selectedPeriod = PayrollPeriod::find($request->payroll_period_id);
-        }
-
-        // Calculate payroll with deductions applied
-        $payrollData = $this->calculatePayroll($employee, $selectedPeriod, true);
-
-        return back()->with('success', 'Cash advance deductions applied successfully.');
-    }
 }
