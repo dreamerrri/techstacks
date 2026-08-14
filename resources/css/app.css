@@ -18,7 +18,12 @@
 
 
 
-
+@layer base {
+    :root {
+        --sidebar-w: 15rem;
+        --sidebar-w-mini: 4.25rem;
+    }
+}
 /* ── Components ── */
 @import './components/notifications.css';
 @import './components/avatar.css';

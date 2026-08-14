@@ -29,7 +29,15 @@ export default function Sidebar({ open, onClose, minified }) {
         });
     }, [currentUrl]);
 
-    const toggleGroup = (label) => setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
+    const toggleGroup = (label) =>
+        setOpenGroups((prev) => {
+            const next = {};
+            Object.keys(prev).forEach((k) => {
+                if (k !== label && prev[k]) next[k] = false;
+            });
+            next[label] = !prev[label];
+            return next;
+        });
 
     const header = (
         <div className={`drawer-header py-2 w-full flex items-center ${minified ? 'justify-center' : ''}`}>
@@ -67,10 +75,10 @@ export default function Sidebar({ open, onClose, minified }) {
                     const isOpen = !!openGroups[group.label];
                     const groupActive = group.items.some((item) => isRouteActive(item.active, currentUrl));
                     return (
-                        <li key={group.label} className="dropdown relative [--strategy:static]">
+                        <li key={group.label} className={`dropdown relative [--strategy:static] --prevent-on-load-init ${isOpen ? 'open' : ''}`}>
                             <button
                                 type="button"
-                                className={`dropdown-toggle ${isOpen ? 'open' : ''}`}
+                                className="dropdown-toggle"
                                 aria-haspopup="menu"
                                 aria-expanded={isOpen}
                                 onClick={() => toggleGroup(group.label)}
@@ -80,7 +88,7 @@ export default function Sidebar({ open, onClose, minified }) {
                                 <span className={`icon-[tabler--chevron-down] size-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}></span>
                             </button>
                             {isOpen && (
-                                <ul className={`dropdown-menu mt-0 shadow-none min-w-40 ms-6 ps-2 border-s border-base-content/20 rounded-none ${groupActive ? 'open' : ''}`} role="menu">
+                                <ul className={`dropdown-menu dropdown-open:opacity-100 mt-0 shadow-none min-w-40 ms-6 ps-2 border-s border-base-content/20 rounded-none`} role="menu">
                                     {group.items.map((item) => (
                                         <li key={item.title}>
                                             <Link href={item.href} className={navLinkClass(item)} onClick={onClose}>

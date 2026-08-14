@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 import Icon from './Icon';
 import SearchModal from './SearchModal';
@@ -20,6 +20,27 @@ export default function Navbar({ onOpenSidebar, onToggleMinified }) {
     const [notifOpen, setNotifOpen] = useState(false);
     const [avatarOpen, setAvatarOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
+    const notifRef = useRef(null);
+    const avatarRef = useRef(null);
+
+    useEffect(() => {
+        const onDocClick = (e) => {
+            if (notifRef.current && !notifRef.current.contains(e.target)) setNotifOpen(false);
+            if (avatarRef.current && !avatarRef.current.contains(e.target)) setAvatarOpen(false);
+        };
+        const onKey = (e) => {
+            if (e.key === 'Escape') {
+                setNotifOpen(false);
+                setAvatarOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', onDocClick);
+        document.addEventListener('keydown', onKey);
+        return () => {
+            document.removeEventListener('mousedown', onDocClick);
+            document.removeEventListener('keydown', onKey);
+        };
+    }, []);
 
     const isAdmin = user?.role === 'admin';
     const isHR = user?.role === 'hr';
@@ -77,7 +98,7 @@ export default function Navbar({ onOpenSidebar, onToggleMinified }) {
                     </button>
 
                     {/* Notifications */}
-                    <div className="dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]">
+                    <div ref={notifRef} className={`dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end] --prevent-on-load-init ${notifOpen ? 'open' : ''}`}>
                         <button
                             type="button"
                             className="dropdown-toggle btn btn-text btn-circle relative"
@@ -94,7 +115,7 @@ export default function Navbar({ onOpenSidebar, onToggleMinified }) {
                             )}
                         </button>
                         {notifOpen && (
-                            <div className="dropdown-menu dropdown-open:opacity-100 min-w-72 z-50" role="menu" aria-labelledby="notif-dropdown">
+                            <div className="dropdown-menu dropdown-open:opacity-100 absolute end-0 top-full mt-2 min-w-72 z-50" role="menu" aria-labelledby="notif-dropdown">
                                 <div className="dropdown-header justify-between">
                                     <span>Notifications</span>
                                     {notifCount > 0 && (
@@ -146,7 +167,7 @@ export default function Navbar({ onOpenSidebar, onToggleMinified }) {
                     </div>
 
                     {/* Avatar dropdown */}
-                    <div className="dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]">
+                    <div ref={avatarRef} className={`dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end] --prevent-on-load-init ${avatarOpen ? 'open' : ''}`}>
                         <button
                             type="button"
                             className="dropdown-toggle flex items-center"
@@ -167,7 +188,7 @@ export default function Navbar({ onOpenSidebar, onToggleMinified }) {
                             </div>
                         </button>
                         {avatarOpen && (
-                            <ul className="dropdown-menu dropdown-open:opacity-100 min-w-60 border border-base-300" role="menu" aria-labelledby="dropdown-avatar">
+                            <ul className="dropdown-menu dropdown-open:opacity-100 absolute end-0 top-full mt-2 min-w-60 border border-base-300 z-50" role="menu" aria-labelledby="dropdown-avatar">
                                 <li className="dropdown-header gap-2">
                                     <div>
                                         <h6 className="text-base-content text-base font-semibold">{user?.name}</h6>
