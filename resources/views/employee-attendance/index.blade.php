@@ -20,7 +20,7 @@
             <i class="icon-[tabler--clock]"></i> My Attendance
         </span>
         <h2 class="text-lg font-bold text-base-content mt-2 mb-1">Attendance Records</h2>
-        <p class="text-base-content/60 m-0">
+        <p class="text-subtle m-0">
             Track your daily time-in/time-out records
         </p>
     </div>
@@ -38,23 +38,23 @@
 @if($currentPeriod)
 <div class="card bg-base-100 border border-base-300 p-6 mb-6">
     <h3 class="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
-        <i class="icon-[tabler--calendar] text-base-content/60"></i> Current Payroll Period
+        <i class="icon-[tabler--calendar] text-subtle"></i> Current Payroll Period
     </h3>
     <div class="grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
         <div class="p-4 bg-base-200 rounded-lg border-l-4 border-info">
-            <div class="text-xs text-base-content/60 mb-1">Period</div>
+            <div class="text-xs text-subtle mb-1">Period</div>
             <div class="text-sm font-semibold text-base-content">
                 {{ $currentPeriod->cutoff_start->format('M d') }} - {{ $currentPeriod->cutoff_end->format('M d, Y') }}
             </div>
         </div>
         <div class="p-4 bg-base-200 rounded-lg border-l-4 border-success">
-            <div class="text-xs text-base-content/60 mb-1">Total Rendered Hours</div>
+            <div class="text-xs text-subtle mb-1">Total Rendered Hours</div>
             <div class="text-lg font-bold text-success">
                 {{ number_format($totalHours, 2) }} hrs
             </div>
         </div>
         <div class="p-4 bg-base-200 rounded-lg border-l-4 border-accent">
-            <div class="text-xs text-base-content/60 mb-1">Total Computed Days</div>
+            <div class="text-xs text-subtle mb-1">Total Computed Days</div>
             <div class="text-lg font-bold text-accent">
                 {{ number_format($totalDays, 2) }} days
             </div>
@@ -88,7 +88,7 @@
                 <td class="text-base-content">{{ $attendance->time_out ?: '-' }}</td>
                 <td class="text-base-content font-semibold">{{ number_format($attendance->rendered_hours, 2) }} hrs</td>
                 <td class="text-base-content font-semibold">{{ number_format($attendance->computed_days, 2) }} days</td>
-                <td class="text-base-content/60">{{ $attendance->remarks ?? '-' }}</td>
+                <td class="text-subtle">{{ $attendance->remarks ?? '-' }}</td>
                 <td class="text-center">
                     <div class="flex gap-2 justify-center">
                         <a href="{{ route('employee-attendance.create') }}" class="btn btn-soft btn-info btn-sm">

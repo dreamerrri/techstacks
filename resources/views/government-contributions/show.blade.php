@@ -8,7 +8,7 @@
     {{-- Top nav --}}
     <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
         <a href="{{ route('government-contributions.index') }}"
-           class="back-link text-base-content/60 no-underline text-sm hover:text-success flex items-center gap-1">
+           class="back-link text-subtle no-underline text-sm hover:text-success flex items-center gap-1">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Government Contributions
         </a>
         <div class="flex gap-2">
@@ -36,7 +36,7 @@
         </div>
         <div>
             <h2 class="text-xl font-bold text-base-content m-0 mb-1">{{ $employee->full_name }}</h2>
-            <p class="text-base-content/60 m-0">{{ $employee->position }} — {{ $employee->department }}</p>
+            <p class="text-subtle m-0">{{ $employee->position }} — {{ $employee->department }}</p>
             <p class="text-base-content font-semibold text-sm mt-1 m-0">Basic Salary: ₱{{ number_format($employee->basic_salary, 2) }}</p>
             @php
                 $statusClass = match($employee->employment_status) {
@@ -69,7 +69,7 @@
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 {{ $color }} {{ $bg }}">
                 <i class="{{ $icon }}"></i>
             </div>
-            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium mb-1">{{ $label }}</div>
+            <div class="text-xs text-faint uppercase tracking-widest font-medium mb-1">{{ $label }}</div>
             <div class="font-bold font-mono text-base-content text-xs break-all">{{ $value ?? '—' }}</div>
         </div>
     @endforeach
@@ -82,19 +82,19 @@
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-base-200 p-4 rounded-xl shadow-sm">
-                    <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Monthly Salary Credit</div>
+                    <div class="text-xs text-faint uppercase tracking-wider mb-1">Monthly Salary Credit</div>
                     <div class="font-bold text-base-content text-lg">₱{{ number_format($sssContribution['salary_credit'], 2) }}</div>
                 </div>
                 <div class="bg-base-200 p-4 rounded-xl shadow-sm">
-                    <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Employee Share</div>
+                    <div class="text-xs text-faint uppercase tracking-wider mb-1">Employee Share</div>
                     <input type="number" name="custom_sss_contribution" id="custom_sss_contribution"
                            value="{{ $employee->custom_sss_contribution ?? $sssContribution['employee_share'] }}"
                            step="0.01" min="0"
                            class="input input-bordered w-full font-bold text-error text-lg">
-                    <div class="text-xs text-base-content/60 mt-1 italic">Leave blank to use calculated contribution based on salary</div>
+                    <div class="text-xs text-subtle mt-1 italic">Leave blank to use calculated contribution based on salary</div>
                 </div>
                 <div class="bg-base-200 p-4 rounded-xl shadow-sm">
-                    <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Total Contribution</div>
+                    <div class="text-xs text-faint uppercase tracking-wider mb-1">Total Contribution</div>
                     <div class="font-bold text-base-content text-lg">₱{{ number_format($sssContribution['total'], 2) }}</div>
                 </div>
             </div>
@@ -107,20 +107,20 @@
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-base-200 p-4 rounded-xl shadow-sm">
-                    <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Salary Basis</div>
+                    <div class="text-xs text-faint uppercase tracking-wider mb-1">Salary Basis</div>
                     <div class="font-bold text-base-content text-lg">₱{{ number_format($philHealthContribution['salary_basis'], 2) }}</div>
                 </div>
                 <div class="bg-base-200 p-4 rounded-xl shadow-sm">
-                    <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Employee Rate</div>
+                    <div class="text-xs text-faint uppercase tracking-wider mb-1">Employee Rate</div>
                     <div class="font-bold text-base-content text-lg">{{ number_format($philHealthContribution['employee_rate'] * 100, 1) }}%</div>
                 </div>
                 <div class="bg-base-200 p-4 rounded-xl shadow-sm">
-                    <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Employee Share</div>
+                    <div class="text-xs text-faint uppercase tracking-wider mb-1">Employee Share</div>
                     <input type="number" name="custom_philhealth_contribution" id="custom_philhealth_contribution"
                            value="{{ $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'] }}"
                            step="0.01" min="0"
                            class="input input-bordered w-full font-bold text-error text-lg">
-                    <div class="text-xs text-base-content/60 mt-1 italic">Leave blank to use calculated contribution based on salary</div>
+                    <div class="text-xs text-subtle mt-1 italic">Leave blank to use calculated contribution based on salary</div>
                 </div>
             </div>
         </div>
@@ -132,22 +132,22 @@
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-base-200 p-4 rounded-xl shadow-sm">
-                    <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Monthly Salary</div>
+                    <div class="text-xs text-faint uppercase tracking-wider mb-1">Monthly Salary</div>
                     <div class="font-bold text-base-content text-lg">₱{{ number_format($pagIbigContribution['salary'], 2) }}</div>
                 </div>
                 @if($pagIbigContribution['employee_rate'] !== null)
                     <div class="bg-base-200 p-4 rounded-xl shadow-sm">
-                        <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Employee Rate</div>
+                        <div class="text-xs text-faint uppercase tracking-wider mb-1">Employee Rate</div>
                         <div class="font-bold text-base-content text-lg">{{ number_format($pagIbigContribution['employee_rate'] * 100, 1) }}%</div>
                     </div>
                 @endif
                 <div class="bg-base-200 p-4 rounded-xl shadow-sm">
-                    <div class="text-xs text-base-content/40 uppercase tracking-wider mb-1">Employee Share</div>
+                    <div class="text-xs text-faint uppercase tracking-wider mb-1">Employee Share</div>
                     <input type="number" name="custom_pagibig_contribution" id="custom_pagibig_contribution"
                            value="{{ $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'] }}"
                            step="0.01" min="0"
                            class="input input-bordered w-full font-bold text-error text-lg">
-                    <div class="text-xs text-base-content/60 mt-1 italic">Leave blank to use calculated contribution based on salary</div>
+                    <div class="text-xs text-subtle mt-1 italic">Leave blank to use calculated contribution based on salary</div>
                 </div>
             </div>
         </div>

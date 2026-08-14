@@ -28,7 +28,7 @@ export default function PermissionsEdit({ permission }) {
             <Head title="Edit Permission" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href={`/permissions/${permission.id}`} className="back-link text-base-content/60 no-underline text-sm hover:text-success">
+                    <Link href={`/permissions/${permission.id}`} className="back-link text-subtle no-underline text-sm hover:text-success">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Permission
                     </Link>
                 </div>
@@ -40,7 +40,7 @@ export default function PermissionsEdit({ permission }) {
 
                     <form onSubmit={(e) => { e.preventDefault(); put(`/permissions/${permission.id}`); }}>
                         <div className="mb-8">
-                            <h3 className="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+                            <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
                                 <Icon name="ph--info-fill" className="size-4 text-error inline" /> Permission Details
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -89,7 +89,7 @@ export default function PermissionsEdit({ permission }) {
                                         onChange={(e) => setData('is_active', e.target.checked)}
                                         className="checkbox checkbox-error"
                                     />
-                                    <span className="font-semibold text-base-content/80 text-sm">Active</span>
+                                    <span className="font-semibold text-muted text-sm">Active</span>
                                 </div>
                             </div>
                         </div>

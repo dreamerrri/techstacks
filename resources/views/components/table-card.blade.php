@@ -67,7 +67,7 @@
 
 <div class="sticky top-0 px-4 sm:px-7 pt-5 rounded-t-2xl">
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h2 class="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
+            <h2 class="text-sm font-semibold uppercase tracking-widest text-faint flex items-center gap-2 m-0">
                 {{ $title ?? '' }}
             </h2>
 

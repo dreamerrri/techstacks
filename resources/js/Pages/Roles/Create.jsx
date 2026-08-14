@@ -106,7 +106,7 @@ export default function RolesCreate({ permissions }) {
                                                 {module.charAt(0).toUpperCase() + module.slice(1)}
                                             </div>
                                             {modulePermissions.map((permission) => (
-                                                <label key={permission.id} className="flex items-center gap-2 cursor-pointer text-xs text-base-content/80 mb-2">
+                                                <label key={permission.id} className="flex items-center gap-2 cursor-pointer text-xs text-muted mb-2">
                                                     <input
                                                         type="checkbox"
                                                         checked={data.permissions.includes(permission.id)}

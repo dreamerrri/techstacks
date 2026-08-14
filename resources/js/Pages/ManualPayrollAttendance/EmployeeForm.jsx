@@ -25,11 +25,11 @@ function ApprovedRequests({ approvedRequests }) {
                 {approvedRequests.map((r) => (
                     <div key={r.id} className="py-2 border-b border-success/20">
                         <span style={{ fontWeight: 600 }}>{r.request_type ? r.request_type.charAt(0).toUpperCase() + r.request_type.slice(1) : ''}</span>
-                        <span className="text-base-content/60"> | </span>
+                        <span className="text-subtle"> | </span>
                         <span>{fmtDate(r.work_date, { month: 'short', day: '2-digit', year: 'numeric' })}</span>
                         {(r.calculated_overtime_hours || r.estimated_hours) && (
                             <>
-                                <span className="text-base-content/60"> | </span>
+                                <span className="text-subtle"> | </span>
                                 <span>{fmtNum(r.calculated_overtime_hours || r.estimated_hours, 1)} hrs</span>
                             </>
                         )}
@@ -56,9 +56,9 @@ function CashAdvanceBox({ cashAdvance, isSecondHalf }) {
                         {fullyPaid.map((r, i) => (
                             <div key={i} className="py-2 border-b border-success/20">
                                 <span className="font-semibold">{fmtMoney(r.amount)}</span>
-                                <span className="text-base-content/60"> | </span>
+                                <span className="text-subtle"> | </span>
                                 <span>{fmtDate(r.request_date, { month: 'short', day: '2-digit', year: 'numeric' })}</span>
-                                <span className="text-base-content/60"> | </span>
+                                <span className="text-subtle"> | </span>
                                 <span className="font-semibold text-success">Fully Paid: {fmtMoney(r.amount_paid)}</span>
                             </div>
                         ))}
@@ -76,11 +76,11 @@ function CashAdvanceBox({ cashAdvance, isSecondHalf }) {
                         {outstanding.map((r, i) => (
                             <div key={i} className="py-2 border-b border-warning/20">
                                 <span className="font-semibold">{fmtMoney(r.amount)}</span>
-                                <span className="text-base-content/60"> | </span>
+                                <span className="text-subtle"> | </span>
                                 <span>{fmtDate(r.request_date, { month: 'short', day: '2-digit', year: 'numeric' })}</span>
-                                <span className="text-base-content/60"> | </span>
+                                <span className="text-subtle"> | </span>
                                 <span>Paid: {fmtMoney(r.amount_paid)}</span>
-                                <span className="text-base-content/60"> | </span>
+                                <span className="text-subtle"> | </span>
                                 <span className="font-semibold text-warning">Balance: {fmtMoney(r.amount - r.amount_paid)}</span>
                             </div>
                         ))}
@@ -109,7 +109,7 @@ function CashAdvanceBox({ cashAdvance, isSecondHalf }) {
 function Row({ label, value, tone = '' }) {
     return (
         <div className="flex justify-between text-xs mb-3">
-            <span className="text-base-content/60">{label}</span>
+            <span className="text-subtle">{label}</span>
             <span className={`font-semibold ${tone}`}>{value}</span>
         </div>
     );
@@ -128,7 +128,7 @@ function AllowanceBenefitList({ employee, total }) {
                             <div key={`a-${i}`} className="flex items-center justify-between bg-base-100 border-s-4 border-primary rounded-lg p-3">
                                 <div>
                                     <div className="font-semibold text-xs text-base-content">{a.name}</div>
-                                    <div className="text-base-content/60 text-xs">{a.type}</div>
+                                    <div className="text-subtle text-xs">{a.type}</div>
                                 </div>
                                 <div className="font-bold text-success text-sm">{fmtMoney(Number(a.amount || 0) / 2)}</div>
                             </div>
@@ -137,7 +137,7 @@ function AllowanceBenefitList({ employee, total }) {
                             <div key={`b-${i}`} className="flex items-center justify-between bg-base-100 border-s-4 border-primary rounded-lg p-3">
                                 <div>
                                     <div className="font-semibold text-xs text-base-content">{b.name}</div>
-                                    <div className="text-base-content/60 text-xs">{b.type}</div>
+                                    <div className="text-subtle text-xs">{b.type}</div>
                                 </div>
                                 <div className="font-bold text-sm">{fmtMoney(Number(b.amount || 0) / 2)}</div>
                             </div>
@@ -149,7 +149,7 @@ function AllowanceBenefitList({ employee, total }) {
                     </div>
                 </>
             ) : (
-                <div className="text-center text-xs text-base-content/60 p-4">No allowances or benefits configured for this employee.</div>
+                <div className="text-center text-xs text-subtle p-4">No allowances or benefits configured for this employee.</div>
             )}
         </div>
     );
@@ -241,7 +241,7 @@ export default function ManualPayrollEmployeeForm({
         <AppLayout title={`Encode Attendance - ${employee.first_name || 'Employee'} ${employee.last_name || ''}`}>
             <Head title="Encode Attendance" />
             <div className="p-2 sm:p-4">
-                <Link href={`/manual-payroll-attendance/period/${payrollPeriod.id}`} className="inline-flex items-center text-sm text-base-content/60 mb-4 gap-3 no-underline hover:text-primary">
+                <Link href={`/manual-payroll-attendance/period/${payrollPeriod.id}`} className="inline-flex items-center text-sm text-subtle mb-4 gap-3 no-underline hover:text-primary">
                     <Icon name="tabler--arrow-left" className="size-4" /> Back to Period
                 </Link>
 
@@ -251,7 +251,7 @@ export default function ManualPayrollEmployeeForm({
                             <Icon name="tabler--user-edit" className="size-3.5" /> {isEdit ? 'Edit' : 'Encode'} Attendance
                         </span>
                         <h2 className="text-lg font-bold text-base-content mt-2 mb-1">{employee.first_name || 'Employee'} {employee.last_name || ''}</h2>
-                        <p className="text-base-content/60 m-0">
+                        <p className="text-subtle m-0">
                             {employee.employee_id || 'N/A'} | {employee.position || 'N/A'} | {employee.department || 'N/A'} | Period: {periodDates}
                         </p>
                     </div>
@@ -261,7 +261,7 @@ export default function ManualPayrollEmployeeForm({
                     <div className="card bg-base-100 border border-base-300 overflow-hidden p-0">
                         <div className="px-6 py-4 border-b border-base-300">
                             <h3 className="text-sm font-bold text-base-content m-0">Attendance Details</h3>
-                            <p className="text-sm text-base-content/60 m-0">Enter attendance totals for the payroll period</p>
+                            <p className="text-sm text-subtle m-0">Enter attendance totals for the payroll period</p>
                         </div>
 
                         <div className="p-4">
@@ -272,7 +272,7 @@ export default function ManualPayrollEmployeeForm({
                                 <Label>Rate Type</Label>
                                 <div className="text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-3">
                                     <span className="font-semibold">Daily Rate</span>
-                                    <span className="text-base-content/60"> (computed using BSM X 12 / 52 / 40 X 8)</span>
+                                    <span className="text-subtle"> (computed using BSM X 12 / 52 / 40 X 8)</span>
                                 </div>
                             </div>
 
@@ -280,7 +280,7 @@ export default function ManualPayrollEmployeeForm({
                                 <div>
                                     <Label>Daily Rate</Label>
                                     <input type="number" step="0.01" min="0" required value={data.daily_rate} onChange={setNum('daily_rate')} className={inputCls(errors.daily_rate)} />
-                                    <p className="text-xs text-base-content/60 mt-1">Based on basic salary ({fmtMoney(employee.basic_salary)})</p>
+                                    <p className="text-xs text-subtle mt-1">Based on basic salary ({fmtMoney(employee.basic_salary)})</p>
                                     {errors.daily_rate && <p className="text-error text-xs mt-1">{errors.daily_rate}</p>}
                                 </div>
                                 <div>
@@ -295,7 +295,7 @@ export default function ManualPayrollEmployeeForm({
                                         className={inputCls(errors.days_worked)}
                                         placeholder={computedDaysFromAttendance ? `Leave blank to use ${fmtNum(computedDaysFromAttendance, 2)} days from attendance` : 'Enter days worked'}
                                     />
-                                    <p className="text-xs text-base-content/60 mt-1">
+                                    <p className="text-xs text-subtle mt-1">
                                         {computedDaysFromAttendance ? `Leave blank to use ${fmtNum(computedDaysFromAttendance, 2)} days from attendance records, or enter a custom value.` : 'Enter days worked for the period.'}
                                     </p>
                                     {errors.days_worked && <p className="text-error text-xs mt-1">{errors.days_worked}</p>}
@@ -305,7 +305,7 @@ export default function ManualPayrollEmployeeForm({
                             <div className="mb-4">
                                 <Label>Weekends Worked</Label>
                                 <input type="number" step="0.5" min="0" value={data.weekends_worked} onChange={setNum('weekends_worked')} className={inputCls(errors.weekends_worked)} />
-                                <p className="text-xs text-base-content/60 mt-1">Number of weekend days worked (paid at 30% premium of daily rate)</p>
+                                <p className="text-xs text-subtle mt-1">Number of weekend days worked (paid at 30% premium of daily rate)</p>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
@@ -322,13 +322,13 @@ export default function ManualPayrollEmployeeForm({
                             <div className="mb-4">
                                 <Label>Holiday Days Worked</Label>
                                 <input type="number" step="0.5" min="0" value={data.holiday_days} onChange={setNum('holiday_days')} className={inputCls(errors.holiday_days)} />
-                                <p className="text-xs text-base-content/60 mt-1">Number of regular holidays worked (paid at 200% of daily rate)</p>
+                                <p className="text-xs text-subtle mt-1">Number of regular holidays worked (paid at 200% of daily rate)</p>
                             </div>
 
                             <div className="mb-4">
                                 <Label>Night Differential Hours</Label>
                                 <input type="number" step="0.5" min="0" value={data.night_differential_hours} onChange={setNum('night_differential_hours')} className={inputCls(errors.night_differential_hours)} />
-                                <p className="text-xs text-base-content/60 mt-1">Hours worked during night shift (paid at 10% premium of hourly rate)</p>
+                                <p className="text-xs text-subtle mt-1">Hours worked during night shift (paid at 10% premium of hourly rate)</p>
                             </div>
 
                             <div className="mb-4">
@@ -346,7 +346,7 @@ export default function ManualPayrollEmployeeForm({
                                 <Label>Reimbursements</Label>
                                 <input type="number" step="0.01" min="0" value={data.reimbursements} onChange={setNum('reimbursements')} className={inputCls(errors.reimbursements)} />
                                 <input type="text" value={data.reimbursements_remarks} onChange={(e) => setData('reimbursements_remarks', e.target.value)} placeholder="Remarks (optional)" className="input input-bordered w-full text-sm mt-2" />
-                                <p className="text-xs text-base-content/60 mt-1">Expense reimbursements to be added to net pay</p>
+                                <p className="text-xs text-subtle mt-1">Expense reimbursements to be added to net pay</p>
                             </div>
 
                             <div className="flex gap-3">
@@ -363,7 +363,7 @@ export default function ManualPayrollEmployeeForm({
                     <div className="card bg-base-100 border border-base-300 overflow-hidden p-0">
                         <div className="bg-base-200 px-6 py-4 border-b border-base-300">
                             <h3 className="flex items-center gap-3 text-sm font-bold text-base-content m-0">
-                                <Icon name="tabler--receipt-2" className="size-5 text-base-content/60" /> Payroll Preview
+                                <Icon name="tabler--receipt-2" className="size-5 text-subtle" /> Payroll Preview
                             </h3>
                         </div>
 
@@ -376,8 +376,8 @@ export default function ManualPayrollEmployeeForm({
                             )}
 
                             {!preview ? (
-                                <div className="text-center text-base-content/60 p-8">
-                                    <Icon name="tabler--calculator" className="size-8 mx-auto mb-3 text-base-content/30" />
+                                <div className="text-center text-subtle p-8">
+                                    <Icon name="tabler--calculator" className="size-8 mx-auto mb-3 text-faint" />
                                     <p className="text-sm m-0">Click "Preview" to see payroll computation</p>
                                 </div>
                             ) : (

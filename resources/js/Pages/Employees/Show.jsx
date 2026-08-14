@@ -77,15 +77,15 @@ export default function EmployeesShow({ employee, payrollInput }) {
             <form onSubmit={saveAllowance}>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
                     <div className="fieldset">
-                        <label className="label text-xs text-base-content/60">Name</label>
+                        <label className="label text-xs text-subtle">Name</label>
                         <input type="text" value={allowance.data.name} onChange={(e) => allowance.setData('name', e.target.value)} required className="input input-bordered input-sm w-full" />
                     </div>
                     <div className="fieldset">
-                        <label className="label text-xs text-base-content/60">Amount</label>
+                        <label className="label text-xs text-subtle">Amount</label>
                         <input type="number" step="0.01" min="0" value={allowance.data.amount} onChange={(e) => allowance.setData('amount', e.target.value)} required className="input input-bordered input-sm w-full" />
                     </div>
                     <div className="fieldset">
-                        <label className="label text-xs text-base-content/60">Type</label>
+                        <label className="label text-xs text-subtle">Type</label>
                         <select value={allowance.data.type} onChange={(e) => allowance.setData('type', e.target.value)} className="select select-bordered select-sm w-full">
                             <option value="monthly">Monthly</option>
                             <option value="one-time">One-time</option>
@@ -93,7 +93,7 @@ export default function EmployeesShow({ employee, payrollInput }) {
                     </div>
                 </div>
                 <div className="fieldset mb-3">
-                    <label className="label text-xs text-base-content/60">Description (optional)</label>
+                    <label className="label text-xs text-subtle">Description (optional)</label>
                     <textarea rows="2" value={allowance.data.description} onChange={(e) => allowance.setData('description', e.target.value)} className="textarea textarea-bordered textarea-sm w-full" />
                 </div>
                 {allowance.errors && Object.keys(allowance.errors).length > 0 && (
@@ -117,15 +117,15 @@ export default function EmployeesShow({ employee, payrollInput }) {
             <form onSubmit={saveBenefit}>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
                     <div className="fieldset">
-                        <label className="label text-xs text-base-content/60">Name</label>
+                        <label className="label text-xs text-subtle">Name</label>
                         <input type="text" value={benefit.data.name} onChange={(e) => benefit.setData('name', e.target.value)} required className="input input-bordered input-sm w-full" />
                     </div>
                     <div className="fieldset">
-                        <label className="label text-xs text-base-content/60">Amount</label>
+                        <label className="label text-xs text-subtle">Amount</label>
                         <input type="number" step="0.01" min="0" value={benefit.data.amount} onChange={(e) => benefit.setData('amount', e.target.value)} required className="input input-bordered input-sm w-full" />
                     </div>
                     <div className="fieldset">
-                        <label className="label text-xs text-base-content/60">Type</label>
+                        <label className="label text-xs text-subtle">Type</label>
                         <select value={benefit.data.type} onChange={(e) => benefit.setData('type', e.target.value)} className="select select-bordered select-sm w-full">
                             <option value="monthly">Monthly</option>
                             <option value="one-time">One-time</option>
@@ -133,7 +133,7 @@ export default function EmployeesShow({ employee, payrollInput }) {
                     </div>
                 </div>
                 <div className="fieldset mb-3">
-                    <label className="label text-xs text-base-content/60">Description (optional)</label>
+                    <label className="label text-xs text-subtle">Description (optional)</label>
                     <textarea rows="2" value={benefit.data.description} onChange={(e) => benefit.setData('description', e.target.value)} className="textarea textarea-bordered textarea-sm w-full" />
                 </div>
                 {benefit.errors && Object.keys(benefit.errors).length > 0 && (
@@ -154,7 +154,7 @@ export default function EmployeesShow({ employee, payrollInput }) {
             <Head title={employee.full_name} />
             <div className="p-2 sm:p-4">
                 <div className="flex justify-between items-center flex-wrap gap-3 mb-5">
-                    <Link href="/employees" className="back-link text-base-content/60 no-underline text-sm hover:text-success">
+                    <Link href="/employees" className="back-link text-subtle no-underline text-sm hover:text-success">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Employee List
                     </Link>
                     <div className="flex gap-2 flex-wrap">
@@ -188,7 +188,7 @@ export default function EmployeesShow({ employee, payrollInput }) {
                     </div>
                     <div>
                         <h2 className="text-xl font-bold text-base-content m-0 mb-1">{employee.full_name}</h2>
-                        <p className="text-base-content/60 m-0">{employee.position} — {employee.department}</p>
+                        <p className="text-subtle m-0">{employee.position} — {employee.department}</p>
                         <div className="mt-2">
                             <StatusBadge type={STATUS_META[employee.employment_status] ?? 'neutral'}>
                                 {employee.employment_status}
@@ -247,7 +247,7 @@ export default function EmployeesShow({ employee, payrollInput }) {
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
                                 {payrollStats.map((stat) => (
                                     <div key={stat.label}>
-                                        <div className="text-xs text-base-content/60 mb-1">{stat.label}</div>
+                                        <div className="text-xs text-subtle mb-1">{stat.label}</div>
                                         <div className={`text-lg font-bold ${stat.cls}`}>{stat.value}</div>
                                     </div>
                                 ))}
@@ -271,7 +271,7 @@ export default function EmployeesShow({ employee, payrollInput }) {
                                 <h2 className="text-sm font-bold text-base-content m-0 flex items-center gap-2">
                                     <Icon name="ph--identification-card-fill" className="size-4 text-error" /> Government Contributions
                                 </h2>
-                                <p className="text-base-content/60 text-xs mt-1 mb-0">View and manage government contribution rates for this employee.</p>
+                                <p className="text-subtle text-xs mt-1 mb-0">View and manage government contribution rates for this employee.</p>
                             </div>
                             <Link href={`/government-contributions/${employee.id}`} className="btn btn-soft btn-info btn-sm">
                                 <Icon name="ph--eye-fill" className="size-4" /> View Contributions
@@ -285,7 +285,7 @@ export default function EmployeesShow({ employee, payrollInput }) {
                                 <h2 className="text-sm font-bold text-base-content m-0 flex items-center gap-2">
                                     <Icon name="ph--clock-fill" className="size-4 text-error" /> Attendance Records
                                 </h2>
-                                <p className="text-base-content/60 text-xs mt-1 mb-0">View daily time-in/time-out records and attendance history for this employee.</p>
+                                <p className="text-subtle text-xs mt-1 mb-0">View daily time-in/time-out records and attendance history for this employee.</p>
                             </div>
                             <Link href={`/employee-attendance/employee/${employee.id}`} className="btn btn-soft btn-success btn-sm">
                                 <Icon name="ph--eye-fill" className="size-4" /> View Attendance
@@ -310,7 +310,7 @@ export default function EmployeesShow({ employee, payrollInput }) {
                             </div>
 
                             <div className="mb-6">
-                                <h3 className="text-sm font-bold text-base-content/80 mb-3">Allowances</h3>
+                                <h3 className="text-sm font-bold text-muted mb-3">Allowances</h3>
                                 {(employee.active_allowances || []).length > 0 ? (
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                         {employee.active_allowances.map((allowanceItem) => (
@@ -318,8 +318,8 @@ export default function EmployeesShow({ employee, payrollInput }) {
                                                 <div className="flex justify-between items-start">
                                                     <div>
                                                         <div className="font-semibold text-base-content text-sm">{allowanceItem.name}</div>
-                                                        <div className="text-base-content/60 text-xs mt-0.5 capitalize">{allowanceItem.type}</div>
-                                                        {allowanceItem.description && <div className="text-base-content/40 text-xs mt-1">{allowanceItem.description}</div>}
+                                                        <div className="text-subtle text-xs mt-0.5 capitalize">{allowanceItem.type}</div>
+                                                        {allowanceItem.description && <div className="text-faint text-xs mt-1">{allowanceItem.description}</div>}
                                                     </div>
                                                     <div className="text-right">
                                                         <div className="font-bold text-success text-sm">{fmtMoney(allowanceItem.amount)}</div>
@@ -339,12 +339,12 @@ export default function EmployeesShow({ employee, payrollInput }) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="py-3 bg-base-200 rounded-lg text-center text-base-content/40 text-xs">No allowances added</div>
+                                    <div className="py-3 bg-base-200 rounded-lg text-center text-faint text-xs">No allowances added</div>
                                 )}
                             </div>
 
                             <div className="mb-4">
-                                <h3 className="text-sm font-bold text-base-content/80 mb-3">Benefits</h3>
+                                <h3 className="text-sm font-bold text-muted mb-3">Benefits</h3>
                                 {(employee.active_benefits || []).length > 0 ? (
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                         {employee.active_benefits.map((benefitItem) => (
@@ -352,8 +352,8 @@ export default function EmployeesShow({ employee, payrollInput }) {
                                                 <div className="flex justify-between items-start">
                                                     <div>
                                                         <div className="font-semibold text-base-content text-sm">{benefitItem.name}</div>
-                                                        <div className="text-base-content/60 text-xs mt-0.5 capitalize">{benefitItem.type}</div>
-                                                        {benefitItem.description && <div className="text-base-content/40 text-xs mt-1">{benefitItem.description}</div>}
+                                                        <div className="text-subtle text-xs mt-0.5 capitalize">{benefitItem.type}</div>
+                                                        {benefitItem.description && <div className="text-faint text-xs mt-1">{benefitItem.description}</div>}
                                                     </div>
                                                     <div className="text-right">
                                                         <div className="font-bold text-info text-sm">{fmtMoney(benefitItem.amount)}</div>
@@ -373,7 +373,7 @@ export default function EmployeesShow({ employee, payrollInput }) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="py-3 bg-base-200 rounded-lg text-center text-base-content/40 text-xs">No benefits added</div>
+                                    <div className="py-3 bg-base-200 rounded-lg text-center text-faint text-xs">No benefits added</div>
                                 )}
                             </div>
 

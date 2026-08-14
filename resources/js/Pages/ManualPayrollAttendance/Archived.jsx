@@ -19,7 +19,7 @@ export default function ArchivedPayrollPeriods({ periods }) {
             <Head title="Archived Payroll Periods" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/manual-payroll-attendance" className="text-base-content/60 no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
+                    <Link href="/manual-payroll-attendance" className="text-subtle no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Attendance page
                     </Link>
                 </div>
@@ -30,7 +30,7 @@ export default function ArchivedPayrollPeriods({ periods }) {
                             <Icon name="tabler--archive" className="size-3.5" /> Archived Payroll Periods
                         </span>
                         <h2 className="text-base font-bold text-base-content mt-2 mb-1">Archived Periods</h2>
-                        <p className="text-base-content/60 text-sm m-0">Archived periods are read-only and can be restored if needed. {periods.length} archived payroll {periods.length === 1 ? 'period' : 'periods'}</p>
+                        <p className="text-subtle text-sm m-0">Archived periods are read-only and can be restored if needed. {periods.length} archived payroll {periods.length === 1 ? 'period' : 'periods'}</p>
                     </div>
 
                     {periods.length > 0 ? (
@@ -43,18 +43,18 @@ export default function ArchivedPayrollPeriods({ periods }) {
                                                 <div className="font-semibold text-base-content text-base">
                                                     {fmtDate(period.cutoff_start, { month: 'short', day: '2-digit' })} - {fmtDate(period.cutoff_end)}
                                                 </div>
-                                                <div className="text-base-content/60 text-xs mt-1">Payroll Date: {fmtDate(period.payroll_date)}</div>
-                                                <div className="text-base-content/40 text-xs mt-1">Created by: {period.created_by || 'N/A'}</div>
+                                                <div className="text-subtle text-xs mt-1">Payroll Date: {fmtDate(period.payroll_date)}</div>
+                                                <div className="text-faint text-xs mt-1">Created by: {period.created_by || 'N/A'}</div>
                                             </div>
                                             <span className="badge badge-soft badge-neutral whitespace-nowrap">Archived</span>
                                         </div>
                                         <div className="flex gap-4 mt-3 pt-3 border-t border-base-200 text-xs mb-4">
                                             <div>
-                                                <span className="text-base-content/60">Employees Encoded:</span>
+                                                <span className="text-subtle">Employees Encoded:</span>
                                                 <span className="font-semibold text-base-content ml-1">{period.encoded_count}</span>
                                             </div>
                                             <div>
-                                                <span className="text-base-content/60">Total Gross:</span>
+                                                <span className="text-subtle">Total Gross:</span>
                                                 <span className="font-semibold text-success ml-1">{fmtMoney(period.total_gross)}</span>
                                             </div>
                                         </div>
@@ -79,9 +79,9 @@ export default function ArchivedPayrollPeriods({ periods }) {
                         </div>
                     ) : (
                         <div className="py-16 px-6 text-center">
-                            <Icon name="tabler--archive-off" className="size-10 text-base-content/30 mx-auto mb-4" />
-                            <h3 className="text-base-content/60 font-semibold mb-2">No Archived Periods</h3>
-                            <p className="text-base-content/40 m-0">Archived payroll periods will appear here.</p>
+                            <Icon name="tabler--archive-off" className="size-10 text-faint mx-auto mb-4" />
+                            <h3 className="text-subtle font-semibold mb-2">No Archived Periods</h3>
+                            <p className="text-faint m-0">Archived payroll periods will appear here.</p>
                         </div>
                     )}
                 </div>

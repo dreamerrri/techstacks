@@ -61,7 +61,7 @@ export default function AuditLogsIndex({ logs, modules, actions, filters }) {
                             <Icon name="tabler--history" className="size-3.5" /> Audit Logs
                         </span>
                         <h2 className="text-lg font-bold text-base-content mt-2 mb-1">System Activity</h2>
-                        <p className="text-base-content/60 m-0">Track and review all system activity and changes.</p>
+                        <p className="text-subtle m-0">Track and review all system activity and changes.</p>
                     </div>
                 </div>
 
@@ -125,7 +125,7 @@ export default function AuditLogsIndex({ logs, modules, actions, filters }) {
                                     <tbody>
                                         {logs.data.map((log) => (
                                             <tr key={log.id} className="row-hover">
-                                                <td className="text-base-content/60 text-xs whitespace-nowrap">
+                                                <td className="text-subtle text-xs whitespace-nowrap">
                                                     {fmtDateTime(log.created_at)}<br />
                                                     {fmtTime(log.created_at)}
                                                 </td>
@@ -133,9 +133,9 @@ export default function AuditLogsIndex({ logs, modules, actions, filters }) {
                                                 <td>
                                                     <span className={`badge ${actionBadge(log.action)} whitespace-nowrap`}>{log.action ? log.action.charAt(0).toUpperCase() + log.action.slice(1) : ''}</span>
                                                 </td>
-                                                <td className="text-base-content/60">{log.module ? log.module.charAt(0).toUpperCase() + log.module.slice(1) : ''}</td>
-                                                <td className="text-base-content/60 max-w-[200px] truncate">{log.description}</td>
-                                                <td className="text-base-content/60 font-mono text-xs">{log.ip_address || '—'}</td>
+                                                <td className="text-subtle">{log.module ? log.module.charAt(0).toUpperCase() + log.module.slice(1) : ''}</td>
+                                                <td className="text-subtle max-w-[200px] truncate">{log.description}</td>
+                                                <td className="text-subtle font-mono text-xs">{log.ip_address || '—'}</td>
                                                 <td className="text-center">
                                                     <Link href={`/audit-logs/${log.id}`} className="btn btn-soft btn-info btn-sm" title="View details">
                                                         <Icon name="tabler--eye" className="size-4" />
@@ -157,18 +157,18 @@ export default function AuditLogsIndex({ logs, modules, actions, filters }) {
                                                 </div>
                                                 <div>
                                                     <div className="font-semibold text-base-content text-sm">{log.user?.name || 'System'}</div>
-                                                    <div className="text-xs text-base-content/40">{fmtDateTime(log.created_at)} {fmtTime(log.created_at)}</div>
+                                                    <div className="text-xs text-faint">{fmtDateTime(log.created_at)} {fmtTime(log.created_at)}</div>
                                                 </div>
                                             </div>
                                             <span className={`badge ${actionBadge(log.action)} whitespace-nowrap`}>{log.action ? log.action.charAt(0).toUpperCase() + log.action.slice(1) : ''}</span>
                                         </div>
 
-                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                                             <span><Icon name="tabler--cube" className="size-3.5 inline" /> {log.module ? log.module.charAt(0).toUpperCase() + log.module.slice(1) : ''}</span>
                                             <span><Icon name="tabler--network" className="size-3.5 inline" /> {log.ip_address || '—'}</span>
                                         </div>
 
-                                        <div className="text-xs text-base-content/40 mt-1">{log.description}</div>
+                                        <div className="text-xs text-faint mt-1">{log.description}</div>
 
                                         <div className="mt-3 pt-3 border-t border-base-200">
                                             <Link href={`/audit-logs/${log.id}`} className="btn btn-info btn-sm">
@@ -185,9 +185,9 @@ export default function AuditLogsIndex({ logs, modules, actions, filters }) {
                         </>
                     ) : (
                         <div className="py-16 px-6 text-center">
-                            <Icon name="tabler--history" className="size-10 text-base-content/30 mx-auto mb-4" />
-                            <h3 className="text-base-content/60 font-semibold mb-2">No Audit Logs Found</h3>
-                            <p className="text-base-content/40 mb-0">No audit log entries match your filters.</p>
+                            <Icon name="tabler--history" className="size-10 text-faint mx-auto mb-4" />
+                            <h3 className="text-subtle font-semibold mb-2">No Audit Logs Found</h3>
+                            <p className="text-faint mb-0">No audit log entries match your filters.</p>
                         </div>
                     )}
                 </div>

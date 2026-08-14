@@ -6,7 +6,7 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('permissions.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-success">
+        <a href="{{ route('permissions.index') }}" class="back-link text-subtle no-underline text-sm hover:text-success">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Permissions
         </a>
     </div>
@@ -27,7 +27,7 @@
                 </div>
                 <div>
                     <h2 class="text-xl font-bold text-base-content m-0">{{ $permission->name }}</h2>
-                    <code class="text-xs text-base-content/60 bg-base-200 px-2 py-0.5 rounded">{{ $permission->slug }}</code>
+                    <code class="text-xs text-subtle bg-base-200 px-2 py-0.5 rounded">{{ $permission->slug }}</code>
                 </div>
             </div>
             <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-soft btn-error btn-sm">
@@ -37,16 +37,16 @@
 
         {{-- Permission Information --}}
         <div class="mb-8">
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
                 <i class="icon-[ph--info-fill] text-error"></i> Permission Information
             </h3>
             <div class="flex flex-col">
                 <div class="flex justify-between items-center py-3 border-b border-base-200">
-                    <span class="text-base-content/40 font-medium">Module</span>
+                    <span class="text-faint font-medium">Module</span>
                     <span class="font-semibold text-base-content">{{ ucfirst($permission->module) }}</span>
                 </div>
                 <div class="flex justify-between items-center py-3 border-b border-base-200">
-                    <span class="text-base-content/40 font-medium">Status</span>
+                    <span class="text-faint font-medium">Status</span>
                     <span>
                         @if($permission->is_active)
                             <span class="badge badge-soft badge-success"><i class="icon-[tabler--circle-check]"></i> Active</span>
@@ -56,13 +56,13 @@
                     </span>
                 </div>
                 <div class="flex justify-between items-center py-3 {{ $permission->description ? 'border-b border-base-200' : '' }}">
-                    <span class="text-base-content/40 font-medium">Assigned to Roles</span>
+                    <span class="text-faint font-medium">Assigned to Roles</span>
                     <span class="font-semibold text-base-content">{{ $permission->roles->count() }}</span>
                 </div>
                 @if($permission->description)
                     <div class="flex flex-col gap-1 py-3">
-                        <span class="text-base-content/40 font-medium">Description</span>
-                        <span class="text-base-content/80 text-sm">{{ $permission->description }}</span>
+                        <span class="text-faint font-medium">Description</span>
+                        <span class="text-muted text-sm">{{ $permission->description }}</span>
                     </div>
                 @endif
             </div>
@@ -70,7 +70,7 @@
 
         {{-- Roles with this Permission --}}
         <div>
-            <h3 class="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+            <h3 class="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
                 <i class="icon-[tabler--user]-tag text-error"></i> Roles with this Permission ({{ $permission->roles->count() }})
             </h3>
 
@@ -84,7 +84,7 @@
                                 </div>
                                 <div>
                                     <div class="font-semibold text-base-content text-sm">{{ $role->name }}</div>
-                                    <code class="text-xs text-base-content/60">{{ $role->slug }}</code>
+                                    <code class="text-xs text-subtle">{{ $role->slug }}</code>
                                 </div>
                             </div>
                             <a href="{{ route('roles.show', $role) }}" class="btn btn-soft btn-info btn-sm">
@@ -94,7 +94,7 @@
                     @endforeach
                 </div>
             @else
-                <p class="text-base-content/40 text-sm m-0">No roles have this permission.</p>
+                <p class="text-faint text-sm m-0">No roles have this permission.</p>
             @endif
         </div>
 

@@ -24,6 +24,6 @@
 ])
 
 <div class="flex justify-between items-center py-2.5 {{ $border ? 'border-b border-base-300' : '' }}">
-    <span class="text-base-content/40">{{ $label }}</span>
+    <span class="text-faint">{{ $label }}</span>
     <span class="font-medium text-base-content">{{ $slot }}</span>
 </div>

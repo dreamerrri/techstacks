@@ -102,7 +102,7 @@ function ContributionBreakdownModal({ open, onClose, data, label }) {
                         <div className="text-base font-bold text-base-content flex items-center gap-2">
                             <Icon name="tabler--stack" className="text-error size-5" /> Contribution Breakdown
                         </div>
-                        <div className="text-xs text-base-content/60 mt-1">
+                        <div className="text-xs text-subtle mt-1">
                             {data.length} employee{data.length !== 1 ? 's' : ''} | {label}
                         </div>
                     </div>
@@ -139,9 +139,9 @@ function ContributionBreakdownModal({ open, onClose, data, label }) {
                                                     <div className="font-semibold text-base-content">
                                                         <Link href={`/government-contributions/${emp.id}`} className="text-base-content no-underline hover:text-primary">{emp.full_name}</Link>
                                                     </div>
-                                                    <div className="text-xs text-base-content/40 font-mono">{emp.employee_id}</div>
+                                                    <div className="text-xs text-faint font-mono">{emp.employee_id}</div>
                                                 </td>
-                                                <td className="text-base-content/60">{emp.department}</td>
+                                                <td className="text-subtle">{emp.department}</td>
                                                 <td className="text-right font-semibold text-base-content">{fmt(emp.basic_salary)}</td>
                                                 <td className="text-right text-error">{fmt(sss)}</td>
                                                 <td className="text-right text-info">{fmt(phil)}</td>
@@ -174,7 +174,7 @@ function ContributionBreakdownModal({ open, onClose, data, label }) {
                         </div>
                     </>
                 ) : (
-                    <div className="py-10 text-base-content/40 flex flex-col items-center justify-center gap-2 w-full">
+                    <div className="py-10 text-faint flex flex-col items-center justify-center gap-2 w-full">
                         <Icon name="tabler--inbox" className="size-8" />
                         <span>No contribution data for the current filter.</span>
                     </div>
@@ -263,14 +263,14 @@ export default function GovernmentContributionsIndex({ employees, departments, f
                             <tbody>
                                 {(employees.data || []).map((employee) => (
                                     <tr key={employee.id} className="row-hover">
-                                        <td className="font-mono text-base-content/60">{employee.employee_id}</td>
+                                        <td className="font-mono text-subtle">{employee.employee_id}</td>
                                         <td className="font-semibold text-base-content">
                                             <Link href={`/government-contributions/${employee.id}`} className="text-base-content no-underline hover:text-primary">
                                                 {employee.full_name}
                                             </Link>
                                         </td>
-                                        <td className="text-base-content/60">{employee.department}</td>
-                                        <td className="text-base-content/60">{employee.position}</td>
+                                        <td className="text-subtle">{employee.department}</td>
+                                        <td className="text-subtle">{employee.position}</td>
                                         <td>
                                             <span className={`badge ${statusBadge(employee.employment_status)} whitespace-nowrap`}>{employee.employment_status}</span>
                                         </td>
@@ -297,13 +297,13 @@ export default function GovernmentContributionsIndex({ employees, departments, f
                                             <Link href={`/government-contributions/${employee.id}`} className="font-semibold text-base-content no-underline text-sm hover:text-primary">
                                                 {employee.full_name}
                                             </Link>
-                                            <div className="text-xs text-base-content/60 font-mono">{employee.employee_id}</div>
+                                            <div className="text-xs text-subtle font-mono">{employee.employee_id}</div>
                                         </div>
                                     </div>
                                     <span className={`badge ${statusBadge(employee.employment_status)} whitespace-nowrap`}>{employee.employment_status}</span>
                                 </div>
 
-                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                                     <span><Icon name="tabler--building" className="size-3.5 inline" /> {employee.department}</span>
                                     <span><Icon name="tabler--briefcase" className="size-3.5 inline" /> {employee.position}</span>
                                     <span><Icon name="tabler--cash" className="size-3.5 inline" /> {fmt(employee.basic_salary)}</span>

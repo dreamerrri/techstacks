@@ -102,7 +102,7 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                                                     </StatusBadge>
                                                 </td>
                                                 <td className="text-base-content">{fmtDate(wr.work_date)}</td>
-                                                <td className="text-base-content/60">
+                                                <td className="text-subtle">
                                                     {fmtTime(wr.start_time) || '-'}
                                                     {wr.end_time ? ` - ${fmtTime(wr.end_time)}` : ''}
                                                 </td>
@@ -148,7 +148,7 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                                             <div>
                                                 <div className="text-sm text-base-content font-semibold">{fmtDate(wr.created_at)}</div>
                                                 {canManage && (
-                                                    <div className="text-xs text-base-content/60">{wr.employee?.full_name}</div>
+                                                    <div className="text-xs text-subtle">{wr.employee?.full_name}</div>
                                                 )}
                                             </div>
                                             <StatusBadge type={STATUS_META[wr.status] ?? 'neutral'}>
@@ -156,7 +156,7 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                                             </StatusBadge>
                                         </div>
 
-                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                                             <StatusBadge type={typeBadge(wr.request_type)}>
                                                 {wr.request_type.charAt(0).toUpperCase() + wr.request_type.slice(1)}
                                             </StatusBadge>
@@ -192,9 +192,9 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                         </>
                     ) : (
                         <div className="card p-12 text-center">
-                            <Icon name="tabler--calendar-off" className="size-10 text-base-content/30 mx-auto mb-3" />
-                            <h3 className="text-base-content/60 font-semibold mb-2">No Work Requests Found</h3>
-                            <p className="text-base-content/40 mb-6">
+                            <Icon name="tabler--calendar-off" className="size-10 text-faint mx-auto mb-3" />
+                            <h3 className="text-subtle font-semibold mb-2">No Work Requests Found</h3>
+                            <p className="text-faint mb-6">
                                 {!canManage
                                     ? `${hasFilters ? 'Try adjusting your filters or' : 'Get started by'} creating a new work request.`
                                     : 'No work requests match your current filters.'}

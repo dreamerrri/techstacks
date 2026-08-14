@@ -31,7 +31,7 @@ export default function RolesShow({ role, availableUsers }) {
             <Head title="Role Details" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/roles" className="back-link text-base-content/60 no-underline text-sm hover:text-success">
+                    <Link href="/roles" className="back-link text-subtle no-underline text-sm hover:text-success">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Roles
                     </Link>
                 </div>
@@ -44,7 +44,7 @@ export default function RolesShow({ role, availableUsers }) {
                             </div>
                             <div>
                                 <h2 className="text-xl font-bold text-base-content m-0">{role.name}</h2>
-                                <code className="text-xs text-base-content/60 bg-base-200 px-2 py-0.5 rounded">{role.slug}</code>
+                                <code className="text-xs text-subtle bg-base-200 px-2 py-0.5 rounded">{role.slug}</code>
                             </div>
                         </div>
                         <Link href={`/roles/${role.id}/edit`} className="btn btn-soft btn-error btn-sm">
@@ -53,12 +53,12 @@ export default function RolesShow({ role, availableUsers }) {
                     </div>
 
                     <div className="mb-8">
-                        <h3 className="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
                             <Icon name="tabler--user" className="size-4 text-error inline" /> Role Information
                         </h3>
                         <div className="flex flex-col">
                             <DetailRow label="Description">
-                                <span className="text-base-content/80">{role.description || '—'}</span>
+                                <span className="text-muted">{role.description || '—'}</span>
                             </DetailRow>
                             <DetailRow label="Status">
                                 {role.is_active ? <StatusBadge type="success">Active</StatusBadge> : <StatusBadge type="error">Inactive</StatusBadge>}
@@ -69,18 +69,18 @@ export default function RolesShow({ role, availableUsers }) {
                     </div>
 
                     <div className="mb-8">
-                        <h3 className="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
                             <Icon name="ph--key-fill" className="size-4 text-error inline" /> Permissions ({role.permissions?.length ?? 0})
                         </h3>
                         {role.permissions?.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                 {Object.entries(permissionGroups).map(([module, perms]) => (
                                     <div key={module} className="bg-base-200 border border-base-300 rounded-xl p-4">
-                                        <div className="text-xs font-bold text-base-content/60 uppercase tracking-widest mb-3">
+                                        <div className="text-xs font-bold text-subtle uppercase tracking-widest mb-3">
                                             {module.charAt(0).toUpperCase() + module.slice(1)}
                                         </div>
                                         {perms.map((permission) => (
-                                            <div key={permission.id} className="flex items-center gap-2 text-xs text-base-content/80 mb-1.5">
+                                            <div key={permission.id} className="flex items-center gap-2 text-xs text-muted mb-1.5">
                                                 <Icon name="tabler--circle-check" className="size-3.5 text-success flex-shrink-0" />
                                                 {permission.name}
                                             </div>
@@ -89,12 +89,12 @@ export default function RolesShow({ role, availableUsers }) {
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-base-content/40 text-sm m-0">No permissions assigned to this role.</p>
+                            <p className="text-faint text-sm m-0">No permissions assigned to this role.</p>
                         )}
                     </div>
 
                     <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
                             <Icon name="tabler--user" className="size-4 text-error inline" /> Assigned Users ({role.users?.length ?? 0})
                         </h3>
 
@@ -129,7 +129,7 @@ export default function RolesShow({ role, availableUsers }) {
                                             </div>
                                             <div>
                                                 <div className="font-semibold text-base-content text-sm">{user.name}</div>
-                                                <div className="text-base-content/60 text-xs">{user.email}</div>
+                                                <div className="text-subtle text-xs">{user.email}</div>
                                             </div>
                                         </div>
                                         {user.id !== auth?.user?.id && (
@@ -148,7 +148,7 @@ export default function RolesShow({ role, availableUsers }) {
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-base-content/40 text-sm m-0">No users assigned to this role.</p>
+                            <p className="text-faint text-sm m-0">No users assigned to this role.</p>
                         )}
                     </div>
                 </div>

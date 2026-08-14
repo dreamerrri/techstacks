@@ -14,7 +14,7 @@
 {{-- Header --}}
 <div class="mb-6">
     <a href="{{ route('employee-attendance.index') }}"
-       class="text-base-content/60 no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
+       class="text-subtle no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
         <i class="icon-[tabler--arrow-left]"></i> Back to Attendance
     </a>
     <div>
@@ -23,7 +23,7 @@
         </span>
     </div>
     <h2 class="text-lg font-bold text-base-content mt-2 mb-1">Record Attendance</h2>
-    <p class="text-base-content/60 m-0">
+    <p class="text-subtle m-0">
         Add your time-in/time-out record for a specific date
     </p>
 </div>
@@ -42,7 +42,7 @@
             <input type="date" name="date" readonly
                    value="{{ $todayAttendance ? $todayAttendance->date->format('Y-m-d') : '' }}"
                    class="input input-bordered w-full bg-base-200">
-            <p class="text-base-content/60 text-xs mt-1">Auto-set when you clock in</p>
+            <p class="text-subtle text-xs mt-1">Auto-set when you clock in</p>
         </div>
 
         <div class="grid grid-cols-2 gap-5 mb-5">
@@ -52,14 +52,14 @@
                        value="{{ $todayAttendance && $todayAttendance->time_in ? (is_string($todayAttendance->time_in) ? substr($todayAttendance->time_in, 0, 5) : $todayAttendance->time_in->format('H:i')) : '' }}"
                        {{ $todayAttendance && $todayAttendance->time_in ? 'readonly' : '' }}
                        class="input input-bordered w-full bg-base-200">
-                <p class="text-base-content/60 text-xs mt-1">Auto-set when you clock in</p>
+                <p class="text-subtle text-xs mt-1">Auto-set when you clock in</p>
             </div>
             <div>
                 <label class="label text-sm font-semibold text-base-content">Time Out</label>
                 <input type="time" name="time_out" readonly
                        value="{{ $todayAttendance && $todayAttendance->time_out ? (is_string($todayAttendance->time_out) ? substr($todayAttendance->time_out, 0, 5) : $todayAttendance->time_out->format('H:i')) : '' }}"
                        class="input input-bordered w-full bg-base-200">
-                <p class="text-base-content/60 text-xs mt-1">Auto-set when you clock out</p>
+                <p class="text-subtle text-xs mt-1">Auto-set when you clock out</p>
             </div>
         </div>
 
@@ -104,7 +104,7 @@
                     </span>
                 </span>
             </div>
-            <span class="text-base-content/60 text-sm">Hover to see expected clock out time</span>
+            <span class="text-subtle text-sm">Hover to see expected clock out time</span>
         </div>
         @endif
 

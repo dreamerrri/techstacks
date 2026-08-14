@@ -10,7 +10,7 @@ export default function PermissionsShow({ permission }) {
             <Head title="Permission Details" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/permissions" className="back-link text-base-content/60 no-underline text-sm hover:text-success">
+                    <Link href="/permissions" className="back-link text-subtle no-underline text-sm hover:text-success">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Permissions
                     </Link>
                 </div>
@@ -23,7 +23,7 @@ export default function PermissionsShow({ permission }) {
                             </div>
                             <div>
                                 <h2 className="text-xl font-bold text-base-content m-0">{permission.name}</h2>
-                                <code className="text-xs text-base-content/60 bg-base-200 px-2 py-0.5 rounded">{permission.slug}</code>
+                                <code className="text-xs text-subtle bg-base-200 px-2 py-0.5 rounded">{permission.slug}</code>
                             </div>
                         </div>
                         <Link href={`/permissions/${permission.id}/edit`} className="btn btn-soft btn-error btn-sm">
@@ -32,7 +32,7 @@ export default function PermissionsShow({ permission }) {
                     </div>
 
                     <div className="mb-8">
-                        <h3 className="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
                             <Icon name="ph--info-fill" className="size-4 text-error inline" /> Permission Information
                         </h3>
                         <div className="flex flex-col">
@@ -47,15 +47,15 @@ export default function PermissionsShow({ permission }) {
                             </DetailRow>
                             {permission.description && (
                                 <div className="flex flex-col gap-1 py-3">
-                                    <span className="text-base-content/40 font-medium">Description</span>
-                                    <span className="text-base-content/80 text-sm">{permission.description}</span>
+                                    <span className="text-faint font-medium">Description</span>
+                                    <span className="text-muted text-sm">{permission.description}</span>
                                 </div>
                             )}
                         </div>
                     </div>
 
                     <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
                             <Icon name="tabler--user-tag" className="size-4 text-error inline" /> Roles with this Permission ({permission.roles?.length ?? 0})
                         </h3>
                         {permission.roles?.length > 0 ? (
@@ -68,7 +68,7 @@ export default function PermissionsShow({ permission }) {
                                             </div>
                                             <div>
                                                 <div className="font-semibold text-base-content text-sm">{role.name}</div>
-                                                <code className="text-xs text-base-content/60">{role.slug}</code>
+                                                <code className="text-xs text-subtle">{role.slug}</code>
                                             </div>
                                         </div>
                                         <Link href={`/roles/${role.id}`} className="btn btn-soft btn-info btn-sm">
@@ -78,7 +78,7 @@ export default function PermissionsShow({ permission }) {
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-base-content/40 text-sm m-0">No roles have this permission.</p>
+                            <p className="text-faint text-sm m-0">No roles have this permission.</p>
                         )}
                     </div>
                 </div>

@@ -6,7 +6,7 @@
 @section('content')
 
     <div class="mb-5">
-        <a href="{{ route('employees.show', $employee) }}" class="back-link text-base-content/60 no-underline text-sm hover:text-success">
+        <a href="{{ route('employees.show', $employee) }}" class="back-link text-subtle no-underline text-sm hover:text-success">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee Profile
         </a>
     </div>

@@ -6,7 +6,7 @@
 
     Props:
         icon  (string, required) Iconify class, e.g. 'icon-[ph--briefcase-fill]'
-        color (string, optional) Icon text color class. Default: 'text-base-content/60'
+        color (string, optional) Icon text color class. Default: 'text-subtle'
         bg    (string, optional) Icon square background class. Default: 'bg-base-200'
 
     Slot: heading text.
@@ -18,7 +18,7 @@
 --}}
 @props([
     'icon',
-    'color' => 'text-base-content/60',
+    'color' => 'text-subtle',
     'bg'    => 'bg-base-200',
 ])
 

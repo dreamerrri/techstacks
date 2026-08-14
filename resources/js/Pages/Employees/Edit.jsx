@@ -9,7 +9,7 @@ export default function EmployeesEdit({ employee }) {
             <Head title="Edit Employee" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href={`/employees/${employee.id}`} className="back-link text-base-content/60 no-underline text-sm hover:text-success">
+                    <Link href={`/employees/${employee.id}`} className="back-link text-subtle no-underline text-sm hover:text-success">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Employee Profile
                     </Link>
                 </div>

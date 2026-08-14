@@ -44,7 +44,7 @@
                     <i class="icon-[tabler--stack] text-error"></i>
                     <span id="contribModalTitle">Contribution Breakdown</span>
                 </div>
-                <div class="text-xs text-base-content/60 mt-1" id="contribModalMeta">—</div>
+                <div class="text-xs text-subtle mt-1" id="contribModalMeta">—</div>
             </div>
             <button onclick="closeContribModal()" class="btn btn-soft btn-error btn-sm btn-circle">
                 <i class="icon-[tabler--x]"></i>
@@ -70,7 +70,7 @@
                 <tfoot id="contribBreakdownFoot"></tfoot>
             </table>
 
-            <div id="contribBreakdownEmpty" class="py-10 text-base-content/40 flex flex-col items-center justify-center gap-2 w-full">
+            <div id="contribBreakdownEmpty" class="py-10 text-faint flex flex-col items-center justify-center gap-2 w-full">
                 <i class="icon-[tabler--inbox] text-3xl"></i>
                 <span>No contribution data for the current filter.</span>
             </div>
@@ -160,15 +160,15 @@
                 };
             @endphp
             <tr class="row-hover">
-                <td class="font-mono text-base-content/60">{{ $employee->employee_id }}</td>
+                <td class="font-mono text-subtle">{{ $employee->employee_id }}</td>
                 <td class="font-semibold text-base-content">
                     <a href="{{ route('government-contributions.show', $employee) }}"
                        class="text-base-content no-underline hover:text-primary">
                         {{ $employee->full_name }}
                     </a>
                 </td>
-                <td class="text-base-content/60">{{ $employee->department }}</td>
-                <td class="text-base-content/60">{{ $employee->position }}</td>
+                <td class="text-subtle">{{ $employee->department }}</td>
+                <td class="text-subtle">{{ $employee->position }}</td>
                 <td><span class="badge {{ $statusClass }}">{{ $employee->employment_status }}</span></td>
                 <td class="text-center">
                     <a href="{{ route('government-contributions.show', $employee) }}"
@@ -179,7 +179,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="6" class="py-10 text-base-content/40">
+                <td colspan="6" class="py-10 text-faint">
                     <div class="flex flex-col items-center">
                         <i class="icon-[tabler--user] text-3xl mb-2"></i>
                         <span>No employees found.</span>
@@ -220,13 +220,13 @@
                                class="font-semibold text-base-content no-underline text-sm hover:text-primary">
                                 {{ $employee->full_name }}
                             </a>
-                            <div class="text-xs text-base-content/60 font-mono">{{ $employee->employee_id }}</div>
+                            <div class="text-xs text-subtle font-mono">{{ $employee->employee_id }}</div>
                         </div>
                     </div>
                     <span class="badge {{ $statusClass }} whitespace-nowrap">{{ $employee->employment_status }}</span>
                 </div>
 
-                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                     <span><i class="icon-[tabler--building] w-3.5"></i> {{ $employee->department }}</span>
                     <span><i class="icon-[tabler--briefcase] w-3.5"></i> {{ $employee->position }}</span>
                     <span><i class="icon-[tabler--cash] w-3.5"></i> ₱{{ number_format($employee->basic_salary, 2) }}</span>
@@ -240,7 +240,7 @@
                 </div>
             </div>
         @empty
-            <div class="py-10 text-center text-base-content/40">
+            <div class="py-10 text-center text-faint">
                 <i class="icon-[tabler--user] text-3xl mb-2 block"></i>
                 No employees found.
             </div>
@@ -309,8 +309,8 @@ function openContribModal() {
 
         return `
              <tr class="row-hover">
-                <td><div class="font-semibold text-base-content"><a href="${emp.show_url}" class="text-base-content no-underline hover:text-primary">${emp.name}</a></div><div class="text-xs text-base-content/40 font-mono">${emp.id}</div></td>
-                <td class="text-base-content/60">${emp.department}</td>
+                <td><div class="font-semibold text-base-content"><a href="${emp.show_url}" class="text-base-content no-underline hover:text-primary">${emp.name}</a></div><div class="text-xs text-faint font-mono">${emp.id}</div></td>
+                <td class="text-subtle">${emp.department}</td>
                 <td class="text-right font-semibold text-base-content">₱${emp.salary}</td>
                 <td class="text-right text-error">${fmt(sss)}</td>
                 <td class="text-right text-info">${fmt(phil)}</td>

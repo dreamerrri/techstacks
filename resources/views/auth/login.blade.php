@@ -89,7 +89,7 @@
                                 class="w-full pe-12"
                             >
                             <button type="button" onclick="togglePassword()"
-                                    class="absolute end-3 top-1/2 -translate-y-1/2 bg-transparent border-0 cursor-pointer text-base-content/60 p-0">
+                                    class="absolute end-3 top-1/2 -translate-y-1/2 bg-transparent border-0 cursor-pointer text-subtle p-0">
                                 <i class="icon-[ph--eye-fill]" id="eyeIcon"></i>
                             </button>
                         </div>

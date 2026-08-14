@@ -53,7 +53,7 @@ export default function WorkRequestsCreate({ upcomingHolidays }) {
             <Head title="New Work Request" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/work-requests" className="back-link text-base-content/60 no-underline text-sm hover:text-primary">
+                    <Link href="/work-requests" className="back-link text-subtle no-underline text-sm hover:text-primary">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Requests
                     </Link>
                 </div>
@@ -63,7 +63,7 @@ export default function WorkRequestsCreate({ upcomingHolidays }) {
                         <Icon name="ph--calendar-plus" className="size-4 inline" /> New Request
                     </div>
                     <h2 className="text-lg font-bold text-base-content mb-1">Create Work Request</h2>
-                    <p className="text-base-content/60 text-sm mb-6">Submit a request for weekend, holiday, or overtime work</p>
+                    <p className="text-subtle text-sm mb-6">Submit a request for weekend, holiday, or overtime work</p>
 
                     <form onSubmit={submit}>
                         <FormField label="Request Type" required error={errors.request_type}>
@@ -161,13 +161,13 @@ export default function WorkRequestsCreate({ upcomingHolidays }) {
                 {upcomingHolidays?.length > 0 && (
                     <div className="card bg-base-100 shadow-md p-6 mt-4">
                         <h3 className="m-0 mb-4 flex items-center gap-2 text-sm font-bold text-base-content">
-                            <Icon name="ph--calendar-fill" className="size-4 text-base-content/60" /> Upcoming Holidays
+                            <Icon name="ph--calendar-fill" className="size-4 text-subtle" /> Upcoming Holidays
                         </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                             {upcomingHolidays.map((holiday) => (
                                 <div key={holiday.id} className="p-3 bg-base-200 border-s-4 border-primary rounded-lg">
                                     <div className="text-sm font-semibold text-base-content">{holiday.name}</div>
-                                    <div className="text-xs text-base-content/60 mt-1">{new Date(holiday.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}</div>
+                                    <div className="text-xs text-subtle mt-1">{new Date(holiday.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}</div>
                                     <div className="mt-1">
                                         <span className="badge badge-neutral badge-sm font-semibold">
                                             {holiday.type.charAt(0).toUpperCase() + holiday.type.slice(1)}

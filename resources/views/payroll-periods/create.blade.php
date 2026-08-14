@@ -8,7 +8,7 @@
 
   <div class="mb-5">
         <a href="{{ route('manual-payroll-attendance.index') }}" 
-        class="text-base-content/60 no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
+        class="text-subtle no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
              <i class="icon-[tabler--arrow-left]"></i> Back to Payroll Periods
         </a>
     </div>
@@ -19,7 +19,7 @@
         </span>
     </div>
     <h2 class="text-lg font-bold text-base-content mt-2 mb-1">New Payroll Period</h2>
-    <p class="text-base-content/60 m-0">Pick a start date — end date and pay date are computed automatically</p>
+    <p class="text-subtle m-0">Pick a start date — end date and pay date are computed automatically</p>
 </div>
 
 <div class="max-w-[600px]">
@@ -40,7 +40,7 @@
                 <input type="date" name="cutoff_start" id="cutoff_start" required
                        value="{{ old('cutoff_start') }}"
                        class="input input-bordered w-full {{ $errors->has('cutoff_start') ? 'border-error' : '' }}">
-                <p class="text-base-content/60 text-xs mt-1">
+                <p class="text-subtle text-xs mt-1">
                     The period will cover 15 days starting from this date.
                 </p>
                 @error('cutoff_start')
@@ -52,7 +52,7 @@
             <div class="mb-5">
                 <label class="label text-sm font-semibold text-base-content">
                     Cutoff End Date
-                    <span class="font-normal text-base-content/40 text-xs">— auto</span>
+                    <span class="font-normal text-faint text-xs">— auto</span>
                 </label>
                 <input type="text" id="preview_end" disabled placeholder="Computed after picking start date"
                        class="input input-bordered w-full bg-base-200">
@@ -62,7 +62,7 @@
             <div class="mb-7">
                 <label class="label text-sm font-semibold text-base-content">
                     Payroll Date
-                    <span class="font-normal text-base-content/40 text-xs">— auto (5 days after end)</span>
+                    <span class="font-normal text-faint text-xs">— auto (5 days after end)</span>
                 </label>
                 <input type="text" id="preview_payroll" disabled placeholder="Computed after picking start date"
                        class="input input-bordered w-full bg-base-200">

@@ -29,7 +29,7 @@ function StatCard({ tone, icon, title, value, sub }) {
                 </div>
                 <p className="payroll-stat-card__title">{title}</p>
                 <p className="payroll-stat-card__paragraph">{value}</p>
-                <div className="text-base-content/60">{sub}</div>
+                <div className="text-subtle">{sub}</div>
             </div>
             <div className="payroll-stat-card__ribbon">
                 <div className="payroll-stat-card__ribbon-label">
@@ -47,8 +47,8 @@ function EarningsRow({ label, sub, value, tone = 'text-success', prefix = '+' })
     return (
         <div className="flex justify-between items-start py-2.5 border-b border-base-200">
             <div>
-                <div className="text-base-content/60">{label}</div>
-                <div className="text-xs text-base-content/40">{sub}</div>
+                <div className="text-subtle">{label}</div>
+                <div className="text-xs text-faint">{sub}</div>
             </div>
             <span className={`font-semibold ${tone} ml-4 whitespace-nowrap`}>{prefix}{fmt(value)}</span>
         </div>
@@ -97,7 +97,7 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                 `}</style>
 
                 <div className="flex justify-between items-center flex-wrap gap-3 mb-5">
-                    <Link href="/payroll" className="back-link text-base-content/60 no-underline text-sm hover:text-primary flex items-center gap-1">
+                    <Link href="/payroll" className="back-link text-subtle no-underline text-sm hover:text-primary flex items-center gap-1">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Payroll List
                     </Link>
                     {hasGross && payslipUrl && (
@@ -113,8 +113,8 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                     </div>
                     <div className="flex-1">
                         <h2 className="text-xl font-bold text-base-content m-0 mb-1">{employee.full_name}</h2>
-                        <p className="text-base-content/60 m-0">{employee.position} — {employee.department}</p>
-                        <div className="flex flex-wrap gap-3 mt-1 text-xs text-base-content/60">
+                        <p className="text-subtle m-0">{employee.position} — {employee.department}</p>
+                        <div className="flex flex-wrap gap-3 mt-1 text-xs text-subtle">
                             <span><Icon name="tabler--id-badge" className="size-3.5 inline" /> {employee.employee_id}</span>
                             <span><Icon name="tabler--calendar" className="size-3.5 inline" /> {fmtDate(employee.date_hired)}</span>
                             <span><Icon name="tabler--moneybag" className="size-3.5 inline" /> {employee.salary_type} Salary</span>
@@ -133,7 +133,7 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                                 <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 ${g.color} ${g.bg}`}>
                                     <Icon name={g.icon} className="size-5" />
                                 </div>
-                                <div className="text-xs text-base-content/40 uppercase tracking-widest font-medium mb-1">{g.label}</div>
+                                <div className="text-xs text-faint uppercase tracking-widest font-medium mb-1">{g.label}</div>
                                 <div className="font-bold font-mono text-base-content text-xs break-all">{g.value || '—'}</div>
                             </div>
                         ))}
@@ -252,22 +252,22 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                         <div className="flex flex-col text-sm">
                             <div className="flex justify-between items-start py-2.5 border-b border-base-200">
                                 <div>
-                                    <div className="text-base-content/60">Taxable Income</div>
-                                    <div className="text-xs text-base-content/40">After government contributions</div>
+                                    <div className="text-subtle">Taxable Income</div>
+                                    <div className="text-xs text-faint">After government contributions</div>
                                 </div>
                                 <span className="font-semibold text-base-content ml-4">{fmt(p.taxable_income)}</span>
                             </div>
                             <div className="flex justify-between items-start py-2.5">
                                 <div>
-                                    <div className="text-base-content/60">Withholding Tax</div>
-                                    <div className="text-xs text-base-content/40">Based on Philippine tax brackets</div>
+                                    <div className="text-subtle">Withholding Tax</div>
+                                    <div className="text-xs text-faint">Based on Philippine tax brackets</div>
                                 </div>
                                 <span className="font-semibold text-error ml-4">-{fmt(p.withholding_tax)}</span>
                             </div>
                         </div>
-                        <div className="mt-4 p-4 bg-base-300 rounded-xl text-xs text-base-content/60 leading-relaxed">
-                            <strong className="text-base-content/80">Note:</strong> Allowances are included in gross pay but deducted from taxable income for withholding tax computation.<br />
-                            <strong className="text-base-content/80">Tax Bracket Reference:</strong><br />
+                        <div className="mt-4 p-4 bg-base-300 rounded-xl text-xs text-subtle leading-relaxed">
+                            <strong className="text-muted">Note:</strong> Allowances are included in gross pay but deducted from taxable income for withholding tax computation.<br />
+                            <strong className="text-muted">Tax Bracket Reference:</strong><br />
                             • ₱0 – ₱20,832: 0%<br />
                             • ₱20,833 – ₱33,333: 20%<br />
                             • ₱33,334 – ₱66,667: 25%<br />

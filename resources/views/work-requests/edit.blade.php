@@ -18,7 +18,7 @@
             <i class="icon-[ph--pencil-fill]"></i> Edit Request
         </div>
         <h2 class="text-2xl font-bold text-base-content mt-2 mb-1">Edit Work Request #{{ $workRequest->id }}</h2>
-        <p class="text-base-content/60 m-0">
+        <p class="text-subtle m-0">
             Modify your pending work request
         </p>
     </div>
@@ -120,14 +120,14 @@
 @if($upcomingHolidays->count() > 0)
 <div class="card bg-base-100 border border-base-300 p-6 mt-6">
     <h3 class="m-0 mb-4 flex items-center gap-2">
-        <i class="icon-[ph--calendar-fill] text-base-content/60"></i> Upcoming Holidays
+        <i class="icon-[ph--calendar-fill] text-subtle"></i> Upcoming Holidays
     </h3>
     <div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
         @foreach($upcomingHolidays as $holiday)
         <div class="p-3 bg-base-200 rounded-lg border-s-4 {{ $holiday->type === 'regular' ? 'border-warning' : 'border-info' }}">
             <div class="text-sm font-semibold text-base-content">{{ $holiday->name }}</div>
-            <div class="text-xs text-base-content/60 mt-1">{{ $holiday->date->format('M d, Y') }}</div>
-            <div class="text-[11px] text-base-content/60 mt-0.5">
+            <div class="text-xs text-subtle mt-1">{{ $holiday->date->format('M d, Y') }}</div>
+            <div class="text-[11px] text-subtle mt-0.5">
                 <span class="badge badge-neutral badge-sm font-semibold">
                     {{ ucfirst($holiday->type) }}
                 </span>

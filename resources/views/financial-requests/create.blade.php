@@ -18,7 +18,7 @@
             <i class="icon-[ph--cash-fill]"></i> New Request
         </div>
         <h2 class="text-base-content">Create Financial Request</h2>
-        <p class="text-base-content/60">
+        <p class="text-subtle">
             Submit a request for cash advance or reimbursement
         </p>
     </div>
@@ -44,7 +44,7 @@
                 <option value="cash_advance">Cash Advance</option>
                 <option value="reimbursement">Reimbursement</option>
             </select>
-            <p class="text-xs text-base-content/60 mt-2">
+            <p class="text-xs text-subtle mt-2">
                 Choose the type of financial request
             </p>
         </div>
@@ -57,7 +57,7 @@
             <input type="number" name="amount" id="amount" min="0" step="0.01"
                    class="w-full text-sm border border-base-300 rounded-lg p-4"
                    placeholder="0.00">
-            <p class="text-xs text-base-content/60 mt-2" id="amount_help_text">
+            <p class="text-xs text-subtle mt-2" id="amount_help_text">
                 Enter the amount you are requesting
             </p>
         </div>
@@ -70,7 +70,7 @@
             <input type="text" name="description" id="description" maxlength="255"
                    class="w-full text-sm border border-base-300 rounded-lg p-4"
                    placeholder="Brief description of the request">
-            <p class="text-xs text-base-content/60 mt-2">
+            <p class="text-xs text-subtle mt-2">
                 Short description (optional)
             </p>
         </div>
@@ -83,7 +83,7 @@
             <textarea name="reason" id="reason" rows="4" maxlength="1000"
                       class="w-full text-sm border border-base-300 rounded-lg p-4 resize-y"
                       placeholder="Provide a detailed reason for this financial request..."></textarea>
-            <p class="text-xs text-base-content/60 mt-2">
+            <p class="text-xs text-subtle mt-2">
                 Maximum 1000 characters
             </p>
         </div>
@@ -95,7 +95,7 @@
             </label>
             <input type="file" name="receipt_image" id="receipt_image" accept="image/*"
                    class="w-full text-sm border border-base-300 rounded-lg p-4">
-            <p class="text-xs text-base-content/60 mt-2">
+            <p class="text-xs text-subtle mt-2">
                 Upload receipt image (required for reimbursements, max 2MB)
             </p>
         </div>

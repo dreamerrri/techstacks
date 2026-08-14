@@ -66,7 +66,7 @@ export default function WorkRequestsShow({ workRequest }) {
             <Head title="Work Request Details" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/work-requests" className="back-link text-base-content/60 no-underline text-sm hover:text-primary">
+                    <Link href="/work-requests" className="back-link text-subtle no-underline text-sm hover:text-primary">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Requests
                     </Link>
                 </div>
@@ -75,7 +75,7 @@ export default function WorkRequestsShow({ workRequest }) {
                     <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                         <div>
                             <h2 className="text-lg font-bold text-base-content mb-1">Work Request #{workRequest.id}</h2>
-                            <p className="text-base-content/60 text-sm m-0">Submitted on {fmt(workRequest.created_at)}</p>
+                            <p className="text-subtle text-sm m-0">Submitted on {fmt(workRequest.created_at)}</p>
                         </div>
                     </div>
 
@@ -87,7 +87,7 @@ export default function WorkRequestsShow({ workRequest }) {
                                     {workRequest.status.charAt(0).toUpperCase() + workRequest.status.slice(1)}
                                 </div>
                                 {workRequest.status === 'approved' && workRequest.approved_at && (
-                                    <div className="text-xs text-base-content/80">
+                                    <div className="text-xs text-muted">
                                         Approved on {fmt(workRequest.approved_at)}
                                         {workRequest.approved_by ? ` by ${workRequest.approved_by.name}` : ''}
                                     </div>
@@ -100,7 +100,7 @@ export default function WorkRequestsShow({ workRequest }) {
                     </div>
 
                     <div className="card bg-base-200/50 border border-base-300 shadow-sm p-4 mb-4">
-                        <h3 className="text-base-content/80 mb-3 text-sm font-bold flex items-center gap-2">
+                        <h3 className="text-muted mb-3 text-sm font-bold flex items-center gap-2">
                             <Icon name="tabler--info-circle" className="size-4" /> Details
                         </h3>
                         <div className="flex flex-wrap gap-2 mb-2">
@@ -149,7 +149,7 @@ export default function WorkRequestsShow({ workRequest }) {
 
                     {workRequest.reason && (
                         <div className="card bg-base-200/50 border border-base-300 shadow-sm p-4 mb-4">
-                            <h3 className="flex items-center gap-2 text-base-content/80 text-sm font-bold">
+                            <h3 className="flex items-center gap-2 text-muted text-sm font-bold">
                                 <Icon name="tabler--message" className="size-4" /> Reason
                             </h3>
                             <div className="text-sm text-base-content mt-2">{workRequest.reason}</div>

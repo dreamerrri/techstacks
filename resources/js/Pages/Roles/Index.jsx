@@ -40,9 +40,9 @@ export default function RolesIndex({ roles }) {
                                     <tr key={role.id} className="row-hover">
                                         <td className="font-semibold text-base-content">{role.name}</td>
                                         <td><code className="bg-base-200 text-error text-xs px-1.5 py-0.5 rounded">{role.slug}</code></td>
-                                        <td className="text-base-content/60 truncate max-w-64">{role.description || '—'}</td>
-                                        <td className="text-base-content/60 text-right">{role.users_count}</td>
-                                        <td className="text-base-content/60 text-right">{role.permissions?.length ?? 0}</td>
+                                        <td className="text-subtle truncate max-w-64">{role.description || '—'}</td>
+                                        <td className="text-subtle text-right">{role.users_count}</td>
+                                        <td className="text-subtle text-right">{role.permissions?.length ?? 0}</td>
                                         <td className="text-right">
                                             {role.is_active ? (
                                                 <StatusBadge type="success">Active</StatusBadge>
@@ -88,16 +88,16 @@ export default function RolesIndex({ roles }) {
                                         </div>
                                         <div>
                                             <div className="font-semibold text-base-content text-sm">{role.name}</div>
-                                            <code className="text-xs text-base-content/60">{role.slug}</code>
+                                            <code className="text-xs text-subtle">{role.slug}</code>
                                         </div>
                                     </div>
                                     {role.is_active ? <StatusBadge type="success">Active</StatusBadge> : <StatusBadge type="error">Inactive</StatusBadge>}
                                 </div>
-                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                                     <span><Icon name="tabler--users" className="size-3.5 inline" /> {role.users_count} users</span>
                                     <span><Icon name="ph--key-fill" className="size-3.5 inline" /> {role.permissions?.length ?? 0} permissions</span>
                                 </div>
-                                {role.description && <div className="text-xs text-base-content/40 mt-1">{role.description}</div>}
+                                {role.description && <div className="text-xs text-faint mt-1">{role.description}</div>}
                                 <div className="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-200">
                                     <Link href={`/roles/${role.id}`} className="btn btn-info btn-sm">
                                         <Icon name="ph--eye-fill" className="size-4" /> View

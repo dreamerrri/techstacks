@@ -22,7 +22,7 @@ export default function EmployeesArchived({ employees }) {
             <Head title="Archived Employees" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/employees" className="back-link text-base-content/60 no-underline text-sm hover:text-success">
+                    <Link href="/employees" className="back-link text-subtle no-underline text-sm hover:text-success">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Employee page
                     </Link>
                 </div>
@@ -48,15 +48,15 @@ export default function EmployeesArchived({ employees }) {
                             <tbody>
                                 {employees.data.map((emp) => (
                                     <tr key={emp.id} className="row-hover">
-                                        <td className="font-mono text-base-content/60">{emp.employee_id}</td>
+                                        <td className="font-mono text-subtle">{emp.employee_id}</td>
                                         <td>
                                             <div className="flex items-center gap-2">
                                                 {avatar(emp)}
                                                 <span className="font-semibold text-base-content">{emp.full_name}</span>
                                             </div>
                                         </td>
-                                        <td className="text-base-content/60">{emp.department}</td>
-                                        <td className="text-base-content/60">{emp.position}</td>
+                                        <td className="text-subtle">{emp.department}</td>
+                                        <td className="text-subtle">{emp.position}</td>
                                         <td>
                                             <ConfirmButton
                                                 title="Restore Employee?"
@@ -84,13 +84,13 @@ export default function EmployeesArchived({ employees }) {
                                         {avatar(emp, 'w-10 h-10', 'text-sm')}
                                         <div>
                                             <div className="font-semibold text-base-content text-sm">{emp.full_name}</div>
-                                            <div className="text-xs text-base-content/60 font-mono">{emp.employee_id}</div>
+                                            <div className="text-xs text-subtle font-mono">{emp.employee_id}</div>
                                         </div>
                                     </div>
                                     <span className="badge badge-soft badge-neutral whitespace-nowrap">Archived</span>
                                 </div>
 
-                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                                     <span><Icon name="ph--buildings-fill" className="size-3.5 inline" /> {emp.department}</span>
                                     <span><Icon name="ph--briefcase-fill" className="size-3.5 inline" /> {emp.position}</span>
                                 </div>

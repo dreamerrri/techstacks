@@ -12,7 +12,7 @@ export default function PermissionsIndex({ permissions }) {
                 <div className="card w-full min-w-0 border border-base-300 flex flex-col p-0">
                     <div className="sticky top-0 px-4 sm:px-7 pt-5 rounded-t-2xl bg-base-100 z-10">
                         <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-                            <h2 className="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
+                            <h2 className="text-sm font-semibold uppercase tracking-widest text-faint flex items-center gap-2 m-0">
                                 <Icon name="tabler--key" className="size-4 text-primary" />
                                 <span>Permissions Management</span>
                                 <span className="tooltip [--placement:right]">
@@ -61,10 +61,10 @@ export default function PermissionsIndex({ permissions }) {
                                                 <tr key={permission.id} className="row-hover">
                                                     <td className="font-semibold text-base-content">{permission.name}</td>
                                                     <td><code className="bg-base-200 text-error text-xs px-1.5 py-0.5 rounded">{permission.slug}</code></td>
-                                                    <td className="text-base-content/60">
+                                                    <td className="text-subtle">
                                                         <span className="truncate block max-w-64" title={permission.description}>{permission.description || '—'}</span>
                                                     </td>
-                                                    <td className="text-base-content/60 text-right">{permission.roles?.length ?? 0}</td>
+                                                    <td className="text-subtle text-right">{permission.roles?.length ?? 0}</td>
                                                     <td className="text-right">
                                                         {permission.is_active ? <StatusBadge type="success">Active</StatusBadge> : <StatusBadge type="error">Inactive</StatusBadge>}
                                                     </td>
@@ -106,15 +106,15 @@ export default function PermissionsIndex({ permissions }) {
                                                     </div>
                                                     <div>
                                                         <div className="font-semibold text-base-content text-sm">{permission.name}</div>
-                                                        <code className="text-xs text-base-content/60">{permission.slug}</code>
+                                                        <code className="text-xs text-subtle">{permission.slug}</code>
                                                     </div>
                                                 </div>
                                                 {permission.is_active ? <StatusBadge type="success">Active</StatusBadge> : <StatusBadge type="error">Inactive</StatusBadge>}
                                             </div>
-                                            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                                            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                                                 <span><Icon name="tabler--users" className="size-3.5 inline" /> {permission.roles?.length ?? 0} roles</span>
                                             </div>
-                                            {permission.description && <div className="text-xs text-base-content/40 mt-1">{permission.description}</div>}
+                                            {permission.description && <div className="text-xs text-faint mt-1">{permission.description}</div>}
                                             <div className="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-200">
                                                 <Link href={`/permissions/${permission.id}`} className="btn btn-soft btn-info btn-sm">
                                                     <Icon name="ph--eye-fill" className="size-4" /> View

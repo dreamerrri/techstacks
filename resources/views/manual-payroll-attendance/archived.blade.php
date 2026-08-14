@@ -12,7 +12,7 @@
 
               <div class="mb-5">
         <a href="{{ route('manual-payroll-attendance.index') }}" 
-        class="text-base-content/60 no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
+        class="text-subtle no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
              <i class="icon-[tabler--arrow-left]"></i> Back to Attendance page
         </a>
     </div>
@@ -31,7 +31,7 @@
 
     <div class="px-6 py-5 border-b border-base-300">
         <h2 class="text-base font-bold text-base-content m-0">Archived Periods</h2>
-        <p class="text-base-content/60 text-sm mt-1 mb-0">{{ $periods->count() }} archived payroll {{ Str::plural('period', $periods->count()) }}</p>
+        <p class="text-subtle text-sm mt-1 mb-0">{{ $periods->count() }} archived payroll {{ Str::plural('period', $periods->count()) }}</p>
     </div>
 
     @if($periods->count() > 0)
@@ -46,10 +46,10 @@
                                 <div class="font-semibold text-base-content text-base">
                                     {{ $period->cutoff_start->format('M d') }} - {{ $period->cutoff_end->format('M d, Y') }}
                                 </div>
-                                <div class="text-base-content/60 text-xs mt-1">
+                                <div class="text-subtle text-xs mt-1">
                                     Payroll Date: {{ $period->payroll_date->format('M d, Y') }}
                                 </div>
-                                <div class="text-base-content/40 text-xs mt-1">
+                                <div class="text-faint text-xs mt-1">
                                     Created by: {{ $period->createdBy?->name ?? 'N/A' }}
                                 </div>
                             </div>
@@ -58,11 +58,11 @@
 
                         <div class="flex gap-4 mt-3 pt-3 border-t border-base-200 text-xs mb-4">
                             <div>
-                                <span class="text-base-content/60">Employees Encoded:</span>
+                                <span class="text-subtle">Employees Encoded:</span>
                                 <span class="font-semibold text-base-content ml-1">{{ $period->payrollInputs ? $period->payrollInputs->count() : 0 }}</span>
                             </div>
                             <div>
-                                <span class="text-base-content/60">Total Gross:</span>
+                                <span class="text-subtle">Total Gross:</span>
                                 <span class="font-semibold text-success ml-1">₱{{ number_format($period->total_gross_pay ?? 0, 2) }}</span>
                             </div>
                         </div>
@@ -79,9 +79,9 @@
       </div>
     @else
         <div class="py-16 px-6 text-center">
-            <i class="icon-[ph--archive-fill] text-5xl text-base-content/30 mb-4 block"></i>
-            <h3 class="text-base-content/60 m-0 mb-2">No Archived Periods</h3>
-            <p class="text-base-content/40 m-0">Archived payroll periods will appear here.</p>
+            <i class="icon-[ph--archive-fill] text-5xl text-faint mb-4 block"></i>
+            <h3 class="text-subtle m-0 mb-2">No Archived Periods</h3>
+            <p class="text-faint m-0">Archived payroll periods will appear here.</p>
         </div>
     @endif
 

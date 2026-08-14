@@ -68,7 +68,7 @@ export default function DataTable({
         <div className="card w-full min-w-0 border border-base-300 flex flex-col p-0">
             <div className="sticky top-0 px-4 sm:px-7 pt-5 rounded-t-2xl bg-base-100 z-10">
                 <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-                    <h2 className="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
+                    <h2 className="text-sm font-semibold uppercase tracking-widest text-faint flex items-center gap-2 m-0">
                         {icon && <Icon name={icon} className="size-4 text-primary" />}
                         <span>{title}</span>
                         {tooltip && (
@@ -137,8 +137,8 @@ export default function DataTable({
 
             {empty && (!paginator || paginator.total === 0) && (
                 <div className="px-6 py-10 text-center">
-                    <Icon name="tabler--database-off" className="size-10 text-base-content/30 mx-auto mb-3" />
-                    <p className="text-sm text-base-content/60">{typeof empty === 'string' ? empty : 'No records found.'}</p>
+                    <Icon name="tabler--database-off" className="size-10 text-faint mx-auto mb-3" />
+                    <p className="text-sm text-subtle">{typeof empty === 'string' ? empty : 'No records found.'}</p>
                 </div>
             )}
         </div>

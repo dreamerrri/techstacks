@@ -10,7 +10,7 @@
                     'warning' => ['bg' => 'bg-warning/10', 'text' => 'text-warning', 'icon' => 'icon-[ph--warning-circle-fill]', 'label' => 'Warning'],
                     'success' => ['bg' => 'bg-success/10', 'text' => 'text-success', 'icon' => 'icon-[tabler--circle-check]', 'label' => 'Success'],
                     'info' => ['bg' => 'bg-info/10', 'text' => 'text-info', 'icon' => 'icon-[ph--info-fill]', 'label' => 'Info'],
-                    default => ['bg' => 'bg-base-300', 'text' => 'text-base-content/50', 'icon' => 'icon-[ph--bell-fill]', 'label' => 'Notification'],
+                    default => ['bg' => 'bg-base-300', 'text' => 'text-subtle', 'icon' => 'icon-[ph--bell-fill]', 'label' => 'Notification'],
                 };
             @endphp
             <li role="listitem" data-notif-id="{{ $notification->id }}">
@@ -22,10 +22,10 @@
                     </div>
                     <div class="min-w-0 flex-1">
                         <div class="truncate text-[13px] font-semibold text-base-content"><span class="sr-only">{{ $style['label'] }}: </span>{{ $notification->title }}</div>
-                        <div class="mt-px text-[11px] text-base-content/60">{{ $notification->message }}</div>
-                        <div class="mt-0.5 text-[10px] text-base-content/40">{{ $notification->created_at?->diffForHumans() }}</div>
+                        <div class="mt-px text-[11px] text-subtle">{{ $notification->message }}</div>
+                        <div class="mt-0.5 text-[10px] text-faint">{{ $notification->created_at?->diffForHumans() }}</div>
                     </div>
-                    <i class="icon-[ph--caret-right-fill] flex-shrink-0 text-[10px] text-base-content/30 group-hover:text-base-content/50" aria-hidden="true"></i>
+                    <i class="icon-[ph--caret-right-fill] flex-shrink-0 text-[10px] text-faint group-hover:text-subtle" aria-hidden="true"></i>
                 </a>
             </li>
         @endforeach
@@ -36,7 +36,7 @@
             <i class="icon-[tabler--check] text-lg text-success" aria-hidden="true"></i>
         </div>
         <div class="mb-1 text-[13px] font-semibold text-base-content">All caught up</div>
-        <div class="text-xs text-base-content/40">No pending actions right now</div>
+        <div class="text-xs text-faint">No pending actions right now</div>
     </div>
 </div>
 

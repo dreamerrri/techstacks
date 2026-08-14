@@ -61,13 +61,13 @@
                         </td>
                         <td class="text-sm text-base-content p-4">
                             {{ $request->work_date->format('M d, Y') }}
-                            <div class="text-xs text-base-content/60">{{ $request->work_date->format('l') }}</div>
+                            <div class="text-xs text-subtle">{{ $request->work_date->format('l') }}</div>
                         </td>
                         <td>
                             {{ $request->start_time ? $request->start_time : '-' }} 
                             @if($request->end_time) - {{ $request->end_time }}@endif
                             @if($request->estimated_hours)
-                            <div class="text-xs text-base-content/60">{{ number_format($request->estimated_hours, 2) }} hrs</div>
+                            <div class="text-xs text-subtle">{{ number_format($request->estimated_hours, 2) }} hrs</div>
                             @endif
                         </td>
                         <td>
@@ -93,8 +93,8 @@
 @else
     <div class="card text-center p-4">
         <i class="icon-[tabler--circle-check] text-success mb-4"></i>
-        <h3 class="text-base-content/60">All Caught Up!</h3>
-        <p class="text-base-content/60">
+        <h3 class="text-subtle">All Caught Up!</h3>
+        <p class="text-subtle">
             There are no pending work requests to review.
         </p>
         <a href="{{ route('work-requests.index') }}"
@@ -116,15 +116,15 @@
                     <div class="flex justify-between items-start mb-2">
                         <div>
                             <div class="text-sm text-base-content font-semibold">{{ $request->employee->full_name }}</div>
-                            <div class="text-xs text-base-content/60">{{ $request->employee->employee_id }}</div>
-                            <div class="text-xs text-base-content/60">{{ $request->employee->position }}</div>
+                            <div class="text-xs text-subtle">{{ $request->employee->employee_id }}</div>
+                            <div class="text-xs text-subtle">{{ $request->employee->position }}</div>
                         </div>
                         <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->request_type === 'weekend' ? 'bg-info/10 text-info' : ($request->request_type === 'holiday' ? 'bg-warning/10 text-warning' : 'bg-primary/10 text-primary') }}">
                             {{ ucfirst($request->request_type) }}
                         </span>
                     </div>
 
-                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                         <span><i class="icon-[ph--calendar-fill] w-3.5"></i> {{ $request->work_date->format('M d, Y') }}</span>
                         <span><i class="icon-[ph--calendar-blank-fill] w-3.5"></i> {{ $request->work_date->format('l') }}</span>
                         <span><i class="icon-[ph--clock-fill] w-3.5"></i> {{ $request->start_time ? $request->start_time : '-' }} @if($request->end_time) - {{ $request->end_time }}@endif</span>
@@ -134,7 +134,7 @@
                     </div>
 
                     @if($request->reason)
-                        <div class="text-xs text-base-content/60 mt-2">
+                        <div class="text-xs text-subtle mt-2">
                             <i class="icon-[ph--text-align-left-fill] w-3.5"></i> {{ \Illuminate\Support\Str::limit($request->reason, 80) }}
                         </div>
                     @endif
@@ -153,7 +153,7 @@
                 </div>
             @endforeach
         @else
-            <div class="py-10 text-center text-base-content/40">
+            <div class="py-10 text-center text-faint">
                 <i class="icon-[ph--check-circle-fill] text-3xl mb-2 block"></i>
                 All caught up! No pending requests.
             </div>

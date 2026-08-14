@@ -38,9 +38,9 @@
         <tr class="row-hover">
             <td class="font-semibold text-base-content">{{ $role->name }}</td>
             <td><code class="bg-base-200 text-error text-xs px-1.5 py-0.5 rounded">{{ $role->slug }}</code></td>
-            <td class="text-base-content/60 truncate">{{ $role->description ?? '—' }}</td>
-            <td class="text-base-content/60 text-right">{{ $role->users_count }}</td>
-            <td class="text-base-content/60 text-right">{{ $role->permissions->count() }}</td>
+            <td class="text-subtle truncate">{{ $role->description ?? '—' }}</td>
+            <td class="text-subtle text-right">{{ $role->users_count }}</td>
+            <td class="text-subtle text-right">{{ $role->permissions->count() }}</td>
             <td class="text-right">
                 @if($role->is_active)
                     <span class="badge badge-soft badge-success"><i class="icon-[tabler--circle-check]"></i> Active</span>
@@ -73,7 +73,7 @@
         </tr>
     @empty
         <tr>
-            <td colspan="7" class="py-10 text-base-content/40">
+            <td colspan="7" class="py-10 text-faint">
                 <div class="flex flex-col items-center">
                     <i class="icon-[ph--tray-fill] text-3xl mb-2"></i>
                     <span>No data found.</span>
@@ -96,7 +96,7 @@
                             </div>
                             <div>
                                 <div class="font-semibold text-base-content text-sm">{{ $role->name }}</div>
-                                <code class="text-xs text-base-content/60">{{ $role->slug }}</code>
+                                <code class="text-xs text-subtle">{{ $role->slug }}</code>
                             </div>
                         </div>
                         @if($role->is_active)
@@ -106,13 +106,13 @@
                         @endif
                     </div>
 
-                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                         <span><i class="icon-[tabler--user]s w-3.5"></i> {{ $role->users_count }} users</span>
                         <span><i class="icon-[ph--key-fill] w-3.5"></i> {{ $role->permissions->count() }} permissions</span>
                     </div>
 
                     @if($role->description)
-                        <div class="text-xs text-base-content/40 mt-1">{{ $role->description }}</div>
+                        <div class="text-xs text-faint mt-1">{{ $role->description }}</div>
                     @endif
 
                     <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-200">
@@ -137,7 +137,7 @@
                     </div>
                 </div>
             @empty
-                <div class="py-10 text-center text-base-content/40">
+                <div class="py-10 text-center text-faint">
                     <i class="icon-[tabler--user]-tag text-3xl mb-2 block"></i>
                     No roles found.
                 </div>

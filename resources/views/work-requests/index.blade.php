@@ -112,7 +112,7 @@
                     <td class="text-base-content">
                         {{ $request->work_date->format('M d, Y') }}
                     </td>
-                    <td class="text-base-content/60">
+                    <td class="text-subtle">
                         {{ $request->start_time ?: '-' }}
                         @if($request->end_time) - {{ $request->end_time }}@endif
                     </td>
@@ -141,9 +141,9 @@
         </x-data-table>
     @else
         <div class="card p-12 text-center">
-            <i class="icon-[tabler--calendar-off] text-3xl text-base-content/40 mb-4 block"></i>
-            <h3 class="text-base-content/60 font-semibold mb-2">No Work Requests Found</h3>
-            <p class="text-base-content/40 mb-6">
+            <i class="icon-[tabler--calendar-off] text-3xl text-faint mb-4 block"></i>
+            <h3 class="text-subtle font-semibold mb-2">No Work Requests Found</h3>
+            <p class="text-faint mb-6">
                 @if(!$admin && !$hr)
                     {{ $status || $type ? 'Try adjusting your filters or' : 'Get started by' }} creating a new work request.
                 @else
@@ -169,7 +169,7 @@
                                 {{ $request->created_at->format('M d, Y') }}
                             </div>
                             @if($admin || $hr)
-                                <div class="text-xs text-base-content/60">{{ $request->employee->full_name }}</div>
+                                <div class="text-xs text-subtle">{{ $request->employee->full_name }}</div>
                             @endif
                         </div>
                         <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->status === 'pending' ? 'bg-warning/10 text-warning' : ($request->status === 'approved' ? 'bg-success/10 text-success' : ($request->status === 'rejected' ? 'bg-error/10 text-error' : 'bg-base-200 text-base-content')) }}">
@@ -177,7 +177,7 @@
                         </span>
                     </div>
 
-                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                         <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->request_type === 'weekend' ? 'bg-info/10 text-info' : ($request->request_type === 'holiday' ? 'bg-warning/10 text-warning' : 'bg-secondary/10 text-secondary') }}">
                             {{ ucfirst($request->request_type) }}
                         </span>
@@ -201,7 +201,7 @@
                 </div>
             @endforeach
         @else
-            <div class="py-10 text-center text-base-content/40">
+            <div class="py-10 text-center text-faint">
                 <i class="icon-[ph--calendar-x-fill] text-3xl mb-2 block"></i>
                 No work requests found.
             </div>

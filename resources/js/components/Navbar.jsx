@@ -9,7 +9,7 @@ const NOTIF_STYLE = {
     warning: { bg: 'bg-warning/10', text: 'text-warning', icon: 'ph--warning-circle-fill' },
     success: { bg: 'bg-success/10', text: 'text-success', icon: 'tabler--circle-check' },
     info: { bg: 'bg-info/10', text: 'text-info', icon: 'ph--info-fill' },
-    default: { bg: 'bg-base-300', text: 'text-base-content/50', icon: 'ph--bell-fill' },
+    default: { bg: 'bg-base-300', text: 'text-subtle', icon: 'ph--bell-fill' },
 };
 
 export default function Navbar({ onOpenSidebar, onToggleMinified }) {
@@ -87,7 +87,7 @@ export default function Navbar({ onOpenSidebar, onToggleMinified }) {
                     {/* Search */}
                     <button
                         type="button"
-                        className="input input-bordered btn-outline bg-base-200 flex w-full max-w-xs input-sm items-center gap-2 text-start text-base-content/50 cursor-pointer"
+                        className="input input-bordered btn-outline bg-base-200 flex w-full max-w-xs input-sm items-center gap-2 text-start text-subtle cursor-pointer"
                         onClick={() => setSearchOpen(true)}
                         aria-haspopup="dialog"
                         aria-expanded={searchOpen}
@@ -141,12 +141,12 @@ export default function Navbar({ onOpenSidebar, onToggleMinified }) {
                                                             </div>
                                                             <div className="min-w-0 flex-1">
                                                                 <div className="truncate text-[13px] font-semibold text-base-content">{notification.title}</div>
-                                                                <div className="mt-px text-[11px] text-base-content/60">{notification.message}</div>
+                                                                <div className="mt-px text-[11px] text-subtle">{notification.message}</div>
                                                                 {notification.created_at && (
-                                                                    <div className="mt-0.5 text-[10px] text-base-content/40">{notification.created_at}</div>
+                                                                    <div className="mt-0.5 text-[10px] text-faint">{notification.created_at}</div>
                                                                 )}
                                                             </div>
-                                                            <Icon name="ph--caret-right-fill" className="flex-shrink-0 text-[10px] text-base-content/30 group-hover:text-base-content/50" />
+                                                            <Icon name="ph--caret-right-fill" className="flex-shrink-0 text-[10px] text-faint group-hover:text-subtle" />
                                                         </a>
                                                     </li>
                                                 );
@@ -158,7 +158,7 @@ export default function Navbar({ onOpenSidebar, onToggleMinified }) {
                                                 <Icon name="tabler--check" className="text-lg text-success" />
                                             </div>
                                             <div className="mb-1 text-[13px] font-semibold text-base-content">All caught up</div>
-                                            <div className="text-xs text-base-content/40">No pending actions right now</div>
+                                            <div className="text-xs text-faint">No pending actions right now</div>
                                         </div>
                                     )}
                                 </div>
@@ -192,7 +192,7 @@ export default function Navbar({ onOpenSidebar, onToggleMinified }) {
                                 <li className="dropdown-header gap-2">
                                     <div>
                                         <h6 className="text-base-content text-base font-semibold">{user?.name}</h6>
-                                        <small className="text-base-content/50">{roleLabel}</small>
+                                        <small className="text-subtle">{roleLabel}</small>
                                     </div>
                                 </li>
                                 <li>

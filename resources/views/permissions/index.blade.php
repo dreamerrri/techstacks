@@ -48,10 +48,10 @@
                     <tr class="row-hover">
                         <td class="font-semibold text-base-content">{{ $permission->name }}</td>
                         <td><code class="bg-base-200 text-error text-xs px-1.5 py-0.5 rounded">{{ $permission->slug }}</code></td>
-                        <td class="text-base-content/60">
+                        <td class="text-subtle">
                             <span class="truncate block" title="{{ $permission->description }}">{{ $permission->description ?? '—' }}</span>
                         </td>
-                        <td class="text-base-content/60 text-right">{{ $permission->roles->count() }}</td>
+                        <td class="text-subtle text-right">{{ $permission->roles->count() }}</td>
                         <td class="text-right">
                             @if($permission->is_active)
                                 <span class="badge badge-soft badge-success"><i class="icon-[tabler--circle-check]"></i> Active</span>
@@ -84,7 +84,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="py-10 text-base-content/40">
+                        <td colspan="6" class="py-10 text-faint">
                             <div class="flex flex-col items-center">
                                 <i class="icon-[ph--tray-fill] text-3xl mb-2"></i>
                                 <span>No data found.</span>
@@ -105,7 +105,7 @@
                                 </div>
                                 <div>
                                     <div class="font-semibold text-base-content text-sm">{{ $permission->name }}</div>
-                                    <code class="text-xs text-base-content/60">{{ $permission->slug }}</code>
+                                    <code class="text-xs text-subtle">{{ $permission->slug }}</code>
                                 </div>
                             </div>
                             @if($permission->is_active)
@@ -115,12 +115,12 @@
                             @endif
                         </div>
 
-                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                             <span><i class="icon-[tabler--user] w-3.5"></i>{{ $permission->roles->count() }} roles</span>
                         </div>
 
                         @if($permission->description)
-                            <div class="text-xs text-base-content/40 mt-1">{{ $permission->description }}</div>
+                            <div class="text-xs text-faint mt-1">{{ $permission->description }}</div>
                         @endif
 
                         <div class="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-200">

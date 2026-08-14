@@ -60,7 +60,7 @@ export default function WorkRequestsPending({ pendingRequests }) {
                 <div className="card w-full min-w-0 border border-base-300 flex flex-col p-0">
                     <div className="sticky top-0 px-4 sm:px-7 pt-5 rounded-t-2xl bg-base-100 z-10">
                         <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-                            <h2 className="text-sm font-semibold uppercase tracking-widest text-base-content/40 flex items-center gap-2 m-0">
+                            <h2 className="text-sm font-semibold uppercase tracking-widest text-faint flex items-center gap-2 m-0">
                                 <Icon name="tabler--clock" className="size-4 text-primary" />
                                 <span>Pending Work Requests</span>
                             </h2>
@@ -89,8 +89,8 @@ export default function WorkRequestsPending({ pendingRequests }) {
                                             <tr key={req.id} className="row-hover">
                                                 <td>
                                                     <div className="font-semibold text-base-content">{req.employee?.full_name}</div>
-                                                    <div className="text-xs text-base-content/60">{req.employee?.employee_id}</div>
-                                                    <div className="text-xs text-base-content/60">{req.employee?.position}</div>
+                                                    <div className="text-xs text-subtle">{req.employee?.employee_id}</div>
+                                                    <div className="text-xs text-subtle">{req.employee?.position}</div>
                                                 </td>
                                                 <td>
                                                     <StatusBadge type={typeBadge(req.request_type)}>
@@ -102,10 +102,10 @@ export default function WorkRequestsPending({ pendingRequests }) {
                                                     {fmtTime(req.start_time) || '-'}
                                                     {req.end_time ? ` - ${fmtTime(req.end_time)}` : ''}
                                                     {req.estimated_hours != null && (
-                                                        <div className="text-xs text-base-content/60">{Number(req.estimated_hours).toFixed(2)} hrs</div>
+                                                        <div className="text-xs text-subtle">{Number(req.estimated_hours).toFixed(2)} hrs</div>
                                                     )}
                                                 </td>
-                                                <td className="text-base-content/60 text-sm max-w-52 truncate">{req.reason || '-'}</td>
+                                                <td className="text-subtle text-sm max-w-52 truncate">{req.reason || '-'}</td>
                                                 <td>
                                                     <div className="flex gap-2 justify-end">
                                                         <Link href={`/work-requests/${req.id}`} className="btn btn-soft btn-info btn-sm">
@@ -131,15 +131,15 @@ export default function WorkRequestsPending({ pendingRequests }) {
                                         <div className="flex justify-between items-start mb-2">
                                             <div>
                                                 <div className="text-sm text-base-content font-semibold">{req.employee?.full_name}</div>
-                                                <div className="text-xs text-base-content/60">{req.employee?.employee_id}</div>
-                                                <div className="text-xs text-base-content/60">{req.employee?.position}</div>
+                                                <div className="text-xs text-subtle">{req.employee?.employee_id}</div>
+                                                <div className="text-xs text-subtle">{req.employee?.position}</div>
                                             </div>
                                             <StatusBadge type={typeBadge(req.request_type)}>
                                                 {req.request_type.charAt(0).toUpperCase() + req.request_type.slice(1)}
                                             </StatusBadge>
                                         </div>
 
-                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                                             <span><Icon name="ph--calendar-fill" className="size-3.5 inline" /> {fmtDate(req.work_date)}</span>
                                             <span><Icon name="ph--clock-fill" className="size-3.5 inline" /> {fmtTime(req.start_time) || '-'}{req.end_time ? ` - ${fmtTime(req.end_time)}` : ''}</span>
                                             {req.estimated_hours != null && (
@@ -148,7 +148,7 @@ export default function WorkRequestsPending({ pendingRequests }) {
                                         </div>
 
                                         {req.reason && (
-                                            <div className="text-xs text-base-content/60 mt-2">
+                                            <div className="text-xs text-subtle mt-2">
                                                 <Icon name="ph--text-align-left-fill" className="size-3.5 inline" /> {req.reason}
                                             </div>
                                         )}
@@ -171,8 +171,8 @@ export default function WorkRequestsPending({ pendingRequests }) {
                     ) : (
                         <div className="card text-center p-8 m-4">
                             <Icon name="tabler--circle-check" className="text-success size-10 mb-4" />
-                            <h3 className="text-base-content/60">All Caught Up!</h3>
-                            <p className="text-base-content/60 mb-4">There are no pending work requests to review.</p>
+                            <h3 className="text-subtle">All Caught Up!</h3>
+                            <p className="text-subtle mb-4">There are no pending work requests to review.</p>
                             <Link href="/work-requests" className="btn btn-soft btn-primary inline-flex items-center gap-2 mx-auto">
                                 <Icon name="ph--list-fill" className="size-4" /> View All Requests
                             </Link>

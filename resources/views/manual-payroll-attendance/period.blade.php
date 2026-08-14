@@ -16,7 +16,7 @@
 <div class="flex items-center justify-between mb-4">
     <div>
         <a href="{{ route('manual-payroll-attendance.index') }}"
-           class="inline-flex items-center text-sm text-base-content/60 mb-4 gap-3 no-underline">
+           class="inline-flex items-center text-sm text-subtle mb-4 gap-3 no-underline">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Periods
         </a>
         <div class="inline-block font-semibold text-xs text-info bg-info/10 rounded-lg p-4 mb-4">
@@ -25,7 +25,7 @@
         <h2 class="text-base-content">
             {{ $payrollPeriod->cutoff_start ? $payrollPeriod->cutoff_start->format('F d') : 'N/A' }} - {{ $payrollPeriod->cutoff_end ? $payrollPeriod->cutoff_end->format('F d, Y') : 'N/A' }}
         </h2>
-        <p class="text-base-content/60">
+        <p class="text-subtle">
             Payroll Date: {{ $payrollPeriod->payroll_date ? $payrollPeriod->payroll_date->format('F d, Y') : 'N/A' }} | 
             Status: <span class="font-semibold">{{ ucfirst($payrollPeriod->status) }}</span>
         </p>
@@ -49,19 +49,19 @@
 {{-- Summary Cards --}}
 <div class="grid mb-4 gap-3">
     <div class="bg-base-100 border border-base-300 rounded-lg p-4">
-        <div class="text-xs text-base-content/60 mb-4">Total Employees</div>
+        <div class="text-xs text-subtle mb-4">Total Employees</div>
         <div class="font-bold text-2xl text-base-content" id="totalEmployees">{{ $payrollPeriod->payrollInputs ? $payrollPeriod->payrollInputs->count() : 0 }}</div>
     </div>
     <div class="bg-base-100 border border-base-300 rounded-xl p-5">
-        <div class="text-base-content/60 text-xs mb-1">Total Gross Pay</div>
+        <div class="text-subtle text-xs mb-1">Total Gross Pay</div>
         <div class="text-2xl font-bold text-success" id="totalGrossPay">₱{{ number_format($payrollPeriod->total_gross_pay ?? 0, 2) }}</div>
     </div>
     <div class="bg-base-100 border border-base-300 rounded-xl p-5">
-        <div class="text-base-content/60 text-xs mb-1">Total Net Pay</div>
+        <div class="text-subtle text-xs mb-1">Total Net Pay</div>
         <div class="text-2xl font-bold text-info" id="totalNetPay">₱{{ number_format($payrollPeriod->total_net_pay ?? 0, 2) }}</div>
     </div>
     <div class="bg-base-100 border border-base-300 rounded-xl p-5">
-        <div class="text-base-content/60 text-xs mb-1">Total Deductions</div>
+        <div class="text-subtle text-xs mb-1">Total Deductions</div>
         <div class="text-2xl font-bold text-error" id="totalDeductions">₱{{ number_format($payrollPeriod->total_deductions ?? 0, 2) }}</div>
     </div>
 </div>
@@ -70,7 +70,7 @@
 <div class="card overflow-hidden p-4 mb-4">
     <div class="border-base-300 p-4">
         <h3 class="text-base-content">Encoded Employees</h3>
-        <p class="text-sm text-base-content/60">Employees with attendance data for this period</p>
+        <p class="text-sm text-subtle">Employees with attendance data for this period</p>
     </div>
 
     @if($payrollPeriod->payrollInputs && $payrollPeriod->payrollInputs->count() > 0)
@@ -78,15 +78,15 @@
         <table class="w-full text-sm">
             <thead class="bg-base-200">
                 <tr>
-                    <th class="text-xs text-base-content/60 p-4">Employee</th>
-                    <th class="text-right text-xs text-base-content/60 p-4">Days Worked</th>
-                    <th class="text-right text-xs text-base-content/60 p-4">OT Hours</th>
-                    <th class="text-right text-xs text-base-content/60 p-4">Late Hours</th>
-                    <th class="text-right text-xs text-base-content/60 p-4">Allowances</th>
-                    <th class="text-right text-xs text-base-content/60 p-4">Deductions</th>
-                    <th class="text-right text-xs text-base-content/60 p-4">Gross Pay</th>
-                    <th class="text-right text-xs text-base-content/60 p-4">Net Pay</th>
-                    <th class="text-center text-xs text-base-content/60 p-4">Actions</th>
+                    <th class="text-xs text-subtle p-4">Employee</th>
+                    <th class="text-right text-xs text-subtle p-4">Days Worked</th>
+                    <th class="text-right text-xs text-subtle p-4">OT Hours</th>
+                    <th class="text-right text-xs text-subtle p-4">Late Hours</th>
+                    <th class="text-right text-xs text-subtle p-4">Allowances</th>
+                    <th class="text-right text-xs text-subtle p-4">Deductions</th>
+                    <th class="text-right text-xs text-subtle p-4">Gross Pay</th>
+                    <th class="text-right text-xs text-subtle p-4">Net Pay</th>
+                    <th class="text-center text-xs text-subtle p-4">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -100,7 +100,7 @@
                             </div>
                             <div>
                                 <div class="font-semibold text-base-content">{{ $input->employee->first_name ?? 'Unknown' }} {{ $input->employee->last_name ?? '' }}</div>
-                                <div class="text-xs text-base-content/60 font-mono">{{ $input->employee->employee_id ?? 'N/A' }}</div>
+                                <div class="text-xs text-subtle font-mono">{{ $input->employee->employee_id ?? 'N/A' }}</div>
                             </div>
                         </div>
                     </td>
@@ -118,7 +118,7 @@
                             <i class="icon-[ph--pencil-fill]"></i> Edit
                         </a>
                         @else
-                        <span class="text-xs text-base-content/60">Finalized</span>
+                        <span class="text-xs text-subtle">Finalized</span>
                         @endif
                     </td>
                 </tr>
@@ -128,7 +128,7 @@
         </table>
     </div>
     @else
-    <div class="text-center text-base-content/60 p-4">
+    <div class="text-center text-subtle p-4">
         <i class="icon-[ph--clipboard-text-fill] text-2xl mb-4"></i>
         No employees encoded yet for this period.
     </div>
@@ -140,7 +140,7 @@
 <div class="card overflow-hidden p-4">
     <div class="border-base-300 p-4">
         <h3 class="text-base-content">Pending Encoding</h3>
-        <p class="text-sm text-base-content/60">Employees without attendance data for this period</p>
+        <p class="text-sm text-subtle">Employees without attendance data for this period</p>
     </div>
 
     {{-- Filters --}}
@@ -185,7 +185,7 @@
                 <i class="icon-[ph--x]"></i> Clear
             </button>
         </div>
-        <div class="text-xs text-base-content/60 mt-2">
+        <div class="text-xs text-subtle mt-2">
             Showing <span id="filteredCount">{{ $unencodedEmployees->count() }}</span> of {{ $unencodedEmployees->count() }} employees
         </div>
     </div>
@@ -200,13 +200,13 @@
                  data-department="{{ $employee->department ?? '' }}"
                  data-status="{{ $employee->employment_status ?? '' }}">
                 <div class="flex items-center gap-3">
-                    <div class="flex items-center justify-center font-bold text-xs text-base-content/60 bg-base-200 rounded-lg">
+                    <div class="flex items-center justify-center font-bold text-xs text-subtle bg-base-200 rounded-lg">
                         {{ strtoupper(substr($employee->first_name ?? '?', 0, 1)) }}
                     </div>
                     <div>
                         <div class="font-semibold text-sm text-base-content">{{ $employee->first_name ?? 'Unknown' }} {{ $employee->last_name ?? '' }}</div>
-                        <div class="text-xs text-base-content/60 font-mono">{{ $employee->employee_id ?? 'N/A' }}</div>
-                        <div class="text-base-content/60 mt-2">{{ $employee->department ?? 'N/A' }} • {{ $employee->employment_status ?? 'N/A' }}</div>
+                        <div class="text-xs text-subtle font-mono">{{ $employee->employee_id ?? 'N/A' }}</div>
+                        <div class="text-subtle mt-2">{{ $employee->department ?? 'N/A' }} • {{ $employee->employment_status ?? 'N/A' }}</div>
                     </div>
                 </div>
                 <a href="{{ route('manual-payroll-attendance.employee-form', [$payrollPeriod, $employee]) }}"
@@ -217,7 +217,7 @@
             @endif
             @endforeach
         </div>
-        <div id="noResults" class="hidden text-center text-base-content/60 p-4">
+        <div id="noResults" class="hidden text-center text-subtle p-4">
             <i class="icon-[tabler--search] text-2xl mb-4"></i>
             No employees match your filters.
         </div>

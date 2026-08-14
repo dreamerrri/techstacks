@@ -4,9 +4,9 @@
     'required' => false,
     'help' => null,
     'wrapperClass' => 'fieldset',
-    'labelClass' => 'label text-xs font-semibold uppercase tracking-wider text-base-content/60',
+    'labelClass' => 'label text-xs font-semibold uppercase tracking-wider text-subtle',
     'errorClass' => 'label text-red-600 text-xs mt-1',
-    'helpClass' => 'text-base-content/40 text-xs mt-1',
+    'helpClass' => 'text-faint text-xs mt-1',
 ])
 
 <div {{ $attributes->merge(['class' => $wrapperClass]) }}>

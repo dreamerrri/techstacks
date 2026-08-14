@@ -101,7 +101,7 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                                                     <StatusBadge type={typeBadge(req.request_type)}>{typeLabel(req.request_type)}</StatusBadge>
                                                 </td>
                                                 <td className="text-base-content font-semibold">{fmtMoney(req.amount)}</td>
-                                                <td className="text-base-content/60">{req.description || '-'}</td>
+                                                <td className="text-subtle">{req.description || '-'}</td>
                                                 <td>
                                                     <StatusBadge type={STATUS_META[req.status] ?? 'neutral'}>
                                                         {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
@@ -144,7 +144,7 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                                             <div>
                                                 <div className="text-sm text-base-content font-semibold">{fmtDate(req.created_at)}</div>
                                                 {canManage && (
-                                                    <div className="text-xs text-base-content/60">{req.employee?.full_name}</div>
+                                                    <div className="text-xs text-subtle">{req.employee?.full_name}</div>
                                                 )}
                                             </div>
                                             <StatusBadge type={STATUS_META[req.status] ?? 'neutral'}>
@@ -152,13 +152,13 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                                             </StatusBadge>
                                         </div>
 
-                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                                             <StatusBadge type={typeBadge(req.request_type)}>{typeLabel(req.request_type)}</StatusBadge>
                                             <span className="font-semibold text-base-content">{fmtMoney(req.amount)}</span>
                                         </div>
 
                                         {req.description && (
-                                            <div className="text-xs text-base-content/60 mt-2">{req.description}</div>
+                                            <div className="text-xs text-subtle mt-2">{req.description}</div>
                                         )}
 
                                         <div className="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-200">
@@ -189,9 +189,9 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                         </>
                     ) : (
                         <div className="card p-12 text-center">
-                            <Icon name="tabler--cash" className="size-10 text-base-content/30 mx-auto mb-3" />
-                            <h3 className="text-base-content/60 font-semibold mb-2">No Financial Requests Found</h3>
-                            <p className="text-base-content/40 mb-6">
+                            <Icon name="tabler--cash" className="size-10 text-faint mx-auto mb-3" />
+                            <h3 className="text-subtle font-semibold mb-2">No Financial Requests Found</h3>
+                            <p className="text-faint mb-6">
                                 {!canManage
                                     ? `${hasFilters ? 'Try adjusting your filters or' : 'Get started by'} creating a new financial request.`
                                     : 'No financial requests match your current filters.'}

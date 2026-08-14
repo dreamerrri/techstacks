@@ -74,7 +74,7 @@ export default function UsersIndex({ users, filters, stats }) {
 
     const toggleButton = (user) => {
         if (user.id === currentUserId) {
-            return <span className="text-base-content/80 text-xs">—</span>;
+            return <span className="text-muted text-xs">—</span>;
         }
         return (
             <ConfirmButton
@@ -103,7 +103,7 @@ export default function UsersIndex({ users, filters, stats }) {
                                 <Icon name={s.icon} className="size-5" />
                             </div>
                             <div className="text-3xl font-bold text-base-content mb-1">{s.value}</div>
-                            <div className="text-xs text-base-content/80 uppercase tracking-widest font-medium">{s.label}</div>
+                            <div className="text-xs text-muted uppercase tracking-widest font-medium">{s.label}</div>
                         </div>
                     ))}
                 </div>
@@ -155,7 +155,7 @@ export default function UsersIndex({ users, filters, stats }) {
                                 {users.data.map((user) => (
                                     <tr key={user.id} className="row-hover">
                                         <td className="font-semibold text-base-content">{nameCell(user)}</td>
-                                        <td className="text-base-content/60">{user.email}</td>
+                                        <td className="text-subtle">{user.email}</td>
                                         <td>{roleSelect(user)}</td>
                                         <td>
                                             {user.is_active ? (
@@ -164,7 +164,7 @@ export default function UsersIndex({ users, filters, stats }) {
                                                 <StatusBadge type="error">Inactive</StatusBadge>
                                             )}
                                         </td>
-                                        <td className="text-base-content/60 text-xs">{formatDate(user.last_login_at)}</td>
+                                        <td className="text-subtle text-xs">{formatDate(user.last_login_at)}</td>
                                         <td>{toggleButton(user)}</td>
                                     </tr>
                                 ))}
@@ -197,14 +197,14 @@ export default function UsersIndex({ users, filters, stats }) {
                                                     <span className="badge badge-soft badge-success text-[10px] px-2 py-0 normal-case">You</span>
                                                 )}
                                             </div>
-                                            <div className="text-xs text-base-content/60">{user.email}</div>
+                                            <div className="text-xs text-subtle">{user.email}</div>
                                         </div>
                                     </div>
                                     {user.is_active ? <StatusBadge type="success">Active</StatusBadge> : <StatusBadge type="error">Inactive</StatusBadge>}
                                 </div>
                                 <div className="flex justify-between items-center flex-wrap gap-2 pt-3 border-t border-base-300">
                                     {roleSelect(user)}
-                                    <span className="text-xs text-base-content/80">{formatDate(user.last_login_at)}</span>
+                                    <span className="text-xs text-muted">{formatDate(user.last_login_at)}</span>
                                     {toggleButton(user)}
                                 </div>
                             </div>

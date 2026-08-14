@@ -110,7 +110,7 @@
                     <td class="text-base-content font-semibold">
                         ₱{{ number_format($request->amount, 2) }}
                     </td>
-                    <td class="text-base-content/60">
+                    <td class="text-subtle">
                         {{ $request->description ?: '-' }}
                     </td>
                     <td>
@@ -138,9 +138,9 @@
         </x-data-table>
     @else
         <div class="card p-12 text-center">
-            <i class="icon-[tabler--cash] text-3xl text-base-content/40 mb-4 block"></i>
-            <h3 class="text-base-content/60 font-semibold mb-2">No Financial Requests Found</h3>
-            <p class="text-base-content/40 mb-6">
+            <i class="icon-[tabler--cash] text-3xl text-faint mb-4 block"></i>
+            <h3 class="text-subtle font-semibold mb-2">No Financial Requests Found</h3>
+            <p class="text-faint mb-6">
                 @if(!$admin && !$hr)
                     {{ $status || $type ? 'Try adjusting your filters or' : 'Get started by' }} creating a new financial request.
                 @else
@@ -166,7 +166,7 @@
                                 {{ $request->created_at->format('M d, Y') }}
                             </div>
                             @if($admin || $hr)
-                                <div class="text-xs text-base-content/60">{{ $request->employee->full_name }}</div>
+                                <div class="text-xs text-subtle">{{ $request->employee->full_name }}</div>
                             @endif
                         </div>
                         <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $request->status === 'pending' ? 'bg-warning/10 text-warning' : ($request->status === 'approved' ? 'bg-success/10 text-success' : ($request->status === 'rejected' ? 'bg-error/10 text-error' : 'bg-base-200 text-base-content')) }}">
@@ -174,7 +174,7 @@
                         </span>
                     </div>
 
-                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                         <span class="badge {{ $typeClass }}">
                             {{ $request->request_type === 'cash_advance' ? 'Cash Advance' : 'Reimbursement' }}
                         </span>
@@ -182,7 +182,7 @@
                     </div>
 
                     @if($request->description)
-                        <div class="text-xs text-base-content/60 mt-2">
+                        <div class="text-xs text-subtle mt-2">
                             {{ $request->description }}
                         </div>
                     @endif
@@ -201,9 +201,9 @@
             @endforeach
         @else
             <div class="card p-8 text-center">
-                <i class="icon-[tabler--cash] text-2xl text-base-content/40 mb-3 block"></i>
-                <h3 class="text-base-content/60 font-semibold mb-2">No Financial Requests Found</h3>
-                <p class="text-base-content/40 text-sm">
+                <i class="icon-[tabler--cash] text-2xl text-faint mb-3 block"></i>
+                <h3 class="text-subtle font-semibold mb-2">No Financial Requests Found</h3>
+                <p class="text-faint text-sm">
                     @if(!$admin && !$hr)
                         {{ $status || $type ? 'Try adjusting your filters or' : 'Get started by' }} creating a new financial request.
                     @else

@@ -104,7 +104,7 @@ export default function Register() {
                         <button
                             type="button"
                             onClick={() => setShowPassword((v) => !v)}
-                            className="absolute end-3 top-1/2 -translate-y-1/2 bg-transparent border-0 cursor-pointer text-base-content/60 p-0"
+                            className="absolute end-3 top-1/2 -translate-y-1/2 bg-transparent border-0 cursor-pointer text-subtle p-0"
                         >
                             <i className={showPassword ? 'icon-[ph--eye-slash-fill]' : 'icon-[ph--eye-fill]'}></i>
                         </button>
@@ -159,7 +159,7 @@ export default function Register() {
                         <button
                             type="button"
                             onClick={() => setShowConfirm((v) => !v)}
-                            className="absolute end-3 top-1/2 -translate-y-1/2 bg-transparent border-0 cursor-pointer text-base-content/60 p-0"
+                            className="absolute end-3 top-1/2 -translate-y-1/2 bg-transparent border-0 cursor-pointer text-subtle p-0"
                         >
                             <i className={showConfirm ? 'icon-[ph--eye-slash-fill]' : 'icon-[ph--eye-fill]'}></i>
                         </button>

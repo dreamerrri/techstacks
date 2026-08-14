@@ -111,8 +111,8 @@ export default function ProfileShow({ employee }) {
                             </div>
                             <div className="text-center mt-2 pb-6">
                                 <h3 className="text-2xl text-base-content font-bold leading-normal mb-1">{user?.name}</h3>
-                                <p className="text-base-content/60 text-sm m-0 mb-2">{user?.email}</p>
-                                <div className="text-xs mt-0 mb-2 text-base-content/60 font-bold uppercase flex items-center justify-center gap-1">
+                                <p className="text-subtle text-sm m-0 mb-2">{user?.email}</p>
+                                <div className="text-xs mt-0 mb-2 text-subtle font-bold uppercase flex items-center justify-center gap-1">
                                     <span className={`badge ${roleClass}`}>{user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : ''}</span>
                                     {employee && (
                                         <span className="badge badge-soft badge-neutral">{employee.position} — {employee.department}</span>
@@ -197,7 +197,7 @@ export default function ProfileShow({ employee }) {
                                                 <DetailRow label="Date Hired">{fmt(employee.date_hired, { month: 'short', day: '2-digit', year: 'numeric' })}</DetailRow>
                                                 <DetailRow label="Salary Type" border={false}>{employee.salary_type}</DetailRow>
                                             </div>
-                                            <div className="mt-3 px-3 py-2 bg-base-200 rounded-lg text-xs text-base-content/40">
+                                            <div className="mt-3 px-3 py-2 bg-base-200 rounded-lg text-xs text-faint">
                                                 <Icon name="ph--info-fill" className="size-3.5 inline" /> Employment details can only be changed by HR.
                                             </div>
                                         </Panel>
@@ -253,14 +253,14 @@ export default function ProfileShow({ employee }) {
                                                     <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 ${color} ${bg}`}>
                                                         <Icon name={icon} className="size-5" />
                                                     </div>
-                                                    <div className="text-xs text-base-content/40 uppercase tracking-widest font-medium mb-1">{label}</div>
+                                                    <div className="text-xs text-faint uppercase tracking-widest font-medium mb-1">{label}</div>
                                                     <div className="font-bold font-mono text-base-content text-xs break-all">{value || '—'}</div>
                                                 </Panel>
                                             ))}
                                         </div>
                                     </Panel>
                                 ) : (
-                                    <Panel padding="p-6" className="text-center text-sm text-base-content/60">
+                                    <Panel padding="p-6" className="text-center text-sm text-subtle">
                                         No employee record is linked to this account yet, so government contribution details aren&apos;t available.
                                     </Panel>
                                 )
@@ -282,7 +282,7 @@ export default function ProfileShow({ employee }) {
                                                 </FormField>
                                             </div>
 
-                                            <div className="text-xs font-semibold text-base-content/40 uppercase tracking-widest mb-2">
+                                            <div className="text-xs font-semibold text-faint uppercase tracking-widest mb-2">
                                                 Change Password <span className="normal-case font-normal">(leave blank to keep current)</span>
                                             </div>
                                             <div className="border-t border-base-300 mb-4"></div>
@@ -309,7 +309,7 @@ export default function ProfileShow({ employee }) {
                                         <PanelHeader icon="ph--palette-fill" color="text-accent" bg="bg-accent/10">
                                             Appearance
                                         </PanelHeader>
-                                        <p className="text-xs text-base-content/40 mb-4">
+                                        <p className="text-xs text-faint mb-4">
                                             Pick a theme — it applies instantly and is saved to your account.
                                         </p>
                                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" id="theme-picker">

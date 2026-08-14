@@ -12,7 +12,7 @@
             <i class="icon-[ph--lock-fill]"></i>
         </div>
         <h1 class="text-3xl font-bold text-base-content mb-3">Access Denied</h1>
-        <p class="text-base-content/60 text-base leading-relaxed mb-8">
+        <p class="text-subtle text-base leading-relaxed mb-8">
             You do not have permission to access this page. Your current role does not grant you access to this resource. Please contact your administrator if you believe this is an error.
         </p>
         <div class="flex flex-wrap justify-center gap-3">

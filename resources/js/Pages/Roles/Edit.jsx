@@ -36,7 +36,7 @@ export default function RolesEdit({ role, permissions }) {
             <Head title="Edit Role" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href={`/roles/${role.id}`} className="back-link text-base-content/60 no-underline text-sm hover:text-success">
+                    <Link href={`/roles/${role.id}`} className="back-link text-subtle no-underline text-sm hover:text-success">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Role
                     </Link>
                 </div>
@@ -48,7 +48,7 @@ export default function RolesEdit({ role, permissions }) {
 
                     <form onSubmit={(e) => { e.preventDefault(); put(`/roles/${role.id}`); }}>
                         <div className="mb-8">
-                            <h3 className="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+                            <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
                                 <Icon name="ph--info-fill" className="size-4 text-error inline" /> Role Details
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -88,13 +88,13 @@ export default function RolesEdit({ role, permissions }) {
                                         onChange={(e) => setData('is_active', e.target.checked)}
                                         className="checkbox checkbox-error"
                                     />
-                                    <span className="font-semibold text-base-content/80 text-sm">Active</span>
+                                    <span className="font-semibold text-muted text-sm">Active</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="mb-8">
-                            <h3 className="text-xs font-semibold uppercase tracking-widest text-base-content/40 border-b-2 border-error/20 pb-2 mb-4">
+                            <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
                                 <Icon name="ph--key-fill" className="size-4 text-error inline" /> Permissions
                             </h3>
                             {errors.permissions && (
@@ -104,11 +104,11 @@ export default function RolesEdit({ role, permissions }) {
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                     {Object.entries(permissions).map(([module, modulePermissions]) => (
                                         <div key={module} className="bg-base-200 border border-base-300 rounded-xl p-4">
-                                            <div className="text-xs font-bold text-base-content/60 uppercase tracking-widest mb-3">
+                                            <div className="text-xs font-bold text-subtle uppercase tracking-widest mb-3">
                                                 {module.charAt(0).toUpperCase() + module.slice(1)}
                                             </div>
                                             {modulePermissions.map((permission) => (
-                                                <label key={permission.id} className="flex items-center gap-2 cursor-pointer text-xs text-base-content/80 mb-2">
+                                                <label key={permission.id} className="flex items-center gap-2 cursor-pointer text-xs text-muted mb-2">
                                                     <input
                                                         type="checkbox"
                                                         checked={data.permissions.includes(permission.id)}
@@ -122,7 +122,7 @@ export default function RolesEdit({ role, permissions }) {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-base-content/40 text-sm m-0">No permissions available.</p>
+                                <p className="text-faint text-sm m-0">No permissions available.</p>
                             )}
                         </div>
 

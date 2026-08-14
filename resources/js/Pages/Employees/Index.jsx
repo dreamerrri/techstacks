@@ -69,28 +69,28 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
                             <Icon name="tabler--user" className="size-5" />
                         </div>
                         <div className="text-3xl font-bold text-base-content mb-1">{stats.total}</div>
-                        <div className="text-xs text-base-content/80 uppercase tracking-widest font-medium">Total Employees</div>
+                        <div className="text-xs text-muted uppercase tracking-widest font-medium">Total Employees</div>
                     </div>
                     <div className="card bg-base-100 border border-base-300 p-5 text-center">
                         <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-success bg-success/10">
                             <Icon name="tabler--circle-check" className="size-5" />
                         </div>
                         <div className="text-3xl font-bold text-base-content mb-1">{stats.regular}</div>
-                        <div className="text-xs text-base-content/80 uppercase tracking-widest font-medium">Regular</div>
+                        <div className="text-xs text-muted uppercase tracking-widest font-medium">Regular</div>
                     </div>
                     <div className="card bg-base-100 border border-base-300 p-5 text-center">
                         <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-warning bg-warning/10">
                             <Icon name="tabler--clock" className="size-5" />
                         </div>
                         <div className="text-3xl font-bold text-base-content mb-1">{stats.probationary}</div>
-                        <div className="text-xs text-base-content/80 uppercase tracking-widest font-medium">Probationary</div>
+                        <div className="text-xs text-muted uppercase tracking-widest font-medium">Probationary</div>
                     </div>
                     <Link href="/employees/archived" className="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
-                        <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-base-content/60 bg-base-200">
+                        <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-subtle bg-base-200">
                             <Icon name="tabler--archive" className="size-5" />
                         </div>
                         <div className="text-3xl font-bold text-base-content mb-1">{stats.archived}</div>
-                        <div className="text-xs text-base-content/80 uppercase tracking-widest font-medium">Archived</div>
+                        <div className="text-xs text-muted uppercase tracking-widest font-medium">Archived</div>
                     </Link>
                 </div>
 
@@ -146,7 +146,7 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
                             <tbody>
                                 {employees.data.map((emp) => (
                                     <tr key={emp.id} className="row-hover">
-                                        <td className="font-mono text-base-content/60">{emp.employee_id}</td>
+                                        <td className="font-mono text-subtle">{emp.employee_id}</td>
                                         <td>
                                             <div className="flex items-center gap-2">
                                                 {avatar(emp)}
@@ -155,14 +155,14 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
                                                 </Link>
                                             </div>
                                         </td>
-                                        <td className="text-base-content/60">{emp.department}</td>
-                                        <td className="text-base-content/60">{emp.position}</td>
+                                        <td className="text-subtle">{emp.department}</td>
+                                        <td className="text-subtle">{emp.position}</td>
                                         <td>
                                             <StatusBadge type={STATUS_META[emp.employment_status] ?? 'neutral'}>
                                                 {emp.employment_status}
                                             </StatusBadge>
                                         </td>
-                                        <td className="text-base-content/60">{fmtDate(emp.date_hired)}</td>
+                                        <td className="text-subtle">{fmtDate(emp.date_hired)}</td>
                                         <td>
                                             <div className="flex gap-2">
                                                 <Link href={`/employees/${emp.id}`} className="btn btn-soft btn-info btn-sm">
@@ -201,7 +201,7 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
                                             <Link href={`/employees/${emp.id}`} className="text-base-content no-underline font-semibold text-sm hover:text-primary">
                                                 {emp.full_name}
                                             </Link>
-                                            <div className="text-xs text-base-content/60 font-mono">{emp.employee_id}</div>
+                                            <div className="text-xs text-subtle font-mono">{emp.employee_id}</div>
                                         </div>
                                     </div>
                                     <StatusBadge type={STATUS_META[emp.employment_status] ?? 'neutral'} className="whitespace-nowrap">
@@ -209,7 +209,7 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
                                     </StatusBadge>
                                 </div>
 
-                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                                     <span><Icon name="tabler--building" className="size-3.5 inline" /> {emp.department}</span>
                                     <span><Icon name="tabler--briefcase" className="size-3.5 inline" /> {emp.position}</span>
                                     <span><Icon name="tabler--calendar" className="size-3.5 inline" /> {fmtDate(emp.date_hired)}</span>

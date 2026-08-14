@@ -21,7 +21,7 @@ export default function Dashboard({ counts }) {
                 <i className={icon}></i>
             </div>
             <div className={`${small ? 'text-2xl font-small' : 'text-3xl font-bold'} text-base-content mb-1`}>{value}</div>
-            <div className="text-xs text-base-content/80 uppercase tracking-widest">{label}</div>
+            <div className="text-xs text-muted uppercase tracking-widest">{label}</div>
         </Link>
     );
 
@@ -30,7 +30,7 @@ export default function Dashboard({ counts }) {
             <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
                 <i className={icon}></i>
             </div>
-            <span className="text-base-content/80">{label}</span>
+            <span className="text-muted">{label}</span>
         </a>
     );
 
@@ -139,21 +139,21 @@ export default function Dashboard({ counts }) {
                     </h2>
                     <div className="flex flex-col">
                         <div className="flex justify-between items-center py-3 border-b border-base-200">
-                            <span className="text-base-content/80">Name</span>
+                            <span className="text-muted">Name</span>
                             <span className="font-semibold text-base-content text-right">{user.name}</span>
                         </div>
                         <div className="flex justify-between items-center py-3 border-b border-base-200">
-                            <span className="text-base-content/80">Email</span>
+                            <span className="text-muted">Email</span>
                             <span className="font-semibold text-base-content text-right">{user.email}</span>
                         </div>
                         <div className="flex justify-between items-center py-3 border-b border-base-200">
-                            <span className="text-base-content/80">Role</span>
+                            <span className="text-muted">Role</span>
                             <span className="font-semibold text-base-content text-right">
                                 {isAdmin ? 'Administrator' : isHR ? 'HR Personnel' : 'Employee'}
                             </span>
                         </div>
                         <div className="flex justify-between items-center py-3 border-b border-base-200">
-                            <span className="text-base-content/80">Account Status</span>
+                            <span className="text-muted">Account Status</span>
                             <span className="font-semibold text-base-content text-right">
                                 {user.is_active ? (
                                     <span className="badge badge-soft badge-primary">
@@ -167,7 +167,7 @@ export default function Dashboard({ counts }) {
                             </span>
                         </div>
                         <div className="flex justify-between items-center py-3">
-                            <span className="text-base-content/80">Last Login</span>
+                            <span className="text-muted">Last Login</span>
                             <span className="font-semibold text-base-content text-right">
                                 {user.last_login_at ? new Date(user.last_login_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) + ' ' + new Date(user.last_login_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'First Login'}
                             </span>

@@ -36,7 +36,7 @@
     <div class="flex items-center justify-between mb-4">
         <div>
             <h2 class="text-base-content">Work Request #{{ $workRequest->id }}</h2>
-            <p class="text-base-content/80">
+            <p class="text-muted">
                 Submitted on {{ $workRequest->created_at->format('M d, Y \a\t g:i A') }}
             </p>
         </div>
@@ -58,7 +58,7 @@
                 {{ ucfirst($workRequest->status) }}
             </div>
             @if($workRequest->status === 'approved' && $workRequest->approved_at)
-                <div class="text-xs text-base-content/80">
+                <div class="text-xs text-muted">
                     Approved on {{ $workRequest->approved_at->format('M d, Y \a\t g:i A') }}
                     @if($workRequest->approvedBy)
                         by {{ $workRequest->approvedBy->name }}
@@ -75,7 +75,7 @@
 
     {{-- Request Details --}}
     <div class="card shadow-sm p-4 mb-4">
-        <h3 class="text-base-content/80 mb-3">Details</h3>
+        <h3 class="text-muted mb-3">Details</h3>
         <div class="flex flex-wrap gap-2">
             @if($isAdmin || $isHR)
             <span class="badge badge-soft badge-neutral gap-1.5">
@@ -87,7 +87,7 @@
     {{-- Request Type --}}
     <div class="card p-6">
         <h3 class="m-0 mb-4 flex items-center gap-2">
-            <i class="icon-[ph--tag-fill] text-base-content/60"></i> Request Type
+            <i class="icon-[ph--tag-fill] text-subtle"></i> Request Type
         </h3>
         <span class="px-3 py-1.5 rounded-full text-sm font-semibold inline-block {{ $workRequest->request_type === 'weekend' ? 'bg-info/10 text-info' : ($workRequest->request_type === 'holiday' ? 'bg-warning/10 text-warning' : 'bg-secondary/10 text-secondary') }}">
             {{ ucfirst($workRequest->request_type) }} Work
@@ -108,7 +108,7 @@
         </div>
 
         @if(($isAdmin || $isHR) || $workRequest->estimated_hours)
-        <div class="text-xs text-base-content/80 mt-3 space-y-1">
+        <div class="text-xs text-muted mt-3 space-y-1">
             @if($isAdmin || $isHR)
                 <div>{{ $workRequest->employee->employee_id }} · {{ $workRequest->employee->position }}</div>
             @endif
@@ -122,7 +122,7 @@
     {{-- Reason --}}
     @if($workRequest->reason)
     <div class="card shadow-sm p-4 mb-4">
-        <h3 class="flex items-center gap-2 text-base-content/80">
+        <h3 class="flex items-center gap-2 text-muted">
             <span class="icon-[tabler--message] size-4"></span> Reason
         </h3>
         <div class="text-sm text-base-content mt-2">

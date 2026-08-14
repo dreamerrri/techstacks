@@ -41,7 +41,7 @@
                         <input type="text" name="slug" id="slug" value="{{ old('slug') }}"
                                class="input input-bordered w-full"
                                placeholder="e.g. admin, hr, employee" required>
-                        <p class="text-base-content/40 text-xs mt-1">Lowercase, no spaces (used in code)</p>
+                        <p class="text-faint text-xs mt-1">Lowercase, no spaces (used in code)</p>
                         @error('slug') <p class="label text-error text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
@@ -75,7 +75,7 @@
                                     {{ ucfirst($module) }}
                                 </div>
                                 @foreach($modulePermissions as $permission)
-                                    <label class="flex items-center gap-2 cursor-pointer text-xs text-base-content/80 mb-2">
+                                    <label class="flex items-center gap-2 cursor-pointer text-xs text-muted mb-2">
                                         <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
                                                {{ in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}
                                                class="checkbox checkbox-error checkbox-xs">

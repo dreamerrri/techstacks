@@ -28,7 +28,7 @@ export default function AuditLogsShow({ auditLog }) {
             <Head title="Audit Log Detail" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/audit-logs" className="back-link text-base-content/60 no-underline text-sm hover:text-primary flex items-center gap-1">
+                    <Link href="/audit-logs" className="back-link text-subtle no-underline text-sm hover:text-primary flex items-center gap-1">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Audit Logs
                     </Link>
                 </div>
@@ -36,7 +36,7 @@ export default function AuditLogsShow({ auditLog }) {
                     <span className="badge badge-soft badge-success mb-2">
                         <Icon name="tabler--history" className="size-3.5" /> Audit Log Detail
                     </span>
-                    <p className="text-base-content/60 m-0">Detailed view of a single audit log entry.</p>
+                    <p className="text-subtle m-0">Detailed view of a single audit log entry.</p>
                 </div>
 
                 <div className="card bg-base-100 shadow-sm p-0 max-w-2xl">
@@ -66,19 +66,19 @@ export default function AuditLogsShow({ auditLog }) {
                         </DetailRow>
 
                         <DetailRow label="User Agent" border={!(auditLog.old_values || auditLog.new_values)}>
-                            <span className="text-base-content/60 text-xs break-all">{auditLog.user_agent || '—'}</span>
+                            <span className="text-subtle text-xs break-all">{auditLog.user_agent || '—'}</span>
                         </DetailRow>
 
                         {auditLog.old_values && (
                             <div className={`flex flex-col gap-2 py-3 ${auditLog.new_values ? 'border-b border-base-300' : ''}`}>
-                                <span className="text-xs font-semibold uppercase tracking-wider text-base-content/40">Old Values</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-faint">Old Values</span>
                                 <pre className="m-0 text-xs bg-base-200 p-3 rounded-xl overflow-x-auto">{JSON.stringify(auditLog.old_values, null, 2)}</pre>
                             </div>
                         )}
 
                         {auditLog.new_values && (
                             <div className="flex flex-col gap-2 py-3">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-base-content/40">New Values</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-faint">New Values</span>
                                 <pre className="m-0 text-xs bg-base-200 p-3 rounded-xl overflow-x-auto">{JSON.stringify(auditLog.new_values, null, 2)}</pre>
                             </div>
                         )}

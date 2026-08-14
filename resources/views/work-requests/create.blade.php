@@ -19,7 +19,7 @@
             <i class=" icon-[ph--calendar-fill]-plus"></i> New Request
         </div>
         <h2 class="text-base-content">Create Work Request</h2>
-        <p class="text-base-content/60">
+        <p class="text-subtle">
             Submit a request for weekend, holiday, or overtime work
         </p>
     </div>
@@ -47,7 +47,7 @@
                 <option value="overtime">Overtime</option>
                 <option value="half_day">Half Day</option>
             </select>
-            <p class="text-xs text-base-content/60 mt-2">
+            <p class="text-xs text-subtle mt-2">
                 Choose the type of work you're requesting
             </p>
         </div>
@@ -59,7 +59,7 @@
             </label>
             <input type="date" name="work_date" id="work_date" required min="{{ now()->toDateString() }}"
                    class="w-full text-sm border border-base-300 rounded-lg p-4">
-            <p class="text-xs text-base-content/60 mt-2">
+            <p class="text-xs text-subtle mt-2">
                 Date must be today or in the future
             </p>
         </div>
@@ -89,7 +89,7 @@
             </label>
             <input type="number" name="estimated_hours" id="estimated_hours" min="0" max="24" step="0.5"
                    class="w-full text-sm border border-base-300 rounded-lg p-4">
-            <p class="text-xs text-base-content/60 mt-2">
+            <p class="text-xs text-subtle mt-2">
                 Estimated duration of work (optional)
             </p>
             <div id="overtime_hours_display" class="hidden bg-info/10 border-s-4 border-primary rounded-lg p-4 mt-2">
@@ -108,7 +108,7 @@
             <textarea name="reason" id="reason" rows="4" maxlength="500"
                       class="w-full text-sm border border-base-300 rounded-lg p-4 resize-y"
                       placeholder="Provide a reason for this work request..."></textarea>
-            <p class="text-xs text-base-content/60 mt-2">
+            <p class="text-xs text-subtle mt-2">
                 Maximum 500 characters
             </p>
         </div>
@@ -131,14 +131,14 @@
 @if($upcomingHolidays->count() > 0)
 <div class="card p-4 mt-2">
     <h3 class="flex items-center gap-3">
-        <i class="icon-[ph--calendar-fill] text-base-content/60"></i> Upcoming Holidays
+        <i class="icon-[ph--calendar-fill] text-subtle"></i> Upcoming Holidays
     </h3>
     <div class="grid gap-3">
         @foreach($upcomingHolidays as $holiday)
         <div class="bg-base-200 border-s-4 border-primary rounded-lg p-4">
             <div class="font-semibold text-sm text-base-content">{{ $holiday->name }}</div>
-            <div class="text-xs text-base-content/60 mt-2">{{ $holiday->date->format('M d, Y') }}</div>
-            <div class="text-base-content/60 mt-2">
+            <div class="text-xs text-subtle mt-2">{{ $holiday->date->format('M d, Y') }}</div>
+            <div class="text-subtle mt-2">
                 <span class="font-semibold rounded-lg p-4">
                     {{ ucfirst($holiday->type) }}
                 </span>

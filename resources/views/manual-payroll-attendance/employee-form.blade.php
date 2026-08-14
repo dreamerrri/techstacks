@@ -18,7 +18,7 @@
 <div class="flex items-center justify-between mb-4">
     <div>
         <a href="{{ route('manual-payroll-attendance.period', $payrollPeriod) }}"
-           class="inline-flex items-center text-sm text-base-content/60 mb-4 gap-3 no-underline">
+           class="inline-flex items-center text-sm text-subtle mb-4 gap-3 no-underline">
             <i class="icon-[ph--arrow-left-fill]"></i> Back to Period
         </a>
         <div class="inline-block font-semibold text-xs text-info bg-info/10 rounded-lg p-4 mb-4">
@@ -27,7 +27,7 @@
         <h2 class="text-base-content">
             {{ $employee->first_name ?? 'Employee' }} {{ $employee->last_name ?? '' }}
         </h2>
-        <p class="text-base-content/60">
+        <p class="text-subtle">
             {{ $employee->employee_id ?? 'N/A' }} | {{ $employee->position ?? 'N/A' }} | {{ $employee->department ?? 'N/A' }} |
             Period: {{ $payrollPeriod->cutoff_start->format('M d') }} - {{ $payrollPeriod->cutoff_end->format('M d, Y') }}
         </p>
@@ -39,7 +39,7 @@
     <div class="card overflow-hidden p-4">
         <div class="border-base-300 p-4">
             <h3 class="text-base-content">Attendance Details</h3>
-            <p class="text-sm text-base-content/60">Enter attendance totals for the payroll period</p>
+            <p class="text-sm text-subtle">Enter attendance totals for the payroll period</p>
         </div>
 
         <form id="attendanceForm" class="p-4">
@@ -65,13 +65,13 @@
                     @foreach($approvedRequests as $request)
                     <div class="py-2 border-b border-success/20">
                         <span style="font-weight:600;">{{ ucfirst($request->request_type) }}</span>
-                        <span class="text-base-content/60">|</span>
+                        <span class="text-subtle">|</span>
                         <span>{{ $request->work_date->format('M d, Y') }}</span>
                         @if($request->request_type === 'overtime' && $request->calculated_overtime_hours)
-                        <span class="text-base-content/60">|</span>
+                        <span class="text-subtle">|</span>
                         <span>{{ number_format($request->calculated_overtime_hours, 1) }} OT hrs</span>
                         @elseif($request->estimated_hours)
-                        <span class="text-base-content/60">|</span>
+                        <span class="text-subtle">|</span>
                         <span>{{ number_format($request->estimated_hours, 1) }} hrs</span>
                         @endif
                     </div>
@@ -116,9 +116,9 @@
                     @foreach($fullyPaidCashAdvances as $cashAdvance)
                     <div class="py-2 border-b border-success/20">
                         <span class="font-semibold">₱{{ number_format($cashAdvance->amount, 2) }}</span>
-                        <span class="text-base-content/60">|</span>
+                        <span class="text-subtle">|</span>
                         <span>{{ $cashAdvance->request_date->format('M d, Y') }}</span>
-                        <span class="text-base-content/60">|</span>
+                        <span class="text-subtle">|</span>
                         <span class="font-semibold text-success">Fully Paid: ₱{{ number_format($cashAdvance->amount_paid, 2) }}</span>
                     </div>
                     @endforeach
@@ -138,11 +138,11 @@
                     @foreach($outstandingCashAdvances as $cashAdvance)
                     <div class="py-2 border-b border-warning/20">
                         <span class="font-semibold">₱{{ number_format($cashAdvance->amount, 2) }}</span>
-                        <span class="text-base-content/60">|</span>
+                        <span class="text-subtle">|</span>
                         <span>{{ $cashAdvance->request_date->format('M d, Y') }}</span>
-                        <span class="text-base-content/60">|</span>
+                        <span class="text-subtle">|</span>
                         <span>Paid: ₱{{ number_format($cashAdvance->amount_paid, 2) }}</span>
-                        <span class="text-base-content/60">|</span>
+                        <span class="text-subtle">|</span>
                         <span class="font-semibold text-warning">Balance: ₱{{ number_format($cashAdvance->amount - $cashAdvance->amount_paid, 2) }}</span>
                     </div>
                     @endforeach
@@ -174,7 +174,7 @@
                 <div class="text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-4">
                     <input type="hidden" name="rate_type" value="daily">
                     <span class="font-semibold">Daily Rate</span>
-                    <span class="text-base-content/60">(computed using BSM X 12 / 52 / 40 X 8)</span>
+                    <span class="text-subtle">(computed using BSM X 12 / 52 / 40 X 8)</span>
                 </div>
             </div>
 
@@ -185,7 +185,7 @@
                            value="{{ $isEdit ? $payrollInput->daily_rate : $dailyRate }}"
                            class="w-full text-sm border border-base-300 rounded-lg p-4"
                            oninput="window.dailyRateValue = this.value">
-                    <p class="text-xs text-base-content/60 mt-2">Based on basic salary (₱{{ number_format($employee->basic_salary ?? 0, 2) }})</p>
+                    <p class="text-xs text-subtle mt-2">Based on basic salary (₱{{ number_format($employee->basic_salary ?? 0, 2) }})</p>
                 </div>
                 <div>
                     <label class="font-semibold text-sm text-base-content mb-4">Days Worked</label>
@@ -194,7 +194,7 @@
                            class="w-full text-sm border border-base-300 rounded-lg p-4"
                            oninput="window.daysWorkedValue = this.value"
                            placeholder="{{ $computedDaysFromAttendance ? 'Leave blank to use ' . number_format($computedDaysFromAttendance, 2) . ' days from attendance' : 'Enter days worked' }}">
-                    <p class="text-xs text-base-content/60 mt-2">@if($computedDaysFromAttendance) Leave blank to use {{ number_format($computedDaysFromAttendance, 2) }} days from attendance records, or enter a custom value. @else Enter days worked for the period. @endif</p>
+                    <p class="text-xs text-subtle mt-2">@if($computedDaysFromAttendance) Leave blank to use {{ number_format($computedDaysFromAttendance, 2) }} days from attendance records, or enter a custom value. @else Enter days worked for the period. @endif</p>
                 </div>
             </div>
 
@@ -204,7 +204,7 @@
                        value="{{ $isEdit ? ($payrollInput->weekends_worked ?? '0') : ($weekendsWorked ?? '0') }}"
                        class="w-full text-sm border border-base-300 rounded-lg p-4"
                        oninput="window.weekendsWorkedValue = this.value">
-                <p class="text-xs text-base-content/60 mt-2">Number of weekend days worked (paid at 30% premium of daily rate)</p>
+                <p class="text-xs text-subtle mt-2">Number of weekend days worked (paid at 30% premium of daily rate)</p>
             </div>
 
             <div class="grid mb-4 gap-3">
@@ -230,7 +230,7 @@
                        value="{{ $isEdit ? ($payrollInput->holiday_days ?? '0') : ($holidayDays ?? '0') }}"
                        class="w-full text-sm border border-base-300 rounded-lg p-4"
                        oninput="window.holidayDaysValue = this.value">
-                <p class="text-xs text-base-content/60 mt-2">Number of regular holidays worked (paid at 200% of daily rate)</p>
+                <p class="text-xs text-subtle mt-2">Number of regular holidays worked (paid at 200% of daily rate)</p>
             </div>
 
             <div class="mb-4">
@@ -239,7 +239,7 @@
                        value="{{ $isEdit ? ($payrollInput->night_differential_hours ?? '0') : '0' }}"
                        class="w-full text-sm border border-base-300 rounded-lg p-4"
                        oninput="window.nightDifferentialHoursValue = this.value">
-                <p class="text-xs text-base-content/60 mt-2">Hours worked during night shift (paid at 10% premium of hourly rate)</p>
+                <p class="text-xs text-subtle mt-2">Hours worked during night shift (paid at 10% premium of hourly rate)</p>
             </div>
 
             {{-- Allowances & Benefits Section --}}
@@ -261,7 +261,7 @@
                                 <div class="flex items-center justify-between bg-base-100 border-s-4 border-primary rounded-lg p-4">
                                     <div>
                                         <div class="font-semibold text-xs text-base-content">{{ $allowance->name }}</div>
-                                        <div class="text-base-content/60">{{ $allowance->type }}</div>
+                                        <div class="text-subtle">{{ $allowance->type }}</div>
                                     </div>
                                     <div class="font-bold text-success text-sm">₱{{ number_format(round($allowance->amount / 2, 2), 2) }}</div>
                                 </div>
@@ -270,7 +270,7 @@
                                 <div class="flex items-center justify-between bg-base-100 border-s-4 border-primary rounded-lg p-4">
                                     <div>
                                         <div class="font-semibold text-xs text-base-content">{{ $benefit->name }}</div>
-                                        <div class="text-base-content/60">{{ $benefit->type }}</div>
+                                        <div class="text-subtle">{{ $benefit->type }}</div>
                                     </div>
                                     <div class="font-bold text-sm">₱{{ number_format(round($benefit->amount / 2, 2), 2) }}</div>
                                 </div>
@@ -281,7 +281,7 @@
                             <span class="font-bold text-success">₱{{ number_format($totalAllowancesAndBenefits, 2) }}</span>
                         </div>
                     @else
-                        <div class="text-center text-xs text-base-content/60 p-4">
+                        <div class="text-center text-xs text-subtle p-4">
                             No allowances or benefits configured for this employee.
                         </div>
                     @endif
@@ -313,7 +313,7 @@
                        placeholder="Remarks (optional)"
                        class="w-full text-sm border border-base-300 rounded-lg p-4 mt-2"
                        oninput="window.reimbursementsRemarksValue = this.value">
-                <p class="text-xs text-base-content/60 mt-2">Expense reimbursements to be added to net pay</p>
+                <p class="text-xs text-subtle mt-2">Expense reimbursements to be added to net pay</p>
             </div>
 
             <div class="flex gap-3">
@@ -333,12 +333,12 @@
     <div class="card overflow-hidden p-4">
         <div class="bg-base-200 border-base-300 p-4">
             <h3 class="flex items-center gap-3">
-                <i class="icon-[ph--receipt-fill] text-base-content/60"></i> Payroll Preview
+                <i class="icon-[ph--receipt-fill] text-subtle"></i> Payroll Preview
             </h3>
         </div>
 
         <div class="p-4" id="previewPanel">
-            <div class="text-center text-base-content/60 p-4">
+            <div class="text-center text-subtle p-4">
                 <i class="icon-[ph--calculator-fill] text-2xl mb-4"></i>
                 <p class="text-sm">Click "Preview" to see payroll computation</p>
             </div>
@@ -465,31 +465,31 @@ function previewPayroll() {
                     previewPanel.innerHTML = `
                         <div class="mb-4">
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Basic Salary:</span>
+                                <span class="text-subtle">Basic Salary:</span>
                                 <span class="font-semibold text-base-content">₱${previewData.basic_salary ? previewData.basic_salary.toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Weekend Rate:</span>
+                                <span class="text-subtle">Weekend Rate:</span>
                                 <span class="text-success">+₱${previewData.weekend_pay ? previewData.weekend_pay.toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Overtime Rate:</span>
+                                <span class="text-subtle">Overtime Rate:</span>
                                 <span class="text-success">+₱${previewData.overtime_pay ? previewData.overtime_pay.toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Holiday Rate:</span>
+                                <span class="text-subtle">Holiday Rate:</span>
                                 <span class="text-success">+₱${previewData.holiday_pay ? previewData.holiday_pay.toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Night Differential:</span>
+                                <span class="text-subtle">Night Differential:</span>
                                 <span class="text-success">+₱${previewData.night_differential ? previewData.night_differential.toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Allowances:</span>
+                                <span class="text-subtle">Allowances:</span>
                                 <span class="text-success">+₱${previewData.allowances ? previewData.allowances.toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Late Deduction:</span>
+                                <span class="text-subtle">Late Deduction:</span>
                                 <span class="text-error">-₱${previewData.late_deduction ? previewData.late_deduction.toFixed(2) : '0.00'}</span>
                             </div>
                         </div>
@@ -503,11 +503,11 @@ function previewPayroll() {
                         <div class="bg-info/10 border border-base-300 rounded-lg p-4 mb-4">
                             <div class="font-semibold text-xs text-info mb-4">Monthly Cutoff Breakdown</div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">1st Cutoff Pay:</span>
+                                <span class="text-subtle">1st Cutoff Pay:</span>
                                 <span class="font-semibold text-base-content">₱${previewData.first_cutoff_gross_pay ? parseFloat(previewData.first_cutoff_gross_pay).toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">2nd Cutoff Pay:</span>
+                                <span class="text-subtle">2nd Cutoff Pay:</span>
                                 <span class="font-semibold text-base-content">₱${previewData.second_cutoff_gross_pay ? parseFloat(previewData.second_cutoff_gross_pay).toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between font-bold text-sm text-info border-base-300">
@@ -518,32 +518,32 @@ function previewPayroll() {
                         ` : ''}
                         <div class="mb-4">
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">SSS Contribution:</span>
+                                <span class="text-subtle">SSS Contribution:</span>
                                 <span class="text-error">-₱${previewData.sss_contribution ? parseFloat(previewData.sss_contribution).toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">PhilHealth Contribution:</span>
+                                <span class="text-subtle">PhilHealth Contribution:</span>
                                 <span class="text-error">-₱${previewData.philhealth_contribution ? parseFloat(previewData.philhealth_contribution).toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Pag-IBIG Contribution:</span>
+                                <span class="text-subtle">Pag-IBIG Contribution:</span>
                                 <span class="text-error">-₱${previewData.pagibig_contribution ? parseFloat(previewData.pagibig_contribution).toFixed(2) : '0.00'}</span>
                             </div>
                             ${window.isSecondHalfOfMonth ? `
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Withholding Tax:</span>
+                                <span class="text-subtle">Withholding Tax:</span>
                                 <span class="text-error">-₱${previewData.withholding_tax ? parseFloat(previewData.withholding_tax).toFixed(2) : '0.00'}</span>
                             </div>
                             ` : ''}
                             @if($isEdit)
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Manual Deductions:</span>
+                                <span class="text-subtle">Manual Deductions:</span>
                                 <span class="text-error">-₱${previewData.manual_deductions ? parseFloat(previewData.manual_deductions).toFixed(2) : '0.00'}</span>
                             </div>
                             @endif
                             ${previewData.cash_advance_deduction && previewData.cash_advance_deduction > 0 ? `
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Cash Advance Deduction:</span>
+                                <span class="text-subtle">Cash Advance Deduction:</span>
                                 <span class="text-error">-₱${parseFloat(previewData.cash_advance_deduction).toFixed(2)}</span>
                             </div>
                             ` : ''}
@@ -565,7 +565,7 @@ function previewPayroll() {
                         </div>
                         <div class="mb-4">
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">Reimbursements:</span>
+                                <span class="text-subtle">Reimbursements:</span>
                                 <span class="text-success">+₱${window.reimbursementsValue ? parseFloat(window.reimbursementsValue).toFixed(2) : '0.00'}</span>
                             </div>
                         </div>
@@ -573,11 +573,11 @@ function previewPayroll() {
                         <div class="bg-success/10 border border-base-300 rounded-lg p-4 mb-4">
                             <div class="font-semibold text-xs mb-4">Monthly Net Pay Breakdown</div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">1st Cutoff Net:</span>
+                                <span class="text-subtle">1st Cutoff Net:</span>
                                 <span class="font-semibold text-base-content">₱${previewData.first_cutoff_net_pay ? parseFloat(previewData.first_cutoff_net_pay).toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between text-xs mb-4">
-                                <span class="text-base-content/60">2nd Cutoff Net:</span>
+                                <span class="text-subtle">2nd Cutoff Net:</span>
                                 <span class="font-semibold text-base-content">₱${previewData.second_cutoff_net_pay ? parseFloat(previewData.second_cutoff_net_pay).toFixed(2) : '0.00'}</span>
                             </div>
                             <div class="flex justify-between font-bold text-sm border-base-300">

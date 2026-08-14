@@ -16,7 +16,7 @@
             <i class="icon-[ph--cash-fill]"></i> Edit Request
         </div>
         <h2 class="text-base-content">Edit Financial Request #{{ $financialRequest->id }}</h2>
-        <p class="text-base-content/60">
+        <p class="text-subtle">
             {{ $financialRequest->request_type === 'cash_advance' ? 'Cash Advance' : 'Reimbursement' }} Request
         </p>
     </div>
@@ -52,7 +52,7 @@
                    class="w-full text-sm border border-base-300 rounded-lg p-4"
                    placeholder="0.00"
                    {{ $financialRequest->request_type === 'cash_advance' ? 'readonly' : '' }}>
-            <p class="text-xs text-base-content/60 mt-2" id="amount_help_text">
+            <p class="text-xs text-subtle mt-2" id="amount_help_text">
                 @if($financialRequest->request_type === 'cash_advance')
                     Amount is automatically set to your basic salary: ₱{{ number_format($financialRequest->employee->basic_salary, 2) }}
                 @else
@@ -70,7 +70,7 @@
                    value="{{ $financialRequest->description }}"
                    class="w-full text-sm border border-base-300 rounded-lg p-4"
                    placeholder="Brief description of the request">
-            <p class="text-xs text-base-content/60 mt-2">
+            <p class="text-xs text-subtle mt-2">
                 Short description (optional)
             </p>
         </div>
@@ -83,7 +83,7 @@
             <textarea name="reason" id="reason" rows="4" maxlength="1000"
                       class="w-full text-sm border border-base-300 rounded-lg p-4 resize-y"
                       placeholder="Provide a detailed reason for this financial request...">{{ $financialRequest->reason }}</textarea>
-            <p class="text-xs text-base-content/60 mt-2">
+            <p class="text-xs text-subtle mt-2">
                 Maximum 1000 characters
             </p>
         </div>
@@ -96,12 +96,12 @@
                 </label>
                 <input type="file" name="receipt_image" id="receipt_image" accept="image/*"
                        class="w-full text-sm border border-base-300 rounded-lg p-4">
-                <p class="text-xs text-base-content/60 mt-2">
+                <p class="text-xs text-subtle mt-2">
                     Upload new receipt image (optional, max 2MB)
                 </p>
                 @if($financialRequest->receipt_image)
                     <div class="mt-2">
-                        <p class="text-xs text-base-content/60 mb-1">Current receipt:</p>
+                        <p class="text-xs text-subtle mb-1">Current receipt:</p>
                         <img src="{{ asset('storage/' . $financialRequest->receipt_image) }}" 
                              alt="Current Receipt" 
                              class="max-w-full h-auto rounded-lg border border-base-300"

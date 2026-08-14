@@ -105,7 +105,7 @@
                                             -
                                             {{ $period->cutoff_end ? $period->cutoff_end->format('M d, Y') : 'N/A' }}
                                         </div>
-                                        <div class="text-base-content/60 text-xs mt-1">
+                                        <div class="text-subtle text-xs mt-1">
                                             Payroll Date: {{ $period->payroll_date ? $period->payroll_date->format('M d, Y') : 'N/A' }}
                                         </div>
                                     </div>
@@ -124,11 +124,11 @@
 
                                 <div class="flex gap-4 mt-3 pt-3 border-t border-base-200 text-xs">
                                     <div>
-                                        <span class="text-base-content/60">Employees Encoded:</span>
+                                        <span class="text-subtle">Employees Encoded:</span>
                                         <span class="font-semibold text-base-content ml-1">{{ $period->payrollInputs ? $period->payrollInputs->count() : 0 }}</span>
                                     </div>
                                     <div>
-                                        <span class="text-base-content/60">Total Gross:</span>
+                                        <span class="text-subtle">Total Gross:</span>
                                         <span class="font-semibold text-success ml-1">₱{{ number_format($period->total_gross_pay ?? 0, 2) }}</span>
                                     </div>
                                 </div>
@@ -139,9 +139,9 @@
             </div>
         @else
             <div class="py-16 px-6 text-center">
-                <i class="icon-[ph--calendar-fill] text-5xl text-base-content/30 mb-4 block"></i>
-                <h3 class="text-base-content/60 m-0 mb-2">No Payroll Periods Found</h3>
-                <p class="text-base-content/40 m-0">Create a payroll period to start encoding attendance.</p>
+                <i class="icon-[ph--calendar-fill] text-5xl text-faint mb-4 block"></i>
+                <h3 class="text-subtle m-0 mb-2">No Payroll Periods Found</h3>
+                <p class="text-faint m-0">Create a payroll period to start encoding attendance.</p>
                 @if($isAdmin || $isHR)
                     <a href="{{ route('payroll-periods.create') }}" class="btn btn-soft btn-error mt-4">
                         <i class="icon-[ph--plus-fill]"></i> Create Payroll Period

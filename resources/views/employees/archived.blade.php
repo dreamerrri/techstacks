@@ -5,7 +5,7 @@
 
 @section('content')
 
- <a href="{{ route('employees.index') }}" class="back-link text-base-content/60 no-underline text-sm hover:text-success">
+ <a href="{{ route('employees.index') }}" class="back-link text-subtle no-underline text-sm hover:text-success">
                 <i class="icon-[ph--arrow-left-fill]"></i> Back to Employee page
             </a>
 <x-table-card>
@@ -37,10 +37,10 @@
        
                     @forelse($employees as $employee)
                         <tr>
-                            <td class="font-mono text-base-content/60">{{ $employee->employee_id }}</td>
+                            <td class="font-mono text-subtle">{{ $employee->employee_id }}</td>
                             <td class="font-semibold text-base-content">{{ $employee->full_name }}</td>
-                            <td class="text-base-content/60">{{ $employee->department }}</td>
-                            <td class="text-base-content/60">{{ $employee->position }}</td>
+                            <td class="text-subtle">{{ $employee->department }}</td>
+                            <td class="text-subtle">{{ $employee->position }}</td>
                             <td>
                                 <form method="POST" action="{{ route('employees.restore', $employee) }}"
                                       data-confirm="This employee will be restored to the active list."
@@ -56,7 +56,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="py-10 text-base-content/40">
+                            <td colspan="5" class="py-10 text-faint">
     <div class="flex flex-col items-center"> {{-- Remember this --}}
         <i class="icon-[ph--archive-fill] text-3xl mb-2"></i>
         <span>No archived employees.</span> {{-- And this --}}
@@ -76,13 +76,13 @@
                             </div>
                             <div>
                                 <div class="font-semibold text-base-content text-sm">{{ $employee->full_name }}</div>
-                                <div class="text-xs text-base-content/60 font-mono">{{ $employee->employee_id }}</div>
+                                <div class="text-xs text-subtle font-mono">{{ $employee->employee_id }}</div>
                             </div>
                         </div>
                         <span class="badge badge-soft badge-neutral whitespace-nowrap">Archived</span>
                     </div>
 
-                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                         <span><i class="icon-[ph--buildings-fill] w-3.5"></i> {{ $employee->department }}</span>
                         <span><i class="icon-[ph--briefcase-fill] w-3.5"></i> {{ $employee->position }}</span>
                     </div>
@@ -101,7 +101,7 @@
                     </div>
                 </div>
             @empty
-                <div class="py-10 text-center text-base-content/40">
+                <div class="py-10 text-center text-faint">
                     <i class="icon-[ph--archive-fill] text-3xl mb-2 block"></i>
                     No archived employees.
                 </div>

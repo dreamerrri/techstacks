@@ -43,7 +43,7 @@ export default function FinancialRequestsCreate({ employee }) {
             <Head title="New Financial Request" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/financial-requests" className="back-link text-base-content/60 no-underline text-sm hover:text-primary">
+                    <Link href="/financial-requests" className="back-link text-subtle no-underline text-sm hover:text-primary">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Requests
                     </Link>
                 </div>
@@ -53,7 +53,7 @@ export default function FinancialRequestsCreate({ employee }) {
                         <Icon name="ph--cash-fill" className="size-4 inline" /> New Request
                     </div>
                     <h2 className="text-lg font-bold text-base-content mb-1">Create Financial Request</h2>
-                    <p className="text-base-content/60 text-sm mb-6">Submit a request for cash advance or reimbursement</p>
+                    <p className="text-subtle text-sm mb-6">Submit a request for cash advance or reimbursement</p>
 
                     <form onSubmit={submit}>
                         <FormField label="Request Type" required error={errors.request_type}>

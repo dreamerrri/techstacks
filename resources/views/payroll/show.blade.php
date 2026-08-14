@@ -151,7 +151,7 @@
 {{-- Top nav --}}
 <div class="flex justify-between items-center flex-wrap gap-3 mb-5">
     <a href="{{ route('payroll.index') }}" 
-           class="back-link text-base-content/60 no-underline text-sm hover:text-primary flex items-center gap-1">
+           class="back-link text-subtle no-underline text-sm hover:text-primary flex items-center gap-1">
       <i class="icon-[ph--arrow-left-fill]"></i> Back to Payroll List
     </a>
     @if(($payroll['gross_pay'] ?? 0) > 0)
@@ -169,8 +169,8 @@
     </div>
     <div class="flex-1">
         <h2 class="text-xl font-bold text-base-content m-0 mb-1">{{ $employee->full_name }}</h2>
-        <p class="text-base-content/60 m-0">{{ $employee->position }} — {{ $employee->department }}</p>
-        <div class="flex flex-wrap gap-3 mt-1 text-xs text-base-content/60">
+        <p class="text-subtle m-0">{{ $employee->position }} — {{ $employee->department }}</p>
+        <div class="flex flex-wrap gap-3 mt-1 text-xs text-subtle">
             <span><i class="icon-[ph--identification-badge-fill] w-3.5"></i> {{ $employee->employee_id }}</span>
             <span><i class=" icon-[ph--calendar-fill] w-3.5"></i> {{ $employee->date_hired->format('M d, Y') }}</span>
             <span><i class="icon-[ph--money-fill] w-3.5"></i> {{ $employee->salary_type }} Salary</span>
@@ -203,7 +203,7 @@
                 <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 {{ $color }} {{ $bg }}">
                     <i class="{{ $icon }} size-5"></i>
                 </div>
-                <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium mb-1">{{ $label }}</div>
+                <div class="text-xs text-faint uppercase tracking-widest font-medium mb-1">{{ $label }}</div>
                 <div class="font-bold font-mono text-base-content text-xs break-all">{{ $value ?? '—' }}</div>
             </div>
         @endforeach
@@ -235,7 +235,7 @@
         <p class="payroll-stat-card__paragraph">
           ₱{{ number_format($payroll['gross_pay'] ?? 0, 2) }}
         </p>
-        <div class="text-base-content/60">For this cutoff</div>
+        <div class="text-subtle">For this cutoff</div>
       </div>
       <div class="payroll-stat-card__ribbon">
         <div class="payroll-stat-card__ribbon-label">
@@ -269,7 +269,7 @@
         <p class="payroll-stat-card__paragraph">
           -₱{{ number_format($payroll['total_deductions'] ?? 0, 2) }}
         </p>
-        <div class="text-base-content/60">Gov't & Manual Deductions</div>
+        <div class="text-subtle">Gov't & Manual Deductions</div>
       </div>
       <div class="payroll-stat-card__ribbon">
         <div class="payroll-stat-card__ribbon-label">
@@ -303,7 +303,7 @@
         <p class="payroll-stat-card__paragraph">
           ₱{{ number_format($payroll['net_pay'] ?? 0, 2) }}
         </p>
-        <div class="text-base-content/60">Take-home for this cutoff</div>
+        <div class="text-subtle">Take-home for this cutoff</div>
       </div>
       <div class="payroll-stat-card__ribbon">
         <div class="payroll-stat-card__ribbon-label">
@@ -369,8 +369,8 @@
             ] as [$label, $sub, $val, $cls, $prefix])
                 <div class="flex justify-between items-start py-2.5 border-b border-base-200">
                     <div>
-                        <div class="text-base-content/60">{{ $label }}</div>
-                        <div class="text-xs text-base-content/40">{{ $sub }}</div>
+                        <div class="text-subtle">{{ $label }}</div>
+                        <div class="text-xs text-faint">{{ $sub }}</div>
                     </div>
                     <span class="font-semibold {{ $cls }} ml-4 whitespace-nowrap">{{ $prefix }}₱{{ number_format($val, 2) }}</span>
                 </div>
@@ -400,8 +400,8 @@
             ] as [$label, $sub, $val])
                 <div class="flex justify-between items-start py-2.5 border-b border-base-200">
                     <div>
-                        <div class="text-base-content/60">{{ $label }}</div>
-                        <div class="text-xs text-base-content/40">{{ $sub }}</div>
+                        <div class="text-subtle">{{ $label }}</div>
+                        <div class="text-xs text-faint">{{ $sub }}</div>
                     </div>
                     <span class="font-semibold text-error ml-4 whitespace-nowrap">-₱{{ number_format($val, 2) }}</span>
                 </div>
@@ -424,22 +424,22 @@
         <div class="flex flex-col text-sm">
             <div class="flex justify-between items-start py-2.5 border-b border-base-200">
                 <div>
-                    <div class="text-base-content/60">Taxable Income</div>
-                    <div class="text-xs text-base-content/40">After government contributions</div>
+                    <div class="text-subtle">Taxable Income</div>
+                    <div class="text-xs text-faint">After government contributions</div>
                 </div>
                 <span class="font-semibold text-base-content ml-4">₱{{ number_format($payroll['taxable_income'] ?? 0, 2) }}</span>
             </div>
             <div class="flex justify-between items-start py-2.5">
                 <div>
-                    <div class="text-base-content/60">Withholding Tax</div>
-                    <div class="text-xs text-base-content/40">Based on Philippine tax brackets</div>
+                    <div class="text-subtle">Withholding Tax</div>
+                    <div class="text-xs text-faint">Based on Philippine tax brackets</div>
                 </div>
                 <span class="font-semibold text-error ml-4">-₱{{ number_format($payroll['withholding_tax'] ?? 0, 2) }}</span>
             </div>
         </div>
-        <div class="mt-4 p-4 bg-base-300 rounded-xl text-xs text-base-content/60 leading-relaxed">
-            <strong class="text-base-content/80">Note:</strong> Allowances are included in gross pay but deducted from taxable income for withholding tax computation.<br>
-            <strong class="text-base-content/80">Tax Bracket Reference:</strong><br>
+        <div class="mt-4 p-4 bg-base-300 rounded-xl text-xs text-subtle leading-relaxed">
+            <strong class="text-muted">Note:</strong> Allowances are included in gross pay but deducted from taxable income for withholding tax computation.<br>
+            <strong class="text-muted">Tax Bracket Reference:</strong><br>
             • ₱0 – ₱20,832: 0%<br>
             • ₱20,833 – ₱33,333: 20%<br>
             • ₱33,334 – ₱66,667: 25%<br>

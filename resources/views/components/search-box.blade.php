@@ -45,7 +45,7 @@
 <!-- Search Trigger -->
 <button
     type="button"
-    class="input input-bordered btn-outline bg-base-200 flex w-full max-w-xs input-sm items-center gap-2 text-start text-base-content/50 cursor-pointer"
+    class="input input-bordered btn-outline bg-base-200 flex w-full max-w-xs input-sm items-center gap-2 text-start text-subtle cursor-pointer"
     aria-haspopup="dialog"
     aria-expanded="false"
     aria-controls="{{ $id }}"
@@ -128,28 +128,28 @@
                     <template x-for="(item, index) in flatResults" :key="item.group + '-' + item.url">
                         <div>
                             <div x-show="index === 0 || flatResults[index - 1].group !== item.group"
-                                 class="px-2 pt-2 pb-1 text-xs font-semibold uppercase text-base-content/50"
+                                 class="px-2 pt-2 pb-1 text-xs font-semibold uppercase text-subtle"
                                  x-text="item.group"></div>
                             <button type="button"
                                     class="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-start text-sm"
                                     :class="index === activeIndex ? 'bg-base-200' : 'hover:bg-base-200'"
                                     @click="select(index)"
                                     @mouseenter="activeIndex = index">
-                                <span :class="'icon-[' + item.icon + '] size-4 shrink-0 text-base-content/60'"></span>
+                                <span :class="'icon-[' + item.icon + '] size-4 shrink-0 text-subtle'"></span>
                                 <span class="min-w-0 flex-1">
                                     <span class="block truncate" x-text="item.title"></span>
-                                    <span x-show="item.subtitle" class="block truncate text-xs text-base-content/60" x-text="item.subtitle"></span>
+                                    <span x-show="item.subtitle" class="block truncate text-xs text-subtle" x-text="item.subtitle"></span>
                                 </span>
                             </button>
                         </div>
                     </template>
 
                     <div x-show="loading" class="flex items-center justify-center py-4">
-                        <span class="loading loading-spinner loading-sm text-base-content/50"></span>
+                        <span class="loading loading-spinner loading-sm text-subtle"></span>
                     </div>
 
                     <div x-show="!loading && query.trim().length > 0 && flatResults.length === 0"
-                         class="px-2 py-6 text-center text-sm text-base-content/50">
+                         class="px-2 py-6 text-center text-sm text-subtle">
                         No results for "<span x-text="query"></span>"
                     </div>
                 </div>

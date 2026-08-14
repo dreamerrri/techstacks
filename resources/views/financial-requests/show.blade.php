@@ -18,7 +18,7 @@
             <i class="icon-[ph--cash-fill]"></i> Request Details
         </div>
         <h2 class="text-base-content">Financial Request #{{ $financialRequest->id }}</h2>
-        <p class="text-base-content/60">
+        <p class="text-subtle">
             {{ $financialRequest->request_type === 'cash_advance' ? 'Cash Advance' : 'Reimbursement' }} Request
         </p>
     </div>
@@ -38,15 +38,15 @@
             </h3>
             <div class="flex flex-col text-sm">
                 <div class="flex justify-between items-start py-2 border-b border-base-200">
-                    <span class="text-base-content/40">Name</span>
+                    <span class="text-faint">Name</span>
                     <span class="font-semibold text-base-content">{{ $financialRequest->employee->full_name }}</span>
                 </div>
                 <div class="flex justify-between items-start py-2 border-b border-base-200">
-                    <span class="text-base-content/40">Employee ID</span>
+                    <span class="text-faint">Employee ID</span>
                     <span class="font-semibold text-base-content">{{ $financialRequest->employee->employee_id }}</span>
                 </div>
                 <div class="flex justify-between items-start py-2">
-                    <span class="text-base-content/40">Department</span>
+                    <span class="text-faint">Department</span>
                     <span class="font-semibold text-base-content">{{ $financialRequest->employee->department }}</span>
                 </div>
             </div>
@@ -59,13 +59,13 @@
             </h3>
             <div class="flex flex-col text-sm">
                 <div class="flex justify-between items-start py-2 border-b border-base-200">
-                    <span class="text-base-content/40">Request Type</span>
+                    <span class="text-faint">Request Type</span>
                     <span class="font-semibold text-base-content">
                         {{ $financialRequest->request_type === 'cash_advance' ? 'Cash Advance' : 'Reimbursement' }}
                     </span>
                 </div>
                 <div class="flex justify-between items-start py-2 border-b border-base-200">
-                    <span class="text-base-content/40">Amount</span>
+                    <span class="text-faint">Amount</span>
                     <span class="font-bold text-error text-base">₱{{ number_format($financialRequest->amount, 2) }}</span>
                 </div>
                 @php
@@ -77,15 +77,15 @@
                         : '₱15,000 maximum';
                 @endphp
                 <div class="flex justify-between items-start py-2 border-b border-base-200">
-                    <span class="text-base-content/40">Maximum Allowed</span>
-                    <span class="font-semibold text-base-content/60">₱{{ number_format($maxAmount, 2) }} ({{ $limitDescription }})</span>
+                    <span class="text-faint">Maximum Allowed</span>
+                    <span class="font-semibold text-subtle">₱{{ number_format($maxAmount, 2) }} ({{ $limitDescription }})</span>
                 </div>
                 <div class="flex justify-between items-start py-2">
-                    <span class="text-base-content/40">Request Date</span>
+                    <span class="text-faint">Request Date</span>
                     <span class="font-semibold text-base-content">{{ $financialRequest->request_date->format('M d, Y') }}</span>
                 </div>
                 <div class="flex justify-between items-start py-2">
-                    <span class="text-base-content/40">Status</span>
+                    <span class="text-faint">Status</span>
                     @php
                         $statusClass = match($financialRequest->status) {
                             'pending'   => 'badge-soft badge-warning',
@@ -105,7 +105,7 @@
     @if($financialRequest->description)
         <div class="mt-4">
             <h3 class="text-sm font-bold text-base-content mb-2">Description</h3>
-            <p class="text-sm text-base-content/80 bg-base-200 rounded-lg p-4">
+            <p class="text-sm text-muted bg-base-200 rounded-lg p-4">
                 {{ $financialRequest->description }}
             </p>
         </div>
@@ -115,7 +115,7 @@
     @if($financialRequest->reason)
         <div class="mt-4">
             <h3 class="text-sm font-bold text-base-content mb-2">Reason</h3>
-            <p class="text-sm text-base-content/80 bg-base-200 rounded-lg p-4">
+            <p class="text-sm text-muted bg-base-200 rounded-lg p-4">
                 {{ $financialRequest->reason }}
             </p>
         </div>
@@ -140,23 +140,23 @@
             <h3 class="text-sm font-bold text-base-content mb-2">Payment Information</h3>
             <div class="bg-base-200 rounded-lg p-4">
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-base-content/60">Total Amount:</span>
+                    <span class="text-sm text-subtle">Total Amount:</span>
                     <span class="font-bold text-base-content">₱{{ number_format($financialRequest->amount, 2) }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
-                    <span class="text-sm text-base-content/60">Amount Paid:</span>
+                    <span class="text-sm text-subtle">Amount Paid:</span>
                     <span class="font-bold text-success">₱{{ number_format($financialRequest->amount_paid, 2) }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2 pt-2 border-t border-base-300">
-                    <span class="text-sm text-base-content/60">Remaining Balance:</span>
+                    <span class="text-sm text-subtle">Remaining Balance:</span>
                     <span class="font-bold text-error">₱{{ number_format($financialRequest->remaining_balance, 2) }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2 pt-2 border-t border-base-300">
-                    <span class="text-sm text-base-content/60">Payment Progress:</span>
+                    <span class="text-sm text-subtle">Payment Progress:</span>
                     <span class="font-semibold text-base-content">{{ $financialRequest->payment_progress }}%</span>
                 </div>
                 <div class="mt-3 pt-3 border-t border-base-300">
-                    <p class="text-xs text-base-content/60 text-center">
+                    <p class="text-xs text-subtle text-center">
                         <i class="icon-[ph--info-fill]"></i>
                         Payments are automatically deducted at 50% of net pay per payroll cutoff
                     </p>
@@ -213,16 +213,16 @@
             <h3 class="text-sm font-bold text-base-content mb-2">Approval Information</h3>
             <div class="bg-base-200 rounded-lg p-4">
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-base-content/60">Approved By:</span>
+                    <span class="text-sm text-subtle">Approved By:</span>
                     <span class="font-semibold text-base-content">{{ $financialRequest->approvedBy->name }}</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
-                    <span class="text-sm text-base-content/60">Approved At:</span>
+                    <span class="text-sm text-subtle">Approved At:</span>
                     <span class="font-semibold text-base-content">{{ $financialRequest->approved_at->format('M d, Y g:i A') }}</span>
                 </div>
                 @if($financialRequest->rejection_reason)
                     <div class="mt-3 pt-3 border-t border-base-300">
-                        <span class="text-sm text-base-content/60">Rejection Reason:</span>
+                        <span class="text-sm text-subtle">Rejection Reason:</span>
                         <p class="text-sm text-error mt-1">{{ $financialRequest->rejection_reason }}</p>
                     </div>
                 @endif

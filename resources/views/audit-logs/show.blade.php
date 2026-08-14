@@ -12,7 +12,7 @@
         <span class="badge badge-soft badge-success mb-2">
             <i class="icon-[tabler--history]"></i> Audit Log Detail
         </span>
-        <p class="text-base-content/60 m-0">Detailed view of a single audit log entry.</p>
+        <p class="text-subtle m-0">Detailed view of a single audit log entry.</p>
     </div>
 
     <div class="card bg-base-100 shadow-sm p-0 max-w-2xl">
@@ -53,19 +53,19 @@
             </x-detail-row>
 
             <x-detail-row label="User Agent" :border="!($auditLog->old_values || $auditLog->new_values)">
-                <span class="text-base-content/60 text-xs break-all">{{ $auditLog->user_agent ?? '—' }}</span>
+                <span class="text-subtle text-xs break-all">{{ $auditLog->user_agent ?? '—' }}</span>
             </x-detail-row>
 
             @if($auditLog->old_values)
                 <div class="flex flex-col gap-2 py-3 {{ $auditLog->new_values ? 'border-b border-base-300' : '' }}">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-base-content/40">Old Values</span>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-faint">Old Values</span>
                     <pre class="m-0 text-xs bg-base-200 p-3 rounded-xl overflow-x-auto">{{ json_encode($auditLog->old_values, JSON_PRETTY_PRINT) }}</pre>
                 </div>
             @endif
 
             @if($auditLog->new_values)
                 <div class="flex flex-col gap-2 py-3">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-base-content/40">New Values</span>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-faint">New Values</span>
                     <pre class="m-0 text-xs bg-base-200 p-3 rounded-xl overflow-x-auto">{{ json_encode($auditLog->new_values, JSON_PRETTY_PRINT) }}</pre>
                 </div>
             @endif

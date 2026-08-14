@@ -11,7 +11,7 @@
                 <i class="icon-[tabler--user]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $employees->total() }}</div>
-            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Total Employees</div>
+            <div class="text-xs text-faint uppercase tracking-widest font-medium">Total Employees</div>
         </div>
 
         <div class="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
@@ -19,21 +19,21 @@
                 <i class="icon-[tabler--circle-check]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\Employee::active()->where('employment_status','Regular')->count() }}</div>
-            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Regular</div>
+            <div class="text-xs text-faint uppercase tracking-widest font-medium">Regular</div>
         </div>
         <div class="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
             <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-warning bg-warning/10">
                 <i class="icon-[tabler--clock]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\Employee::active()->where('employment_status','Probationary')->count() }}</div>
-            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Probationary</div>
+            <div class="text-xs text-faint uppercase tracking-widest font-medium">Probationary</div>
         </div>
         <a href="{{ route('employees.archived') }}" class="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-base-content/60 bg-base-200">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-subtle bg-base-200">
                 <i class="icon-[tabler--archive]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ \App\Models\Employee::archived()->count() }}</div>
-            <div class="text-xs text-base-content/40 uppercase tracking-widest font-medium">Archived</div>
+            <div class="text-xs text-faint uppercase tracking-widest font-medium">Archived</div>
         </a>
     </div>
 
@@ -107,19 +107,19 @@
                     };
                 @endphp
                 <tr class="row-hover">
-                    <td class="font-mono text-base-content/60">{{ $employee->employee_id }}</td>
+                    <td class="font-mono text-subtle">{{ $employee->employee_id }}</td>
                     <td>
                         <a href="{{ route('employees.show', $employee) }}"
                            class="text-base-content no-underline font-semibold hover:text-primary">
                             {{ $employee->full_name }}
                         </a>
                     </td>
-                    <td class="text-base-content/60">{{ $employee->department }}</td>
-                    <td class="text-base-content/60">{{ $employee->position }}</td>
+                    <td class="text-subtle">{{ $employee->department }}</td>
+                    <td class="text-subtle">{{ $employee->position }}</td>
                     <td>
                         <span class="badge {{ $statusClass }}">{{ $employee->employment_status }}</span>
                     </td>
-                    <td class="text-base-content/60">{{ $employee->date_hired->format('M d, Y') }}</td>
+                    <td class="text-subtle">{{ $employee->date_hired->format('M d, Y') }}</td>
                     <td>
                         <div class="flex gap-2">
                             <a href="{{ route('employees.show', $employee) }}" class="btn btn-soft btn-info btn-sm">
@@ -143,7 +143,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="py-10 text-center text-base-content/40">
+                    <td colspan="7" class="py-10 text-center text-faint">
                         <i class="icon-[tabler--user] text-3xl mb-2 block"></i>
                         No employees found.
                     </td>
@@ -182,13 +182,13 @@
                                    class="text-base-content no-underline font-semibold text-sm hover:text-primary">
                                     {{ $employee->full_name }}
                                 </a>
-                                <div class="text-xs text-base-content/60 font-mono">{{ $employee->employee_id }}</div>
+                                <div class="text-xs text-subtle font-mono">{{ $employee->employee_id }}</div>
                             </div>
                         </div>
                         <span class="badge {{ $statusClass }} whitespace-nowrap">{{ $employee->employment_status }}</span>
                     </div>
 
-                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content/60 mt-2">
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
                         <span><i class="icon-[tabler--building] w-3.5"></i> {{ $employee->department }}</span>
                         <span><i class="icon-[tabler--briefcase] w-3.5"></i> {{ $employee->position }}</span>
                         <span><i class="icon-[tabler--calendar] w-3.5"></i> {{ $employee->date_hired->format('M d, Y') }}</span>
@@ -214,7 +214,7 @@
                     </div>
                 </div>
             @empty
-                <div class="py-10 text-center text-base-content/40">
+                <div class="py-10 text-center text-faint">
                     <i class="icon-[tabler--user] text-3xl mb-2 block"></i>
                     No employees found.
                 </div>

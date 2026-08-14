@@ -109,7 +109,7 @@ function DeptBreakdownModal({ open, onClose, data, label, periodLabel }) {
                 <div className="px-7 py-5 border-b border-base-300 flex justify-between items-center">
                     <div>
                         <div className="text-base font-bold text-base-content">{label === 'All Departments' ? 'All Departments' : label} Breakdown</div>
-                        <div className="text-xs text-base-content/60 mt-1">{data.length} employee{data.length !== 1 ? 's' : ''} | {periodLabel}</div>
+                        <div className="text-xs text-subtle mt-1">{data.length} employee{data.length !== 1 ? 's' : ''} | {periodLabel}</div>
                     </div>
                     <button onClick={onClose} className="btn btn-soft btn-error btn-sm btn-circle">
                         <Icon name="tabler--x" className="size-4" />
@@ -141,7 +141,7 @@ function DeptBreakdownModal({ open, onClose, data, label, periodLabel }) {
                                         <tr key={i} className="row-hover text-xs">
                                             <td>
                                                 <div className="font-semibold text-base-content truncate">{emp.name}</div>
-                                                <div className="text-xs text-base-content/60 font-mono">{emp.employee_id}</div>
+                                                <div className="text-xs text-subtle font-mono">{emp.employee_id}</div>
                                             </td>
                                             <td className="text-base-content truncate">{emp.department}</td>
                                             <td className="text-right font-semibold text-base-content">{fmt(emp.basic_pay)}</td>
@@ -319,7 +319,7 @@ export default function PayrollIndex({ employees, departments, payrollData, payr
                                                         <Link href={`/employees/${employee.id}`} className="font-semibold text-base-content no-underline hover:text-success truncate block">
                                                             {employee.full_name}
                                                         </Link>
-                                                        <div className="text-xs text-base-content/60 font-mono">{employee.employee_id}</div>
+                                                        <div className="text-xs text-subtle font-mono">{employee.employee_id}</div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -370,7 +370,7 @@ export default function PayrollIndex({ employees, departments, payrollData, payr
                                                 <Link href={`/employees/${employee.id}`} className="font-semibold text-base-content no-underline text-sm hover:text-success">
                                                     {employee.full_name}
                                                 </Link>
-                                                <div className="text-xs text-base-content/60 font-mono">{employee.employee_id}</div>
+                                                <div className="text-xs text-subtle font-mono">{employee.employee_id}</div>
                                             </div>
                                         </div>
                                         <span className="badge badge-soft badge-warning whitespace-nowrap">{employee.employment_status}</span>

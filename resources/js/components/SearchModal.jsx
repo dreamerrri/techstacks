@@ -146,7 +146,7 @@ export default function SearchModal({ open, onClose }) {
                             {flatResults.map((item, index) => (
                                 <div key={item.group + '-' + item.url}>
                                     {(index === 0 || flatResults[index - 1].group !== item.group) && (
-                                        <div className="px-2 pt-2 pb-1 text-xs font-semibold uppercase text-base-content/50">{item.group}</div>
+                                        <div className="px-2 pt-2 pb-1 text-xs font-semibold uppercase text-subtle">{item.group}</div>
                                     )}
                                     <button
                                         type="button"
@@ -154,10 +154,10 @@ export default function SearchModal({ open, onClose }) {
                                         onClick={() => select(index)}
                                         onMouseEnter={() => setActiveIndex(index)}
                                     >
-                                        <Icon name={item.icon} className="size-4 shrink-0 text-base-content/60" />
+                                        <Icon name={item.icon} className="size-4 shrink-0 text-subtle" />
                                         <span className="min-w-0 flex-1">
                                             <span className="block truncate">{item.title}</span>
-                                            {item.subtitle && <span className="block truncate text-xs text-base-content/60">{item.subtitle}</span>}
+                                            {item.subtitle && <span className="block truncate text-xs text-subtle">{item.subtitle}</span>}
                                         </span>
                                     </button>
                                 </div>
@@ -165,12 +165,12 @@ export default function SearchModal({ open, onClose }) {
 
                             {loading && (
                                 <div className="flex items-center justify-center py-4">
-                                    <span className="loading loading-spinner loading-sm text-base-content/50"></span>
+                                    <span className="loading loading-spinner loading-sm text-subtle"></span>
                                 </div>
                             )}
 
                             {!loading && query.trim().length > 0 && flatResults.length === 0 && (
-                                <div className="px-2 py-6 text-center text-sm text-base-content/50">
+                                <div className="px-2 py-6 text-center text-sm text-subtle">
                                     No results for &quot;{query}&quot;
                                 </div>
                             )}

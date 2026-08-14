@@ -4,7 +4,7 @@ export default function FormField({ label, required, error, help, children, clas
     return (
         <div className={`fieldset ${wrapperClass}`}>
             {label && (
-                <label className="label text-xs font-semibold uppercase tracking-wider text-base-content/60">
+                <label className="label text-xs font-semibold uppercase tracking-wider text-subtle">
                     {label}
                     {required && <span className="text-error"> *</span>}
                 </label>
@@ -16,7 +16,7 @@ export default function FormField({ label, required, error, help, children, clas
                     {error}
                 </p>
             )}
-            {help && !error && <p className="label text-base-content/50 text-xs mt-1">{help}</p>}
+            {help && !error && <p className="label text-subtle text-xs mt-1">{help}</p>}
         </div>
     );
 }

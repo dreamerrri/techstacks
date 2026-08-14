@@ -45,7 +45,7 @@
                 <i class="icon-[tabler--users]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['total_users'] }}</div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest">Total Users</div>
+            <div class="text-xs text-muted uppercase tracking-widest">Total Users</div>
         </a>
 
         <a href="{{ route('users.index') }}" class="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
@@ -53,7 +53,7 @@
                 <i class="icon-[tabler--shield-check]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['admin_users'] }}</div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest ">Admin Users</div>
+            <div class="text-xs text-muted uppercase tracking-widest ">Admin Users</div>
         </a>
 
         <a href="{{ route('users.index') }}" class="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
@@ -61,7 +61,7 @@
                 <i class="icon-[tabler--user]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['hr_users'] }}</div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest ">HR Personnel</div>
+            <div class="text-xs text-muted uppercase tracking-widest ">HR Personnel</div>
         </a>
 
         <a href="{{ route('users.index') }}" class="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
@@ -69,7 +69,7 @@
                 <i class="icon-[tabler--circle-check]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['active_users'] }}</div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest ">Active Accounts</div>
+            <div class="text-xs text-muted uppercase tracking-widest ">Active Accounts</div>
         </a>
 
     @elseif($isHR)
@@ -78,7 +78,7 @@
                 <i class="icon-[tabler--users]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['total_employees'] }}</div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest ">Total Employees</div>
+            <div class="text-xs text-muted uppercase tracking-widest ">Total Employees</div>
         </a>
 
         <div class="card bg-base-100 border border-base-300 p-5 text-center">
@@ -86,7 +86,7 @@
                 <i class="icon-[tabler--calendar-check]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['regular'] }}</div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest ">Regular</div>
+            <div class="text-xs text-muted uppercase tracking-widest ">Regular</div>
         </div>
 
         <div class="card bg-base-100 border border-base-300 p-5 text-center">
@@ -94,7 +94,7 @@
                 <i class="icon-[tabler--clock]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['probationary'] }}</div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest ">Probationary</div>
+            <div class="text-xs text-muted uppercase tracking-widest ">Probationary</div>
         </div>
 
         <div class="card bg-base-100 border border-base-300 p-5 text-center">
@@ -102,7 +102,7 @@
                 <i class="icon-[tabler--archive]"></i>
             </div>
             <div class="text-3xl font-bold text-base-content mb-1">{{ $counts['archived'] }}</div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest ">Archived</div>
+            <div class="text-xs text-muted uppercase tracking-widest ">Archived</div>
         </div>
 
     @else
@@ -112,7 +112,7 @@
                 <i class="icon-[tabler--building]"></i>
             </div>
             <div class="text-2xl font-small text-base-content mb-1">{{ $user->employee?->department ?? '—' }}</div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest ">Department</div>
+            <div class="text-xs text-muted uppercase tracking-widest ">Department</div>
         </div>
 
         <div class="card bg-base-100 border border-base-300 p-5 text-center">
@@ -120,7 +120,7 @@
                 <i class="icon-[tabler--id-badge]"></i>
             </div>
             <div class="text-2xl font-small text-base-content mb-1">{{ $user->employee?->position ?? '—' }}</div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest ">Position</div>
+            <div class="text-xs text-muted uppercase tracking-widest ">Position</div>
         </div>
 
         @php
@@ -138,7 +138,7 @@
                 <i class="icon-[tabler--briefcase]"></i>
             </div>
             <div class="text-2xl font-small text-base-content mb-1">{{ $empStatus ?? '—' }}</div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest ">Employment Status</div>
+            <div class="text-xs text-muted uppercase tracking-widest ">Employment Status</div>
         </div>
 
         <div class="card bg-base-100 border border-base-300 p-5 text-center">
@@ -148,7 +148,7 @@
             <div class="text-2xl font-small text-base-content mb-1">
                 {{ $user->employee?->date_hired ? \Carbon\Carbon::parse($user->employee->date_hired)->format('M d, Y') : '—' }}
             </div>
-            <div class="text-xs text-base-content/80 uppercase tracking-widest ">Date Hired</div>
+            <div class="text-xs text-muted uppercase tracking-widest ">Date Hired</div>
         </div>
     @endif
 
@@ -170,25 +170,25 @@
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--user-plus]"></i>
         </div>
-        <span class="text-base-content/80">Create Users</span>
+        <span class="text-muted">Create Users</span>
     </a>
     <a href="{{ route('roles.index') }}" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--lock]"></i>
         </div>
-        <span class="text-base-content/80">Manage Roles</span>
+        <span class="text-muted">Manage Roles</span>
     </a>
     <a href="#" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--database]"></i>
         </div>
-        <span class="text-base-content/80">System Backup</span>
+        <span class="text-muted">System Backup</span>
     </a>
     <a href="{{ route('audit-logs.index') }}" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--history]"></i>
         </div>
-        <span class="text-base-content/80">View Logs</span>
+        <span class="text-muted">View Logs</span>
     </a>
 
 @elseif($isHR)
@@ -196,25 +196,25 @@
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--user-plus]"></i>
         </div>
-        <span class="text-base-content/80">Add Employee</span>
+        <span class="text-muted">Add Employee</span>
     </a>
     <a href="{{ route('payroll.index') }}" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--calculator]"></i>
         </div>
-        <span class="text-base-content/80">Payroll</span>
+        <span class="text-muted">Payroll</span>
     </a>
     <a href="#" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--inbox]"></i>
         </div>
-        <span class="text-base-content/80">Leave Requests</span>
+        <span class="text-muted">Leave Requests</span>
     </a>
     <a href="#" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--file-type-pdf]"></i>
         </div>
-        <span class="text-base-content/80">Reports</span>
+        <span class="text-muted">Reports</span>
     </a>
 
 @else
@@ -222,25 +222,25 @@
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--user]"></i>
         </div>
-        <span class="text-base-content/80">My Profile</span>
+        <span class="text-muted">My Profile</span>
     </a>
     <a href="{{ route('payroll.index') }}" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--receipt]"></i>
         </div>
-        <span class="text-base-content/80">Payslips</span>
+        <span class="text-muted">Payslips</span>
     </a>
     <a href="#" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--calendar-off]"></i>
         </div>
-        <span class="text-base-content/80">Leave Request</span>
+        <span class="text-muted">Leave Request</span>
     </a>
     <a href="#" class="btn btn-soft flex-col h-auto py-5 gap-2">
         <div class="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
             <i class="icon-[tabler--clock]"></i>
         </div>
-        <span class="text-base-content/80">Attendance</span>
+        <span class="text-muted">Attendance</span>
     </a>
 @endif
     </div>
@@ -292,15 +292,15 @@
     </h2>
     <div class="flex flex-col">
         <div class="flex justify-between items-center py-3 border-b border-base-200">
-            <span class="text-base-content/80 ">Name</span>
+            <span class="text-muted ">Name</span>
             <span class="font-semibold text-base-content text-right">{{ $user->name }}</span>
         </div>
         <div class="flex justify-between items-center py-3 border-b border-base-200">
-            <span class="text-base-content/80 ">Email</span>
+            <span class="text-muted ">Email</span>
             <span class="font-semibold text-base-content text-right">{{ $user->email }}</span>
         </div>
         <div class="flex justify-between items-center py-3 border-b border-base-200">
-            <span class="text-base-content/80 ">Role</span>
+            <span class="text-muted ">Role</span>
             <span class="font-semibold text-base-content text-right">
                 @if($isAdmin) Administrator
                 @elseif($isHR) HR Personnel
@@ -309,7 +309,7 @@
             </span>
         </div>
         <div class="flex justify-between items-center py-3 border-b border-base-200">
-            <span class="text-base-content/80 ">Account Status</span>
+            <span class="text-muted ">Account Status</span>
             <span class="font-semibold text-base-content text-right">
                 @if($user->is_active)
                     <span class="badge badge-soft badge-primary">
@@ -323,7 +323,7 @@
             </span>
         </div>
         <div class="flex justify-between items-center py-3">
-            <span class="text-base-content/80 ">Last Login</span>
+            <span class="text-muted ">Last Login</span>
             <span class="font-semibold text-base-content text-right">
                 @if($user->last_login_at)
                     {{ $user->last_login_at->format('M d, Y h:i A') }}

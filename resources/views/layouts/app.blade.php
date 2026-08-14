@@ -497,7 +497,7 @@
          <li class="dropdown-header gap-2">
                             <div>
                                 <h6 class="text-base-content text-base font-semibold">{{ $user->name }}</h6>
-                                <small class="text-base-content/50">
+                                <small class="text-subtle">
                                     @if($isAdmin) Administrator
                                     @elseif($isHR) HR Personnel
                                     @else Employee
