@@ -16,13 +16,14 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Traits\LogsAudit;
 use Illuminate\Support\Facades\Password;
+use Inertia\Inertia;
 
 
 class AuthController extends Controller
 {
     public function showLogin()
     {
-        return view('auth.login');
+        return Inertia::render('Auth/Login');
     }
 
     public function showRegister()
@@ -195,7 +196,10 @@ public function updatePassword(Request $request)
         'archived'       => Employee::where('is_archived', true)->count(),
     ];
 
-    return view('dashboard', compact('user', 'counts'));
+    return Inertia::render('Dashboard', [
+        'user' => $user,
+        'counts' => $counts,
+    ]);
 }
 
     // -----------------------------------------------------------------------
