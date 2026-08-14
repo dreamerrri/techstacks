@@ -1,10 +1,10 @@
-/* ── Auth pages (login / register / reset / update-password) ── */
+/* ── Auth pages (login / register / reset / update-password)  display: flex; ── */
 
-body.auth-page {
+body.auth-page  {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100vh;
     overflow: hidden;
-    display: flex;
+   
     margin: 0;
     padding: 0;
 }
