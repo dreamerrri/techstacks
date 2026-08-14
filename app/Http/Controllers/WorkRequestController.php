@@ -6,9 +6,9 @@ use App\Models\WorkRequest;
 use App\Models\Employee;
 use App\Models\Holiday;
 use App\Services\NotificationService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use Carbon\Carbon;
 
 class WorkRequestController extends Controller
@@ -21,7 +21,6 @@ class WorkRequestController extends Controller
     {
         $user    = Auth::user();
 
-
         $admin = $user->isAdmin();
         $hr   = $user->isHR();
 
@@ -31,8 +30,7 @@ class WorkRequestController extends Controller
         $status = $request->input('status');
         $type = $request->input('type');
 
-        
-if ($admin || $hr) {
+        if ($admin || $hr) {
             // HR/Admin can see all work requests (no employee record needed)
             $query = WorkRequest::with(['employee', 'approvedBy']);
         } else {
@@ -60,12 +58,12 @@ if ($admin || $hr) {
             $pendingCount = WorkRequest::pending()->count();
         }
 
-        return view('work-requests.index', compact(
-            'workRequests',
-            'pendingCount',
-            'status',
-            'type'
-        ));
+        return Inertia::render('WorkRequests/Index', [
+            'workRequests' => $workRequests,
+            'pendingCount' => $pendingCount,
+            'status' => $status,
+            'type' => $type,
+        ]);
     }
 
     /**
@@ -74,8 +72,6 @@ if ($admin || $hr) {
      */
     public function create()
     {
-
-
         $user = Auth::user();
         $employee = $user->employee;
 
@@ -86,23 +82,23 @@ if ($admin || $hr) {
         // Get upcoming holidays for reference
         $upcomingHolidays = Holiday::getUpcomingHolidays(10);
 
-        return view('work-requests.create', compact('employee', 'upcomingHolidays'));
+        return Inertia::render('WorkRequests/Create', [
+            'employee' => $employee,
+            'upcomingHolidays' => $upcomingHolidays,
+        ]);
     }
 
     /**
      * POST /work-requests
      * Store new work request
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         $user = Auth::user();
         $employee = $user->employee;
 
         if (!$employee) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee record found for this user.',
-            ], 403);
+            return back()->with('error', 'No employee record found for this user.');
         }
 
         $validated = $request->validate([
@@ -129,34 +125,8 @@ if ($admin || $hr) {
             ->first();
 
         if ($existingRequest) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You already have a pending or approved request for this date.',
-            ], 422);
+            return back()->with('error', 'You already have a pending or approved request for this date.');
         }
-
-        // Validate based on request type (optional validation - HR can review during approval)
-        // Commented out for now to allow requests even if holidays aren't set up in system
-        /*
-        if ($validated['request_type'] === 'holiday') {
-            // Check if the date is actually a holiday
-            if (!Holiday::isHoliday($validated['work_date'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'The selected date is not a holiday.',
-                ], 422);
-            }
-        } elseif ($validated['request_type'] === 'weekend') {
-            // Check if the date is a weekend
-            $date = Carbon::parse($validated['work_date']);
-            if (!$date->isWeekend()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'The selected date is not a weekend.',
-                ], 422);
-            }
-        }
-        */
 
         $workRequest = WorkRequest::create([
             'employee_id' => $employee->id,
@@ -173,11 +143,7 @@ if ($admin || $hr) {
         // Notify HR/Admin about the new work request
         NotificationService::notifyWorkRequestSubmitted($employee, $workRequest);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Work request submitted successfully.',
-            'work_request' => $workRequest,
-        ]);
+        return redirect()->route('work-requests.index')->with('success', 'Work request submitted successfully.');
     }
 
     /**
@@ -186,17 +152,12 @@ if ($admin || $hr) {
      */
     public function show(WorkRequest $workRequest)
     {
-
-    
-    
         $user    = Auth::user();
-
 
         $admin = $user->isAdmin();
         $hr   = $user->isHR();
 
         $employee = $user->employee;
-
 
         // HR/Admin can view all work requests (no employee record needed)
         if (!$admin && !$hr) {
@@ -212,7 +173,9 @@ if ($admin || $hr) {
 
         $workRequest->load(['employee', 'approvedBy']);
 
-        return view('work-requests.show', compact('workRequest'));
+        return Inertia::render('WorkRequests/Show', [
+            'workRequest' => $workRequest,
+        ]);
     }
 
     /**
@@ -222,8 +185,7 @@ if ($admin || $hr) {
      */
     public function edit(WorkRequest $workRequest)
     {
- $user    = Auth::user();
-
+        $user    = Auth::user();
 
         $admin = $user->isAdmin();
         $hr   = $user->isHR();
@@ -249,7 +211,10 @@ if ($admin || $hr) {
 
         $upcomingHolidays = Holiday::getUpcomingHolidays(10);
 
-        return view('work-requests.edit', compact('workRequest', 'upcomingHolidays'));
+        return Inertia::render('WorkRequests/Edit', [
+            'workRequest' => $workRequest,
+            'upcomingHolidays' => $upcomingHolidays,
+        ]);
     }
 
     /**
@@ -257,10 +222,9 @@ if ($admin || $hr) {
      * Update work request
      * Only employees can update their own requests
      */
-    public function update(Request $request, WorkRequest $workRequest): JsonResponse
+    public function update(Request $request, WorkRequest $workRequest)
     {
- $user    = Auth::user();
-
+        $user    = Auth::user();
 
         $admin = $user->isAdmin();
         $hr   = $user->isHR();
@@ -269,31 +233,19 @@ if ($admin || $hr) {
 
         // HR/Admin cannot update employee requests
         if ($admin || $hr) {
-            return response()->json([
-                'success' => false,
-                'message' => 'HR/Admin cannot edit employee work requests. Use approve/reject instead.',
-            ], 403);
+            return back()->with('error', 'HR/Admin cannot edit employee work requests. Use approve/reject instead.');
         }
 
         if (!$employee) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee record found for this user.',
-            ], 403);
+            return back()->with('error', 'No employee record found for this user.');
         }
 
         // Employees can only update their own pending requests
         if ($workRequest->employee_id !== $employee->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You can only edit your own work requests.',
-            ], 403);
+            return back()->with('error', 'You can only edit your own work requests.');
         }
         if (!$workRequest->canBeCancelled()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You can only edit pending requests.',
-            ], 403);
+            return back()->with('error', 'You can only edit pending requests.');
         }
 
         $validated = $request->validate([
@@ -313,27 +265,6 @@ if ($admin || $hr) {
             $calculatedOvertimeHours = $this->calculateOvertimeHours($validated['start_time'], $validated['end_time']);
         }
 
-        // Validate based on request type (optional validation - HR can review during approval)
-        // Commented out for now to allow requests even if holidays aren't set up in system
-        /*
-        if ($validated['request_type'] === 'holiday') {
-            if (!Holiday::isHoliday($validated['work_date'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'The selected date is not a holiday.',
-                ], 422);
-            }
-        } elseif ($validated['request_type'] === 'weekend') {
-            $date = Carbon::parse($validated['work_date']);
-            if (!$date->isWeekend()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'The selected date is not a weekend.',
-                ], 422);
-            }
-        }
-        */
-
         $workRequest->update([
             'request_type' => $validated['request_type'],
             'work_date' => $validated['work_date'],
@@ -344,22 +275,16 @@ if ($admin || $hr) {
             'reason' => $validated['reason'] ?? null,
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Work request updated successfully.',
-            'work_request' => $workRequest,
-        ]);
+        return redirect()->route('work-requests.show', $workRequest)->with('success', 'Work request updated successfully.');
     }
 
     /**
      * DELETE /work-requests/{workRequest}
      * Cancel work request (only pending requests)
      */
-    public function destroy(WorkRequest $workRequest): JsonResponse
+    public function destroy(WorkRequest $workRequest)
     {
-
-   $user    = Auth::user();
-
+        $user    = Auth::user();
 
         $admin = $user->isAdmin();
         $hr   = $user->isHR();
@@ -367,25 +292,16 @@ if ($admin || $hr) {
         $employee = $user->employee;
 
         if (!$employee) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee record found for this user.',
-            ], 403);
+            return back()->with('error', 'No employee record found for this user.');
         }
 
         // Employees can only cancel their own pending requests
-      if (!$admin && !$hr) {
+        if (!$admin && !$hr) {
             if ($workRequest->employee_id !== $employee->id) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You can only cancel your own work requests.',
-                ], 403);
+                return back()->with('error', 'You can only cancel your own work requests.');
             }
             if (!$workRequest->canBeCancelled()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You can only cancel pending requests.',
-                ], 403);
+                return back()->with('error', 'You can only cancel pending requests.');
             }
         }
 
@@ -394,10 +310,7 @@ if ($admin || $hr) {
         // Notify employee about cancellation
         NotificationService::notifyWorkRequestCancelled($workRequest->employee, $workRequest);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Work request cancelled successfully.',
-        ]);
+        return redirect()->route('work-requests.index')->with('success', 'Work request cancelled successfully.');
     }
 
     /**
@@ -406,14 +319,10 @@ if ($admin || $hr) {
      */
     public function pending()
     {
-
-       $user    = Auth::user();
-
+        $user    = Auth::user();
 
         $admin = $user->isAdmin();
         $hr   = $user->isHR();
-
-        $employee = $user->employee;;
 
         if (!$admin && !$hr) {
             abort(403, 'Only administrators and HR can view pending requests.');
@@ -424,35 +333,28 @@ if ($admin || $hr) {
             ->orderBy('work_date', 'asc')
             ->get();
 
-        return view('work-requests.pending', compact('pendingRequests'));
+        return Inertia::render('WorkRequests/Pending', [
+            'pendingRequests' => $pendingRequests,
+        ]);
     }
 
     /**
      * POST /work-requests/{workRequest}/approve
      * Approve work request (HR/Admin only)
      */
-    public function approve(Request $request, WorkRequest $workRequest): JsonResponse
+    public function approve(Request $request, WorkRequest $workRequest)
     {
- $user    = Auth::user();
-
+        $user    = Auth::user();
 
         $admin = $user->isAdmin();
         $hr   = $user->isHR();
 
-        $employee = $user->employee;
-
         if (!$admin && !$hr) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Only administrators and HR can approve requests.',
-            ], 403);
+            return back()->with('error', 'Only administrators and HR can approve requests.');
         }
 
         if (!$workRequest->canBeApproved()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'This request cannot be approved.',
-            ], 422);
+            return back()->with('error', 'This request cannot be approved.');
         }
 
         $workRequest->update([
@@ -464,40 +366,26 @@ if ($admin || $hr) {
         // Notify employee about approval
         NotificationService::notifyWorkRequestApproved($workRequest->employee, $workRequest);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Work request approved successfully.',
-            'work_request' => $workRequest,
-        ]);
+        return back()->with('success', 'Work request approved successfully.');
     }
 
     /**
      * POST /work-requests/{workRequest}/reject
      * Reject work request (HR/Admin only)
      */
-    public function reject(Request $request, WorkRequest $workRequest): JsonResponse
+    public function reject(Request $request, WorkRequest $workRequest)
     {
-
- $user    = Auth::user();
-
+        $user    = Auth::user();
 
         $admin = $user->isAdmin();
         $hr   = $user->isHR();
 
-        $employee = $user->employee;
-
         if (!$admin && !$hr) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Only administrators and HR can reject requests.',
-            ], 403);
+            return back()->with('error', 'Only administrators and HR can reject requests.');
         }
 
         if (!$workRequest->canBeRejected()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'This request cannot be rejected.',
-            ], 422);
+            return back()->with('error', 'This request cannot be rejected.');
         }
 
         $validated = $request->validate([
@@ -512,11 +400,7 @@ if ($admin || $hr) {
         // Notify employee about rejection
         NotificationService::notifyWorkRequestRejected($workRequest->employee, $workRequest, $validated['rejection_reason']);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Work request rejected successfully.',
-            'work_request' => $workRequest,
-        ]);
+        return back()->with('success', 'Work request rejected successfully.');
     }
 
     /**

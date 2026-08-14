@@ -16,27 +16,28 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Traits\LogsAudit;
 use Illuminate\Support\Facades\Password;
+use Inertia\Inertia;
 
 
 class AuthController extends Controller
 {
     public function showLogin()
     {
-        return view('auth.login');
+        return Inertia::render('Auth/Login');
     }
 
     public function showRegister()
     {
-        return view('auth.register');
+        return Inertia::render('Auth/Register');
     }
 
     public function showReset()
     {
-        return view('auth.reset');
+        return Inertia::render('Auth/Reset');
     }
   public function showUpdatePassword(Request $request)
 {
-    return view('auth.update-password', [
+    return Inertia::render('Auth/UpdatePassword', [
         'token' => $request->query('token'),
         'email' => $request->query('email'),
     ]);
@@ -180,10 +181,8 @@ public function updatePassword(Request $request)
     /**
      * Dashboard — single route, role-scoped data.
      */
-   public function dashboard()
+public function dashboard()
 {
-    $user = Auth::user();
-
     $counts = [
         'total_users'    => User::count(),
         'admin_users'    => User::where('role', 'admin')->count(),
@@ -195,7 +194,7 @@ public function updatePassword(Request $request)
         'archived'       => Employee::where('is_archived', true)->count(),
     ];
 
-    return view('dashboard', compact('user', 'counts'));
+    return Inertia::render('Dashboard', ['counts' => $counts]);
 }
 
     // -----------------------------------------------------------------------

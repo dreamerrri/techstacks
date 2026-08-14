@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AuditLog;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AuditLogController extends Controller
 {
@@ -37,12 +38,17 @@ class AuditLogController extends Controller
         $modules = AuditLog::distinct()->pluck('module')->sort();
         $actions = AuditLog::distinct()->pluck('action')->sort();
 
-        return view('audit-logs.index', compact('logs', 'modules', 'actions'));
+        return Inertia::render('AuditLogs/Index', [
+            'logs' => $logs,
+            'modules' => $modules,
+            'actions' => $actions,
+            'filters' => $request->only(['module', 'action', 'user_id', 'date_from', 'date_to']),
+        ]);
     }
 
     public function show(AuditLog $auditLog)
     {
         $auditLog->load('user');
-        return view('audit-logs.show', compact('auditLog'));
+        return Inertia::render('AuditLogs/Show', ['auditLog' => $auditLog]);
     }
 }

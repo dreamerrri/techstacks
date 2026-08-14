@@ -46,6 +46,8 @@ class Employee extends Model
         'is_archived',
     ];
 
+    protected $appends = ['full_name'];
+
     protected $casts = [
         'birthdate'   => 'date',
         'date_hired'  => 'date',

@@ -7,6 +7,7 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../**/*.jsx';
 @source '../../node_modules/flyonui/flyonui.js';
 
 @theme {
@@ -26,5 +27,8 @@
 
 /* ── Utilities ── */
 @import './utilities/helpers.css';
+
+/* ── Auth pages (login/register/reset/update-password) ── */
+@import './auth.css';
 
 

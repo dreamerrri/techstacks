@@ -55,6 +55,19 @@ class User extends Authenticatable
         ];
     }
 
+    protected $appends = ['photo_url'];
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        if (!$this->profile_photo) {
+            return null;
+        }
+        if (config('filesystems.default') === 's3') {
+            return \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($this->profile_photo, now()->addHours(24));
+        }
+        return \Illuminate\Support\Facades\Storage::url($this->profile_photo);
+    }
+
     /**
      * Check if user is an admin
      */

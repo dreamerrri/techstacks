@@ -16,6 +16,7 @@ use App\Services\PagIbigContributionService;
 use App\Services\WithholdingTaxService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ManualPayrollAttendanceController extends Controller
 {
@@ -73,7 +74,27 @@ class ManualPayrollAttendanceController extends Controller
         ->pluck('month')
         ->toArray();
 
-    return view('manual-payroll-attendance.index', compact('periods', 'availableYears', 'availableMonths'));
+    return Inertia::render('ManualPayrollAttendance/Index', [
+        'periods' => $periods->map(fn($period) => [
+            'id'            => $period->id,
+            'cutoff_start'  => $period->cutoff_start?->toDateString(),
+            'cutoff_end'    => $period->cutoff_end?->toDateString(),
+            'payroll_date'  => $period->payroll_date?->toDateString(),
+            'status'        => $period->status,
+            'period_label'  => $period->period_label,
+            'encoded_count' => $period->payrollInputs ? $period->payrollInputs->count() : 0,
+            'total_gross'   => $period->total_gross_pay,
+            'total_net'     => $period->total_net_pay,
+        ]),
+        'availableYears'  => $availableYears,
+        'availableMonths' => $availableMonths,
+        'filters'         => [
+            'year'   => $request->year,
+            'month'  => $request->month,
+            'phase'  => $request->phase,
+            'status' => $request->status,
+        ],
+    ]);
 }
 
     /**
@@ -167,7 +188,17 @@ class ManualPayrollAttendanceController extends Controller
                 ->get();
         }
 
-        return view('manual-payroll-attendance.period', compact('payrollPeriod', 'unencodedEmployees'));
+        return Inertia::render('ManualPayrollAttendance/Period', [
+            'payrollPeriod' => $this->periodPayload($payrollPeriod),
+            'unencodedEmployees' => $unencodedEmployees->map(fn($emp) => [
+                'id'               => $emp->id,
+                'employee_id'      => $emp->employee_id,
+                'first_name'       => $emp->first_name,
+                'last_name'        => $emp->last_name,
+                'department'       => $emp->department,
+                'employment_status'=> $emp->employment_status,
+            ])->values(),
+        ]);
     }
 
     /**
@@ -213,17 +244,87 @@ class ManualPayrollAttendanceController extends Controller
         // Work request values are shown as reference in the approved requests section above
         // HR can manually override these values as needed
 
-        return view('manual-payroll-attendance.employee-form', compact(
-            'payrollPeriod',
-            'employee',
-            'payrollInput',
-            'dailyRate',
-            'computedDaysFromAttendance',
-            'approvedRequests',
-            'weekendsWorked',
-            'overtimeHours',
-            'holidayDays'
-        ));
+        // Cash advance info
+        $allCashAdvances = FinancialRequest::where('employee_id', $employee->id)
+            ->where('request_type', 'cash_advance')
+            ->where('status', 'approved')
+            ->get();
+        $outstandingCashAdvances = $allCashAdvances->filter(fn($r) => $r->amount_paid < $r->amount);
+        $fullyPaidCashAdvances = $allCashAdvances->filter(fn($r) => $r->amount_paid >= $r->amount);
+        $totalOutstandingBalance = $outstandingCashAdvances->sum(fn($r) => $r->amount - $r->amount_paid);
+        $existingPeriodPayments = CashAdvancePayment::where('payroll_period_id', $payrollPeriod->id)
+            ->whereHas('financialRequest', fn($q) => $q->where('employee_id', $employee->id))
+            ->exists();
+
+        $totalAllowances = $employee->activeAllowances->sum('amount');
+        $totalBenefits = $employee->activeBenefits->sum('amount');
+
+        return Inertia::render('ManualPayrollAttendance/EmployeeForm', [
+            'payrollPeriod' => $this->periodPayload($payrollPeriod),
+            'employee' => [
+                'id'                => $employee->id,
+                'employee_id'       => $employee->employee_id,
+                'first_name'        => $employee->first_name,
+                'last_name'         => $employee->last_name,
+                'position'          => $employee->position,
+                'department'        => $employee->department,
+                'basic_salary'      => $employee->basic_salary,
+                'active_allowances' => $employee->activeAllowances->map(fn($a) => [
+                    'name'   => $a->name,
+                    'type'   => $a->type,
+                    'amount' => $a->amount,
+                ])->values(),
+                'active_benefits'   => $employee->activeBenefits->map(fn($b) => [
+                    'name'   => $b->name,
+                    'type'   => $b->type,
+                    'amount' => $b->amount,
+                ])->values(),
+            ],
+            'payrollInput' => $payrollInput ? [
+                'id'                        => $payrollInput->id,
+                'daily_rate'                => $payrollInput->daily_rate,
+                'days_worked'               => $payrollInput->days_worked,
+                'weekends_worked'           => $payrollInput->weekends_worked,
+                'overtime_hours'            => $payrollInput->overtime_hours,
+                'late_hours'                => $payrollInput->late_hours,
+                'holiday_days'              => $payrollInput->holiday_days,
+                'night_differential_hours'  => $payrollInput->night_differential_hours,
+                'allowances'                => $payrollInput->allowances,
+                'deductions'                => $payrollInput->deductions,
+                'deductions_remarks'        => $payrollInput->deductions_remarks,
+                'reimbursements'            => $payrollInput->reimbursements,
+                'reimbursements_remarks'    => $payrollInput->reimbursements_remarks,
+            ] : null,
+            'dailyRate' => $dailyRate,
+            'computedDaysFromAttendance' => $computedDaysFromAttendance,
+            'approvedRequests' => $approvedRequests->map(fn($r) => [
+                'id'                        => $r->id,
+                'request_type'              => $r->request_type,
+                'work_date'                 => $r->work_date?->toDateString(),
+                'calculated_overtime_hours' => $r->calculated_overtime_hours,
+                'estimated_hours'           => $r->estimated_hours,
+            ])->values(),
+            'weekendsWorked' => $weekendsWorked,
+            'overtimeHours' => $overtimeHours,
+            'holidayDays' => $holidayDays,
+            'isEdit' => $payrollInput !== null,
+            'isSecondHalfOfMonth' => $payrollPeriod->isSecondHalfOfMonth(),
+            'cashAdvance' => [
+                'fully_paid'       => $fullyPaidCashAdvances->map(fn($r) => [
+                    'amount'       => $r->amount,
+                    'amount_paid'  => $r->amount_paid,
+                    'request_date' => $r->request_date?->toDateString(),
+                ])->values(),
+                'outstanding'      => $outstandingCashAdvances->map(fn($r) => [
+                    'amount'       => $r->amount,
+                    'amount_paid'  => $r->amount_paid,
+                    'request_date' => $r->request_date?->toDateString(),
+                ])->values(),
+                'total_outstanding'   => $totalOutstandingBalance,
+                'existing_payments'   => $existingPeriodPayments,
+            ],
+            'totalAllowancesAndBenefits' => round(($totalAllowances + $totalBenefits) / 2, 2),
+        ]);
     }
 
     /**
@@ -455,7 +556,7 @@ $withholdingTax = $taxResult['tax'];
      * POST /manual-payroll-attendance/save
      * Save payroll input for an employee
      */
-    public function save(Request $request): JsonResponse
+    public function save(Request $request)
     {
         \Log::info('Save payroll input attempt', $request->all());
 
@@ -484,10 +585,7 @@ $withholdingTax = $taxResult['tax'];
             $period = PayrollPeriod::findOrFail($validated['payroll_period_id']);
             if ($period->isFinalized()) {
                 \Log::warning('Attempted to edit finalized payroll period', ['period_id' => $period->id]);
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Cannot edit a finalized payroll period.',
-                ], 422);
+                return back()->with('error', 'Cannot edit a finalized payroll period.');
             }
 
             // If days_worked is null or empty, default to attendance computed days
@@ -600,20 +698,14 @@ $withholdingTax = $taxResult['tax'];
                 \Log::info('Payroll input created successfully', ['payroll_input_id' => $payrollInput->id]);
             }
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Payroll input saved successfully.',
-                'payroll_input' => $payrollInput->load('employee', 'adjustments'),
-            ]);
+            return redirect()->route('manual-payroll-attendance.period', $period)
+                ->with('success', 'Payroll input saved successfully.');
         } catch (\Exception $e) {
             \Log::error('Error saving payroll input', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Error saving payroll input: ' . $e->getMessage(),
-            ], 500);
+            return back()->with('error', 'Error saving payroll input: ' . $e->getMessage());
         }
     }
 
@@ -802,6 +894,52 @@ $withholdingTax = $taxResult['tax'];
     }
 
     // ── Private helpers ────────────────────────────────────────
+
+    /**
+     * Build the shared payroll-period payload for Inertia pages.
+     */
+    private function periodPayload(PayrollPeriod $payrollPeriod): array
+    {
+        $inputs = $payrollPeriod->payrollInputs ? $payrollPeriod->payrollInputs : collect();
+
+        return [
+            'id'              => $payrollPeriod->id,
+            'cutoff_start'    => $payrollPeriod->cutoff_start?->toDateString(),
+            'cutoff_end'      => $payrollPeriod->cutoff_end?->toDateString(),
+            'payroll_date'    => $payrollPeriod->payroll_date?->toDateString(),
+            'status'          => $payrollPeriod->status,
+            'period_label'    => $payrollPeriod->period_label,
+            'is_draft'        => $payrollPeriod->isDraft(),
+            'is_finalized'    => $payrollPeriod->isFinalized(),
+            'is_second_half'  => $payrollPeriod->isSecondHalfOfMonth(),
+            'total_gross'     => $payrollPeriod->total_gross_pay,
+            'total_net'       => $payrollPeriod->total_net_pay,
+            'total_deductions'=> $payrollPeriod->total_deductions,
+            'payroll_inputs'  => $inputs->map(fn($input) => [
+                'id'           => $input->id,
+                'employee_id'  => $input->employee_id,
+                'employee'     => $input->employee ? [
+                    'id'          => $input->employee->id,
+                    'employee_id' => $input->employee->employee_id,
+                    'first_name'  => $input->employee->first_name,
+                    'last_name'   => $input->employee->last_name,
+                ] : null,
+                'days_worked'  => $input->days_worked,
+                'overtime_hours' => $input->overtime_hours,
+                'late_hours'   => $input->late_hours,
+                'allowances'   => $input->allowances,
+                'deductions'   => $input->deductions,
+                'gross_pay'    => $input->gross_pay,
+                'net_pay'      => $input->net_pay,
+                'adjustments'  => $input->adjustments ? $input->adjustments->map(fn($a) => [
+                    'id'              => $a->id,
+                    'adjustment_type' => $a->adjustment_type,
+                    'amount'          => $a->amount,
+                    'remarks'         => $a->remarks,
+                ])->values() : [],
+            ])->values(),
+        ];
+    }
 
     /**
      * Convert employees.basic_salary to a daily rate using the formula:

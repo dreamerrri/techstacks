@@ -7,12 +7,36 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
     public function show()
     {
-        return view('profile.show');
+        $user = Auth::user();
+
+        return Inertia::render('Profile/Show', [
+            'employee' => $user->employee ? [
+                'id'                => $user->employee->id,
+                'first_name'        => $user->employee->first_name,
+                'middle_name'       => $user->employee->middle_name,
+                'last_name'         => $user->employee->last_name,
+                'birthdate'         => $user->employee->birthdate?->format('Y-m-d'),
+                'gender'            => $user->employee->gender,
+                'civil_status'      => $user->employee->civil_status,
+                'contact_number'    => $user->employee->contact_number,
+                'address'           => $user->employee->address,
+                'department'        => $user->employee->department,
+                'position'          => $user->employee->position,
+                'employment_status' => $user->employee->employment_status,
+                'date_hired'        => $user->employee->date_hired?->format('Y-m-d'),
+                'salary_type'       => $user->employee->salary_type,
+                'sss_number'        => $user->employee->sss_number,
+                'philhealth_number' => $user->employee->philhealth_number,
+                'pagibig_number'    => $user->employee->pagibig_number,
+                'tin_number'        => $user->employee->tin_number,
+            ] : null,
+        ]);
     }
 
     /**
