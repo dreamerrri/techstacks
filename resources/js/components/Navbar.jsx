@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 import Icon from './Icon';
+import Breadcrumbs from './Breadcrumbs';
 import SearchModal from './SearchModal';
 
 const NOTIF_STYLE = {
@@ -12,7 +13,7 @@ const NOTIF_STYLE = {
     default: { bg: 'bg-base-300', text: 'text-subtle', icon: 'ph--bell-fill' },
 };
 
-export default function Navbar({ onOpenSidebar, onToggleMinified }) {
+export default function Navbar({ onOpenSidebar, onToggleMinified, breadcrumbs = [] }) {
     const { props } = usePage();
     const user = props.auth?.user;
     const notifications = props.notifications ?? [];
@@ -80,6 +81,10 @@ export default function Navbar({ onOpenSidebar, onToggleMinified }) {
                         <button type="button" className="btn btn-circle btn-text" onClick={onToggleMinified} aria-label="Minify navigation">
                             <Icon name="tabler--menu-2" className="size-5" />
                         </button>
+                    </div>
+
+                    <div className="hidden md:flex min-w-0 items-center ps-2">
+                        <Breadcrumbs items={breadcrumbs} />
                     </div>
                 </div>
 

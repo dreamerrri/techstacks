@@ -3,14 +3,16 @@ import { usePage } from '@inertiajs/react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import { toast } from './toast';
+import getBreadcrumbs from '../Config/breadcrumbs';
 
 export default function AppLayout({ children, title }) {
-    const { props } = usePage();
+    const { props, url } = usePage();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [minified, setMinified] = useState(() => sessionStorage.getItem('sidebar_collapsed') === '1');
 
     const flash = props.flash ?? {};
     const role = props.role ?? 'user';
+    const breadcrumbs = getBreadcrumbs(url, role, title);
 
     useEffect(() => {
         document.body.dataset.role = role;
@@ -56,7 +58,7 @@ export default function AppLayout({ children, title }) {
             />
 
             <div className="flex flex-col flex-1 min-w-0">
-                <Navbar onOpenSidebar={() => setMobileOpen(true)} onToggleMinified={toggleMinified} />
+                <Navbar onOpenSidebar={() => setMobileOpen(true)} onToggleMinified={toggleMinified} breadcrumbs={breadcrumbs} />
 
                 <main className="min-w-0 p-3 sm:p-4 overflow-x-hidden">
                     {children}
