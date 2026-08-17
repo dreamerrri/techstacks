@@ -94,22 +94,6 @@ class ProfileController extends Controller
     return back()->with('success', 'Profile photo updated.');
 }
 
-    /**
-     * Handle banner colour change.
-     * Expects JSON or form-encoded body with field "banner_color" (hex, e.g. "#667eea").
-     */
-    public function updateBannerColor(Request $request)
-    {
-        $request->validate([
-            'banner_color' => ['required', 'string', 'regex:/^#[0-9a-fA-F]{6}$/'],
-        ]);
-
-        $user = Auth::user();
-        $user->banner_color = $request->banner_color;
-        $user->save();
-
-        return back()->with('success', 'Banner colour updated.');
-    }
     public function updatePersonal(Request $request)
 {
     $user     = Auth::user();

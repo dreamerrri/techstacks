@@ -2,13 +2,11 @@
 
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PayrollController;
-use App\Http\Controllers\PayrollInputController;
 use App\Http\Controllers\PayrollPeriodController;
 use App\Http\Controllers\ManualPayrollAttendanceController;
 use App\Http\Controllers\GovernmentContributionsController;
 use App\Http\Controllers\EmployeeAttendanceController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AllowanceController;
@@ -23,9 +21,6 @@ use App\Http\Controllers\FinancialRequestController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SearchController;
 
-Route::get('/test', function () {
-    return 'ok';
-});
 // Public Routes
 Route::get('/', function () {
     return redirect()->route('login');
@@ -74,8 +69,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [EmployeeAttendanceController::class, 'store'])->name('store');
         Route::put('/{attendance}', [EmployeeAttendanceController::class, 'update'])->name('update');
         Route::delete('/{attendance}', [EmployeeAttendanceController::class, 'destroy'])->name('destroy');
-        Route::post('/compute-period', [EmployeeAttendanceController::class, 'getPeriodSummary'])->name('compute-period');
-        
         // HR/Admin can view specific employee's attendance records
         Route::middleware('permission:view.employees')->group(function () {
             Route::get('/employee/{employee}', [EmployeeAttendanceController::class, 'showEmployee'])->name('show-employee');
@@ -85,16 +78,13 @@ Route::middleware('auth')->group(function () {
 Route::get('/profile',  [ProfileController::class, 'show'])->name('profile.show');
 Route::put('/profile',  [ProfileController::class, 'update'])->name('profile.update');
 Route::put('/profile/personal', [ProfileController::class, 'updatePersonal'])->name('profile.personal');
+Route::post('/profile/photo',       [ProfileController::class, 'updatePhoto'])->name('profile.photo');
+
     Route::middleware('permission:view.users')->prefix('users')->name('users.')->group(function () {
         Route::get('/',                [UserController::class, 'index'])->name('index');
         Route::patch('/{user}/toggle', [UserController::class, 'toggleActive'])->name('toggle')->middleware('permission:edit.users');
         Route::patch('/{user}/role',   [UserController::class, 'updateRole'])->name('role')->middleware('permission:manage.user.roles');
     });
-
-    Route::get('/profile',              [ProfileController::class, 'show'])->name('profile.show');
-Route::put('/profile',              [ProfileController::class, 'update'])->name('profile.update');
-Route::post('/profile/photo',       [ProfileController::class, 'updatePhoto'])->name('profile.photo');
-Route::put('/profile/banner-color', [ProfileController::class, 'updateBannerColor'])->name('profile.banner-color');
 
     // Employee Management — admin and HR only.
     Route::middleware('permission:view.employees')->prefix('employees')->name('employees.')->group(function () {
@@ -158,8 +148,6 @@ Route::prefix('payroll')->name('payroll.')->group(function () {
         Route::get('/period/{payrollPeriod}/summary', [ManualPayrollAttendanceController::class, 'getPeriodSummary'])->name('summary');
         Route::post('/preview',                      [ManualPayrollAttendanceController::class, 'preview'])->name('preview');
         Route::post('/save',                         [ManualPayrollAttendanceController::class, 'save'])->name('save');
-        Route::post('/adjustments',                  [ManualPayrollAttendanceController::class, 'saveAdjustment'])->name('adjustments');
-        Route::delete('/adjustments/{adjustment}',    [ManualPayrollAttendanceController::class, 'deleteAdjustment'])->name('delete-adjustment');
     });
 
     // Payroll Period Routes — admin and HR only
@@ -177,7 +165,6 @@ Route::middleware('permission:manage.payroll.periods')->prefix('payroll-periods'
     Route::prefix('government-contributions')->name('government-contributions.')->group(function () {
         Route::get('/', [GovernmentContributionsController::class, 'index'])->name('index')->middleware('permission:view.gov.contributions');
         Route::get('/{employee}', [GovernmentContributionsController::class, 'show'])->name('show')->middleware('permission:view.gov.contributions');
-        Route::get('/api/all-with-contributions', [GovernmentContributionsController::class, 'getAllEmployeesWithContributions'])->name('api.all-with-contributions')->middleware('permission:view.gov.contributions');
         Route::middleware('permission:edit.gov.contributions')->group(function () {
             Route::patch('/{employee}', [GovernmentContributionsController::class, 'update'])->name('update');
         });
@@ -213,12 +200,8 @@ Route::middleware('permission:manage.payroll.periods')->prefix('payroll-periods'
 
     // Notification Routes
     Route::prefix('notifications')->name('notifications.')->group(function () {
-        Route::get('/', [NotificationController::class, 'index'])->name('index');
         Route::post('/{notification}/mark-read', [NotificationController::class, 'markAsRead'])->name('mark-read');
         Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
-        Route::post('/{notification}/mark-resolved', [NotificationController::class, 'markAsResolved'])->name('mark-resolved');
-        Route::post('/mark-all-resolved', [NotificationController::class, 'markAllAsResolved'])->name('mark-all-resolved');
-        Route::post('/generate-hr-admin', [NotificationController::class, 'generateHrAdminNotifications'])->name('generate-hr-admin');
     });
 
     // Work Request Routes
@@ -256,48 +239,5 @@ Route::middleware('permission:manage.payroll.periods')->prefix('payroll-periods'
         Route::get('/{financialRequest}/edit', [FinancialRequestController::class, 'edit'])->name('edit');
         Route::put('/{financialRequest}', [FinancialRequestController::class, 'update'])->name('update');
         Route::delete('/{financialRequest}', [FinancialRequestController::class, 'destroy'])->name('destroy');
-    });
-});
-
-// API Routes (JWT Authentication)
-Route::prefix('api')->group(function () {
-    Route::post('/login',             [AuthController::class, 'apiLogin']);
-    Route::post('/register',          [AuthController::class, 'register']);
-    Route::post('/validate-password', [AuthController::class, 'validatePassword']);
-
-    Route::middleware('jwt')->group(function () {
-
-        Route::prefix('employees')->group(function () {
-            Route::get('/',                     [EmployeeController::class, 'apiIndex']);
-            Route::post('/',                    [EmployeeController::class, 'apiStore']);
-            Route::get('/{employee}',           [EmployeeController::class, 'apiShow']);
-            Route::put('/{employee}',           [EmployeeController::class, 'apiUpdate']);
-            Route::patch('/{employee}/archive', [EmployeeController::class, 'apiArchive']);
-        });
-
-        // ── Payroll API ────────────────────────────────────────
-        Route::prefix('payroll-periods')->name('api.payroll-periods.')->group(function () {
-            Route::get('/',                          [PayrollPeriodController::class, 'index'])->name('index');
-            Route::post('/',                         [PayrollPeriodController::class, 'store'])->name('store');
-            Route::get('/{payrollPeriod}',           [PayrollPeriodController::class, 'show'])->name('show');
-        });
-
-        Route::prefix('payroll-inputs')->name('api.payroll-inputs.')->group(function () {
-            Route::get('/',                          [PayrollInputController::class, 'index'])->name('index');   // ?payroll_period_id=1
-            Route::post('/',                         [PayrollInputController::class, 'store'])->name('store');
-            Route::put('/{payrollInput}',            [PayrollInputController::class, 'update'])->name('update');
-            Route::delete('/{payrollInput}',         [PayrollInputController::class, 'destroy'])->name('destroy');
-        });
-
-        Route::prefix('payroll')->name('api.payroll.')->group(function () {
-            Route::post('/compute',                  [PayrollController::class, 'compute'])->name('compute');
-            Route::post('/finalize',                 [PayrollController::class, 'finalize'])->name('finalize');
-        });
-
-        Route::post('/logout',        [AuthController::class, 'apiLogout']);
-        Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
-        Route::get('/user', function (Request $request) {
-            return $request->user();
-        });
     });
 });

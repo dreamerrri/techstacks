@@ -344,60 +344,6 @@ class EmployeeAttendanceController extends Controller
     }
 
     /**
-     * POST /employee-attendance/compute-period
-     * Get attendance summary for a specific period
-     */
-    public function getPeriodSummary(Request $request): JsonResponse
-    {
-        $user = Auth::user();
-        $employee = $user->employee;
-
-        if (!$employee) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee record found for this user.',
-            ], 403);
-        }
-
-        $validated = $request->validate([
-            'period_id' => 'nullable|exists:payroll_periods,id',
-        ]);
-
-        if (!empty($validated['period_id'])) {
-            $period = PayrollPeriod::find($validated['period_id']);
-        } else {
-            $period = PayrollPeriod::where('status', 'draft')
-                ->where('cutoff_start', '<=', now())
-                ->where('cutoff_end', '>=', now())
-                ->first();
-        }
-
-        if (!$period) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No payroll period found.',
-            ], 404);
-        }
-
-        $attendances = Attendance::where('employee_id', $employee->id)
-            ->whereBetween('date', [$period->cutoff_start->toDateString(), $period->cutoff_end->toDateString()])
-            ->orderBy('date')
-            ->get();
-
-        return response()->json([
-            'success' => true,
-            'period' => [
-                'id' => $period->id,
-                'cutoff_start' => $period->cutoff_start->toDateString(),
-                'cutoff_end' => $period->cutoff_end->toDateString(),
-            ],
-            'attendances' => $attendances,
-            'total_hours' => $attendances->sum('rendered_hours'),
-            'total_days' => $attendances->sum('computed_days'),
-        ]);
-    }
-
-    /**
      * GET /employee-attendance/employee/{employee}
      * Show attendance records for a specific employee (HR/Admin only)
      */

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Access Denied - HR Management System</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
 </head>
 <body class="min-h-screen bg-base-200 flex items-center justify-center p-6">
     <div class="card bg-base-100 border border-base-300 shadow-xl text-center w-full max-w-xl p-8 sm:p-14">

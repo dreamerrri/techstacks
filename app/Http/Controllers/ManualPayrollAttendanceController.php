@@ -710,66 +710,6 @@ $withholdingTax = $taxResult['tax'];
     }
 
     /**
-     * POST /manual-payroll-attendance/adjustments
-     * Add or update payroll adjustment
-     */
-    public function saveAdjustment(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'payroll_input_id' => 'required|exists:payroll_inputs,id',
-            'adjustment_type' => 'required|string',
-            'amount' => 'required|numeric',
-            'remarks' => 'nullable|string',
-        ]);
-
-        // Guard: payroll period must still be a draft
-        $payrollInput = PayrollInput::findOrFail($validated['payroll_input_id']);
-        if ($payrollInput->payrollPeriod->isFinalized()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Cannot add adjustments to a finalized payroll period.',
-            ], 422);
-        }
-
-        $adjustment = PayrollAdjustment::create($validated);
-
-        // Recompute payroll
-        $payrollInput->computePay()->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Adjustment saved successfully.',
-            'adjustment' => $adjustment,
-        ]);
-    }
-
-    /**
-     * DELETE /manual-payroll-attendance/adjustments/{adjustment}
-     * Delete a payroll adjustment
-     */
-    public function deleteAdjustment(PayrollAdjustment $adjustment): JsonResponse
-    {
-        // Guard: payroll period must still be a draft
-        if ($adjustment->payrollInput->payrollPeriod->isFinalized()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Cannot delete adjustments from a finalized payroll period.',
-            ], 422);
-        }
-
-        $payrollInput = $adjustment->payrollInput;
-        $adjustment->delete();
-
-        // Recompute payroll
-        $payrollInput->computePay()->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Adjustment deleted successfully.',
-        ]);
-    }
-
-    /**
      * Process cash advance payments for an employee
      * This method handles the automatic deduction and recording of cash advance payments
      */

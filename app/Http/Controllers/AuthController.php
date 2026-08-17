@@ -8,11 +8,9 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\PasswordResetRequest;
 use App\Services\PasswordValidator;
-use App\Services\JWTTokenService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Traits\LogsAudit;
 use Illuminate\Support\Facades\Password;
@@ -197,75 +195,6 @@ public function dashboard()
     return Inertia::render('Dashboard', ['counts' => $counts]);
 }
 
-    // -----------------------------------------------------------------------
-    // API (JWT)
-    // -----------------------------------------------------------------------
-
-    public function apiLogin(LoginRequest $request)
-    {
-        $credentials = $request->validated();
-        $user = User::where('email', $credentials['email'])->first();
-
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            \Illuminate\Support\Facades\Log::warning('Failed API login attempt', [
-                'email' => $credentials['email'],
-                'ip'    => request()->ip(),
-            ]);
-            return response()->json(['error' => 'Invalid credentials'], 401);
-        }
-
-        if (!$user->isActive()) {
-            return response()->json(['error' => 'Account has been deactivated'], 403);
-        }
-
-        $token        = JWTTokenService::generateToken($user);
-        $refreshToken = JWTTokenService::createRefreshToken($user);
-       $user->updateQuietly(['last_login_at' => now()]);
-
-        return response()->json([
-            'success'       => true,
-            'message'       => 'Login successful',
-            'token'         => $token,
-            'refresh_token' => $refreshToken,
-            'user' => [
-                'id'    => $user->id,
-                'name'  => $user->name,
-                'email' => $user->email,
-                'role'  => $user->role,
-            ],
-        ]);
-    }
-
-    public function refreshToken(Request $request)
-    {
-        try {
-            $token    = JWTTokenService::getTokenFromRequest($request);
-            $newToken = JWTTokenService::refreshToken($token);
-            return response()->json(['success' => true, 'token' => $newToken]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 401);
-        }
-    }
-
-    public function validatePassword(Request $request)
-    {
-        $password = $request->input('password');
-        if (!$password) {
-            return response()->json(['error' => 'Password is required'], 400);
-        }
-
-        $validation = PasswordValidator::validate($password);
-        $isCommon   = PasswordValidator::isCommonPassword($password);
-
-        return response()->json([
-            'valid'     => $validation['valid'] && !$isCommon,
-            'strength'  => $validation['strength'],
-            'level'     => $validation['level'],
-            'errors'    => $validation['errors'],
-            'is_common' => $isCommon,
-        ]);
-    }
-
     public function logout(Request $request)
     {
         $user = Auth::user();
@@ -282,25 +211,5 @@ public function dashboard()
         $request->session()->regenerateToken();
 
         return redirect('/login')->with('success', 'You have been logged out successfully.');
-    }
-
-    public function apiLogout(Request $request)
-    {
-        try {
-            $token   = JWTTokenService::getTokenFromRequest($request);
-            $decoded = JWTTokenService::verifyToken($token);
-            $user    = User::find($decoded->user_id);
-
-            if ($user) {
-                \Illuminate\Support\Facades\Log::info('API logout', [
-                    'user_id' => $user->id,
-                    'email'   => $user->email,
-                ]);
-            }
-
-            return response()->json(['success' => true, 'message' => 'Logged out successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 401);
-        }
     }
 }
