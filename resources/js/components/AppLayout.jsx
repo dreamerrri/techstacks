@@ -34,15 +34,17 @@ export default function AppLayout({ children, title }) {
         });
     }, [flash.success, flash.error, flash.warning, flash.info]);
 
+    useEffect(() => {
+        document.body.classList.toggle('overlay-minified', minified);
+    }, [minified]);
+
     const toggleMinified = () => {
         setMinified((v) => {
             const next = !v;
             if (next) {
                 sessionStorage.setItem('sidebar_collapsed', '1');
-                document.body.classList.add('overlay-minified');
             } else {
                 sessionStorage.removeItem('sidebar_collapsed');
-                document.body.classList.remove('overlay-minified');
             }
             return next;
         });
