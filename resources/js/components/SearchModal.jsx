@@ -122,7 +122,7 @@ export default function SearchModal({ open, onClose }) {
     if (!open) return null;
 
     return (
-        <div id="search-modal" className="overlay modal overlay-open:opacity-100 overlay-open:duration-300" role="dialog" tabIndex="-1" onClick={onClose}>
+        <div id="search-modal" className={`overlay modal overlay-open:opacity-100 overlay-open:duration-300 ${open ? 'open' : ''}`} role="dialog" tabIndex="-1" onClick={onClose}>
             <div className="modal-dialog overflow-x-hidden" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-content max-h-full">
                     <div className="modal-header block">

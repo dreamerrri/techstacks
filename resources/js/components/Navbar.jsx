@@ -34,6 +34,10 @@ export default function Navbar({ onOpenSidebar, onToggleMinified, breadcrumbs = 
                 setNotifOpen(false);
                 setAvatarOpen(false);
             }
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                setSearchOpen(true);
+            }
         };
         document.addEventListener('mousedown', onDocClick);
         document.addEventListener('keydown', onKey);
