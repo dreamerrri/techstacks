@@ -1,0 +1,358 @@
+/* ── Auth pages (login / register / reset / update-password)  display: flex; ── */
+
+body.auth-page  {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+   
+    margin: 0;
+    padding: 0;
+}
+
+/* ══════════════════════════════════════
+   Split Layout
+══════════════════════════════════════ */
+.auth-layout {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+/* ── Left gradient panel ── */
+.auth-image-panel {
+    position: relative;
+    width: 33.333%;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: none; /* hidden on mobile, shown on lg */
+    background: linear-gradient(to bottom right, #0a2018, #00896a);
+}
+
+/* Subtle dark overlay at bottom for depth */
+.auth-image-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.35), transparent 60%);
+}
+
+/* Centered content inside left panel */
+.auth-image-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    padding: 48px 40px;
+    color: white;
+}
+
+.auth-image-content h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.auth-image-content p {
+    font-size: 15px;
+    line-height: 1.7;
+    opacity: 0.9;
+}
+
+/* ── Right white form panel ── */
+.auth-form-panel {
+    flex: 1;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 40px 20px;
+}
+
+/* Inner form container */
+.auth-form-inner {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* ── Form header ── */
+.form-header {
+    margin-bottom: 32px;
+}
+
+.form-header h3 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 6px;
+}
+
+.form-header p {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* ── Form fields ── */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #374151;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    color: #1f2937;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #00c896;
+    box-shadow: 0 0 0 3px rgba(0, 200, 150, 0.1);
+}
+
+.form-group input::placeholder {
+    color: #9ca3af;
+}
+
+/* ── Remember / Forgot ── */
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    font-size: 14px;
+}
+
+.remember-forgot label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #6b7280;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.remember-forgot a {
+    color: #00c896;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.remember-forgot a:hover {
+    text-decoration: underline;
+}
+
+/* ── Submit buttons ── */
+.login-btn,
+.register-btn,
+.reset-btn {
+    width: 100%;
+    padding: 12px;
+    background: #00c896;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.login-btn:hover,
+.register-btn:hover,
+.reset-btn:hover {
+    background: #00b386;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 200, 150, 0.35);
+}
+
+.login-btn:active,
+.register-btn:active,
+.reset-btn:active {
+    transform: translateY(0);
+}
+
+.login-btn:disabled,
+.register-btn:disabled,
+.reset-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ── Alerts ── */
+.alert {
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.alert-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid #dc2626;
+}
+
+.alert-success {
+    background-color: #dcfce7;
+    color: #15803d;
+    border-left: 4px solid #22c55e;
+}
+
+/* ── Field error ── */
+.error-message {
+    color: #dc2626;
+    font-size: 13px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ── Footer link ── */
+.auth-footer-link {
+    text-align: center;
+    margin-top: 28px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.auth-footer-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-footer-link a:hover {
+    text-decoration: underline;
+}
+
+/* ── Password strength (register / reset / update-password) ── */
+.password-strength {
+    margin-top: 10px;
+    display: none;
+}
+
+.password-strength.is-visible {
+    display: block;
+}
+
+.strength-meter {
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0;
+    background: #dc2626;
+    border-radius: 99px;
+    transition: width 0.3s, background 0.3s;
+}
+
+.strength-bar.weak   { width: 25%;  background: #dc2626; }
+.strength-bar.fair   { width: 50%;  background: #f59e0b; }
+.strength-bar.good   { width: 75%;  background: #3b82f6; }
+.strength-bar.strong { width: 100%; background: #00c896; }
+
+.strength-text {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.strength-text.weak   { color: #dc2626; }
+.strength-text.fair   { color: #f59e0b; }
+.strength-text.good   { color: #3b82f6; }
+.strength-text.strong { color: #00c896; }
+
+.password-requirements {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #6b7280;
+    display: none;
+}
+
+.password-requirements.is-visible {
+    display: block;
+}
+
+.requirement {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.requirement i {
+    color: #9ca3af;
+    width: 16px;
+    text-align: center;
+}
+
+.requirement.met {
+    color: #15803d;
+}
+
+.requirement.met i {
+    color: #22c55e;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ══════════════════════════════════════
+   Responsive
+══════════════════════════════════════ */
+
+/* Show left panel on large screens */
+@media (min-width: 1024px) {
+    .auth-image-panel {
+        display: block;
+    }
+}
+
+/* Mobile: allow scroll, full width form */
+@media (max-width: 1023px) {
+    body.auth-page {
+        height: auto;
+        overflow: auto;
+    }
+
+    .auth-form-panel {
+        padding: 32px 16px;
+        min-height: 100vh;
+    }
+
+    .auth-form-inner {
+        max-width: min(400px, 100%);
+    }
+}

@@ -33,6 +33,8 @@ class FinancialRequest extends Model
         'approved_at' => 'datetime',
     ];
 
+    protected $appends = ['remaining_balance', 'payment_progress'];
+
     /**
      * Relationship: belongs to employee
      */

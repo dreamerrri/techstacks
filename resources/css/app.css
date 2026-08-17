@@ -7,6 +7,7 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../**/*.jsx';
 @source '../../node_modules/flyonui/flyonui.js';
 
 @theme {
@@ -17,7 +18,12 @@
 
 
 
-
+@layer base {
+    :root {
+        --sidebar-w: 15rem;
+        --sidebar-w-mini: 4.25rem;
+    }
+}
 /* ── Components ── */
 @import './components/notifications.css';
 @import './components/avatar.css';
@@ -26,5 +32,8 @@
 
 /* ── Utilities ── */
 @import './utilities/helpers.css';
+
+/* ── Auth pages (login/register/reset/update-password) ── */
+@import './auth.css';
 
 

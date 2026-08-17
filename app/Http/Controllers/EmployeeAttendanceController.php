@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Inertia\Inertia;
 
 class EmployeeAttendanceController extends Controller
 {
@@ -56,14 +57,14 @@ class EmployeeAttendanceController extends Controller
             ->orderBy('date', 'desc')
             ->get();
 
-        return view('employee-attendance.index', compact(
-            'employee',
-            'currentPeriod',
-            'attendances',
-            'totalHours',
-            'totalDays',
-            'recentAttendances'
-        ));
+        return Inertia::render('EmployeeAttendance/Index', [
+            'employee'          => $employee,
+            'currentPeriod'     => $currentPeriod,
+            'attendances'       => $attendances,
+            'totalHours'        => $totalHours,
+            'totalDays'         => $totalDays,
+            'recentAttendances' => $recentAttendances,
+        ]);
     }
 
     /**
@@ -91,23 +92,24 @@ class EmployeeAttendanceController extends Controller
                 ->first();
         }
 
-        return view('employee-attendance.create', compact('employee', 'todayAttendance'));
+        return Inertia::render('EmployeeAttendance/Create', [
+            'employee'         => $employee,
+            'todayAttendance'  => $todayAttendance,
+            'isNew'            => $request->has('new') && $request->get('new') === 'true',
+        ]);
     }
 
     /**
      * POST /employee-attendance
      * Save attendance record
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         $user = Auth::user();
         $employee = $user->employee;
 
         if (!$employee) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee record found for this user.',
-            ], 403);
+            return back()->with('error', 'No employee record found for this user.');
         }
 
         $validated = $request->validate([
@@ -171,10 +173,7 @@ class EmployeeAttendanceController extends Controller
             // Prevent employees from changing time_out if already clocked out
             if ($existingAttendance->time_out && !$user->isAdmin() && !$user->isHR()) {
                 if ($validated['time_out'] && $validated['time_out'] !== $existingAttendance->time_out) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'You cannot change your clock out time after clocking out. Contact HR/Admin for assistance.',
-                    ], 403);
+                    return back()->with('error', 'You cannot change your clock out time after clocking out. Contact HR/Admin for assistance.');
                 }
             }
 
@@ -208,28 +207,21 @@ class EmployeeAttendanceController extends Controller
             $message = 'Attendance recorded successfully. Auto clock-out applied (exceeded 9 hours).';
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'attendance' => $attendance,
-            'auto_clock_out_applied' => $autoClockOutApplied,
-        ]);
+        return redirect()->route('employee-attendance.index')
+            ->with('success', $message);
     }
 
     /**
      * PUT /employee-attendance/{attendance}
      * Update attendance record (admin/HR only)
      */
-    public function update(Request $request, Attendance $attendance): JsonResponse
+    public function update(Request $request, Attendance $attendance)
     {
         $user = Auth::user();
 
         // Only admin and HR can update attendance records
         if (!$user->isAdmin() && !$user->isHR()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Only administrators and HR can update attendance records.',
-            ], 403);
+            return back()->with('error', 'Only administrators and HR can update attendance records.');
         }
 
         // Log incoming request for debugging
@@ -251,10 +243,7 @@ class EmployeeAttendanceController extends Controller
                 Carbon::createFromFormat('H:i', $timeIn);
                 $validated['time_in'] = $timeIn;
             } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'The time in field must match the format H:i.',
-                ], 422);
+                return back()->with('error', 'The time in field must match the format H:i.');
             }
         } else {
             $validated['time_in'] = null;
@@ -267,10 +256,7 @@ class EmployeeAttendanceController extends Controller
                 Carbon::createFromFormat('H:i', $timeOut);
                 $validated['time_out'] = $timeOut;
             } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'The time out field must match the format H:i.',
-                ], 422);
+                return back()->with('error', 'The time out field must match the format H:i.');
             }
         } else {
             $validated['time_out'] = null;
@@ -336,36 +322,25 @@ class EmployeeAttendanceController extends Controller
             $message = 'Attendance updated successfully. Auto clock-out applied (exceeded 9 hours).';
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'attendance' => $attendance,
-            'auto_clock_out_applied' => $autoClockOutApplied,
-        ]);
+        return back()->with('success', $message);
     }
 
     /**
      * DELETE /employee-attendance/{attendance}
      * Delete attendance record (only admin/HR)
      */
-    public function destroy(Attendance $attendance): JsonResponse
+    public function destroy(Attendance $attendance)
     {
         $user = Auth::user();
 
         // Only admin and HR can delete attendance records
         if (!$user->isAdmin() && !$user->isHR()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Only administrators and HR can delete attendance records.',
-            ], 403);
+            return back()->with('error', 'Only administrators and HR can delete attendance records.');
         }
 
         $attendance->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Attendance deleted successfully.',
-        ]);
+        return back()->with('success', 'Attendance deleted successfully.');
     }
 
     /**
@@ -462,13 +437,13 @@ class EmployeeAttendanceController extends Controller
             ->orderBy('date', 'desc')
             ->get();
 
-        return view('employee-attendance.show-employee', compact(
-            'employee',
-            'currentPeriod',
-            'attendances',
-            'totalHours',
-            'totalDays',
-            'recentAttendances'
-        ));
+        return Inertia::render('EmployeeAttendance/ShowEmployee', [
+            'employee'          => $employee,
+            'currentPeriod'     => $currentPeriod,
+            'attendances'       => $attendances,
+            'totalHours'        => $totalHours,
+            'totalDays'         => $totalDays,
+            'recentAttendances' => $recentAttendances,
+        ]);
     }
 }

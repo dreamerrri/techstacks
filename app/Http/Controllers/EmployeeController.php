@@ -7,13 +7,14 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 use App\Traits\LogsAudit;
 
 class EmployeeController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Employee::active();
+        $query = Employee::active()->with('user');
 
         // Search
         if ($request->filled('search')) {
@@ -45,14 +46,24 @@ class EmployeeController extends Controller
         $sortCol = isset($allowedSorts[$sortBy]) ? $allowedSorts[$sortBy] : 'last_name';
 
         $employees   = $query->orderBy($sortCol, $sortDir)->paginate(15)->withQueryString();
-        $departments = Employee::active()->distinct()->pluck('department');
+        $departments = Employee::active()->distinct()->orderBy('department')->pluck('department')->values();
 
-        return view('employees.index', compact('employees', 'departments'));
+        return Inertia::render('Employees/Index', [
+            'employees'   => $employees,
+            'departments' => $departments,
+            'filters'     => $request->only(['search', 'department', 'status', 'sort', 'direction']),
+            'stats'       => [
+                'total'        => $employees->total(),
+                'regular'      => Employee::active()->where('employment_status', 'Regular')->count(),
+                'probationary' => Employee::active()->where('employment_status', 'Probationary')->count(),
+                'archived'     => Employee::archived()->count(),
+            ],
+        ]);
     }
 
     public function create()
     {
-        return view('employees.create');
+        return Inertia::render('Employees/Create');
     }
 
     public function store(Request $request)
@@ -89,12 +100,17 @@ class EmployeeController extends Controller
 
     public function show(Employee $employee)
     {
-        return view('employees.show', compact('employee'));
+        $employee->load(['user', 'activeAllowances', 'activeBenefits']);
+
+        return Inertia::render('Employees/Show', [
+            'employee'     => $employee,
+            'payrollInput' => $employee->latestPayrollInput(),
+        ]);
     }
 
     public function edit(Employee $employee)
     {
-        return view('employees.edit', compact('employee'));
+        return Inertia::render('Employees/Edit', ['employee' => $employee]);
     }
 
     public function update(Request $request, Employee $employee)
@@ -130,8 +146,8 @@ class EmployeeController extends Controller
 
     public function archived()
     {
-        $employees = Employee::archived()->orderBy('last_name')->paginate(15);
-        return view('employees.archived', compact('employees'));
+        $employees = Employee::archived()->with('user')->orderBy('last_name')->paginate(15);
+        return Inertia::render('Employees/Archived', ['employees' => $employees]);
     }
 
     public function restore(Employee $employee)

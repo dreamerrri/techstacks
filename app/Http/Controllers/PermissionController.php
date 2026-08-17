@@ -5,18 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\Traits\LogsAudit;
+use Inertia\Inertia;
 
 class PermissionController extends Controller
 {
     public function index()
     {
         $permissions = Permission::with('roles')->get()->groupBy('module');
-        return view('permissions.index', compact('permissions'));
+        return Inertia::render('Permissions/Index', compact('permissions'));
     }
 
     public function create()
     {
-        return view('permissions.create');
+        return Inertia::render('Permissions/Create');
     }
 
     public function store(Request $request)
@@ -46,12 +47,12 @@ class PermissionController extends Controller
     public function show(Permission $permission)
     {
         $permission->load('roles');
-        return view('permissions.show', compact('permission'));
+        return Inertia::render('Permissions/Show', compact('permission'));
     }
 
     public function edit(Permission $permission)
     {
-        return view('permissions.edit', compact('permission'));
+        return Inertia::render('Permissions/Edit', compact('permission'));
     }
 
     public function update(Request $request, Permission $permission)

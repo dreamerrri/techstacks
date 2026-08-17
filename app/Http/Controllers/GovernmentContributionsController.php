@@ -7,6 +7,7 @@ use App\Services\SssContributionService;
 use App\Services\PhilHealthContributionService;
 use App\Services\PagIbigContributionService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use App\Traits\LogsAudit;
 class GovernmentContributionsController extends Controller
 {
@@ -51,18 +52,28 @@ if ($request->filled('status')) {
         // Calculate contributions for each employee
         $employees->getCollection()->transform(function ($employee) {
             $sssContribution = $this->sssService->calculate($employee->basic_salary);
-            $employee->sss_employee_share = $employee->custom_sss_contribution ?? $sssContribution['employee_share'];
-
             $philHealthContribution = $this->philHealthService->calculate($employee->basic_salary);
-            $employee->philhealth_employee_share = $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'];
-
             $pagIbigContribution = $this->pagIbigService->calculate($employee->basic_salary);
-            $employee->pagibig_employee_share = $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'];
+
+            $employee->contribution = [
+                'sss_salary_credit'    => $sssContribution['salary_credit'],
+                'sss_employee_share'   => $employee->custom_sss_contribution ?? $sssContribution['employee_share'],
+                'philhealth_salary_basis'  => $philHealthContribution['salary_basis'],
+                'philhealth_employee_rate' => $philHealthContribution['employee_rate'],
+                'philhealth_employee_share' => $employee->custom_philhealth_contribution ?? $philHealthContribution['employee_share'],
+                'pagibig_salary'       => $pagIbigContribution['salary'],
+                'pagibig_employee_rate' => $pagIbigContribution['employee_rate'],
+                'pagibig_employee_share' => $employee->custom_pagibig_contribution ?? $pagIbigContribution['employee_share'],
+            ];
 
             return $employee;
         });
 
-        return view('government-contributions.index', compact('employees', 'departments'));
+        return Inertia::render('GovernmentContributions/Index', [
+            'employees' => $employees,
+            'departments' => $departments,
+            'filters' => $request->only(['search', 'department', 'status']),
+        ]);
     }
 
     public function show(Employee $employee)
@@ -94,41 +105,28 @@ if ($request->filled('status')) {
             $pagIbigContribution['total'] = $pagIbigEmployeeShare;
         }
 
-        return view('government-contributions.show', compact(
-            'employee',
-            'sssContribution',
-            'philHealthContribution',
-            'pagIbigContribution',
-            'sssEmployeeShare',
-            'philHealthEmployeeShare',
-            'pagIbigEmployeeShare'
-        ));
+        return Inertia::render('GovernmentContributions/Show', [
+            'employee' => $employee,
+            'sssContribution' => $sssContribution,
+            'philHealthContribution' => $philHealthContribution,
+            'pagIbigContribution' => $pagIbigContribution,
+        ]);
     }
 
     public function update(Request $request, $employeeId)
     {
         $employee = Employee::where('employee_id', $employeeId)->firstOrFail();
 
-        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+        $validated = $request->validate([
             'custom_sss_contribution' => 'nullable|numeric|min:0',
             'custom_philhealth_contribution' => 'nullable|numeric|min:0',
             'custom_pagibig_contribution' => 'nullable|numeric|min:0',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        $employee->update($validated);
+        LogsAudit::logAction('update', 'government_contributions', "Updated contributions for employee {$employee->employee_id}");
 
-        $employee->update($validator->validated());
-LogsAudit::logAction('update', 'government_contributions', "Updated contributions for employee {$employee->employee_id}"); 
-        return response()->json([
-            'success' => true,
-            'message' => 'Custom contributions updated successfully.'
-        ]);
+        return back()->with('success', 'Custom contributions updated successfully.');
     }
 
     public function getAllEmployeesWithContributions(Request $request)

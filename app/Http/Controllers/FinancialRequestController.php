@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\FinancialRequest;
 use App\Models\Employee;
 use App\Services\NotificationService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class FinancialRequestController extends Controller
 {
@@ -55,12 +55,12 @@ class FinancialRequestController extends Controller
             $pendingCount = FinancialRequest::pending()->count();
         }
 
-        return view('financial-requests.index', compact(
-            'financialRequests',
-            'pendingCount',
-            'status',
-            'type'
-        ));
+        return Inertia::render('FinancialRequests/Index', [
+            'financialRequests' => $financialRequests,
+            'pendingCount' => $pendingCount,
+            'status' => $status,
+            'type' => $type,
+        ]);
     }
 
     /**
@@ -76,23 +76,22 @@ class FinancialRequestController extends Controller
             abort(403, 'No employee record found for this user.');
         }
 
-        return view('financial-requests.create', compact('employee'));
+        return Inertia::render('FinancialRequests/Create', [
+            'employee' => $employee,
+        ]);
     }
 
     /**
      * POST /financial-requests
      * Store new financial request
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         $user = Auth::user();
         $employee = $user->employee;
 
         if (!$employee) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee record found for this user.',
-            ], 403);
+            return back()->with('error', 'No employee record found for this user.');
         }
 
         $validated = $request->validate([
@@ -110,19 +109,13 @@ class FinancialRequestController extends Controller
         } else {
             // Reimbursement amount must be provided and validated
             if (empty($validated['amount'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Amount is required for reimbursement requests.',
-                ], 422);
+                return back()->with('error', 'Amount is required for reimbursement requests.');
             }
-            
+
             // Reimbursement limited to ₱15,000
             $maxAmount = 15000;
             if ($validated['amount'] > $maxAmount) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Amount cannot exceed ₱" . number_format($maxAmount, 2) . " (₱15,000 maximum).",
-                ], 422);
+                return back()->with('error', "Amount cannot exceed ₱" . number_format($maxAmount, 2) . " (₱15,000 maximum).");
             }
         }
 
@@ -146,11 +139,7 @@ class FinancialRequestController extends Controller
         // Notify HR/Admin about the new financial request
         NotificationService::notifyFinancialRequestSubmitted($employee, $financialRequest);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Financial request submitted successfully.',
-            'financial_request' => $financialRequest,
-        ]);
+        return redirect()->route('financial-requests.index')->with('success', 'Financial request submitted successfully.');
     }
 
     /**
@@ -178,7 +167,9 @@ class FinancialRequestController extends Controller
 
         $financialRequest->load(['employee', 'approvedBy', 'cashAdvancePayments.payrollPeriod']);
 
-        return view('financial-requests.show', compact('financialRequest'));
+        return Inertia::render('FinancialRequests/Show', [
+            'financialRequest' => $financialRequest,
+        ]);
     }
 
     /**
@@ -210,37 +201,30 @@ class FinancialRequestController extends Controller
             abort(403, 'You can only edit pending requests.');
         }
 
-        return view('financial-requests.edit', compact('financialRequest'));
+        return Inertia::render('FinancialRequests/Edit', [
+            'financialRequest' => $financialRequest,
+        ]);
     }
 
     /**
      * PUT/PATCH /financial-requests/{financialRequest}
      * Update financial request
      */
-    public function update(Request $request, FinancialRequest $financialRequest): JsonResponse
+    public function update(Request $request, FinancialRequest $financialRequest)
     {
         $user = Auth::user();
         $employee = $user->employee;
 
         if (!$employee) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee record found for this user.',
-            ], 403);
+            return back()->with('error', 'No employee record found for this user.');
         }
 
         // Employees can only update their own pending requests
         if ($financialRequest->employee_id !== $employee->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You can only update your own financial requests.',
-            ], 403);
+            return back()->with('error', 'You can only update your own financial requests.');
         }
         if (!$financialRequest->canBeCancelled()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You can only update pending requests.',
-            ], 403);
+            return back()->with('error', 'You can only update pending requests.');
         }
 
         $validated = $request->validate([
@@ -257,19 +241,13 @@ class FinancialRequestController extends Controller
         } else {
             // Reimbursement amount must be provided and validated
             if (empty($validated['amount'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Amount is required for reimbursement requests.',
-                ], 422);
+                return back()->with('error', 'Amount is required for reimbursement requests.');
             }
-            
+
             // Reimbursement limited to ₱15,000
             $maxAmount = 15000;
             if ($validated['amount'] > $maxAmount) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Amount cannot exceed ₱" . number_format($maxAmount, 2) . " (₱15,000 maximum).",
-                ], 422);
+                return back()->with('error', "Amount cannot exceed ₱" . number_format($maxAmount, 2) . " (₱15,000 maximum).");
             }
         }
 
@@ -284,71 +262,49 @@ class FinancialRequestController extends Controller
 
         $financialRequest->update($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Financial request updated successfully.',
-            'financial_request' => $financialRequest,
-        ]);
+        return redirect()->route('financial-requests.show', $financialRequest)->with('success', 'Financial request updated successfully.');
     }
 
     /**
      * DELETE /financial-requests/{financialRequest}
      * Cancel financial request (only pending requests)
      */
-    public function destroy(FinancialRequest $financialRequest): JsonResponse
+    public function destroy(FinancialRequest $financialRequest)
     {
         $user = Auth::user();
         $employee = $user->employee;
 
         if (!$employee) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee record found for this user.',
-            ], 403);
+            return back()->with('error', 'No employee record found for this user.');
         }
 
         // Employees can only cancel their own pending requests
         if ($financialRequest->employee_id !== $employee->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You can only cancel your own financial requests.',
-            ], 403);
+            return back()->with('error', 'You can only cancel your own financial requests.');
         }
         if (!$financialRequest->canBeCancelled()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You can only cancel pending requests.',
-            ], 403);
+            return back()->with('error', 'You can only cancel pending requests.');
         }
 
         $financialRequest->update(['status' => 'cancelled']);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Financial request cancelled successfully.',
-        ]);
+        return redirect()->route('financial-requests.index')->with('success', 'Financial request cancelled successfully.');
     }
 
     /**
      * POST /financial-requests/{financialRequest}/approve
      * Approve financial request (HR/Admin only)
      */
-    public function approve(Request $request, FinancialRequest $financialRequest): JsonResponse
+    public function approve(Request $request, FinancialRequest $financialRequest)
     {
         $user = Auth::user();
 
         if (!$user->isAdmin() && !$user->isHR()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Only HR and Admin can approve financial requests.',
-            ], 403);
+            return back()->with('error', 'Only HR and Admin can approve financial requests.');
         }
 
         if (!$financialRequest->canBeApproved()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'This request cannot be approved.',
-            ], 403);
+            return back()->with('error', 'This request cannot be approved.');
         }
 
         $financialRequest->update([
@@ -360,33 +316,23 @@ class FinancialRequestController extends Controller
         // Notify employee about approval
         NotificationService::notifyFinancialRequestApproved($financialRequest->employee, $financialRequest);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Financial request approved successfully.',
-            'financial_request' => $financialRequest,
-        ]);
+        return back()->with('success', 'Financial request approved successfully.');
     }
 
     /**
      * POST /financial-requests/{financialRequest}/reject
      * Reject financial request (HR/Admin only)
      */
-    public function reject(Request $request, FinancialRequest $financialRequest): JsonResponse
+    public function reject(Request $request, FinancialRequest $financialRequest)
     {
         $user = Auth::user();
 
         if (!$user->isAdmin() && !$user->isHR()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Only HR and Admin can reject financial requests.',
-            ], 403);
+            return back()->with('error', 'Only HR and Admin can reject financial requests.');
         }
 
         if (!$financialRequest->canBeRejected()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'This request cannot be rejected.',
-            ], 403);
+            return back()->with('error', 'This request cannot be rejected.');
         }
 
         $validated = $request->validate([
@@ -403,10 +349,6 @@ class FinancialRequestController extends Controller
         // Notify employee about rejection
         NotificationService::notifyFinancialRequestRejected($financialRequest->employee, $financialRequest);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Financial request rejected successfully.',
-            'financial_request' => $financialRequest,
-        ]);
+        return back()->with('success', 'Financial request rejected successfully.');
     }
 }

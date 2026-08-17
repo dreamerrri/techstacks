@@ -7,6 +7,7 @@ use App\Models\PayrollPeriod;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use App\Traits\LogsAudit;
 class PayrollPeriodController extends Controller
 {
@@ -16,7 +17,7 @@ class PayrollPeriodController extends Controller
      */
     public function create()
     {
-        return view('payroll-periods.create');
+        return Inertia::render('PayrollPeriods/Create');
     }
 
     /**
@@ -133,30 +134,20 @@ public function store(Request $request)
      * POST /payroll-periods/{id}/finalize
      * Finalize a payroll period (change status from draft to finalized).
      */
-    public function finalize(PayrollPeriod $payrollPeriod): JsonResponse
+    public function finalize(PayrollPeriod $payrollPeriod)
     {
         if ($payrollPeriod->isFinalized()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Payroll period is already finalized.',
-            ], 422);
+            return back()->with('error', 'Payroll period is already finalized.');
         }
 
         if ($payrollPeriod->payrollInputs->count() === 0) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Cannot finalize a payroll period with no encoded employees.',
-            ], 422);
+            return back()->with('error', 'Cannot finalize a payroll period with no encoded employees.');
         }
 
         $payrollPeriod->update(['status' => 'finalized']);
         LogsAudit::logAction('finalize', 'payroll_period', "Finalized payroll period ID {$payrollPeriod->id}");
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Payroll period finalized successfully.',
-            'payroll_period' => $payrollPeriod,
-        ]);
+        return back()->with('success', 'Payroll period finalized successfully.');
     }
 
 
@@ -164,19 +155,16 @@ public function store(Request $request)
  * DELETE /payroll-periods/{id}
  * Super admin only — hard deletes the period and cascades to inputs.
  */
-public function archive(PayrollPeriod $payrollPeriod): JsonResponse
+public function archive(PayrollPeriod $payrollPeriod)
 {
     if (!Auth::user()->isAdmin()) {
-        return response()->json(['message' => 'Unauthorized.'], 403);
+        return back()->with('error', 'Unauthorized.');
     }
 
     $payrollPeriod->update(['status' => 'archived']);
     LogsAudit::logAction('archive', 'payroll_period', "Archived payroll period ID {$payrollPeriod->id}");
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Payroll period archived.',
-    ]);
+    return back()->with('success', 'Payroll period archived.');
 }
 
 public function archived()
@@ -186,21 +174,29 @@ public function archived()
         ->orderByDesc('cutoff_start')
         ->get();
 
-return view('manual-payroll-attendance.archived', compact('periods'));
+    return Inertia::render('ManualPayrollAttendance/Archived', [
+        'periods' => $periods->map(fn($period) => [
+            'id'            => $period->id,
+            'cutoff_start'  => $period->cutoff_start?->toDateString(),
+            'cutoff_end'    => $period->cutoff_end?->toDateString(),
+            'payroll_date'  => $period->payroll_date?->toDateString(),
+            'period_label'  => $period->period_label,
+            'created_by'    => $period->createdBy?->name,
+            'encoded_count' => $period->payrollInputs ? $period->payrollInputs->count() : 0,
+            'total_gross'   => $period->total_gross_pay,
+        ]),
+    ]);
 }
 
-public function restore(PayrollPeriod $payrollPeriod): JsonResponse
+public function restore(PayrollPeriod $payrollPeriod)
 {
     if (!Auth::user()->isAdmin()) {
-        return response()->json(['message' => 'Unauthorized.'], 403);
+        return back()->with('error', 'Unauthorized.');
     }
 
     $payrollPeriod->update(['status' => 'draft']);
     LogsAudit::logAction('restore', 'payroll_period', "Restored payroll period ID {$payrollPeriod->id}");
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Payroll period restored.',
-    ]);
+    return back()->with('success', 'Payroll period restored.');
 }
 }
