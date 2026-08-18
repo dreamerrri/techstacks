@@ -122,62 +122,70 @@ export default function SearchModal({ open, onClose }) {
     if (!open) return null;
 
     return (
-        <div id="search-modal" className={`overlay modal overlay-open:opacity-100 overlay-open:duration-300 ${open ? 'open' : ''}`} role="dialog" tabIndex="-1" onClick={onClose}>
-            <div className="modal-dialog overflow-x-hidden" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-content max-h-full">
-                    <div className="modal-header block">
-                        <div className="relative">
-                            <input
-                                ref={inputRef}
-                                type="text"
-                                className="input ps-8"
-                                placeholder="Search or type a command"
-                                value={query}
-                                onChange={(e) => {
-                                    setQuery(e.target.value);
-                                    setActiveIndex(0);
-                                }}
-                            />
-                            <Icon name="tabler--search" className="text-base-content absolute start-3 top-1/2 size-4 shrink-0 -translate-y-1/2" />
+        <>
+            <div
+                id="search-modal-backdrop"
+                className={`overlay-backdrop fixed inset-0 z-[79] bg-base-300/60 backdrop-blur-sm transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                onClick={onClose}
+                aria-hidden="true"
+            />
+            <div id="search-modal" className={`overlay modal overlay-open:opacity-100 overlay-open:duration-300 ${open ? 'open' : ''}`} role="dialog" tabIndex="-1">
+                <div className="modal-dialog overflow-x-hidden" onClick={(e) => e.stopPropagation()}>
+                    <div className="modal-content max-h-full">
+                        <div className="modal-header block">
+                            <div className="relative">
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    className="input ps-8"
+                                    placeholder="Search or type a command"
+                                    value={query}
+                                    onChange={(e) => {
+                                        setQuery(e.target.value);
+                                        setActiveIndex(0);
+                                    }}
+                                />
+                                <Icon name="tabler--search" className="text-base-content absolute start-3 top-1/2 size-4 shrink-0 -translate-y-1/2" />
+                            </div>
                         </div>
-                    </div>
-                    <div className="modal-body">
-                        <div className="overflow-y-auto max-h-72 space-y-0.5">
-                            {flatResults.map((item, index) => (
-                                <div key={item.group + '-' + item.url}>
-                                    {(index === 0 || flatResults[index - 1].group !== item.group) && (
-                                        <div className="px-2 pt-2 pb-1 text-xs font-semibold uppercase text-subtle">{item.group}</div>
-                                    )}
-                                    <button
-                                        type="button"
-                                        className={`flex w-full items-center gap-2 rounded-lg px-2 py-2 text-start text-sm ${index === activeIndex ? 'bg-base-200' : 'hover:bg-base-200'}`}
-                                        onClick={() => select(index)}
-                                        onMouseEnter={() => setActiveIndex(index)}
-                                    >
-                                        <Icon name={item.icon} className="size-4 shrink-0 text-subtle" />
-                                        <span className="min-w-0 flex-1">
-                                            <span className="block truncate">{item.title}</span>
-                                            {item.subtitle && <span className="block truncate text-xs text-subtle">{item.subtitle}</span>}
-                                        </span>
-                                    </button>
-                                </div>
-                            ))}
+                        <div className="modal-body">
+                            <div className="overflow-y-auto max-h-72 space-y-0.5">
+                                {flatResults.map((item, index) => (
+                                    <div key={item.group + '-' + item.url}>
+                                        {(index === 0 || flatResults[index - 1].group !== item.group) && (
+                                            <div className="px-2 pt-2 pb-1 text-xs font-semibold uppercase text-subtle">{item.group}</div>
+                                        )}
+                                        <button
+                                            type="button"
+                                            className={`flex w-full items-center gap-2 rounded-lg px-2 py-2 text-start text-sm ${index === activeIndex ? 'bg-base-200' : 'hover:bg-base-200'}`}
+                                            onClick={() => select(index)}
+                                            onMouseEnter={() => setActiveIndex(index)}
+                                        >
+                                            <Icon name={item.icon} className="size-4 shrink-0 text-subtle" />
+                                            <span className="min-w-0 flex-1">
+                                                <span className="block truncate">{item.title}</span>
+                                                {item.subtitle && <span className="block truncate text-xs text-subtle">{item.subtitle}</span>}
+                                            </span>
+                                        </button>
+                                    </div>
+                                ))}
 
-                            {loading && (
-                                <div className="flex items-center justify-center py-4">
-                                    <span className="loading loading-spinner loading-sm text-subtle"></span>
-                                </div>
-                            )}
+                                {loading && (
+                                    <div className="flex items-center justify-center py-4">
+                                        <span className="loading loading-spinner loading-sm text-subtle"></span>
+                                    </div>
+                                )}
 
-                            {!loading && query.trim().length > 0 && flatResults.length === 0 && (
-                                <div className="px-2 py-6 text-center text-sm text-subtle">
-                                    No results for &quot;{query}&quot;
-                                </div>
-                            )}
+                                {!loading && query.trim().length > 0 && flatResults.length === 0 && (
+                                    <div className="px-2 py-6 text-center text-sm text-subtle">
+                                        No results for &quot;{query}&quot;
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
