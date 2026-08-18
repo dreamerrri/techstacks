@@ -53,6 +53,7 @@ export default function ProfileShow({ employee }) {
     const isHR = user?.role === 'hr';
     const roleClass = isAdmin ? 'badge-soft badge-error' : isHR ? 'badge-soft badge-info' : 'badge-soft badge-success';
     const [activeTab, setActiveTab] = useState('account');
+    const [selectedTheme, setSelectedTheme] = useState(user?.theme || 'light');
 
     const personal = useForm({
         first_name: employee?.first_name || '',
@@ -87,9 +88,14 @@ export default function ProfileShow({ employee }) {
     ];
 
     const selectTheme = (theme) => {
+        setSelectedTheme(theme);
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
-        router.patch('/settings/theme', { theme }, { preserveScroll: true });
+        fetch('/settings/theme', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ theme }),
+        }).catch(() => {});
     };
 
     const fmt = (value, options = {}) => {
@@ -320,7 +326,7 @@ export default function ProfileShow({ employee }) {
                                                         name="theme"
                                                         value={theme}
                                                         className="theme-controller radio radio-sm"
-                                                        checked={user?.theme === theme}
+                                                        checked={selectedTheme === theme}
                                                         onChange={() => selectTheme(theme)}
                                                     />
                                                     <span className="capitalize text-sm">{theme}</span>

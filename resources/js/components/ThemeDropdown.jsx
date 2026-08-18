@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { router, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import Icon from './Icon';
 
 const THEMES = [
@@ -12,12 +12,18 @@ export default function ThemeDropdown({ label = 'Theme' }) {
     const { props } = usePage();
     const currentTheme = props.auth?.user?.theme || 'light';
     const [open, setOpen] = useState(false);
+    const [selectedTheme, setSelectedTheme] = useState(currentTheme);
 
     const selectTheme = (theme) => {
+        setSelectedTheme(theme);
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
         setOpen(false);
-        router.patch('/settings/theme', { theme }, { preserveScroll: true });
+        fetch('/settings/theme', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ theme }),
+        }).catch(() => {});
     };
 
     return (
@@ -49,7 +55,7 @@ export default function ThemeDropdown({ label = 'Theme' }) {
                                         name="theme-picker-react"
                                         value={theme}
                                         className="theme-picker-input sr-only"
-                                        checked={currentTheme === theme}
+                                        checked={selectedTheme === theme}
                                         onChange={() => selectTheme(theme)}
                                     />
                                     <span className="icon-[tabler--check] size-4 shrink-0 opacity-0 transition-opacity group-has-checked:opacity-100"></span>
