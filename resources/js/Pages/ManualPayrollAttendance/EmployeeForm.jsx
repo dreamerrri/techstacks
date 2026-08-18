@@ -351,7 +351,7 @@ export default function ManualPayrollEmployeeForm({
 
                             <div className="flex gap-3">
                                 <button type="submit" disabled={processing} className="btn btn-primary">
-                                    <Icon name="tabler--floppy-disk" className="size-4" /> {isEdit ? 'Update' : 'Save'} Attendance
+                                    <Icon name="tabler--device-floppy" className="size-4" /> {isEdit ? 'Update' : 'Save'} Attendance
                                 </button>
                                 <button type="button" onClick={runPreview} disabled={previewing} className="btn btn-soft btn-neutral">
                                     <Icon name="tabler--calculator" className="size-4" /> Preview

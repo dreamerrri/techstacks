@@ -88,7 +88,7 @@ export default function FinancialRequestsShow({ financialRequest }) {
                 </div>
 
                 <div className="inline-block font-semibold text-xs text-info bg-info/10 rounded-lg px-3 py-1.5 mb-4">
-                    <Icon name="ph--cash-fill" className="size-4 inline" /> Request Details
+                    <Icon name="ph--cash-register-fill" className="size-4 inline" /> Request Details
                 </div>
                 <h2 className="text-lg font-bold text-base-content mb-1">Financial Request #{financialRequest.id}</h2>
                 <p className="text-subtle text-sm mb-6">{isCashAdvance ? 'Cash Advance' : 'Reimbursement'} Request</p>

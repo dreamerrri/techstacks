@@ -37,7 +37,7 @@ export default function FinancialRequestsEdit({ financialRequest }) {
 
                 <div className="card bg-base-100 shadow-md p-6 max-w-3xl">
                     <div className="inline-block font-semibold text-xs text-info bg-info/10 rounded-lg px-3 py-1.5 mb-4">
-                        <Icon name="ph--cash-fill" className="size-4 inline" /> Edit Request
+                        <Icon name="ph--cash-register-fill" className="size-4 inline" /> Edit Request
                     </div>
                     <h2 className="text-lg font-bold text-base-content mb-1">Edit Financial Request #{financialRequest.id}</h2>
                     <p className="text-subtle text-sm mb-6">

@@ -56,7 +56,7 @@ export default function PermissionsShow({ permission }) {
 
                     <div>
                         <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
-                            <Icon name="tabler--user-tag" className="size-4 text-error inline" /> Roles with this Permission ({permission.roles?.length ?? 0})
+                            <Icon name="tabler--tag" className="size-4 text-error inline" /> Roles with this Permission ({permission.roles?.length ?? 0})
                         </h3>
                         {permission.roles?.length > 0 ? (
                             <div className="flex flex-col gap-2">

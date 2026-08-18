@@ -7,8 +7,8 @@
         "dev": "vite"
     },
     "devDependencies": {
+        "@iconify-json/ph": "^1.2.0",
         "@iconify-json/tabler": "^1.2.35",
-        "@iconify/json": "^2.2.490",
         "@iconify/tailwind4": "^1.2.3",
         "@tailwindcss/vite": "^4.0.0",
         "autoprefixer": "^10.5.0",
@@ -32,7 +32,6 @@
         "flyonui": "^2.4.1",
         "jquery": "^4.0.0",
         "latest": "^0.2.0",
-        "node": "^24.16.0",
         "notyf": "^3.10.0",
         "react": "^19.2.8",
         "react-dom": "^19.2.8",
