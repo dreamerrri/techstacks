@@ -12,6 +12,7 @@ use App\Services\PhilHealthContributionService;
 use App\Services\PagIbigContributionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PayrollController extends Controller
@@ -111,10 +112,33 @@ class PayrollController extends Controller
             $employees->setCollection($sortedItems->values());
         }
 
-        return view('payroll.index', compact(
-            'employees', 'departments', 'payrollData',
-            'isAdmin', 'isHR', 'payrollPeriods', 'selectedPeriod'
-        ));
+        $employees->load(['user']);
+
+        return Inertia::render('Payroll/Index', [
+            'employees'      => $employees,
+            'departments'    => $departments,
+            'payrollData'    => $payrollData,
+            'payrollPeriods' => $payrollPeriods->map(fn($p) => [
+                'id'           => $p->id,
+                'cutoff_start' => $p->cutoff_start?->format('M d, Y'),
+                'cutoff_end'   => $p->cutoff_end?->format('M d, Y'),
+                'status'       => $p->status,
+            ]),
+            'selectedPeriod' => $selectedPeriod ? [
+                'id'           => $selectedPeriod->id,
+                'cutoff_start' => $selectedPeriod->cutoff_start?->format('M d, Y'),
+                'cutoff_end'   => $selectedPeriod->cutoff_end?->format('M d, Y'),
+                'payroll_date' => $selectedPeriod->payroll_date?->format('M d, Y'),
+                'status'       => $selectedPeriod->status,
+            ] : null,
+            'filters'        => [
+                'search'      => $request->search,
+                'department'  => $request->department,
+                'period'      => $selectedPeriodId,
+                'sort'        => $sortBy,
+                'direction'   => $sortDir,
+            ],
+        ]);
     }
 
     /**
@@ -149,7 +173,23 @@ class PayrollController extends Controller
 
         $payrollData = $this->calculatePayroll($employee, $selectedPeriod);
 
-        return view('payroll.show', compact('employee', 'payrollData', 'isAdmin', 'isHR', 'selectedPeriod'));
+        $employee->load(['user']);
+
+        return Inertia::render('Payroll/Show', [
+            'employee'       => $employee,
+            'payrollData'    => $payrollData,
+            'selectedPeriod' => $selectedPeriod ? [
+                'id'           => $selectedPeriod->id,
+                'cutoff_start' => $selectedPeriod->cutoff_start?->format('M d, Y'),
+                'cutoff_end'   => $selectedPeriod->cutoff_end?->format('M d, Y'),
+                'payroll_date' => $selectedPeriod->payroll_date?->format('M d, Y'),
+                'status'       => $selectedPeriod->status,
+                'is_second_half' => $selectedPeriod->isSecondHalfOfMonth(),
+            ] : null,
+            'payslipUrl'     => $employee->id && ($payrollData['gross_pay'] ?? 0) > 0
+                ? '/payroll/' . $employee->id . '/payslip' . ($selectedPeriod ? '?payroll_period_id=' . $selectedPeriod->id : '')
+                : null,
+        ]);
     }
 
     /**

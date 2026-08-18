@@ -7,19 +7,20 @@ use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\LogsAudit;
+use Inertia\Inertia;
 
 class RoleController extends Controller
 {
     public function index()
     {
         $roles = Role::with('permissions')->withCount('users')->get();
-        return view('roles.index', compact('roles'));
+        return Inertia::render('Roles/Index', compact('roles'));
     }
 
     public function create()
     {
         $permissions = Permission::active()->get()->groupBy('module');
-        return view('roles.create', compact('permissions'));
+        return Inertia::render('Roles/Create', compact('permissions'));
     }
 
     public function store(Request $request)
@@ -54,14 +55,14 @@ class RoleController extends Controller
     {
         $role->load('permissions', 'users');
         $availableUsers = User::where('role', '!=', $role->slug)->get();
-        return view('roles.show', compact('role', 'availableUsers'));
+        return Inertia::render('Roles/Show', compact('role', 'availableUsers'));
     }
 
     public function edit(Role $role)
     {
         $role->load('permissions');
         $permissions = Permission::active()->get()->groupBy('module');
-        return view('roles.edit', compact('role', 'permissions'));
+        return Inertia::render('Roles/Edit', compact('role', 'permissions'));
     }
 
     public function update(Request $request, Role $role)

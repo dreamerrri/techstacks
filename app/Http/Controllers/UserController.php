@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use App\Traits\LogsAudit;
 class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::query();
+        $query = User::query()->with('employee');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -37,7 +38,16 @@ class UserController extends Controller
 
         $users = $query->paginate(15)->withQueryString();
 
-        return view('users.index', compact('users'));
+        return Inertia::render('Users/Index', [
+            'users'  => $users,
+            'filters'=> $request->only(['search', 'role', 'status']),
+            'stats'  => [
+                'total_users'  => User::count(),
+                'admin_users'  => User::where('role', 'admin')->count(),
+                'hr_users'     => User::where('role', 'hr')->count(),
+                'active_users' => User::where('is_active', true)->count(),
+            ],
+        ]);
     }
 
     public function toggleActive(Request $request, User $user)

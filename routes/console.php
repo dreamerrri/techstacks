@@ -3,10 +3,6 @@
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
-use Mailtrap\Helper\ResponseHelper;
-use Mailtrap\MailtrapClient;
-use Mailtrap\Mime\MailtrapEmail;
-use Symfony\Component\Mime\Address;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -14,25 +10,3 @@ Artisan::command('inspire', function () {
 
 // Schedule HR/Admin notification generation to run daily at 9 AM
 Schedule::command('notifications:generate-hr-admin')->dailyAt('09:00');
-
-# app/routes/console.php
-# php artisan send-mail
-
-
-Artisan::command('send-mail', function () {
-    $email = (new MailtrapEmail())
-        ->from(new Address('hello@example.com', 'Mailtrap Test'))
-        ->to(new Address('andrewrennn@gmail.com'))
-        ->subject('You are awesome!')
-        ->category('Integration Test')
-        ->text('Congrats for sending test email with Mailtrap!')
-    ;
-
-    $response = MailtrapClient::initSendingEmails(
-        apiKey: 'def6ba75748b1ce5971d2cd1fb543dd3s',
-        isSandbox: true,
-        inboxId: 3441100
-    )->send($email);
-
-    var_dump(ResponseHelper::toArray($response));
-})->purpose('Send Mail');

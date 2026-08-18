@@ -32,3 +32,50 @@
 .back-link:hover {
     transform: translateX(-4px);
 }
+
+/* ── Theme dropdown scrollbar ── */
+.theme-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-base-300, #d1d5db) transparent;
+}
+.theme-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+.theme-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.theme-scroll::-webkit-scrollbar-thumb {
+    background: var(--color-base-300, #d1d5db);
+    border-radius: 9999px;
+}
+
+/* ── Breadcrumb slide/fade animation ── */
+.breadcrumb-trail .breadcrumb-item {
+    opacity: 0;
+    transform: translateX(-8px);
+    animation: breadcrumb-slide-forward 0.3s ease forwards;
+}
+.breadcrumb-trail[data-depth='1'] .breadcrumb-item {
+    animation-name: breadcrumb-fade-only;
+}
+@media (prefers-reduced-motion: reduce) {
+    .breadcrumb-trail .breadcrumb-item {
+        opacity: 1;
+        transform: none;
+        animation: none;
+    }
+}
+@keyframes breadcrumb-slide-forward {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+@keyframes breadcrumb-fade-only {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

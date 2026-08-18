@@ -7,17 +7,39 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../**/*.jsx';
 @source '../../node_modules/flyonui/flyonui.js';
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Semantic text hierarchy tiers.
+       Derived from the theme's base-content, blended toward a neutral
+       mid-gray instead of toward the surface, so muted text never
+       collapses its contrast with the background on light or dark themes. */
+    --color-muted: var(--text-muted);
+    --color-subtle: var(--text-subtle);
+    --color-faint: var(--text-faint);
 }
 
 
 
 
+@layer base {
+    :root {
+        --sidebar-w: 15rem;
+        --sidebar-w-mini: 4.25rem;
+    }
 
+    :root,
+    [data-theme] {
+        --text-neutral: oklch(50% 0 0);
+        --text-muted: color-mix(in oklab, var(--color-base-content) 88%, var(--text-neutral));
+        --text-subtle: color-mix(in oklab, var(--color-base-content) 68%, var(--text-neutral));
+        --text-faint: color-mix(in oklab, var(--color-base-content) 50%, var(--text-neutral));
+    }
+}
 /* ── Components ── */
 @import './components/notifications.css';
 @import './components/avatar.css';
@@ -26,5 +48,8 @@
 
 /* ── Utilities ── */
 @import './utilities/helpers.css';
+
+/* ── Auth pages (login/register/reset/update-password) ── */
+@import './auth.css';
 
 
