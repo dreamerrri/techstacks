@@ -51,7 +51,7 @@ export default function SearchModal({ open, onClose }) {
     useEffect(() => {
         if (!open) return;
         const onKey = (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+            if ((e.metaKey || e.ctrlKey) && e.key === '/') {
                 e.preventDefault();
                 onClose();
             }
