@@ -34,7 +34,7 @@ export default function Navbar({ onOpenSidebar, onToggleMinified, breadcrumbs = 
                 setNotifOpen(false);
                 setAvatarOpen(false);
             }
-            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+            if ((e.metaKey || e.ctrlKey) && e.key === '/') {
                 e.preventDefault();
                 setSearchOpen(true);
             }
@@ -103,7 +103,7 @@ export default function Navbar({ onOpenSidebar, onToggleMinified, breadcrumbs = 
                     >
                         <Icon name="tabler--search" className="size-4 shrink-0" />
                         <span className="truncate flex-1">Search or type a command</span>
-                        <kbd className="kbd kbd-sm hidden sm:inline-flex">Ctrl K</kbd>
+                        <kbd className="kbd kbd-sm hidden sm:inline-flex">Ctrl /</kbd>
                     </button>
 
                     {/* Notifications */}
