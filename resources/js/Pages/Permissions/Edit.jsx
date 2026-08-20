@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import FormField from '../../Components/FormField';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import FormField from '../../components/FormField';
 
 export default function PermissionsEdit({ permission }) {
     const { data, setData, put, processing, errors } = useForm({

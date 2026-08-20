@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import StatusBadge from '../../Components/StatusBadge';
-import { toast } from '../../Components/toast';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import StatusBadge from '../../components/StatusBadge';
+import { toast } from '../../components/toast';
 
 const typeBadge = (type) => (type === 'weekend' ? 'info' : type === 'holiday' ? 'warning' : 'primary');
 

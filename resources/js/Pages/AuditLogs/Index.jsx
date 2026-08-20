@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import Pagination from '../../Components/Pagination';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import Pagination from '../../components/Pagination';
 
 const ACTION_BADGE = {
     create: 'badge-soft badge-success text-xs',

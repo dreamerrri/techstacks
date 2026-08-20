@@ -1,8 +1,8 @@
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import StatusBadge from '../../Components/StatusBadge';
-import ConfirmButton from '../../Components/ConfirmButton';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import StatusBadge from '../../components/StatusBadge';
+import ConfirmButton from '../../components/ConfirmButton';
 
 export default function PermissionsIndex({ permissions }) {
     return (

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Head, Link, usePage, router } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import ConfirmButton from '../../Components/ConfirmButton';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import ConfirmButton from '../../components/ConfirmButton';
 
 const MONTH_NAMES = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 

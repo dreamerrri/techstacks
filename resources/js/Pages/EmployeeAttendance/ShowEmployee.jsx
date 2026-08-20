@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import ConfirmButton from '../../Components/ConfirmButton';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import ConfirmButton from '../../components/ConfirmButton';
 
 const fmtDate = (value, opts = { month: 'short', day: '2-digit', year: 'numeric' }) => {
     if (!value) return '—';

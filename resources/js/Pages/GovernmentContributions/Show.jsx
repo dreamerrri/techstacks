@@ -1,7 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import { toast } from '../../Components/toast';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import { toast } from '../../components/toast';
 
 const fmt = (n) => '₱' + parseFloat(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtRate = (r) => (r === null || r === undefined ? '—' : (parseFloat(r) * 100).toFixed(1) + '%');

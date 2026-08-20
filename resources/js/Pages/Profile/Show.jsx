@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import Panel, { PanelHeader } from '../../Components/Panel';
-import DetailRow from '../../Components/DetailRow';
-import FormField from '../../Components/FormField';
-import StatusBadge from '../../Components/StatusBadge';
-import { toast } from '../../Components/toast';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import Panel, { PanelHeader } from '../../components/Panel';
+import DetailRow from '../../components/DetailRow';
+import FormField from '../../components/FormField';
+import StatusBadge from '../../components/StatusBadge';
+import { toast } from '../../components/toast';
 
 const THEMES = [
     'techstacks', 'techstacks-light', 'light', 'dark', 'black', 'claude', 'corporate',

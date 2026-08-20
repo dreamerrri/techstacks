@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useForm } from '@inertiajs/react';
-import AuthLayout from '../../Components/AuthLayout';
+import AuthLayout from '../../components/AuthLayout';
 import usePasswordStrength from '../../Hooks/usePasswordStrength';
 
 export default function UpdatePassword({ token, email }) {
