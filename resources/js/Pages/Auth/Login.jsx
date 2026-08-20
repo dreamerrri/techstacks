@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useForm } from '@inertiajs/react';
-import AuthLayout from '../../Components/AuthLayout';
+import AuthLayout from '../../components/AuthLayout';
 
 export default function Login() {
     const { data, setData, post, processing, errors } = useForm({

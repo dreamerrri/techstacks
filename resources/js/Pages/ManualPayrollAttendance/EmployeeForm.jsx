@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
 
 const fmtDate = (value, opts = { month: 'long', day: '2-digit', year: 'numeric' }) => {
     if (!value) return 'N/A';

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import DetailRow from '../../Components/DetailRow';
-import StatusBadge from '../../Components/StatusBadge';
-import ConfirmButton from '../../Components/ConfirmButton';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import DetailRow from '../../components/DetailRow';
+import StatusBadge from '../../components/StatusBadge';
+import ConfirmButton from '../../components/ConfirmButton';
 
 const groupByModule = (items) => {
     const groups = {};

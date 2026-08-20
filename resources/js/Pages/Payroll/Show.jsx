@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
 
 const fmt = (n) => '₱' + parseFloat(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtNum = (n, digits = 2) => parseFloat(n || 0).toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });

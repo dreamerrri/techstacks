@@ -1,9 +1,9 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import StatusBadge from '../../Components/StatusBadge';
-import DataTable from '../../Components/DataTable';
-import ConfirmButton from '../../Components/ConfirmButton';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import StatusBadge from '../../components/StatusBadge';
+import DataTable from '../../components/DataTable';
+import ConfirmButton from '../../components/ConfirmButton';
 
 const STATUS_META = {
     pending: 'warning',

@@ -1,10 +1,10 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import Avatar from '../../Components/Avatar';
-import StatusBadge from '../../Components/StatusBadge';
-import DataTable from '../../Components/DataTable';
-import ConfirmButton from '../../Components/ConfirmButton';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import Avatar from '../../components/Avatar';
+import StatusBadge from '../../components/StatusBadge';
+import DataTable from '../../components/DataTable';
+import ConfirmButton from '../../components/ConfirmButton';
 
 const ROLE_BADGE = {
     admin: 'badge-soft badge-error',

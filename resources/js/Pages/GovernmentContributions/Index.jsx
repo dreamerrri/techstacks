@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import DataTable from '../../Components/DataTable';
-import { toast } from '../../Components/toast';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import DataTable from '../../components/DataTable';
+import { toast } from '../../components/toast';
 
 const fmt = (n) => '₱' + parseFloat(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtNum = (n) => parseFloat(n || 0).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });

@@ -1,6 +1,6 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import AppLayout from '../Components/AppLayout';
-import FullCalendarWidget from '../Components/FullCalendarWidget';
+import AppLayout from '../components/AppLayout';
+import FullCalendarWidget from '../components/FullCalendarWidget';
 
 export default function Dashboard({ counts }) {
     const { user } = usePage().props.auth;

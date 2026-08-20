@@ -1,6 +1,6 @@
 import { useForm } from '@inertiajs/react';
-import Icon from '../../Components/Icon';
-import FormField from '../../Components/FormField';
+import Icon from '../../components/Icon';
+import FormField from '../../components/FormField';
 
 const YESTERDAY = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 const TODAY = new Date().toISOString().split('T')[0];

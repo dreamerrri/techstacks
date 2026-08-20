@@ -1,8 +1,8 @@
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import DataTable from '../../Components/DataTable';
-import ConfirmButton from '../../Components/ConfirmButton';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import DataTable from '../../components/DataTable';
+import ConfirmButton from '../../components/ConfirmButton';
 
 export default function EmployeesArchived({ employees }) {
     const avatar = (emp, size = 'w-8 h-8', text = 'text-xs') => (

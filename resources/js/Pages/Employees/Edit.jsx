@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
 import EmployeeForm from './EmployeeForm';
 
 export default function EmployeesEdit({ employee }) {

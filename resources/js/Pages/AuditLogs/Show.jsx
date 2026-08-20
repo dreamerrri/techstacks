@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import DetailRow from '../../Components/DetailRow';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import DetailRow from '../../components/DetailRow';
 
 const ACTION_BADGE = {
     create: 'badge-soft badge-success',

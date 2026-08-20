@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
-import { toast } from '../../Components/toast';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
+import { toast } from '../../components/toast';
 
 const nowDate = () => {
     const now = new Date();

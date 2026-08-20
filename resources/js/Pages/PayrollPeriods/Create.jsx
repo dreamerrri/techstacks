@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import AppLayout from '../../Components/AppLayout';
-import Icon from '../../Components/Icon';
+import AppLayout from '../../components/AppLayout';
+import Icon from '../../components/Icon';
 
 function toInputDate(d) {
     const mm = String(d.getMonth() + 1).padStart(2, '0');
