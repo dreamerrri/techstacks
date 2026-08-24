@@ -181,16 +181,26 @@ public function updatePassword(Request $request)
      */
 public function dashboard()
 {
-    $counts = [
-        'total_users'    => User::count(),
-        'admin_users'    => User::where('role', 'admin')->count(),
-        'hr_users'       => User::where('role', 'hr')->count(),
-        'active_users'   => User::where('is_active', true)->count(),
-        'total_employees'=> Employee::where('is_archived', false)->count(),
-        'regular'        => Employee::where('employment_status', 'Regular')->where('is_archived', false)->count(),
-        'probationary'   => Employee::where('employment_status', 'Probationary')->where('is_archived', false)->count(),
-        'archived'       => Employee::where('is_archived', true)->count(),
-    ];
+    $user = Auth::user();
+
+    // Only expose account statistics to roles whose UI actually renders them
+    $counts = [];
+    if ($user->isAdmin()) {
+        $counts += [
+            'total_users'    => User::count(),
+            'admin_users'    => User::where('role', 'admin')->count(),
+            'hr_users'       => User::where('role', 'hr')->count(),
+            'active_users'   => User::where('is_active', true)->count(),
+        ];
+    }
+    if ($user->isHR()) {
+        $counts += [
+            'total_employees'=> Employee::where('is_archived', false)->count(),
+            'regular'        => Employee::where('employment_status', 'Regular')->where('is_archived', false)->count(),
+            'probationary'   => Employee::where('employment_status', 'Probationary')->where('is_archived', false)->count(),
+            'archived'       => Employee::where('is_archived', true)->count(),
+        ];
+    }
 
     return Inertia::render('Dashboard', ['counts' => $counts]);
 }

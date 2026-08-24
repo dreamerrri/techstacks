@@ -169,7 +169,7 @@ export default function ProfileShow({ employee }) {
                                                         <input type="text" value={personal.data.last_name} onChange={(e) => personal.setData('last_name', e.target.value)} className="input input-bordered w-full" required />
                                                     </FormField>
                                                     <FormField label="Birthdate" error={personal.errors.birthdate}>
-                                                        <input type="date" value={personal.data.birthdate} onChange={(e) => personal.setData('birthdate', e.target.value)} className="input input-bordered w-full" required max={new Date(Date.now() - 86400000).toISOString().split('T')[0]} />
+                                                        <input type="date" value={personal.data.birthdate} onChange={(e) => personal.setData('birthdate', e.target.value)} className="input input-bordered w-full" required max={(() => { const t = new Date(Date.now() - 86400000); t.setMinutes(t.getMinutes() - t.getTimezoneOffset()); return t.toISOString().split('T')[0]; })()} />
                                                     </FormField>
                                                     <FormField label="Gender" error={personal.errors.gender}>
                                                         <select value={personal.data.gender} onChange={(e) => personal.setData('gender', e.target.value)} className="select select-bordered w-full" required>

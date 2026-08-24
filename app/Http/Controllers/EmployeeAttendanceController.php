@@ -113,7 +113,9 @@ class EmployeeAttendanceController extends Controller
         }
 
         $validated = $request->validate([
-            'date' => 'required|date',
+            // Self-service: no future dates, backdating limited to 7 days (HR/Admin
+            // encode older records via Manual Payroll Attendance instead)
+            'date' => 'required|date|before_or_equal:today|after_or_equal:' . now()->subDays(7)->toDateString(),
             'time_in' => 'required|date_format:H:i',
             'time_out' => 'nullable|date_format:H:i',
             'remarks' => 'nullable|string|max:255',
@@ -170,10 +172,15 @@ class EmployeeAttendanceController extends Controller
             ->first();
 
         if ($existingAttendance) {
-            // Prevent employees from changing time_out if already clocked out
+            // Prevent employees from changing any time entry once clocked out
+            // (rendered_hours/computed_days feed payroll, so time_in is protected too)
             if ($existingAttendance->time_out && !$user->isAdmin() && !$user->isHR()) {
-                if ($validated['time_out'] && $validated['time_out'] !== $existingAttendance->time_out) {
-                    return back()->with('error', 'You cannot change your clock out time after clocking out. Contact HR/Admin for assistance.');
+                $existingIn = $existingAttendance->time_in ? Carbon::parse($existingAttendance->time_in)->format('H:i') : null;
+                $existingOut = Carbon::parse($existingAttendance->time_out)->format('H:i');
+                $timeOutChanged = $validated['time_out'] && $validated['time_out'] !== $existingOut;
+                $timeInChanged = $validated['time_in'] !== $existingIn;
+                if ($timeOutChanged || $timeInChanged) {
+                    return back()->with('error', 'You cannot change your attendance after clocking out. Contact HR/Admin for assistance.');
                 }
             }
 

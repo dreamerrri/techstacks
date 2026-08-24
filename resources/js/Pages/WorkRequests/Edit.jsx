@@ -4,7 +4,13 @@ import AppLayout from '../../components/AppLayout';
 import Icon from '../../components/Icon';
 import FormField from '../../components/FormField';
 
-const TODAY = new Date().toISOString().split('T')[0];
+// Local date (not UTC) so min/max are correct for the user's timezone
+const toLocalISO = (d) => {
+    const t = new Date(d);
+    t.setMinutes(t.getMinutes() - t.getTimezoneOffset());
+    return t.toISOString().split('T')[0];
+};
+const TODAY = toLocalISO(new Date());
 
 function calculateOvertime(start, end) {
     if (!start || !end) return null;

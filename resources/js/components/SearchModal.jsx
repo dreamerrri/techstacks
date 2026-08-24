@@ -87,19 +87,29 @@ export default function SearchModal({ open, onClose }) {
 
     useEffect(() => {
         if (!open) return;
+        const controller = new AbortController();
         if (query.trim().length < 2) {
             setRecordGroups([]);
-            return;
+            setLoading(false);
+            return () => controller.abort();
         }
         clearTimeout(debounceRef.current);
         setLoading(true);
         debounceRef.current = setTimeout(() => {
-            fetch('/search?q=' + encodeURIComponent(query))
+            fetch('/search?q=' + encodeURIComponent(query), { signal: controller.signal })
                 .then((r) => r.json())
                 .then((data) => setRecordGroups(data.groups ?? []))
-                .catch(() => setRecordGroups([]))
-                .finally(() => setLoading(false));
+                .catch((err) => {
+                    if (err.name !== 'AbortError') setRecordGroups([]);
+                })
+                .finally(() => {
+                    if (!controller.signal.aborted) setLoading(false);
+                });
         }, 250);
+        return () => {
+            clearTimeout(debounceRef.current);
+            controller.abort();
+        };
     }, [query, open]);
 
     const select = (index) => {

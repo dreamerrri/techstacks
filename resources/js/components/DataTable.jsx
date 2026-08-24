@@ -1,15 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 import Icon from './Icon';
 import Pagination from './Pagination';
-
-function debounce(fn, delay) {
-    let t;
-    return (...args) => {
-        clearTimeout(t);
-        t = setTimeout(() => fn(...args), delay);
-    };
-}
 
 export default function DataTable({
     title,
@@ -25,22 +17,34 @@ export default function DataTable({
     children,
 }) {
     const { url } = usePage();
+    const searchTimerRef = useRef(null);
     const [searchValue, setSearchValue] = useState(() => {
         const params = new URLSearchParams(url.split('?')[1] || '');
         return params.get('search') || '';
     });
 
-    const submitSearch = debounce((value) => {
-        const params = new URLSearchParams(baseUrl.split('?')[1] || '');
-        if (value) params.set('search', value);
-        else params.delete('search');
+    // Build params from the live URL so sort/direction set elsewhere are preserved
+    const navigateWithParams = (mutate) => {
+        const path = baseUrl.split('?')[0];
+        const params = new URLSearchParams(window.location.search);
+        mutate(params);
         params.delete('page');
-        router.get(baseUrl.split('?')[0], Object.fromEntries(params), {
+        router.get(path, Object.fromEntries(params), {
             preserveState: true,
             replace: true,
             preserveScroll: true,
         });
-    }, 400);
+    };
+
+    const submitSearch = (value) => {
+        clearTimeout(searchTimerRef.current);
+        searchTimerRef.current = setTimeout(() => {
+            navigateWithParams((params) => {
+                if (value) params.set('search', value);
+                else params.delete('search');
+            });
+        }, 400);
+    };
 
     const handleSearch = (value) => {
         setSearchValue(value);
@@ -48,14 +52,10 @@ export default function DataTable({
     };
 
     const handleFilter = (name, value) => {
-        const params = new URLSearchParams(baseUrl.split('?')[1] || '');
-        if (value) params.set(name, value);
-        else params.delete(name);
-        params.delete('page');
-        router.get(baseUrl.split('?')[0], Object.fromEntries(params), {
-            preserveState: true,
-            replace: true,
-            preserveScroll: true,
+        clearTimeout(searchTimerRef.current);
+        navigateWithParams((params) => {
+            if (value) params.set(name, value);
+            else params.delete(name);
         });
     };
 
@@ -63,6 +63,8 @@ export default function DataTable({
         const params = new URLSearchParams(url.split('?')[1] || '');
         return [...params.keys()].some((k) => ['search', 'per_page', ...filters.map((f) => f.name)].includes(k));
     };
+
+    useEffect(() => () => clearTimeout(searchTimerRef.current), []);
 
     return (
         <div className="card w-full min-w-0 border border-base-300 flex flex-col p-0">

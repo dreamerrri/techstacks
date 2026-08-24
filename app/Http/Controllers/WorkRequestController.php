@@ -300,9 +300,12 @@ class WorkRequestController extends Controller
             if ($workRequest->employee_id !== $employee->id) {
                 return back()->with('error', 'You can only cancel your own work requests.');
             }
-            if (!$workRequest->canBeCancelled()) {
-                return back()->with('error', 'You can only cancel pending requests.');
-            }
+        }
+
+        // Everyone (including HR/Admin) can only cancel pending requests,
+        // so approved/rejected requests can't bypass the state machine
+        if (!$workRequest->canBeCancelled()) {
+            return back()->with('error', 'You can only cancel pending requests.');
         }
 
         $workRequest->update(['status' => 'cancelled']);

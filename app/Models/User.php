@@ -62,7 +62,9 @@ class User extends Authenticatable
         if (!$this->profile_photo) {
             return null;
         }
-        if (config('filesystems.default') === 's3') {
+        // Photos are always uploaded to the s3 disk, so resolve URLs from s3.
+        // Fall back to the default disk only when S3 is not configured (e.g. local dev)
+        if (config('filesystems.disks.s3.key') && config('filesystems.disks.s3.secret')) {
             return \Illuminate\Support\Facades\Storage::disk('s3')->temporaryUrl($this->profile_photo, now()->addHours(24));
         }
         return \Illuminate\Support\Facades\Storage::url($this->profile_photo);

@@ -167,15 +167,13 @@ class EmployeeController extends Controller
         }
 
         $validated = $request->validate([
-            'sss_rate' => 'required|numeric|min:0|max:1',
-            'sss_cap' => 'required|numeric|min:0',
-            'philhealth_rate' => 'required|numeric|min:0|max:1',
-            'philhealth_cap' => 'required|numeric|min:0',
-            'pagibig_rate' => 'required|numeric|min:0|max:1',
-            'pagibig_cap' => 'required|numeric|min:0',
+            'custom_sss_contribution' => 'nullable|numeric|min:0',
+            'custom_philhealth_contribution' => 'nullable|numeric|min:0',
+            'custom_pagibig_contribution' => 'nullable|numeric|min:0',
         ]);
 
         $employee->update($validated);
+        LogsAudit::logAction('update', 'government_contributions', "Updated contributions for employee {$employee->employee_id}");
 
         return redirect()->route('employees.show', $employee)
             ->with('success', 'Government contribution rates updated successfully.');
