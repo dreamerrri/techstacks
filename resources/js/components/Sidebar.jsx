@@ -150,8 +150,8 @@ export default function Sidebar({ open, onClose, minified }) {
                     minified ? 'minified sm:w-[var(--sidebar-w-mini)]' : '',
                     // Mobile: slides in/out via React state
                     open ? 'max-sm:translate-x-0 max-sm:shadow-2xl' : 'max-sm:-translate-x-full rtl:max-sm:translate-x-full',
-                    // Desktop: always pinned open (minify handled via width classes)
-                    'sm:z-10',
+                    // Desktop: always pinned visible (overrides FlyonUI .drawer default transform)
+                    'sm:z-10 sm:translate-x-0 rtl:sm:translate-x-0',
                 ].join(' ')}
                 role="dialog"
                 tabIndex="-1"
