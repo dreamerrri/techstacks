@@ -16,7 +16,9 @@ function actionBadge(action) {
     return ACTION_BADGE[String(action || '').toLowerCase()] || 'badge-soft text-xs';
 }
 
-export default function AuditLogsIndex({ logs, modules, actions, filters }) {
+export default function AuditLogsIndex({ logs, modules = [], actions = [], filters }) {
+    const moduleList = Array.isArray(modules) ? modules : Object.values(modules || {});
+    const actionList = Array.isArray(actions) ? actions : Object.values(actions || {});
     const [module, setModule] = useState(filters?.module || '');
     const [action, setAction] = useState(filters?.action || '');
     const [dateFrom, setDateFrom] = useState(filters?.date_from || '');
@@ -71,7 +73,7 @@ export default function AuditLogsIndex({ logs, modules, actions, filters }) {
                             <label className="label label-text">Module</label>
                             <select className="select select-bordered select-sm w-40" value={module} onChange={(e) => setModule(e.target.value)}>
                                 <option value="">All Modules</option>
-                                {modules.map((m) => (
+                                {moduleList.map((m) => (
                                     <option key={m} value={m}>{m.charAt(0).toUpperCase() + m.slice(1)}</option>
                                 ))}
                             </select>
@@ -80,7 +82,7 @@ export default function AuditLogsIndex({ logs, modules, actions, filters }) {
                             <label className="label label-text">Action</label>
                             <select className="select select-bordered select-sm w-36" value={action} onChange={(e) => setAction(e.target.value)}>
                                 <option value="">All Actions</option>
-                                {actions.map((a) => (
+                                {actionList.map((a) => (
                                     <option key={a} value={a}>{a.charAt(0).toUpperCase() + a.slice(1)}</option>
                                 ))}
                             </select>

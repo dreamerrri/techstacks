@@ -34,7 +34,6 @@ const NAV = {
                 icon: 'tabler--chart-line',
                 items: [
                     { title: 'Audit Logs', icon: 'tabler--file-text', href: '/audit-logs', active: ['audit-logs'] },
-                    { title: 'Reports', icon: 'tabler--chart-bar', href: '#', active: ['reports'] },
                 ],
             },
         ],
@@ -50,7 +49,6 @@ const NAV = {
             { title: 'Payroll', icon: 'tabler--cash', href: '/payroll', active: ['payroll'] },
             { title: 'Gov. Contributions', icon: 'tabler--id-badge', href: '/government-contributions', active: ['government-contributions'] },
             { title: 'Audit Logs', icon: 'tabler--file-text', href: '/audit-logs', active: ['audit-logs'] },
-            { title: 'Reports', icon: 'tabler--chart-bar', href: '#', active: ['reports'] },
         ],
     },
     hr: {
