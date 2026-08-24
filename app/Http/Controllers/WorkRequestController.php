@@ -356,6 +356,11 @@ class WorkRequestController extends Controller
             return back()->with('error', 'Only administrators and HR can approve requests.');
         }
 
+        // Separation of duties: no approving your own request
+        if ($workRequest->employee?->user_id === $user->id) {
+            return back()->with('error', 'You cannot approve your own work request.');
+        }
+
         if (!$workRequest->canBeApproved()) {
             return back()->with('error', 'This request cannot be approved.');
         }
@@ -385,6 +390,11 @@ class WorkRequestController extends Controller
 
         if (!$admin && !$hr) {
             return back()->with('error', 'Only administrators and HR can reject requests.');
+        }
+
+        // Separation of duties: no rejecting your own request
+        if ($workRequest->employee?->user_id === $user->id) {
+            return back()->with('error', 'You cannot reject your own work request.');
         }
 
         if (!$workRequest->canBeRejected()) {

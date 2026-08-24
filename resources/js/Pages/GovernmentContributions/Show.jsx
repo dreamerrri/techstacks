@@ -6,6 +6,10 @@ import { toast } from '../../components/toast';
 const fmt = (n) => '₱' + parseFloat(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtRate = (r) => (r === null || r === undefined ? '—' : (parseFloat(r) * 100).toFixed(1) + '%');
 
+// Escape user-controlled values before interpolating into the print window's HTML
+const esc = (v) =>
+    String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
 const EMPLOYMENT_BADGE = {
     Regular: 'badge-soft badge-success',
     Probationary: 'badge-soft badge-warning',
@@ -79,7 +83,7 @@ export default function GovernmentContributionsShow({ employee, sssContribution,
     const printDetail = () => {
         const d = employeeData;
         const win = window.open('', '_blank');
-        win.document.write(`<!DOCTYPE html><html><head><title>Government Contributions — ${d.name}</title>
+        win.document.write(`<!DOCTYPE html><html><head><title>Government Contributions — ${esc(d.name)}</title>
         <style>* { margin:0; padding:0; box-sizing:border-box; } body { font-family:Arial,sans-serif; font-size:11px; color:#111; padding:20px; }
         h1 { font-size:16px; color:#1a1a2e; margin-bottom:4px; } p { font-size:11px; color:#6b7280; margin-bottom:16px; }
         .profile { background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:14px; margin-bottom:16px; display:flex; gap:24px; flex-wrap:wrap; }
@@ -94,16 +98,16 @@ export default function GovernmentContributionsShow({ employee, sssContribution,
         @media print { body { padding:0; } }</style></head><body>
         <h1>Government Contributions Report</h1><p>Generated: ${new Date().toLocaleString()}</p>
         <div class="profile">
-            <div class="field"><div class="label">Employee ID</div><div class="value" style="font-family:monospace;">${d.id}</div></div>
-            <div class="field"><div class="label">Full Name</div><div class="value">${d.name}</div></div>
-            <div class="field"><div class="label">Department</div><div class="value">${d.department}</div></div>
-            <div class="field"><div class="label">Position</div><div class="value">${d.position}</div></div>
+            <div class="field"><div class="label">Employee ID</div><div class="value" style="font-family:monospace;">${esc(d.id)}</div></div>
+            <div class="field"><div class="label">Full Name</div><div class="value">${esc(d.name)}</div></div>
+            <div class="field"><div class="label">Department</div><div class="value">${esc(d.department)}</div></div>
+            <div class="field"><div class="label">Position</div><div class="value">${esc(d.position)}</div></div>
             <div class="field"><div class="label">Basic Salary</div><div class="value">₱${d.salary}</div></div>
-            <div class="field"><div class="label">Status</div><div class="value">${d.status}</div></div>
+            <div class="field"><div class="label">Status</div><div class="value">${esc(d.status)}</div></div>
         </div>
         <div class="section"><div class="section-title ids-title">Government ID Numbers</div>
         <table><thead><tr><th>SSS Number</th><th>PhilHealth Number</th><th>Pag-IBIG Number</th><th>TIN Number</th></tr></thead>
-        <tbody><tr><td style="font-family:monospace;">${d.sssNumber}</td><td style="font-family:monospace;">${d.philNumber}</td><td style="font-family:monospace;">${d.pagNumber}</td><td style="font-family:monospace;">${d.tinNumber}</td></tr></tbody></table></div>
+        <tbody><tr><td style="font-family:monospace;">${esc(d.sssNumber)}</td><td style="font-family:monospace;">${esc(d.philNumber)}</td><td style="font-family:monospace;">${esc(d.pagNumber)}</td><td style="font-family:monospace;">${esc(d.tinNumber)}</td></tr></tbody></table></div>
         <div class="section"><div class="section-title sss-title">SSS Contribution (Circular No. 2024-006)</div>
         <table><thead><tr><th>Monthly Salary Credit</th><th>Employee Share</th><th>Total Contribution</th></tr></thead>
         <tbody><tr><td class="amount">₱${d.sssSalaryCredit}</td><td class="amount">₱${d.sssEmployeeShare}</td><td class="amount">₱${d.sssTotal}</td></tr></tbody></table></div>

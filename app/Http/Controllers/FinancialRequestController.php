@@ -303,6 +303,11 @@ class FinancialRequestController extends Controller
             return back()->with('error', 'Only HR and Admin can approve financial requests.');
         }
 
+        // Separation of duties: no approving your own request
+        if ($financialRequest->employee?->user_id === $user->id) {
+            return back()->with('error', 'You cannot approve your own financial request.');
+        }
+
         if (!$financialRequest->canBeApproved()) {
             return back()->with('error', 'This request cannot be approved.');
         }
@@ -329,6 +334,11 @@ class FinancialRequestController extends Controller
 
         if (!$user->isAdmin() && !$user->isHR()) {
             return back()->with('error', 'Only HR and Admin can reject financial requests.');
+        }
+
+        // Separation of duties: no rejecting your own request
+        if ($financialRequest->employee?->user_id === $user->id) {
+            return back()->with('error', 'You cannot reject your own financial request.');
         }
 
         if (!$financialRequest->canBeRejected()) {

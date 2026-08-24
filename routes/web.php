@@ -29,16 +29,18 @@ Route::get('/', function () {
 // Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login',   [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login',  [AuthController::class, 'login']);
+    // Rate limited to blunt credential-stuffing / brute-force attempts
+    Route::post('/login',  [AuthController::class, 'login'])->middleware('throttle:5,1');
 
     Route::get('/register',  [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
 
 
      Route::get('/reset',  [AuthController::class, 'showReset'])->name('reset');
    
 
     Route::post('/password/reset/send', [AuthController::class, 'sendResetEmail'])
+    ->middleware('throttle:3,1')
     ->name('password.reset.submit');
 
     
