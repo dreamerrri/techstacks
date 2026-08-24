@@ -1,59 +1,82 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Techstacks Logify
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+An HR and payroll management system built with **Laravel 12** and **React 19** (Inertia v3), featuring role-based access for Administrators, HR Personnel, and Employees.
 
-## About Laravel
+## Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| Layer | Technology |
+|---|---|
+| Backend | PHP ^8.2, Laravel 12, Inertia Laravel ^3.3 |
+| Frontend | React 19, @inertiajs/react, Vite 7 |
+| Styling | Tailwind CSS v4, FlyonUI 2.4 |
+| Icons | Iconify (`@iconify-json/ph`, `@iconify-json/tabler`) |
+| PDF | barryvdh/laravel-dompdf |
+| Storage | Local disk / AWS S3 (`league/flysystem-aws-s3-v3`) |
+| Auth tokens | firebase/php-jwt |
+| Mail | Mailtrap (`railsware/mailtrap-php`) |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Role-based access** — Admin, HR, and Employee roles with granular permissions
+- **Employee management** — profiles, employment status, archiving
+- **Attendance** — manual payroll attendance encoding and employee attendance tracking with calendar views (FullCalendar)
+- **Payroll** — payroll periods, payslip generation (PDF)
+- **Government contributions** — SSS, PhilHealth, Pag-IBIG tracking
+- **Work requests** — submission, approval workflow, pending/archived states
+- **Financial requests** — cash-related requests with approval flow
+- **Audit logs** — action history per user
+- **Global search** — command-palette modal (`Ctrl+/` or click the navbar search) searching pages and records
+- **Notifications** — in-app notification dropdown with mark-as-read
+- **Theme switching** — multiple UI themes persisted per user
 
-## Learning Laravel
+## Requirements
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- PHP >= 8.2
+- Composer
+- Node.js >= 20
+- MySQL (or any database supported by Laravel)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Installation
 
-## Laravel Sponsors
+```bash
+# Install PHP dependencies
+composer install
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Install Node dependencies
+npm install
 
-### Premium Partners
+# Configure environment
+cp .env.example .env
+php artisan key:generate
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Set your database credentials in .env, then:
+php artisan migrate --seed
 
-## Contributing
+# Build frontend assets (or run the dev server)
+npm run build
+npm run dev
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Serve the application
+php artisan serve
+```
 
-## Code of Conduct
+> **Note:** If your local PHP version differs from `composer.json` requirements, use:
+> `composer install --prefer-dist --ignore-platform-req=php`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Development Notes
 
-## Security Vulnerabilities
+### Iconify icons
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Icons are rendered as literal class strings like `icon-[tabler--home]`. Only icon names present in the manifest at `resources/js/Config/iconify.js` are compiled into CSS by Tailwind. When adding a new icon anywhere in JSX, add it to the manifest first, otherwise it will silently not render.
+
+### Themes
+
+Themes are applied client-side via `data-theme` on `<html>` and stored in `localStorage`. The selected theme is persisted server-side through a plain `fetch` PATCH to `/settings/theme` (not an Inertia request).
+
+### Case-sensitive imports
+
+The project deploys to Linux — import paths must match on-disk casing exactly (e.g., `../../components/AppLayout`, not `../../Components/AppLayout`). Windows will not catch these mistakes; only CI/Linux builds will.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is proprietary software.
