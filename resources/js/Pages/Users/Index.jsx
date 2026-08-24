@@ -12,7 +12,7 @@ const ROLE_BADGE = {
     employee: 'badge-soft badge-info',
 };
 
-export default function UsersIndex({ users, filters, stats }) {
+export default function UsersIndex({ users, filters, stats, pendingCount = 0 }) {
     const { auth } = usePage().props;
     const currentUserId = auth?.user?.id;
 
@@ -107,6 +107,19 @@ export default function UsersIndex({ users, filters, stats }) {
                         </div>
                     ))}
                 </div>
+
+                {pendingCount > 0 && (
+                    <Link
+                        href="/users/pending"
+                        className="alert alert-soft alert-warning mb-4 flex items-center gap-2 no-underline hover:brightness-95 transition"
+                    >
+                        <Icon name="tabler--user-question" className="size-5 shrink-0" />
+                        <span className="flex-1 text-sm">
+                            <strong>{pendingCount}</strong> registration{pendingCount === 1 ? '' : 's'} awaiting approval
+                        </span>
+                        <Icon name="tabler--chevron-right" className="size-4 shrink-0" />
+                    </Link>
+                )}
 
                 <DataTable
                     title="User Accounts"

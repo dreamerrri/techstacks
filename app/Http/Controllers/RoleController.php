@@ -123,7 +123,12 @@ class RoleController extends Controller
         }
 
         $role->users()->attach($user->id);
-        $user->update(['role' => $role->slug]);
+
+        // Sync the legacy role column only for known system roles, so assigning
+        // a custom role can't overwrite/corrupt role-based authorization checks
+        if (in_array($role->slug, ['admin', 'hr', 'employee'], true)) {
+            $user->update(['role' => $role->slug]);
+        }
 
         LogsAudit::logAction('assign', 'role', "Assigned role {$role->name} to user {$user->name}");
 
@@ -137,7 +142,12 @@ class RoleController extends Controller
         }
 
         $role->users()->detach($user->id);
-        $user->update(['role' => 'employee']);
+
+        // Only reset the legacy role when it currently mirrors the removed role,
+        // so removing a secondary role can't demote e.g. an admin to employee
+        if ($user->role === $role->slug) {
+            $user->update(['role' => 'employee']);
+        }
 
         LogsAudit::logAction('revoke', 'role', "Removed role {$role->name} from user {$user->name}");
 

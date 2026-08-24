@@ -20,7 +20,7 @@ export default function Dashboard({ counts }) {
             <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 ${colorClass}`}>
                 <i className={icon}></i>
             </div>
-            <div className={`${small ? 'text-2xl font-small' : 'text-3xl font-bold'} text-base-content mb-1`}>{value}</div>
+            <div className={`${small ? 'text-lg sm:text-2xl font-small break-words' : 'text-2xl sm:text-3xl font-bold'} text-base-content mb-1`}>{value}</div>
             <div className="text-xs text-muted uppercase tracking-widest">{label}</div>
         </Link>
     );

@@ -8,6 +8,10 @@ import { toast } from '../../components/toast';
 const fmt = (n) => '₱' + parseFloat(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtNum = (n) => parseFloat(n || 0).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
+// Escape user-controlled values before interpolating into the print window's HTML
+const esc = (v) =>
+    String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
 function SortableTh({ label, sortKey, filters, align = 'right' }) {
     const active = filters.sort === sortKey;
     const direction = active && filters.direction === 'asc' ? 'desc' : 'asc';
@@ -63,7 +67,7 @@ function DeptBreakdownModal({ open, onClose, data, label, periodLabel }) {
             t.basic += +d.basic_pay; t.allowance += +d.allowance_benefits; t.ot += +d.overtime_pay;
             t.gross += +d.gross_pay; t.sss += +d.sss_contribution; t.phil += +d.philhealth_contribution;
             t.pagibig += +d.pagibig_contribution; t.tax += +d.withholding_tax; t.ded += +d.total_deductions; t.net += +d.net_pay;
-            rows += `<tr><td><strong>${d.name}</strong><br><small>${d.employee_id}</small></td><td>${d.department}</td><td class="num">${fmt(d.basic_pay)}</td><td class="num">${fmt(d.allowance_benefits)}</td><td class="num">${fmt(d.overtime_pay)}</td><td class="num">${fmt(d.gross_pay)}</td><td class="num red">${fmt(d.sss_contribution)}</td><td class="num red">${fmt(d.philhealth_contribution)}</td><td class="num red">${fmt(d.pagibig_contribution)}</td><td class="num red">${fmt(d.withholding_tax)}</td><td class="num red bold">${fmt(d.total_deductions)}</td><td class="num green bold">${fmt(d.net_pay)}</td></tr>`;
+            rows += `<tr><td><strong>${esc(d.name)}</strong><br><small>${esc(d.employee_id)}</small></td><td>${esc(d.department)}</td><td class="num">${fmt(d.basic_pay)}</td><td class="num">${fmt(d.allowance_benefits)}</td><td class="num">${fmt(d.overtime_pay)}</td><td class="num">${fmt(d.gross_pay)}</td><td class="num red">${fmt(d.sss_contribution)}</td><td class="num red">${fmt(d.philhealth_contribution)}</td><td class="num red">${fmt(d.pagibig_contribution)}</td><td class="num red">${fmt(d.withholding_tax)}</td><td class="num red bold">${fmt(d.total_deductions)}</td><td class="num green bold">${fmt(d.net_pay)}</td></tr>`;
         });
         const win = window.open('', '_blank');
         win.document.write(`<!DOCTYPE html><html><head><title>Payroll Summary Report</title>
@@ -76,7 +80,7 @@ function DeptBreakdownModal({ open, onClose, data, label, periodLabel }) {
         tfoot tr td { background:#dbeafe; font-weight:700; border-top:2px solid #93c5fd; padding:8px; } tfoot tr td.num { text-align:right; }
         .gross-bar { margin-top:12px; background:#d1fae5; border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; }
         .gross-bar span, .gross-bar strong { font-size:11px; color:#065f46; } @media print { body { padding:0; } }</style>
-        </head><body><h1>Payroll Summary Report</h1><div class="meta">Filter: ${label} | Cutoff: ${periodLabel} | Printed: ${new Date().toLocaleString()}</div>
+        </head><body><h1>Payroll Summary Report</h1><div class="meta">Filter: ${esc(label)} | Cutoff: ${esc(periodLabel)} | Printed: ${new Date().toLocaleString()}</div>
         <table><thead><tr>${headers.map((h, i) => i >= 2 ? `<th class="num">${h}</th>` : `<th>${h}</th>`).join('')}</tr></thead>
         <tbody>${rows}</tbody>
         <tfoot><tr><td colspan="2">Totals (${data.length} employees)</td><td class="num">${fmt(t.basic)}</td><td class="num">${fmt(t.allowance)}</td><td class="num">${fmt(t.ot)}</td><td class="num">${fmt(t.gross)}</td><td class="num red">${fmt(t.sss)}</td><td class="num red">${fmt(t.phil)}</td><td class="num red">${fmt(t.pagibig)}</td><td class="num red">${fmt(t.tax)}</td><td class="num red bold">${fmt(t.ded)}</td><td class="num green bold">${fmt(t.net)}</td></tr></tfoot>

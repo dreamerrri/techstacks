@@ -6,6 +6,7 @@ const NAV = {
                 icon: 'tabler--lock',
                 items: [
                     { title: 'Users', icon: 'tabler--users', href: '/users', active: ['users'] },
+                    { title: 'Pending Accounts', icon: 'tabler--user-question', href: '/users/pending', active: ['users'] },
                     { title: 'Roles', icon: 'tabler--shield', href: '/roles', active: ['roles'] },
                     { title: 'Permissions', icon: 'tabler--shield-check', href: '/permissions', active: ['permissions'] },
                 ],

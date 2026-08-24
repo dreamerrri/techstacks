@@ -41,14 +41,14 @@ export default function Sidebar({ open, onClose, minified }) {
 
     const header = (
         <div className={`drawer-header py-2 w-full flex items-center ${minified ? 'justify-center' : ''}`}>
-            <Link href="/dashboard" className="techicon flex items-center gap-2 no-underline" onClick={onClose}>
-                <svg fill="currentColor" height="2em" viewBox="0 0 1813 1441" width="2em" xmlns="http://www.w3.org/2000/svg" className="brand-logo-icon shrink-0 text-primary">
+            <Link href="/dashboard" className="techicon flex items-center gap-2 no-underline max-sm:gap-1.5" onClick={onClose}>
+                <svg fill="currentColor" viewBox="0 0 1813 1441" xmlns="http://www.w3.org/2000/svg" className="brand-logo-icon shrink-0 text-primary size-8 max-sm:size-6">
                     <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fillRule="evenodd"></path>
                     <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fillRule="evenodd"></path>
                 </svg>
                 {!minified && (
                     <div className="tech drawer-title tracking-wide">
-                        <span className="block text-xl font-semibold text-primary">Techstacks</span>
+                        <span className="block text-xl font-semibold text-primary max-sm:text-base">Techstacks</span>
                         <span className="block text-xs text-primary/60">
                             {role === 'admin' ? 'Admin Portal' : role === 'hr' ? 'HR Portal' : 'Employee Portal'}
                         </span>
@@ -62,11 +62,11 @@ export default function Sidebar({ open, onClose, minified }) {
         `tooltip-toggle ${isRouteActive(item.active, currentUrl) ? 'active' : ''}`;
 
     const ExpandedNav = (
-        <nav className="drawer-body px-2 pt-4" aria-label="Primary">
-            <ul className="menu p-0">
+        <nav className="drawer-body px-2 pt-4 max-sm:pt-2" aria-label="Primary">
+            <ul className="menu p-0 max-sm:text-sm">
                 <li>
                     <Link href="/dashboard" className={currentUrl === '/dashboard' ? 'active' : ''} onClick={onClose}>
-                        <span className="icon-[tabler--home] size-5"></span>
+                        <span className="icon-[tabler--home] size-5 max-sm:size-4"></span>
                         <span>Dashboard</span>
                     </Link>
                 </li>
@@ -83,17 +83,17 @@ export default function Sidebar({ open, onClose, minified }) {
                                 aria-expanded={isOpen}
                                 onClick={() => toggleGroup(group.label)}
                             >
-                                <span className={`icon-[${group.icon}] size-5`}></span>
+                                <span className={`icon-[${group.icon}] size-5 max-sm:size-4`}></span>
                                 <span>{group.label}</span>
-                                <span className={`icon-[tabler--chevron-down] size-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}></span>
+                                <span className={`icon-[tabler--chevron-down] size-4 max-sm:size-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`}></span>
                             </button>
                             {isOpen && (
                                 <ul className={`dropdown-menu dropdown-open:opacity-100 mt-0 shadow-none min-w-40 ms-6 ps-2 border-s border-base-content/20 rounded-none`} role="menu">
                                     {group.items.map((item) => (
                                         <li key={item.title}>
                                             <Link href={item.href} className={navLinkClass(item)} onClick={onClose}>
-                                                <span className={`icon-[${item.icon}] size-5`}></span>
-                                                <span className="text-md">{item.title}</span>
+                                                <span className={`icon-[${item.icon}] size-5 max-sm:size-4`}></span>
+                                                <span className="text-md max-sm:text-xs">{item.title}</span>
                                             </Link>
                                         </li>
                                     ))}
@@ -130,7 +130,7 @@ export default function Sidebar({ open, onClose, minified }) {
                 'overlay [--auto-close:sm] border-r border-base-300 drawer drawer-start',
                 'hidden sm:fixed sm:inset-y-0 sm:start-0 sm:z-10 sm:flex sm:translate-x-0',
                 open ? 'open translate-x-0' : '',
-                'w-[var(--sidebar-w)]',
+                'w-[var(--sidebar-w)] max-sm:w-52',
                 minified ? 'minified w-[var(--sidebar-w-mini)]' : '',
             ].join(' ')}
             role="dialog"

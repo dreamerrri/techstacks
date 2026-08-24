@@ -8,6 +8,10 @@ import { toast } from '../../components/toast';
 const fmt = (n) => '₱' + parseFloat(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtNum = (n) => parseFloat(n || 0).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
+// Escape user-controlled values before interpolating into the print window's HTML
+const esc = (v) =>
+    String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
 const EMPLOYMENT_BADGE = {
     Regular: 'badge-soft badge-success text-xs',
     Probationary: 'badge-soft badge-warning text-xs',
@@ -47,7 +51,7 @@ function ContributionBreakdownModal({ open, onClose, data, label }) {
             const pag = parseFloat(emp.pagibig_employee_share) || 0;
             const total = sss + phil + pag;
             t.sss += sss; t.phil += phil; t.pag += pag; t.all += total;
-            rows += `<tr><td><strong>${emp.full_name}</strong><br><small>${emp.employee_id}</small></td><td>${emp.department}</td><td class="num">${fmt(emp.basic_salary)}</td><td class="num red">${fmt(sss)}</td><td class="num blue">${fmt(phil)}</td><td class="num amber">${fmt(pag)}</td><td class="num bold">${fmt(total)}</td><td>${emp.employment_status}</td></tr>`;
+            rows += `<tr><td><strong>${esc(emp.full_name)}</strong><br><small>${esc(emp.employee_id)}</small></td><td>${esc(emp.department)}</td><td class="num">${fmt(emp.basic_salary)}</td><td class="num red">${fmt(sss)}</td><td class="num blue">${fmt(phil)}</td><td class="num amber">${fmt(pag)}</td><td class="num bold">${fmt(total)}</td><td>${esc(emp.employment_status)}</td></tr>`;
         });
         const win = window.open('', '_blank');
         win.document.write(`<!DOCTYPE html><html><head><title>Government Contributions Report</title>
@@ -62,7 +66,7 @@ function ContributionBreakdownModal({ open, onClose, data, label }) {
         .total-bar span, .total-bar strong { font-size:11px; color:#991b1b; } @media print { body { padding:0; } }</style>
         </head><body>
         <h1>Government Contributions Report</h1>
-        <div class="meta">Filter: ${filterNote} | Printed: ${new Date().toLocaleString()}</div>
+        <div class="meta">Filter: ${esc(filterNote)} | Printed: ${new Date().toLocaleString()}</div>
         <table><thead><tr><th>Employee</th><th>Dept</th><th class="num">Basic Salary</th><th class="num">SSS Share</th><th class="num">PhilHealth Share</th><th class="num">Pag-IBIG Share</th><th class="num">Total</th><th>Status</th></tr></thead>
         <tbody>${rows}</tbody>
         <tfoot><tr><td colspan="2">Totals (${data.length} employees)</td><td class="num">—</td><td class="num red">${fmt(t.sss)}</td><td class="num blue">${fmt(t.phil)}</td><td class="num amber">${fmt(t.pag)}</td><td class="num bold">${fmt(t.all)}</td><td></td></tr></tfoot>

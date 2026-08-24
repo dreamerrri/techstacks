@@ -69,8 +69,14 @@ protected static function boot()
     parent::boot();
 
     static::creating(function ($employee) {
-        $latest = static::max('id') ?? 0;
-        $employee->employee_id = 'EMP-' . str_pad(($latest + 1), 4, '0', STR_PAD_LEFT);
+        if ($employee->employee_id) {
+            return;
+        }
+        // Lock so concurrent creations can't compute the same sequential ID
+        \Illuminate\Support\Facades\DB::transaction(function () use ($employee) {
+            $latest = \Illuminate\Support\Facades\DB::table('employees')->lockForUpdate()->max('id') ?? 0;
+            $employee->employee_id = 'EMP-' . str_pad(((int) $latest + 1), 4, '0', STR_PAD_LEFT);
+        });
     });
 }
     // Full name accessor

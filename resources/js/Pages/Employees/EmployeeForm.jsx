@@ -2,8 +2,14 @@ import { useForm } from '@inertiajs/react';
 import Icon from '../../components/Icon';
 import FormField from '../../components/FormField';
 
-const YESTERDAY = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-const TODAY = new Date().toISOString().split('T')[0];
+// Local dates (not UTC) so min/max are correct for the user's timezone
+const toLocalISO = (d) => {
+    const t = new Date(d);
+    t.setMinutes(t.getMinutes() - t.getTimezoneOffset());
+    return t.toISOString().split('T')[0];
+};
+const YESTERDAY = toLocalISO(new Date(Date.now() - 86400000));
+const TODAY = toLocalISO(new Date());
 
 const GENDERS = ['Male', 'Female', 'Other'];
 const CIVIL_STATUSES = ['Single', 'Married', 'Widowed', 'Separated'];

@@ -357,6 +357,7 @@ class ManualPayrollAttendanceController extends Controller
         $cutoffStart = null;
         $cutoffEnd = null;
         $workingDaysPerMonth = 22; // Default fallback
+        $period = null;
         if (!empty($validated['payroll_period_id'])) {
             $period = PayrollPeriod::find($validated['payroll_period_id']);
             if ($period) {
@@ -480,7 +481,9 @@ $withholdingTax = $taxResult['tax'];
 
         if ($approvedCashAdvances->isNotEmpty()) {
             // Check if cash advance payments have already been processed for this payroll period
-            $existingPayments = CashAdvancePayment::where('payroll_period_id', $period->id ?? null)
+            $existingPayments = CashAdvancePayment::where(function ($query) use ($period) {
+                    $period ? $query->where('payroll_period_id', $period->id) : $query->whereNull('payroll_period_id');
+                })
                 ->whereHas('financialRequest', function($query) use ($employee) {
                     $query->where('employee_id', $employee->id);
                 })

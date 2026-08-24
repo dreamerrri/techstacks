@@ -131,12 +131,12 @@ export default function ProfileShow({ employee }) {
                             </div>
                         </div>
 
-                        <nav className="tabs tabs-bordered [&_.tab:hover]:text-primary [&_.tab:hover]:border-primary [&_.tab-active]:border-primary [&_.tab-active]:text-primary" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
+                        <nav className="tabs tabs-bordered overflow-x-auto [&_.tab:hover]:text-primary [&_.tab:hover]:border-primary [&_.tab-active]:border-primary [&_.tab-active]:text-primary" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
                             {tabs.map((tab, index) => (
                                 <button
                                     key={tab.id}
                                     type="button"
-                                    className={`tab active-tab:tab-active w-full ${activeTab === tab.id ? 'active' : ''}`}
+                                    className={`tab active-tab:tab-active whitespace-nowrap text-xs sm:text-sm ${activeTab === tab.id ? 'active' : ''}`}
                                     id={`tabs-${tab.id}-item`}
                                     data-tab={`#tabs-${tab.id}`}
                                     aria-controls={`tabs-${tab.id}`}
@@ -169,7 +169,7 @@ export default function ProfileShow({ employee }) {
                                                         <input type="text" value={personal.data.last_name} onChange={(e) => personal.setData('last_name', e.target.value)} className="input input-bordered w-full" required />
                                                     </FormField>
                                                     <FormField label="Birthdate" error={personal.errors.birthdate}>
-                                                        <input type="date" value={personal.data.birthdate} onChange={(e) => personal.setData('birthdate', e.target.value)} className="input input-bordered w-full" required max={new Date(Date.now() - 86400000).toISOString().split('T')[0]} />
+                                                        <input type="date" value={personal.data.birthdate} onChange={(e) => personal.setData('birthdate', e.target.value)} className="input input-bordered w-full" required max={(() => { const t = new Date(Date.now() - 86400000); t.setMinutes(t.getMinutes() - t.getTimezoneOffset()); return t.toISOString().split('T')[0]; })()} />
                                                     </FormField>
                                                     <FormField label="Gender" error={personal.errors.gender}>
                                                         <select value={personal.data.gender} onChange={(e) => personal.setData('gender', e.target.value)} className="select select-bordered w-full" required>

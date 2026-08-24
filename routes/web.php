@@ -29,16 +29,18 @@ Route::get('/', function () {
 // Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login',   [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login',  [AuthController::class, 'login']);
+    // Rate limited to blunt credential-stuffing / brute-force attempts
+    Route::post('/login',  [AuthController::class, 'login'])->middleware('throttle:5,1');
 
     Route::get('/register',  [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
 
 
      Route::get('/reset',  [AuthController::class, 'showReset'])->name('reset');
    
 
     Route::post('/password/reset/send', [AuthController::class, 'sendResetEmail'])
+    ->middleware('throttle:3,1')
     ->name('password.reset.submit');
 
     
@@ -82,6 +84,10 @@ Route::post('/profile/photo',       [ProfileController::class, 'updatePhoto'])->
 
     Route::middleware('permission:view.users')->prefix('users')->name('users.')->group(function () {
         Route::get('/',                [UserController::class, 'index'])->name('index');
+        // Registration approval queue
+        Route::get('/pending',         [UserController::class, 'pending'])->name('pending')->middleware('permission:edit.users');
+        Route::patch('/{user}/approve',[UserController::class, 'approveClaim'])->name('approve')->middleware('permission:edit.users');
+        Route::delete('/{user}/reject',[UserController::class, 'rejectClaim'])->name('reject')->middleware('permission:edit.users');
         Route::patch('/{user}/toggle', [UserController::class, 'toggleActive'])->name('toggle')->middleware('permission:edit.users');
         Route::patch('/{user}/role',   [UserController::class, 'updateRole'])->name('role')->middleware('permission:manage.user.roles');
     });

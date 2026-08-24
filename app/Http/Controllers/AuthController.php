@@ -77,6 +77,9 @@ public function updatePassword(Request $request)
             if (!$user->isActive()) {
                 Auth::logout();
                 $request->session()->invalidate();
+                if (is_null($user->approved_at)) {
+                    return back()->with('error', 'Your account is pending administrator approval. You will be notified once it is approved.');
+                }
                 return back()->with('error', 'Your account has been deactivated. Please contact administrator.');
             }
 
@@ -121,47 +124,17 @@ public function updatePassword(Request $request)
             'email'     => $validated['email'],
             'password'  => Hash::make($validated['password']),
             'role'      => 'employee',
-            'is_active' => true,
+            // Accounts stay inactive until an HR/Admin approves the registration
+            'is_active' => false,
         ]);
-        LogsAudit::logAction('create', 'user', "New user registered: {$user->name}"); 
-
-        // --- FIX: Auto-create a linked Employee record for every new registered user ---
-        if (!Employee::where('email', $validated['email'])->exists()) {
-            $nameParts = explode(' ', trim($validated['name']), 2);
-            $firstName = $nameParts[0];
-            $lastName  = $nameParts[1] ?? $nameParts[0];
-
-            $employee = Employee::create([
-                'user_id'           => $user->id,
-                'first_name'        => $firstName,
-                'last_name'         => $lastName,
-                'email'             => $validated['email'],
-                'birthdate'         => '1990-01-01',      // placeholder — HR should update
-                'gender'            => 'Other',
-                'civil_status'      => 'Single',
-                'address'           => '',
-                'contact_number'    => '',
-                'department'        => 'Unassigned',
-                'position'          => 'Unassigned',
-                'employment_status' => 'Probationary',
-                'date_hired'        => now()->toDateString(),
-                'salary_type'       => 'Monthly',
-                'basic_salary'      => 0,
-            ]);
-        } else {
-            // Employee record already exists (e.g. HR added them first) — just link the user_id
-            Employee::where('email', $validated['email'])
-                ->whereNull('user_id')
-                ->update(['user_id' => $user->id]);
-        }
-        // --- END FIX ---
+        LogsAudit::logAction('create', 'user', "New user registered (pending approval): {$user->name}");
 
         \Illuminate\Support\Facades\Log::info('User registration', [
             'user_id' => $user->id,
             'email'   => $user->email,
         ]);
 
-       return redirect()->route('login')->with('success', 'Registration successful! Please log in.');
+       return redirect()->route('login')->with('success', 'Registration successful! Your account is pending administrator approval. You will be able to log in once it is approved.');
     }
 
 
@@ -181,16 +154,26 @@ public function updatePassword(Request $request)
      */
 public function dashboard()
 {
-    $counts = [
-        'total_users'    => User::count(),
-        'admin_users'    => User::where('role', 'admin')->count(),
-        'hr_users'       => User::where('role', 'hr')->count(),
-        'active_users'   => User::where('is_active', true)->count(),
-        'total_employees'=> Employee::where('is_archived', false)->count(),
-        'regular'        => Employee::where('employment_status', 'Regular')->where('is_archived', false)->count(),
-        'probationary'   => Employee::where('employment_status', 'Probationary')->where('is_archived', false)->count(),
-        'archived'       => Employee::where('is_archived', true)->count(),
-    ];
+    $user = Auth::user();
+
+    // Only expose account statistics to roles whose UI actually renders them
+    $counts = [];
+    if ($user->isAdmin()) {
+        $counts += [
+            'total_users'    => User::count(),
+            'admin_users'    => User::where('role', 'admin')->count(),
+            'hr_users'       => User::where('role', 'hr')->count(),
+            'active_users'   => User::where('is_active', true)->count(),
+        ];
+    }
+    if ($user->isHR()) {
+        $counts += [
+            'total_employees'=> Employee::where('is_archived', false)->count(),
+            'regular'        => Employee::where('employment_status', 'Regular')->where('is_archived', false)->count(),
+            'probationary'   => Employee::where('employment_status', 'Probationary')->where('is_archived', false)->count(),
+            'archived'       => Employee::where('is_archived', true)->count(),
+        ];
+    }
 
     return Inertia::render('Dashboard', ['counts' => $counts]);
 }
