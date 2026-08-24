@@ -71,7 +71,7 @@ export default function Navbar({ onOpenSidebar, onToggleMinified, breadcrumbs = 
 
     return (
         <>
-            <nav className="navbar bg-base-100 gap-2 sm:gap-4 border-b border-base-300 shadow-sm sticky top-0 z-9">
+            <nav className="navbar bg-base-100 gap-2 sm:gap-4 border-b border-base-300 shadow-sm sticky top-0 z-20">
                 <div className="navbar-start min-w-0 items-center gap-2">
                     <button type="button" className="btn btn-text max-sm:btn-square sm:hidden" onClick={onOpenSidebar} aria-label="Open menu">
                         <Icon name="tabler--menu-2" className="size-5" />
@@ -181,8 +181,8 @@ export default function Navbar({ onOpenSidebar, onToggleMinified, breadcrumbs = 
                         >
                             <div className="avatar">
                                 <div className="size-9.5 rounded-full">
-                                    {user?.profile_photo ? (
-                                        <img src={user.profile_photo} alt={user.name} />
+                                    {user?.photo_url ? (
+                                        <img src={user.photo_url} alt={user.name} />
                                     ) : (
                                         <span className="flex items-center justify-center bg-base-200 size-full rounded-full">
                                             {user?.name ? user.name.charAt(0).toUpperCase() : '?'}
