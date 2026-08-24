@@ -6,6 +6,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 const theme =
     document.documentElement.dataset.theme ||
     window.__inertia_initial?.theme ||
+    localStorage.getItem('theme') ||
     'techstacks';
 
 document.documentElement.dataset.theme = theme;

@@ -93,7 +93,11 @@ export default function ProfileShow({ employee }) {
         localStorage.setItem('theme', theme);
         fetch('/settings/theme', {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+            },
             body: JSON.stringify({ theme }),
         }).catch(() => {});
     };
