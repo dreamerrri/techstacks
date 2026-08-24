@@ -79,3 +79,45 @@
         opacity: 1;
     }
 }
+/* ── CSS-only FlyonUI tooltips ─────────────────────────────────────────
+   FlyonUI's JS normally toggles 'tooltip-shown' on hover AND positions the
+   popover, but that JS is not loaded in the React app. These rules
+   replicate both so structured tooltips (.tooltip > .tooltip-toggle +
+   .tooltip-content) work. Placements used in the app: right, top. */
+.tooltip:hover > .tooltip-content,
+.tooltip:focus-within > .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tooltip {
+    position: relative;
+}
+
+.tooltip > .tooltip-content {
+    z-index: 60;
+    white-space: nowrap;
+}
+
+.\[\-\-placement\:right\] > .tooltip-content {
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    margin-left: 0.5rem;
+}
+
+.\[\-\-placement\:top\] > .tooltip-content {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 0.5rem;
+}
+
+/* FlyonUI's .drawer-body clips horizontally (overflow: hidden auto), which
+   chops off tooltips escaping the minified sidebar. The minified list is
+   short enough that vertical scrolling isn't needed, so let it show. */
+@media (min-width: 640px) {
+    .minified > .drawer-body {
+        overflow: visible;
+    }
+}

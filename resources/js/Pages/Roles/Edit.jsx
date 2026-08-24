@@ -4,7 +4,7 @@ import AppLayout from '../../components/AppLayout';
 import Icon from '../../components/Icon';
 import FormField from '../../components/FormField';
 
-export default function RolesEdit({ role, permissions }) {
+export default function RolesEdit({ roleData: role, permissions }) {
     const selectedIds = (role.permissions || []).map((p) => p.id);
 
     const { data, setData, put, processing, errors } = useForm({

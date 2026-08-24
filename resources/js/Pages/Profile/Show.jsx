@@ -136,7 +136,7 @@ export default function ProfileShow({ employee }) {
                                 <button
                                     key={tab.id}
                                     type="button"
-                                    className={`tab active-tab:tab-active whitespace-nowrap text-xs sm:text-sm ${activeTab === tab.id ? 'active' : ''}`}
+                                    className={`tab active-tab:tab-active whitespace-nowrap text-xs sm:text-sm sm:w-full ${activeTab === tab.id ? 'active' : ''}`}
                                     id={`tabs-${tab.id}-item`}
                                     data-tab={`#tabs-${tab.id}`}
                                     aria-controls={`tabs-${tab.id}`}

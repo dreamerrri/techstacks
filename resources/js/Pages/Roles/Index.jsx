@@ -15,7 +15,7 @@ export default function RolesIndex({ roles }) {
                     icon="tabler--lock"
                     tooltip="Manage all system roles and their assigned permissions."
                     baseUrl="/roles"
-                    empty="No data found."
+                    empty={roles.length === 0 ? 'No data found.' : ''}
                     actions={
                         <Link href="/roles/create" className="btn btn-soft btn-error btn-sm">
                             <Icon name="ph--plus-fill" className="size-4" /> Create Role
