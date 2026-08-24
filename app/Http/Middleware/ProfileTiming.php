@@ -38,20 +38,6 @@ class ProfileTiming
         $response->headers->set('X-Debug-Query-Count', (string) count($log));
         $response->headers->set('X-Debug-Query-Ms', number_format($queryMs, 1));
 
-        // Average per-query latency reveals network round-trip problems;
-        // the slowest single query reveals heavy scans / missing indexes.
-        if ($log) {
-            $avg = $queryMs / count($log);
-            $response->headers->set('X-Debug-Query-Avg-Ms', number_format($avg, 1));
-
-            $slowest = collect($log)->sortByDesc('time')->first();
-            if ($slowest && $slowest['time'] > 10) {
-                $safeQuery = preg_replace('/[^\x20-\x7E]/', '', $slowest['query']);
-                $response->headers->set('X-Debug-Slowest-Ms', number_format($slowest['time'], 1));
-                $response->headers->set('X-Debug-Slowest-Query', substr($safeQuery, 0, 200));
-            }
-        }
-
         return $response;
     }
 }
