@@ -1,6 +1,19 @@
+import { lazy, Suspense } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
 import AppLayout from '../components/AppLayout';
-import FullCalendarWidget from '../components/FullCalendarWidget';
+
+// FullCalendar is heavy (~250KB with plugins) — load it in the background
+// instead of blocking the dashboard's first paint on it
+const FullCalendarWidget = lazy(() => import('../components/FullCalendarWidget'));
+
+function CalendarSkeleton() {
+    return (
+        <div className="card bg-base-100 border border-base-300 p-6 mb-4 animate-pulse">
+            <div className="h-6 w-40 bg-base-200 rounded mb-4"></div>
+            <div className="h-64 bg-base-200 rounded"></div>
+        </div>
+    );
+}
 
 export default function Dashboard({ counts }) {
     const { user } = usePage().props.auth;
@@ -128,7 +141,9 @@ export default function Dashboard({ counts }) {
                         Calendar
                     </h2>
                     <div className="card flex not-prose p-4 w-full">
-                        <FullCalendarWidget />
+                        <Suspense fallback={<CalendarSkeleton />}>
+                            <FullCalendarWidget />
+                        </Suspense>
                     </div>
                 </div>
 

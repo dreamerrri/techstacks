@@ -14,14 +14,44 @@ const THEMES = [
     'slack', 'soft', 'spotify', 'valorant', 'vscode',
 ];
 
+// Downscale the image in-browser before upload so a 38px navbar avatar
+// doesn't ship (and store) a multi-megabyte original. Falls back to the
+// original file if canvas processing fails.
+async function resizeImage(file, maxDimension = 512, quality = 0.85) {
+    try {
+        const bitmap = await createImageBitmap(file);
+        const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+        if (scale >= 1 && file.size < 200 * 1024) return file;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(bitmap.width * scale);
+        canvas.height = Math.round(bitmap.height * scale);
+        canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+        return new Promise((resolve) => {
+            canvas.toBlob(
+                (blob) => resolve(blob && blob.size < file.size ? blob : file),
+                'image/jpeg',
+                quality
+            );
+        });
+    } catch {
+        return file;
+    }
+}
+
 function AvatarUpload({ photoUrl, initials, size = 'w-32 h-32' }) {
     const fileRef = useRef(null);
 
-    const handleFile = (e) => {
+    const handleFile = async (e) => {
         const file = e.target.files?.[0];
+        e.target.value = '';
         if (!file) return;
+
+        const processed = await resizeImage(file);
         const formData = new FormData();
-        formData.append('photo', file);
+        // Server validates mimes jpg,jpeg,png,webp — resized output is JPEG
+        formData.append('photo', processed, 'avatar.jpg');
         router.post('/profile/photo', formData, {
             preserveScroll: true,
             onSuccess: () => toast('success', 'Profile photo updated.'),
