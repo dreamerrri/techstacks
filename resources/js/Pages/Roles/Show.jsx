@@ -15,7 +15,7 @@ const groupByModule = (items) => {
     return groups;
 };
 
-export default function RolesShow({ role, availableUsers }) {
+export default function RolesShow({ roleData: role, availableUsers }) {
     const { auth } = usePage().props;
     const { data, setData, post, processing, errors } = useForm({ user_id: '' });
     const permissionGroups = groupByModule(role.permissions);

@@ -55,14 +55,16 @@ class RoleController extends Controller
     {
         $role->load('permissions', 'users');
         $availableUsers = User::where('role', '!=', $role->slug)->get();
-        return Inertia::render('Roles/Show', compact('role', 'availableUsers'));
+        // 'roleData' not 'role': a page prop named 'role' would overwrite the
+        // globally shared user-role string and break the sidebar nav
+        return Inertia::render('Roles/Show', ['roleData' => $role, 'availableUsers' => $availableUsers]);
     }
 
     public function edit(Role $role)
     {
         $role->load('permissions');
         $permissions = Permission::active()->get()->groupBy('module');
-        return Inertia::render('Roles/Edit', compact('role', 'permissions'));
+        return Inertia::render('Roles/Edit', ['roleData' => $role, 'permissions' => $permissions]);
     }
 
     public function update(Request $request, Role $role)
