@@ -1,111 +1,138 @@
-import { Head, router, usePage } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import AppLayout from '../../components/AppLayout';
 import Icon from '../../components/Icon';
+import DataTable from '../../components/DataTable';
 import ConfirmButton from '../../components/ConfirmButton';
-import { toast } from '../../components/toast';
 
-function ClaimRow({ claim }) {
-    const approve = () => {
-        router.patch(`/users/${claim.id}/approve`, {}, {
-            preserveScroll: true,
-            onSuccess: () => toast('success', 'Account approved.'),
-        });
-    };
-
-    return (
-        <tr className="hover:bg-base-200/60">
-            <td>
-                <div className="font-semibold text-base-content">{claim.name}</div>
-                <div className="text-xs text-subtle">{claim.email}</div>
-            </td>
-            <td className="text-xs text-subtle whitespace-nowrap">{claim.registered_at}</td>
-            <td>
-                {claim.matched_employee ? (
-                    <div className="flex flex-col gap-0.5">
-                        <span className="badge badge-soft badge-success w-fit gap-1 normal-case">
-                            <Icon name="tabler--user-check" className="size-3.5" />
-                            Match found
-                        </span>
-                        <span className="text-xs text-subtle">
-                            {claim.matched_employee.employee_id} — {claim.matched_employee.full_name},{' '}
-                            {claim.matched_employee.department} ({claim.matched_employee.employment_status})
-                        </span>
-                    </div>
-                ) : (
-                    <span className="badge badge-soft badge-warning w-fit gap-1 normal-case">
-                        <Icon name="tabler--user-question" className="size-3.5" />
-                        No match — new profile will be created
-                    </span>
-                )}
-            </td>
-            <td className="text-end">
-                <div className="flex justify-end gap-2">
-                    <button type="button" className="btn btn-soft btn-success btn-sm" onClick={approve}>
-                        <Icon name="tabler--check" className="size-4" />
-                        Approve
-                    </button>
-                    <ConfirmButton
-                        className="btn btn-soft btn-error btn-sm"
-                        title="Reject registration?"
-                        text={`This permanently removes ${claim.name}'s account. They can register again later.`}
-                        confirmText="Yes, reject it"
-                        url={`/users/${claim.id}/reject`}
-                        method="delete"
-                    >
-                        <Icon name="tabler--trash" className="size-4" />
-                        Reject
-                    </ConfirmButton>
-                </div>
-            </td>
-        </tr>
+function MatchBadge({ matched }) {
+    return matched ? (
+        <span className="badge badge-soft badge-success w-fit gap-1 normal-case">
+            <Icon name="tabler--user-check" className="size-3.5" />
+            Match found
+        </span>
+    ) : (
+        <span className="badge badge-soft badge-warning w-fit gap-1 normal-case">
+            <Icon name="tabler--user-question" className="size-3.5" />
+            No match — new profile will be created
+        </span>
     );
 }
 
 export default function UsersPending({ claims }) {
-    const { auth } = usePage().props;
-    const canManage = auth?.user?.role === 'admin' || auth?.user?.role === 'hr';
+    const approve = (claim) => {
+        router.patch(`/users/${claim.id}/approve`, {}, { preserveScroll: true });
+    };
+
+    const matchCell = (claim) => (
+        <div className="flex flex-col gap-0.5">
+            <MatchBadge matched={claim.matched_employee} />
+            {claim.matched_employee && (
+                <span className="text-xs text-subtle">
+                    {claim.matched_employee.employee_id} — {claim.matched_employee.full_name},{' '}
+                    {claim.matched_employee.department} ({claim.matched_employee.employment_status})
+                </span>
+            )}
+        </div>
+    );
 
     return (
         <AppLayout title="Pending Accounts">
             <Head title="Pending Accounts" />
 
-            <div className="card w-full min-w-0 border border-base-300 p-0">
-                <div className="px-4 sm:px-7 pt-5 pb-4 rounded-t-2xl">
-                    <h2 className="text-sm font-semibold uppercase tracking-widest text-faint flex items-center gap-2 m-0">
-                        <Icon name="tabler--user-question" className="size-4 text-primary" />
-                        <span>Registration Approval Queue</span>
-                    </h2>
-                    <p className="text-xs text-subtle mt-1 mb-0">
-                        Self-registrations stay inactive until approved. Approving links the account to a matching
-                        employee record, or creates a new profile when none exists.
-                    </p>
+            <DataTable
+                title="Registration Approval Queue"
+                icon="tabler--user-question"
+                tooltip="Self-registrations stay inactive until approved. Approving links the account to a matching employee record."
+                baseUrl="/users/pending"
+                empty={claims.length === 0 ? 'No pending registrations. You\'re all caught up.' : ''}
+            >
+                <div className="overflow-x-auto hidden md:block">
+                    <table className="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Registrant</th>
+                                <th>Registered</th>
+                                <th>Employee Match</th>
+                                <th className="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {claims.map((claim) => (
+                                <tr key={claim.id} className="row-hover">
+                                    <td>
+                                        <div className="font-semibold text-base-content">{claim.name}</div>
+                                        <div className="text-xs text-subtle">{claim.email}</div>
+                                    </td>
+                                    <td className="text-subtle text-xs whitespace-nowrap">{claim.registered_at}</td>
+                                    <td>{matchCell(claim)}</td>
+                                    <td className="text-right">
+                                        <div className="flex gap-2 justify-end items-center">
+                                            <button
+                                                type="button"
+                                                className="btn btn-soft btn-success btn-sm"
+                                                onClick={() => approve(claim)}
+                                            >
+                                                <Icon name="tabler--check" className="size-4" /> Approve
+                                            </button>
+                                            <ConfirmButton
+                                                title="Reject registration?"
+                                                text={`This permanently removes ${claim.name}'s account. They can register again later.`}
+                                                confirmText="Yes, reject it"
+                                                url={`/users/${claim.id}/reject`}
+                                                method="delete"
+                                                className="btn btn-soft btn-error btn-sm"
+                                            >
+                                                <Icon name="tabler--trash" className="size-4" /> Reject
+                                            </ConfirmButton>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
 
-                {claims.length === 0 ? (
-                    <div className="px-4 py-10 text-center">
-                        <Icon name="tabler--circle-check" className="size-10 text-success mx-auto mb-3" />
-                        <p className="text-sm text-subtle">No pending registrations. You're all caught up.</p>
-                    </div>
-                ) : (
-                    <div className="overflow-x-auto px-4 sm:px-7 pb-5">
-                        <table className="table table-sm w-full">
-                            <thead>
-                                <tr>
-                                    <th>Registrant</th>
-                                    <th>Registered</th>
-                                    <th>Employee Match</th>
-                                    {canManage && <th className="text-end">Actions</th>}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {claims.map((claim) => (
-                                    <ClaimRow key={claim.id} claim={claim} />
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </div>
+                <div className="md:hidden p-4">
+                    {claims.map((claim) => (
+                        <div key={claim.id} className="card bg-base-100 border border-base-300 p-4 mb-3">
+                            <div className="flex justify-between items-start mb-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-content text-sm font-bold flex-shrink-0">
+                                        {claim.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-base-content text-sm">{claim.name}</div>
+                                        <div className="text-xs text-subtle">{claim.email}</div>
+                                    </div>
+                                </div>
+                                <span className="text-xs text-faint whitespace-nowrap">{claim.registered_at}</span>
+                            </div>
+
+                            <div className="mb-2">{matchCell(claim)}</div>
+
+                            <div className="flex justify-between items-center flex-wrap gap-2 pt-3 border-t border-base-300">
+                                <button
+                                    type="button"
+                                    className="btn btn-success btn-sm"
+                                    onClick={() => approve(claim)}
+                                >
+                                    <Icon name="tabler--check" className="size-4" /> Approve
+                                </button>
+                                <ConfirmButton
+                                    title="Reject registration?"
+                                    text={`This permanently removes ${claim.name}'s account. They can register again later.`}
+                                    confirmText="Yes, reject it"
+                                    url={`/users/${claim.id}/reject`}
+                                    method="delete"
+                                    className="btn btn-outline btn-error btn-sm"
+                                >
+                                    <Icon name="tabler--trash" className="size-4" /> Reject
+                                </ConfirmButton>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </DataTable>
         </AppLayout>
     );
 }
