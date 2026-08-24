@@ -84,6 +84,10 @@ Route::post('/profile/photo',       [ProfileController::class, 'updatePhoto'])->
 
     Route::middleware('permission:view.users')->prefix('users')->name('users.')->group(function () {
         Route::get('/',                [UserController::class, 'index'])->name('index');
+        // Registration approval queue
+        Route::get('/pending',         [UserController::class, 'pending'])->name('pending')->middleware('permission:edit.users');
+        Route::patch('/{user}/approve',[UserController::class, 'approveClaim'])->name('approve')->middleware('permission:edit.users');
+        Route::delete('/{user}/reject',[UserController::class, 'rejectClaim'])->name('reject')->middleware('permission:edit.users');
         Route::patch('/{user}/toggle', [UserController::class, 'toggleActive'])->name('toggle')->middleware('permission:edit.users');
         Route::patch('/{user}/role',   [UserController::class, 'updateRole'])->name('role')->middleware('permission:manage.user.roles');
     });

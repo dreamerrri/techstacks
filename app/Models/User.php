@@ -27,6 +27,7 @@ class User extends Authenticatable
         'role',
          'profile_photo',
         'is_active',
+        'approved_at',
         'last_login_at',
         'theme',
     ];

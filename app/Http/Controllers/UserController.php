@@ -11,7 +11,9 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::query()->with('employee');
+        $query = User::query()->with('employee')
+            // Pending (never-approved) registrations live in the approval queue only
+            ->whereNotNull('approved_at');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -41,6 +43,7 @@ class UserController extends Controller
         return Inertia::render('Users/Index', [
             'users'  => $users,
             'filters'=> $request->only(['search', 'role', 'status']),
+            'pendingCount' => self::pendingQuery()->count(),
             'stats'  => [
                 'total_users'  => User::count(),
                 'admin_users'  => User::where('role', 'admin')->count(),
@@ -48,6 +51,100 @@ class UserController extends Controller
                 'active_users' => User::where('is_active', true)->count(),
             ],
         ]);
+    }
+
+    /**
+     * Self-registrations awaiting HR/Admin approval.
+     * Each is matched against an existing unlinked Employee dossier by email
+     * so the approver can confirm it is really that person before linking.
+     */
+    private static function pendingQuery()
+    {
+        return User::whereNull('approved_at')->orderBy('created_at');
+    }
+
+    public function pending(Request $request)
+    {
+        $claims = self::pendingQuery()
+            ->get()
+            ->map(function (User $user) {
+                $match = \App\Models\Employee::where('email', $user->email)
+                    ->whereNull('user_id')
+                    ->first();
+
+                return [
+                    'id'             => $user->id,
+                    'name'           => $user->name,
+                    'email'          => $user->email,
+                    'registered_at'  => $user->created_at?->format('M d, Y h:i A'),
+                    'matched_employee' => $match ? [
+                        'employee_id'       => $match->employee_id,
+                        'full_name'         => $match->full_name,
+                        'department'        => $match->department,
+                        'employment_status' => $match->employment_status,
+                    ] : null,
+                ];
+            });
+
+        return Inertia::render('Users/Pending', ['claims' => $claims]);
+    }
+
+    public function approveClaim(Request $request, User $user)
+    {
+        if (!is_null($user->approved_at)) {
+            return back()->with('error', 'This registration was already processed.');
+        }
+
+        $employee = \App\Models\Employee::where('email', $user->email)
+            ->whereNull('user_id')
+            ->first();
+
+        if ($employee) {
+            // HR confirmed this registrant owns the pre-created dossier — link them
+            $employee->update(['user_id' => $user->id]);
+            $message = "Account approved and linked to employee {$employee->employee_id}.";
+        } else {
+            // No dossier exists: create a bare profile for HR to complete later
+            $nameParts = explode(' ', trim($user->name), 2);
+            \App\Models\Employee::create([
+                'user_id'           => $user->id,
+                'first_name'        => $nameParts[0],
+                'last_name'         => $nameParts[1] ?? $nameParts[0],
+                'email'             => $user->email,
+                'birthdate'         => '1990-01-01', // placeholder — HR should update
+                'gender'            => 'Other',
+                'civil_status'      => 'Single',
+                'address'           => '',
+                'contact_number'    => '',
+                'department'        => 'Unassigned',
+                'position'          => 'Unassigned',
+                'employment_status' => 'Probationary',
+                'date_hired'        => now()->toDateString(),
+                'salary_type'       => 'Monthly',
+                'basic_salary'      => 0,
+            ]);
+            $message = 'Account approved. No matching employee record existed, so a new profile was created.';
+        }
+
+        $user->forceFill(['approved_at' => now(), 'is_active' => true])->save();
+        LogsAudit::logAction('approve', 'user', "Approved registration of {$user->name} ({$user->email})");
+
+        return redirect()->route('users.pending')->with('success', $message);
+    }
+
+    public function rejectClaim(Request $request, User $user)
+    {
+        if (!is_null($user->approved_at)) {
+            return back()->with('error', 'This registration was already processed.');
+        }
+        if ($user->id === Auth::id()) {
+            return back()->with('error', 'You cannot reject your own account.');
+        }
+
+        LogsAudit::logAction('reject', 'user', "Rejected registration of {$user->name} ({$user->email})");
+        $user->delete();
+
+        return redirect()->route('users.pending')->with('success', 'Registration rejected and removed.');
     }
 
     public function toggleActive(Request $request, User $user)

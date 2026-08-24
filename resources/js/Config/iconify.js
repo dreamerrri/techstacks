@@ -69,6 +69,8 @@ export const ICONS = [
     'icon-[tabler--clock-off]',
     'icon-[tabler--cube]',
     'icon-[tabler--database]',
+    'icon-[tabler--user-check]',
+    'icon-[tabler--user-question]',
     'icon-[tabler--database-off]',
     'icon-[tabler--device-floppy]',
     'icon-[tabler--eye]',
