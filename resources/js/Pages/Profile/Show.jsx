@@ -131,12 +131,12 @@ export default function ProfileShow({ employee }) {
                             </div>
                         </div>
 
-                        <nav className="tabs tabs-bordered [&_.tab:hover]:text-primary [&_.tab:hover]:border-primary [&_.tab-active]:border-primary [&_.tab-active]:text-primary" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
+                        <nav className="tabs tabs-bordered overflow-x-auto [&_.tab:hover]:text-primary [&_.tab:hover]:border-primary [&_.tab-active]:border-primary [&_.tab-active]:text-primary" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
                             {tabs.map((tab, index) => (
                                 <button
                                     key={tab.id}
                                     type="button"
-                                    className={`tab active-tab:tab-active w-full ${activeTab === tab.id ? 'active' : ''}`}
+                                    className={`tab active-tab:tab-active whitespace-nowrap text-xs sm:text-sm ${activeTab === tab.id ? 'active' : ''}`}
                                     id={`tabs-${tab.id}-item`}
                                     data-tab={`#tabs-${tab.id}`}
                                     aria-controls={`tabs-${tab.id}`}

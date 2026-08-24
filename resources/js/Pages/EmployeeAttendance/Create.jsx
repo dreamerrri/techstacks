@@ -119,7 +119,7 @@ export default function EmployeeAttendanceCreate({ todayAttendance }) {
                             <p className="text-subtle text-xs mt-1">Auto-set when you clock in</p>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-5 mb-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5 mb-5">
                             <div>
                                 <label className="label text-sm font-semibold text-base-content">Time In</label>
                                 <input type="time" name="time_in" readOnly value={data.time_in} className="input input-bordered w-full bg-base-200" />

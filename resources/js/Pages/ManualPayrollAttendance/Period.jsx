@@ -92,19 +92,19 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                     <div className="bg-base-100 border border-base-300 rounded-lg p-4">
                         <div className="text-xs text-subtle mb-1">Total Employees</div>
-                        <div className="font-bold text-2xl text-base-content">{inputs.length}</div>
+                        <div className="font-bold text-xl sm:text-2xl text-base-content">{inputs.length}</div>
                     </div>
                     <div className="bg-base-100 border border-base-300 rounded-xl p-4">
                         <div className="text-xs text-subtle mb-1">Total Gross Pay</div>
-                        <div className="text-2xl font-bold text-success">{fmtMoney(payrollPeriod.total_gross)}</div>
+                        <div className="text-lg sm:text-2xl font-bold text-success break-words">{fmtMoney(payrollPeriod.total_gross)}</div>
                     </div>
                     <div className="bg-base-100 border border-base-300 rounded-xl p-4">
                         <div className="text-xs text-subtle mb-1">Total Net Pay</div>
-                        <div className="text-2xl font-bold text-info">{fmtMoney(payrollPeriod.total_net)}</div>
+                        <div className="text-lg sm:text-2xl font-bold text-info break-words">{fmtMoney(payrollPeriod.total_net)}</div>
                     </div>
                     <div className="bg-base-100 border border-base-300 rounded-xl p-4">
                         <div className="text-xs text-subtle mb-1">Total Deductions</div>
-                        <div className="text-2xl font-bold text-error">{fmtMoney(payrollPeriod.total_deductions)}</div>
+                        <div className="text-lg sm:text-2xl font-bold text-error break-words">{fmtMoney(payrollPeriod.total_deductions)}</div>
                     </div>
                 </div>
 
