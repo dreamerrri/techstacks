@@ -18,6 +18,7 @@ class NotificationController extends Controller
         }
 
         $notification->markAsRead();
+        auth()->user()->clearUnreadNotificationsCountCache();
 
         return response()->json(['success' => true]);
     }
@@ -25,6 +26,7 @@ class NotificationController extends Controller
     public function markAllAsRead()
     {
         Notification::forCurrentUser()->unread()->update(['is_read' => true]);
+        auth()->user()->clearUnreadNotificationsCountCache();
 
         return response()->json(['success' => true]);
     }

@@ -6,6 +6,7 @@ use App\Models\PayrollInput;
 use App\Models\Employee;
 use App\Models\PayrollPeriod;
 use App\Models\CashAdvancePayment;
+use App\Models\FinancialRequest;
 use App\Services\Payroll\PayrollComputationEngine;
 use App\Services\SssContributionService;
 use App\Services\PhilHealthContributionService;
@@ -83,10 +84,50 @@ class PayrollController extends Controller
 
         $departments = Employee::active()->distinct()->pluck('department');
 
-        // Calculate payroll for each employee using the selected period
+        // Calculate payroll for each employee using the selected period.
+        // Data every calculation needs is fetched ONCE here (not per employee):
+        // this turns ~4N+ queries into 4 queries for N employees.
+        $employeeIds = $employees->pluck('id');
+
+        $firstCutoffPeriod = null;
+        if ($selectedPeriod) {
+            $firstCutoffPeriod = PayrollPeriod::whereYear('cutoff_start', $selectedPeriod->cutoff_start->year)
+                ->whereMonth('cutoff_start', $selectedPeriod->cutoff_start->month)
+                ->whereDay('cutoff_start', '<=', 15)
+                ->first();
+        }
+
+        $prefetched = [
+            'firstCutoffPeriod' => $firstCutoffPeriod,
+            'firstCutoffInputs' => $firstCutoffPeriod
+                ? PayrollInput::where('payroll_period_id', $firstCutoffPeriod->id)
+                    ->whereIn('employee_id', $employeeIds)
+                    ->get()
+                    ->keyBy('employee_id')
+                : collect(),
+            // Outstanding approved cash advances grouped by employee
+            'cashAdvances' => FinancialRequest::whereIn('employee_id', $employeeIds)
+                ->where('request_type', 'cash_advance')
+                ->where('status', 'approved')
+                ->where('amount_paid', '<', \DB::raw('amount'))
+                ->get()
+                ->groupBy('employee_id'),
+            // Employees whose cash advances were already paid for this period
+            'paidEmployeeIds' => $selectedPeriod
+                ? CashAdvancePayment::where('payroll_period_id', $selectedPeriod->id)
+                    ->whereHas('financialRequest', fn ($q) => $q->whereIn('employee_id', $employeeIds))
+                    ->with('financialRequest:id,employee_id')
+                    ->get()
+                    ->pluck('financialRequest.employee_id')
+                    ->filter()
+                    ->unique()
+                    ->values()
+                : collect(),
+        ];
+
         $payrollData = [];
         foreach ($employees as $employee) {
-            $payrollData[$employee->id] = $this->calculatePayroll($employee, $selectedPeriod);
+            $payrollData[$employee->id] = $this->calculatePayroll($employee, $selectedPeriod, $prefetched);
         }
 
         // In-memory sort by computed payroll fields (these aren't DB columns)
@@ -196,15 +237,18 @@ class PayrollController extends Controller
      * Calculate payroll for an employee using PayrollComputationEngine.
      * If a specific PayrollPeriod is given, data is scoped to that period.
      * Otherwise falls back to current → latest input.
+     *
+     * $prefetched (optional) carries batch-loaded data for list views so the
+     * loop avoids N+1 queries; single-record paths may omit it.
      */
-    private function calculatePayroll(Employee $employee, ?PayrollPeriod $period = null): array
+    private function calculatePayroll(Employee $employee, ?PayrollPeriod $period = null, ?array $prefetched = null): array
     {
         $basicSalary = $employee->basic_salary;
         $salaryType = $employee->salary_type;
 
         // Calculate working days from payroll period if available, otherwise use default 22
-        $workingDaysPerMonth = $period 
-            ? PayrollPeriod::calculateWorkingDays($period->cutoff_start, $period->cutoff_end) 
+        $workingDaysPerMonth = $period
+            ? PayrollPeriod::calculateWorkingDays($period->cutoff_start, $period->cutoff_end)
             : 22;
 
         // Resolve payroll input — use already-loaded relation if available, else query
@@ -212,16 +256,11 @@ class PayrollController extends Controller
             $payrollInput = $employee->relationLoaded('payrollInputs')
                 ? $employee->payrollInputs->first()
                 : $employee->payrollInputs()->where('payroll_period_id', $period->id)->first();
-
-            if (!$payrollInput) {
-                \Log::info("No payroll input for employee {$employee->id} in period {$period->id}");
-            }
         } else {
             $payrollInput = $employee->currentPayrollInput();
 
             if (!$payrollInput) {
                 $payrollInput = $employee->latestPayrollInput();
-                \Log::info('No current payroll period input, using latest payroll input for employee ' . $employee->id);
             }
         }
 
@@ -258,7 +297,6 @@ class PayrollController extends Controller
                 'night_diff_hours'        => $payrollInput->night_differential_hours ?? 0,
                 'holiday_days'             => $payrollInput->holiday_days ?? 0,
             ];
-            \Log::info('Payroll input data found for employee ' . $employee->id, $attendanceData);
         } else {
             $attendanceData = [
                 'days_worked'              => 0,
@@ -270,7 +308,6 @@ class PayrollController extends Controller
                 'night_diff_hours'        => 0,
                 'holiday_days'             => 0,
             ];
-            \Log::warning('No payroll input data found for employee ' . $employee->id);
         }
 
         // Prepare employee data for engine
@@ -327,16 +364,20 @@ class PayrollController extends Controller
         $firstCutoffContributions = 0;
 
         if ($period) {
-            // Fetch 1st cutoff data for the same month
-            $firstCutoffPeriod = PayrollPeriod::whereYear('cutoff_start', $period->cutoff_start->year)
-                ->whereMonth('cutoff_start', $period->cutoff_start->month)
-                ->whereDay('cutoff_start', '<=', 15)
-                ->first();
-            
-            if ($firstCutoffPeriod) {
-                $firstCutoffPayrollInput = PayrollInput::where('payroll_period_id', $firstCutoffPeriod->id)
-                    ->where('employee_id', $employee->id)
+            // 1st cutoff data for the same month (prefetched on list views)
+            $firstCutoffPeriod = $prefetched !== null
+                ? $prefetched['firstCutoffPeriod']
+                : PayrollPeriod::whereYear('cutoff_start', $period->cutoff_start->year)
+                    ->whereMonth('cutoff_start', $period->cutoff_start->month)
+                    ->whereDay('cutoff_start', '<=', 15)
                     ->first();
+
+            if ($firstCutoffPeriod) {
+                $firstCutoffPayrollInput = $prefetched !== null
+                    ? $prefetched['firstCutoffInputs']->get($employee->id)
+                    : PayrollInput::where('payroll_period_id', $firstCutoffPeriod->id)
+                        ->where('employee_id', $employee->id)
+                        ->first();
                 if ($firstCutoffPayrollInput) {
                     $firstCutoffGrossPay = $firstCutoffPayrollInput->gross_pay;
                     $firstCutoffNetPay = $firstCutoffPayrollInput->net_pay;
@@ -348,20 +389,13 @@ class PayrollController extends Controller
 
         $totalMonthlyGross = $firstCutoffGrossPay + $grossPay;
         $totalMonthlyContributions = $currentCutoffContributions * 2; // Total monthly fixed contributions
-        
+
         // Use total monthly allowances for withholding tax calculation
         // Since allowances are now per-cutoff (divided by 2), multiply by 2 to get total monthly
         $totalMonthlyAllowances = array_sum($allowances) * 2;
 
         if ($period && $period->isSecondHalfOfMonth()) {
-            \Log::info('Withholding tax calculation in PayrollController', [
-                'total_monthly_gross'         => $totalMonthlyGross,
-                'total_monthly_contributions' => $totalMonthlyContributions,
-                'total_monthly_allowances'    => $totalMonthlyAllowances,
-            ]);
-
             $withholdingTax = $this->calculateTax($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
-            \Log::info('Withholding tax result', ['withholding_tax' => $withholdingTax]);
         }
 
         $taxableIncome = $totalMonthlyGross - $totalMonthlyContributions - $totalMonthlyAllowances;
@@ -372,36 +406,38 @@ class PayrollController extends Controller
 
         // Cash advance payment deduction (50% of net pay per cutoff)
         $cashAdvancePayment = 0;
-        $approvedCashAdvances = $employee->financialRequests()
-            ->where('request_type', 'cash_advance')
-            ->where('status', 'approved')
-            ->where('amount_paid', '<', \DB::raw('amount'))
-            ->get();
+        $approvedCashAdvances = $prefetched !== null
+            ? $prefetched['cashAdvances']->get($employee->id, collect())
+            : $employee->financialRequests()
+                ->where('request_type', 'cash_advance')
+                ->where('status', 'approved')
+                ->where('amount_paid', '<', \DB::raw('amount'))
+                ->get();
 
-        if ($approvedCashAdvances->isNotEmpty()) {
-            // Skip if cash advance payments were already processed for this period
-            // (actual persistence happens when payroll input is saved, not on read)
-            $existingPayments = CashAdvancePayment::where('payroll_period_id', $period?->id ?? 0)
+        // Skip if cash advance payments were already processed for this period
+        // (actual persistence happens when payroll input is saved, not on read)
+        $alreadyPaid = $prefetched !== null
+            ? $prefetched['paidEmployeeIds']->contains($employee->id)
+            : CashAdvancePayment::where('payroll_period_id', $period?->id ?? 0)
                 ->whereHas('financialRequest', function ($query) use ($employee) {
                     $query->where('employee_id', $employee->id);
                 })
                 ->exists();
 
-            if (!$existingPayments) {
-                // Calculate total outstanding balance
-                $totalOutstanding = $approvedCashAdvances->sum(function($request) {
-                    return $request->amount - $request->amount_paid;
-                });
+        if ($approvedCashAdvances->isNotEmpty() && !$alreadyPaid) {
+            // Calculate total outstanding balance
+            $totalOutstanding = $approvedCashAdvances->sum(function($request) {
+                return $request->amount - $request->amount_paid;
+            });
 
-                // Second pass: compute net pay with all deductions (except cash advance)
-                $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax, $manualDeductions];
-                $result     = $engine->compute($employeeData, $attendanceData, $deductions, $benefits, $allowances, [], false, $cutoffStart, $cutoffEnd);
-                $netPayBeforeCashAdvance = $result['net_pay'] + $reimbursements;
+            // Second pass: compute net pay with all deductions (except cash advance)
+            $deductions = [$sssContribution, $philhealthContribution, $pagibigContribution, $withholdingTax, $manualDeductions];
+            $result     = $engine->compute($employeeData, $attendanceData, $deductions, $benefits, $allowances, [], false, $cutoffStart, $cutoffEnd);
+            $netPayBeforeCashAdvance = $result['net_pay'] + $reimbursements;
 
-                // Calculate payment as 50% of net pay (or remaining balance, whichever is lower)
-                $cashAdvancePayment = min($netPayBeforeCashAdvance * 0.5, $totalOutstanding);
-                $cashAdvancePayment = round($cashAdvancePayment, 2);
-            }
+            // Calculate payment as 50% of net pay (or remaining balance, whichever is lower)
+            $cashAdvancePayment = min($netPayBeforeCashAdvance * 0.5, $totalOutstanding);
+            $cashAdvancePayment = round($cashAdvancePayment, 2);
         }
 
         // Second pass: compute net pay with all deductions

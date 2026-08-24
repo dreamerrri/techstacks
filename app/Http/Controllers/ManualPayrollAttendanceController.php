@@ -421,14 +421,7 @@ class ManualPayrollAttendanceController extends Controller
         
         if ($period && $period->isSecondHalfOfMonth()) {
             $totalContributions = $sssContribution + $philhealthContribution + $pagibigContribution;
-            \Log::info('Withholding tax calculation in ManualPayrollAttendanceController', [
-                'gross_pay' => $grossPay,
-                'sss_contribution' => $sssContribution,
-                'philhealth_contribution' => $philhealthContribution,
-                'pagibig_contribution' => $pagibigContribution,
-                'total_contributions' => $totalContributions,
-            ]);
-            
+
             // Fetch 1st cutoff pay for the same month
             $firstCutoffPeriod = PayrollPeriod::whereYear('cutoff_start', $period->cutoff_start->year)
                 ->whereMonth('cutoff_start', $period->cutoff_start->month)
@@ -456,12 +449,6 @@ class ManualPayrollAttendanceController extends Controller
 $withholdingTaxService = new WithholdingTaxService();
 $taxResult = $withholdingTaxService->calculate($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
 $withholdingTax = $taxResult['tax'];
-            \Log::info('Withholding tax result in ManualPayrollAttendanceController', [
-                'total_monthly_gross' => $totalMonthlyGross,
-                'total_monthly_contributions' => $totalMonthlyContributions,
-                'total_monthly_allowances' => $totalMonthlyAllowances,
-                'withholding_tax' => $withholdingTax
-            ]);
         }
 
         // Total government contributions
@@ -561,8 +548,6 @@ $withholdingTax = $taxResult['tax'];
      */
     public function save(Request $request)
     {
-        \Log::info('Save payroll input attempt', $request->all());
-
         try {
             $validated = $request->validate([
                 'payroll_period_id' => 'required|exists:payroll_periods,id',
@@ -581,8 +566,6 @@ $withholdingTax = $taxResult['tax'];
                 'reimbursements' => 'nullable|numeric|min:0',
                 'reimbursements_remarks' => 'nullable|string|max:255',
             ]);
-
-            \Log::info('Validation passed', $validated);
 
             // Guard: period must still be a draft
             $period = PayrollPeriod::findOrFail($validated['payroll_period_id']);
@@ -627,7 +610,6 @@ $withholdingTax = $taxResult['tax'];
             $employee = Employee::findOrFail($validated['employee_id']);
 
             if ($payrollInput) {
-                \Log::info('Updating existing payroll input', ['payroll_input_id' => $payrollInput->id]);
                 // Update existing
                 $payrollInput->fill([
                     'daily_rate' => $validated['daily_rate'],
@@ -659,10 +641,7 @@ $withholdingTax = $taxResult['tax'];
                     // Recompute payroll with cash advance deduction included
                     $payrollInput->computePay()->save();
                 }
-                
-                \Log::info('Payroll input updated successfully', ['payroll_input_id' => $payrollInput->id]);
             } else {
-                \Log::info('Creating new payroll input');
                 // Create new
                 $payrollInput = new PayrollInput([
                     'payroll_period_id' => $validated['payroll_period_id'],
@@ -697,8 +676,6 @@ $withholdingTax = $taxResult['tax'];
                     // Recompute payroll with cash advance deduction included
                     $payrollInput->computePay()->save();
                 }
-                
-                \Log::info('Payroll input created successfully', ['payroll_input_id' => $payrollInput->id]);
             }
 
             return redirect()->route('manual-payroll-attendance.period', $period)

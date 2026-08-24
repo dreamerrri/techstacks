@@ -158,14 +158,6 @@ class EmployeeAttendanceController extends Controller
             }
         }
 
-        // Log the received data for debugging
-        \Log::info('Attendance save attempt', [
-            'time_in' => $validated['time_in'] ?? 'null',
-            'time_out' => $validated['time_out'] ?? 'null',
-            'time_in_type' => gettype($validated['time_in'] ?? null),
-            'time_out_type' => gettype($validated['time_out'] ?? null),
-        ]);
-
         // Check if attendance already exists for this date, update if it does
         $existingAttendance = Attendance::where('employee_id', $employee->id)
             ->where('date', $validated['date'])
@@ -200,15 +192,6 @@ class EmployeeAttendanceController extends Controller
             ]);
         }
 
-        // Log the created attendance
-        \Log::info('Attendance created', [
-            'id' => $attendance->id,
-            'time_in' => $attendance->time_in,
-            'time_out' => $attendance->time_out,
-            'rendered_hours' => $attendance->rendered_hours,
-            'computed_days' => $attendance->computed_days,
-        ]);
-
         $message = 'Attendance recorded successfully.';
         if ($autoClockOutApplied) {
             $message = 'Attendance recorded successfully. Auto clock-out applied (exceeded 9 hours).';
@@ -230,13 +213,6 @@ class EmployeeAttendanceController extends Controller
         if (!$user->isAdmin() && !$user->isHR()) {
             return back()->with('error', 'Only administrators and HR can update attendance records.');
         }
-
-        // Log incoming request for debugging
-        \Log::info('Attendance update request', [
-            'all' => $request->all(),
-            'time_in' => $request->input('time_in'),
-            'time_out' => $request->input('time_out'),
-        ]);
 
         $validated = $request->validate([
             'date' => 'required|date',
@@ -312,16 +288,6 @@ class EmployeeAttendanceController extends Controller
             'time_in' => $validated['time_in'],
             'time_out' => $validated['time_out'],
             'remarks' => $validated['remarks'],
-        ]);
-
-        // Log the updated attendance
-        \Log::info('Attendance updated by HR/Admin', [
-            'id' => $attendance->id,
-            'time_in' => $attendance->time_in,
-            'time_out' => $attendance->time_out,
-            'rendered_hours' => $attendance->rendered_hours,
-            'computed_days' => $attendance->computed_days,
-            'edited_by' => $user->id,
         ]);
 
         $message = 'Attendance updated successfully.';

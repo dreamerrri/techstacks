@@ -95,6 +95,38 @@ class User extends Authenticatable
         return $this->is_active;
     }
 
+    /**
+     * Unread notification count, cached briefly so shared Inertia props
+     * don't run an extra COUNT query on every page load.
+     */
+    public function cachedUnreadNotificationsCount(): int
+    {
+        return \Illuminate\Support\Facades\Cache::remember(
+            "unread_notifications:{$this->id}",
+            now()->addSeconds(60),
+            function () {
+                return (int) \App\Models\Notification::query()
+                    ->where(function ($q) {
+                        if ($this->role === 'admin' || $this->role === 'hr') {
+                            $q->where('audience_type', 'hr_admin')
+                              ->orWhere('audience_type', 'all')
+                              ->orWhere('user_id', $this->id);
+                        } else {
+                            $q->where('audience_type', 'all')
+                              ->orWhere('user_id', $this->id);
+                        }
+                    })
+                    ->unread()
+                    ->count();
+            }
+        );
+    }
+
+    public function clearUnreadNotificationsCountCache(): void
+    {
+        \Illuminate\Support\Facades\Cache::forget("unread_notifications:{$this->id}");
+    }
+
    // Replace the broken employee() method
 public function employee(): HasOne
 {

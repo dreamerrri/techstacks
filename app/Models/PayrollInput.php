@@ -69,17 +69,6 @@ class PayrollInput extends Model
      */
     public function computePay(): static
     {
-        \Log::info('Computing pay for payroll input', [
-            'daily_rate' => $this->daily_rate,
-            'days_worked' => $this->days_worked,
-            'overtime_hours' => $this->overtime_hours,
-            'late_hours' => $this->late_hours,
-            'holiday_days' => $this->holiday_days,
-            'night_differential_hours' => $this->night_differential_hours,
-            'allowances' => $this->allowances,
-            'deductions' => $this->deductions,
-        ]);
-
         // Use PayrollComputationEngine for consistency
         $engine = new \App\Services\Payroll\PayrollComputationEngine();
         
@@ -166,15 +155,9 @@ class PayrollInput extends Model
             // Since allowances are divided by 2 per cutoff, multiply by 2 to get total monthly
             $totalMonthlyAllowances = $this->allowances * 2;
 
-            \Log::info('Withholding tax calculation in PayrollInput', [
-                'total_monthly_gross' => $totalMonthlyGross,
-                'total_monthly_contributions' => $totalMonthlyContributions,
-                'total_monthly_allowances' => $totalMonthlyAllowances,
-            ]);
-$withholdingTaxService = new \App\Services\WithholdingTaxService();
-$taxResult = $withholdingTaxService->calculate($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
-$withholdingTax = $taxResult['tax'];
-            \Log::info('Withholding tax result in PayrollInput', ['withholding_tax' => $withholdingTax]);
+            $withholdingTaxService = new \App\Services\WithholdingTaxService();
+            $taxResult = $withholdingTaxService->calculate($totalMonthlyGross, $totalMonthlyContributions, $totalMonthlyAllowances);
+            $withholdingTax = $taxResult['tax'];
         }
 
         // Total government contributions
@@ -201,13 +184,6 @@ $withholdingTax = $taxResult['tax'];
 
         $this->gross_pay = $result['gross_pay'];
         $this->net_pay = $result['net_pay'] + ($this->reimbursements ?? 0);
-
-        \Log::info('Payroll computation complete', [
-            'gross_pay' => $this->gross_pay,
-            'net_pay' => $this->net_pay,
-            'government_deductions' => $governmentDeductions,
-            'manual_deductions' => $manualDeductions,
-        ]);
 
         return $this;
     }

@@ -39,16 +39,26 @@ class HandleInertiaRequests extends Middleware
 
         $role = $user?->role === 'admin' ? 'admin' : ($user?->role === 'hr' ? 'hr' : 'user');
 
-        $notifications = $user
-            ? \App\Models\Notification::forCurrentUser()
+        $notifications = collect();
+        $notifCount = 0;
+
+        if ($user) {
+            // Single scoped list query; the count comes from a short-lived cache
+            // (User::cachedUnreadNotificationsCount) instead of a second query.
+            $notifications = \App\Models\Notification::forCurrentUser()
                 ->where(function ($q) {
                     $q->where('is_read', false)
                       ->orWhere('is_resolved', false);
                 })
                 ->latest()
                 ->limit(50)
-                ->get()
-            : collect();
+                ->get([
+                    'id', 'user_id', 'type', 'title', 'message',
+                    'link', 'is_read', 'created_at',
+                ]);
+
+            $notifCount = $user->cachedUnreadNotificationsCount();
+        }
 
         return [
             ...parent::share($request),
@@ -80,7 +90,7 @@ class HandleInertiaRequests extends Middleware
                 'info'    => fn () => $request->session()->get('info'),
             ],
             'notifications' => $notifications,
-            'notifCount'    => $user ? \App\Models\Notification::forCurrentUser()->unread()->count() : 0,
+            'notifCount'    => $notifCount,
         ];
     }
 }

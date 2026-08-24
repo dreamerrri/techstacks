@@ -90,16 +90,44 @@ class Notification extends Model
 
     public static function createForEmployee(array $data): self
     {
-        return self::create(array_merge($data, ['audience_type' => 'employee']));
+        $notification = self::create(array_merge($data, ['audience_type' => 'employee']));
+        if (!empty($data['user_id'])) {
+            self::clearUnreadCountsForUserIds([(int) $data['user_id']]);
+        }
+        return $notification;
     }
 
     public static function createForHrAdmin(array $data): self
     {
-        return self::create(array_merge($data, ['audience_type' => 'hr_admin']));
+        $notification = self::create(array_merge($data, ['audience_type' => 'hr_admin']));
+        self::clearUnreadCountsForRoles(['admin', 'hr']);
+        return $notification;
     }
 
     public static function createForAll(array $data): self
     {
-        return self::create(array_merge($data, ['audience_type' => 'all']));
+        $notification = self::create(array_merge($data, ['audience_type' => 'all']));
+        self::clearUnreadCountsForUserIds(\App\Models\User::pluck('id')->all());
+        return $notification;
+    }
+
+    /**
+     * Invalidate cached unread-badge counts (see User::cachedUnreadNotificationsCount).
+     * Creation is rare compared to page loads, so the extra queries here are cheap.
+     */
+    private static function clearUnreadCountsForUserIds(array $userIds): void
+    {
+        if (!$userIds) {
+            return;
+        }
+        \App\Models\User::query()->whereIn('id', $userIds)->get()
+            ->each->clearUnreadNotificationsCountCache();
+    }
+
+    private static function clearUnreadCountsForRoles(array $roles): void
+    {
+        self::clearUnreadCountsForUserIds(
+            \App\Models\User::query()->whereIn('role', $roles)->pluck('id')->all()
+        );
     }
 }
