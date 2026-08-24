@@ -50,15 +50,7 @@ class Attendance extends Model
      */
     public function computeRenderedHours(): float
     {
-        \Log::info('computeRenderedHours called', [
-            'time_in' => $this->time_in,
-            'time_out' => $this->time_out,
-            'time_in_type' => gettype($this->time_in),
-            'time_out_type' => gettype($this->time_out),
-        ]);
-
         if (!$this->time_in || !$this->time_out) {
-            \Log::info('computeRenderedHours: times missing, returning 0');
             return 0;
         }
 
@@ -69,7 +61,7 @@ class Attendance extends Model
 
             // Calculate total minutes difference
             $totalMinutes = $timeOut->diffInMinutes($timeIn);
-            
+
             // Ensure we get positive value (time_out should be after time_in)
             if ($totalMinutes < 0) {
                 $totalMinutes = abs($totalMinutes);
@@ -78,17 +70,13 @@ class Attendance extends Model
             // Convert to hours
             $hours = $totalMinutes / 60;
 
-            \Log::info('computeRenderedHours: calculated hours', ['hours' => $hours]);
-
             // Handle break time (e.g., 1 hour break for shifts > 4 hours)
             // This can be configured based on company policy
             if ($hours > 4) {
                 $hours -= 1; // Subtract 1 hour break
             }
 
-            $result = round(max(0, $hours), 2);
-            \Log::info('computeRenderedHours: result', ['result' => $result]);
-            return $result;
+            return round(max(0, $hours), 2);
         } catch (\Exception $e) {
             \Log::error('computeRenderedHours error', ['error' => $e->getMessage()]);
             return 0;
