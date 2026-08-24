@@ -35,8 +35,10 @@ class AuditLogController extends Controller
         $logs = $query->paginate(67)->onEachSide(1);
    
 
-        $modules = AuditLog::distinct()->pluck('module')->sort();
-        $actions = AuditLog::distinct()->pluck('action')->sort();
+        // values() reindexes after sort() so these serialize as JSON arrays,
+        // not objects (objects crash .map() on the frontend)
+        $modules = AuditLog::distinct()->pluck('module')->filter()->sort()->values();
+        $actions = AuditLog::distinct()->pluck('action')->filter()->sort()->values();
 
         return Inertia::render('AuditLogs/Index', [
             'logs' => $logs,
