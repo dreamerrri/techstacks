@@ -123,21 +123,42 @@ export default function Sidebar({ open, onClose, minified }) {
         </nav>
     );
 
+    // Close the mobile drawer on Escape
+    useEffect(() => {
+        if (!open) return;
+        const onKey = (e) => {
+            if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [open, onClose]);
+
     return (
-        <aside
-            id="collapsible-mini-sidebar"
-            className={[
-                'overlay [--auto-close:sm] border-r border-base-300 drawer drawer-start',
-                'hidden sm:fixed sm:inset-y-0 sm:start-0 sm:z-10 sm:flex sm:translate-x-0',
-                open ? 'open translate-x-0' : '',
-                'w-[var(--sidebar-w)] max-sm:w-52',
-                minified ? 'minified w-[var(--sidebar-w-mini)]' : '',
-            ].join(' ')}
-            role="dialog"
-            tabIndex="-1"
-        >
-            {header}
-            {minified ? CollapsedNav : ExpandedNav}
-        </aside>
+        <>
+            {/* Mobile backdrop — click to close */}
+            <div
+                className={`fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 sm:hidden ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                onClick={onClose}
+                aria-hidden="true"
+            />
+            <aside
+                id="collapsible-mini-sidebar"
+                className={[
+                    'border-r border-base-300 drawer drawer-start',
+                    'fixed inset-y-0 start-0 z-[70] flex flex-col transition-transform duration-300',
+                    'w-[var(--sidebar-w)] max-sm:w-52',
+                    minified ? 'minified sm:w-[var(--sidebar-w-mini)]' : '',
+                    // Mobile: slides in/out via React state
+                    open ? 'max-sm:translate-x-0 max-sm:shadow-2xl' : 'max-sm:-translate-x-full rtl:max-sm:translate-x-full',
+                    // Desktop: always pinned open (minify handled via width classes)
+                    'sm:z-10',
+                ].join(' ')}
+                role="dialog"
+                tabIndex="-1"
+            >
+                {header}
+                {minified ? CollapsedNav : ExpandedNav}
+            </aside>
+        </>
     );
 }
