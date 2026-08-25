@@ -1,14 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 @import 'tailwindcss';
 @plugin '@iconify/tailwind4';
-@import './flyonui.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 @source '../**/*.jsx';
-@source '../../node_modules/flyonui/flyonui.js';
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
@@ -50,11 +48,10 @@
 @import './utilities/helpers.css';
 
 /* â”€â”€ Auth pages (login/register/reset/update-password) â”€â”€ */
-@import './auth.css';
 
 
 
-/* „Ÿ„Ÿ shadcn/ui design tokens „Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
+/* ï¿½ï¿½ï¿½ï¿½ shadcn/ui design tokens ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
    Raw values live in --sc-* vars scoped per data-theme; the @theme inline
    block exposes them as utilities. Kit components use non-colliding
    aliases (brand/soft/dim/highlight) so legacy FlyonUI utilities
@@ -128,3 +125,44 @@
     --color-focusring: var(--sc-ring);
     --radius-shad: var(--sc-radius);
 }
+
+
+/* â”€â”€ FlyonUI compatibility shim â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   Minimal replacements for legacy class names still used by pages after
+   the FlyonUI removal. Style with design tokens. */
+.input,
+.select,
+.textarea {
+    height: 2.25rem;
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid var(--sc-input);
+    background-color: var(--sc-background);
+    color: var(--sc-foreground);
+    padding-inline: 0.75rem;
+    font-size: 0.875rem;
+    outline: none;
+}
+.textarea { height: auto; padding-block: 0.5rem; }
+.input:focus, .select:focus, .textarea:focus {
+    border-color: var(--sc-ring);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--sc-ring) 30%, transparent);
+}
+.select { cursor: pointer; }
+.label { display: block; margin-bottom: 0.35rem; font-size: 0.8rem; font-weight: 600; }
+.label-text { display: block; font-size: 0.85rem; font-weight: 600; }
+.table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.table th {
+    text-align: left;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sc-muted-foreground);
+    border-bottom: 1px solid var(--sc-border);
+    white-space: nowrap;
+}
+.table td { padding: 0.7rem 0.9rem; vertical-align: middle; }
+.table tbody tr { border-bottom: 1px solid color-mix(in oklab, var(--sc-border) 60%, transparent); }
+.table-hover tbody tr:hover td { background-color: color-mix(in oklab, var(--sc-primary) 5%, transparent); }

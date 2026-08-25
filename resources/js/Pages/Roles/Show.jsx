@@ -31,12 +31,12 @@ export default function RolesShow({ roleData: role, availableUsers }) {
             <Head title="Role Details" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/roles" className="back-link text-subtle no-underline text-sm hover:text-success">
+                    <Link href="/roles" className="back-link text-dim-foreground no-underline text-sm hover:text-success">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Roles
                     </Link>
                 </div>
 
-                <div className="card bg-base-100 shadow-sm p-6">
+                <div className="rounded-xl border border-edge bg-card p-6">
                     <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
                         <div className="flex items-center gap-4">
                             <div className="w-14 h-14 rounded-full bg-gradient-to-br from-error to-error/80 flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
@@ -44,21 +44,21 @@ export default function RolesShow({ roleData: role, availableUsers }) {
                             </div>
                             <div>
                                 <h2 className="text-xl font-bold text-base-content m-0">{role.name}</h2>
-                                <code className="text-xs text-subtle bg-base-200 px-2 py-0.5 rounded">{role.slug}</code>
+                                <code className="text-xs text-dim-foreground bg-base-200 px-2 py-0.5 rounded">{role.slug}</code>
                             </div>
                         </div>
-                        <Link href={`/roles/${role.id}/edit`} className="btn btn-soft btn-error btn-sm">
+                        <Link href={`/roles/${role.id}/edit`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10">
                             <Icon name="tabler--pencil" className="size-4" /> Edit Role
                         </Link>
                     </div>
 
                     <div className="mb-8">
-                        <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-dim-foreground/70 border-b-2 border-error/20 pb-2 mb-4">
                             <Icon name="tabler--user" className="size-4 text-error inline" /> Role Information
                         </h3>
                         <div className="flex flex-col">
                             <DetailRow label="Description">
-                                <span className="text-muted">{role.description || '—'}</span>
+                                <span className="text-dim-foreground">{role.description || '—'}</span>
                             </DetailRow>
                             <DetailRow label="Status">
                                 {role.is_active ? <StatusBadge type="success">Active</StatusBadge> : <StatusBadge type="error">Inactive</StatusBadge>}
@@ -69,18 +69,18 @@ export default function RolesShow({ roleData: role, availableUsers }) {
                     </div>
 
                     <div className="mb-8">
-                        <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-dim-foreground/70 border-b-2 border-error/20 pb-2 mb-4">
                             <Icon name="ph--key-fill" className="size-4 text-error inline" /> Permissions ({role.permissions?.length ?? 0})
                         </h3>
                         {role.permissions?.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                 {Object.entries(permissionGroups).map(([module, perms]) => (
-                                    <div key={module} className="bg-base-200 border border-base-300 rounded-xl p-4">
-                                        <div className="text-xs font-bold text-subtle uppercase tracking-widest mb-3">
+                                    <div key={module} className="bg-base-200 border border-edge rounded-xl p-4">
+                                        <div className="text-xs font-bold text-dim-foreground uppercase tracking-widest mb-3">
                                             {module.charAt(0).toUpperCase() + module.slice(1)}
                                         </div>
                                         {perms.map((permission) => (
-                                            <div key={permission.id} className="flex items-center gap-2 text-xs text-muted mb-1.5">
+                                            <div key={permission.id} className="flex items-center gap-2 text-xs text-dim-foreground mb-1.5">
                                                 <Icon name="tabler--circle-check" className="size-3.5 text-success flex-shrink-0" />
                                                 {permission.name}
                                             </div>
@@ -89,12 +89,12 @@ export default function RolesShow({ roleData: role, availableUsers }) {
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-faint text-sm m-0">No permissions assigned to this role.</p>
+                            <p className="text-dim-foreground/70 text-sm m-0">No permissions assigned to this role.</p>
                         )}
                     </div>
 
                     <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-dim-foreground/70 border-b-2 border-error/20 pb-2 mb-4">
                             <Icon name="tabler--user" className="size-4 text-error inline" /> Assigned Users ({role.users?.length ?? 0})
                         </h3>
 
@@ -112,7 +112,7 @@ export default function RolesShow({ roleData: role, availableUsers }) {
                                         <option key={user.id} value={user.id}>{user.name} ({user.email})</option>
                                     ))}
                                 </select>
-                                <button type="submit" className="btn btn-soft btn-error btn-sm" disabled={processing}>
+                                <button type="submit" className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10" disabled={processing}>
                                     <Icon name="tabler--user-plus" className="size-4" /> Assign User
                                 </button>
                             </form>
@@ -122,14 +122,14 @@ export default function RolesShow({ roleData: role, availableUsers }) {
                         {role.users?.length > 0 ? (
                             <div className="flex flex-col gap-2">
                                 {role.users.map((user) => (
-                                    <div key={user.id} className="flex justify-between items-center p-3 border border-base-300 rounded-xl hover:shadow-md transition-shadow">
+                                    <div key={user.id} className="flex justify-between items-center p-3 border border-edge rounded-xl hover:shadow-md transition-shadow">
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-error to-error/80 flex items-center justify-center text-white font-bold flex-shrink-0">
                                                 {user.name.charAt(0).toUpperCase()}
                                             </div>
                                             <div>
                                                 <div className="font-semibold text-base-content text-sm">{user.name}</div>
-                                                <div className="text-subtle text-xs">{user.email}</div>
+                                                <div className="text-dim-foreground text-xs">{user.email}</div>
                                             </div>
                                         </div>
                                         {user.id !== auth?.user?.id && (
@@ -139,7 +139,7 @@ export default function RolesShow({ roleData: role, availableUsers }) {
                                                 confirmText="Yes, remove"
                                                 url={`/roles/${role.id}/users/${user.id}`}
                                                 method="delete"
-                                                className="btn btn-soft btn-error btn-sm"
+                                                className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10"
                                             >
                                                 <Icon name="tabler--user-minus" className="size-4" /> Remove
                                             </ConfirmButton>
@@ -148,7 +148,7 @@ export default function RolesShow({ roleData: role, availableUsers }) {
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-faint text-sm m-0">No users assigned to this role.</p>
+                            <p className="text-dim-foreground/70 text-sm m-0">No users assigned to this role.</p>
                         )}
                     </div>
                 </div>

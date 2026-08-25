@@ -34,12 +34,12 @@ export default function RolesCreate({ permissions }) {
             <Head title="Create Role" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/roles" className="back-link text-base-content no-underline text-sm hover:text-primary">
+                    <Link href="/roles" className="back-link text-base-content no-underline text-sm hover:text-brand">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Roles
                     </Link>
                 </div>
 
-                <div className="card bg-base-100 shadow-md p-6">
+                <div className="rounded-xl border border-edge bg-card shadow-md p-6">
                     <h2 className="text-base font-bold text-base-content mb-6 flex items-center gap-2">
                         <Icon name="tabler--id-badge" className="size-5 text-error" /> Create New Role
                     </h2>
@@ -101,12 +101,12 @@ export default function RolesCreate({ permissions }) {
                             {Object.keys(permissions || {}).length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                     {Object.entries(permissions).map(([module, modulePermissions]) => (
-                                        <div key={module} className="bg-base-200 border border-base-300 rounded-xl p-4">
+                                        <div key={module} className="bg-base-200 border border-edge rounded-xl p-4">
                                             <div className="text-xs font-bold text-base-content uppercase tracking-widest mb-3">
                                                 {module.charAt(0).toUpperCase() + module.slice(1)}
                                             </div>
                                             {modulePermissions.map((permission) => (
-                                                <label key={permission.id} className="flex items-center gap-2 cursor-pointer text-xs text-muted mb-2">
+                                                <label key={permission.id} className="flex items-center gap-2 cursor-pointer text-xs text-dim-foreground mb-2">
                                                     <input
                                                         type="checkbox"
                                                         checked={data.permissions.includes(permission.id)}
@@ -124,7 +124,7 @@ export default function RolesCreate({ permissions }) {
                             )}
                         </div>
 
-                        <div className="flex gap-3 flex-wrap pt-4 border-t border-base-300">
+                        <div className="flex gap-3 flex-wrap pt-4 border-t border-edge">
                             <button type="submit" className="btn btn-soft btn-error" disabled={processing}>
                                 <Icon name="tabler--device-floppy" className="size-4" /> Create Role
                             </button>

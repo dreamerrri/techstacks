@@ -67,20 +67,20 @@ export default function CreatePayrollPeriod() {
             <Head title="Create Payroll Period" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/manual-payroll-attendance" className="text-subtle no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
+                    <Link href="/manual-payroll-attendance" className="text-dim-foreground no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-brand">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Payroll Periods
                     </Link>
                 </div>
 
-                <span className="badge badge-soft badge-info mb-2">
+                <span className="inline-flex items-center gap-1 rounded-full border border-transparent bg-highlight/12 px-2.5 py-0.5 text-xs font-medium text-highlight mb-2">
                     <Icon name="tabler--calendar-plus" className="size-3.5" /> Create Payroll Period
                 </span>
                 <h2 className="text-lg font-bold text-base-content mt-2 mb-1">New Payroll Period</h2>
-                <p className="text-subtle m-0">Pick a start date — end date and pay date are computed automatically</p>
+                <p className="text-dim-foreground m-0">Pick a start date — end date and pay date are computed automatically</p>
 
                 <div className="max-w-[600px] mt-6">
-                    <div className="card bg-base-100 border border-base-300 p-0 overflow-hidden">
-                        <div className="px-6 py-5 border-b border-base-300 flex items-center justify-between">
+                    <div className="rounded-xl border border-edge bg-card p-0 overflow-hidden">
+                        <div className="px-6 py-5 border-b border-edge flex items-center justify-between">
                             <h3 className="text-sm font-bold text-base-content m-0">Payroll Period Details</h3>
                             <span className={`badge ${computed ? (computed.isP1 ? 'badge-soft badge-info' : 'badge-soft badge-secondary') : 'hidden'}`}>
                                 {computed ? (computed.isP1 ? '1st Half' : '2nd Half') : ''}
@@ -97,20 +97,20 @@ export default function CreatePayrollPeriod() {
                                     onChange={(e) => handleStartChange(e.target.value)}
                                     className={`input input-bordered w-full ${errors.cutoff_start ? 'border-error' : ''}`}
                                 />
-                                <p className="text-subtle text-xs mt-1">The period will cover 15 days starting from this date.</p>
+                                <p className="text-dim-foreground text-xs mt-1">The period will cover 15 days starting from this date.</p>
                                 {errors.cutoff_start && <p className="text-error text-sm mt-1.5">{errors.cutoff_start}</p>}
                             </div>
 
                             <div className="mb-5">
                                 <label className="label label-text font-semibold text-sm text-base-content">
-                                    Cutoff End Date <span className="font-normal text-faint text-xs">— auto</span>
+                                    Cutoff End Date <span className="font-normal text-dim-foreground/70 text-xs">— auto</span>
                                 </label>
                                 <input type="text" disabled value={computed ? fmtLong(computed.end) : 'Computed after picking start date'} placeholder="Computed after picking start date" className="input input-bordered w-full bg-base-200" />
                             </div>
 
                             <div className="mb-7">
                                 <label className="label label-text font-semibold text-sm text-base-content">
-                                    Payroll Date <span className="font-normal text-faint text-xs">— auto (5 days after end)</span>
+                                    Payroll Date <span className="font-normal text-dim-foreground/70 text-xs">— auto (5 days after end)</span>
                                 </label>
                                 <input type="text" disabled value={computed ? fmtLong(computed.payroll) : 'Computed after picking start date'} placeholder="Computed after picking start date" className="input input-bordered w-full bg-base-200" />
                             </div>

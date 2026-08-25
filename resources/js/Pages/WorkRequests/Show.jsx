@@ -59,23 +59,23 @@ export default function WorkRequestsShow({ workRequest }) {
     };
 
     const statusColor = workRequest.status === 'pending' ? 'text-warning' : workRequest.status === 'approved' ? 'text-success' : workRequest.status === 'rejected' ? 'text-error' : 'text-base-content';
-    const statusBg = workRequest.status === 'pending' ? 'bg-warning/10 border border-warning' : workRequest.status === 'approved' ? 'bg-success/10 border border-success' : workRequest.status === 'rejected' ? 'bg-error/10 border border-error' : 'bg-base-200 border border-base-300';
+    const statusBg = workRequest.status === 'pending' ? 'bg-warning/10 border border-warning' : workRequest.status === 'approved' ? 'bg-success/10 border border-success' : workRequest.status === 'rejected' ? 'bg-error/10 border border-error' : 'bg-base-200 border border-edge';
 
     return (
         <AppLayout>
             <Head title="Work Request Details" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/work-requests" className="back-link text-subtle no-underline text-sm hover:text-primary">
+                    <Link href="/work-requests" className="back-link text-dim-foreground no-underline text-sm hover:text-brand">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Requests
                     </Link>
                 </div>
 
-                <div className="card bg-base-100 shadow-sm p-6">
+                <div className="rounded-xl border border-edge bg-card p-6">
                     <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                         <div>
                             <h2 className="text-lg font-bold text-base-content mb-1">Work Request #{workRequest.id}</h2>
-                            <p className="text-subtle text-sm m-0">Submitted on {fmt(workRequest.created_at)}</p>
+                            <p className="text-dim-foreground text-sm m-0">Submitted on {fmt(workRequest.created_at)}</p>
                         </div>
                     </div>
 
@@ -87,7 +87,7 @@ export default function WorkRequestsShow({ workRequest }) {
                                     {workRequest.status.charAt(0).toUpperCase() + workRequest.status.slice(1)}
                                 </div>
                                 {workRequest.status === 'approved' && workRequest.approved_at && (
-                                    <div className="text-xs text-muted">
+                                    <div className="text-xs text-dim-foreground">
                                         Approved on {fmt(workRequest.approved_at)}
                                         {workRequest.approved_by ? ` by ${workRequest.approved_by.name}` : ''}
                                     </div>
@@ -99,21 +99,21 @@ export default function WorkRequestsShow({ workRequest }) {
                         </div>
                     </div>
 
-                    <div className="card bg-base-200/50 border border-base-300 shadow-sm p-4 mb-4">
-                        <h3 className="text-muted mb-3 text-sm font-bold flex items-center gap-2">
+                    <div className="card bg-base-200/50 border border-edge shadow-sm p-4 mb-4">
+                        <h3 className="text-dim-foreground mb-3 text-sm font-bold flex items-center gap-2">
                             <Icon name="tabler--info-circle" className="size-4" /> Details
                         </h3>
                         <div className="flex flex-wrap gap-2 mb-2">
                             {canManage && (
-                                <span className="badge badge-soft badge-neutral gap-1.5">
+                                <span className="inline-flex items-center gap-1 rounded-full border border-edge bg-dim px-2.5 py-0.5 text-xs font-medium text-dim-foreground gap-1.5">
                                     <Icon name="tabler--user" className="size-4" /> {workRequest.employee?.full_name}
                                 </span>
                             )}
-                            <span className="badge badge-soft badge-neutral gap-1.5">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-edge bg-dim px-2.5 py-0.5 text-xs font-medium text-dim-foreground gap-1.5">
                                 <Icon name="tabler--calendar" className="size-4" /> {new Date(workRequest.work_date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}
                             </span>
                             {(workRequest.start_time || workRequest.end_time) && (
-                                <span className="badge badge-soft badge-neutral gap-1.5">
+                                <span className="inline-flex items-center gap-1 rounded-full border border-edge bg-dim px-2.5 py-0.5 text-xs font-medium text-dim-foreground gap-1.5">
                                     <Icon name="tabler--clock" className="size-4" />
                                     {fmtTime(workRequest.start_time) || 'Not specified'}
                                     {workRequest.end_time ? ` - ${fmtTime(workRequest.end_time)}` : ''}
@@ -148,8 +148,8 @@ export default function WorkRequestsShow({ workRequest }) {
                     </div>
 
                     {workRequest.reason && (
-                        <div className="card bg-base-200/50 border border-base-300 shadow-sm p-4 mb-4">
-                            <h3 className="flex items-center gap-2 text-muted text-sm font-bold">
+                        <div className="card bg-base-200/50 border border-edge shadow-sm p-4 mb-4">
+                            <h3 className="flex items-center gap-2 text-dim-foreground text-sm font-bold">
                                 <Icon name="tabler--message" className="size-4" /> Reason
                             </h3>
                             <div className="text-sm text-base-content mt-2">{workRequest.reason}</div>
@@ -157,7 +157,7 @@ export default function WorkRequestsShow({ workRequest }) {
                     )}
 
                     {(isPending && canManage) || (!canManage && isPending) ? (
-                        <div className="card bg-base-200/50 border border-base-300 shadow-sm p-4">
+                        <div className="card bg-base-200/50 border border-edge shadow-sm p-4">
                             <h3 className="m-0 mb-4 text-sm font-bold text-base-content">Actions</h3>
                             <div className="flex gap-3 flex-wrap">
                                 {!canManage && (

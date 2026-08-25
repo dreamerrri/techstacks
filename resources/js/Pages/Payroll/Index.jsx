@@ -26,7 +26,7 @@ function SortableTh({ label, sortKey, filters, align = 'right' }) {
 
     return (
         <th className={align === 'right' ? 'text-right' : 'text-center'}>
-            <button type="button" onClick={handleSort} className="inline-flex items-center gap-1 normal-case font-medium hover:text-primary cursor-pointer">
+            <button type="button" onClick={handleSort} className="inline-flex items-center gap-1 normal-case font-medium hover:text-brand cursor-pointer">
                 {label}
                 {active ? (
                     <Icon name={filters.direction === 'asc' ? 'tabler--arrow-up' : 'tabler--arrow-down'} className="size-3.5" />
@@ -110,12 +110,12 @@ function DeptBreakdownModal({ open, onClose, data, label, periodLabel }) {
     return (
         <div className="fixed inset-0 z-[9999] bg-black/50 items-start justify-center p-5 overflow-y-auto flex" onClick={onClose}>
             <div className="bg-base-100 rounded-2xl w-full max-w-[90vw] mx-auto shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-                <div className="px-7 py-5 border-b border-base-300 flex justify-between items-center">
+                <div className="px-7 py-5 border-b border-edge flex justify-between items-center">
                     <div>
                         <div className="text-base font-bold text-base-content">{label === 'All Departments' ? 'All Departments' : label} Breakdown</div>
-                        <div className="text-xs text-subtle mt-1">{data.length} employee{data.length !== 1 ? 's' : ''} | {periodLabel}</div>
+                        <div className="text-xs text-dim-foreground mt-1">{data.length} employee{data.length !== 1 ? 's' : ''} | {periodLabel}</div>
                     </div>
-                    <button onClick={onClose} className="btn btn-soft btn-error btn-sm btn-circle">
+                    <button onClick={onClose} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10 btn-circle">
                         <Icon name="tabler--x" className="size-4" />
                     </button>
                 </div>
@@ -145,7 +145,7 @@ function DeptBreakdownModal({ open, onClose, data, label, periodLabel }) {
                                         <tr key={i} className="row-hover text-xs">
                                             <td>
                                                 <div className="font-semibold text-base-content truncate">{emp.name}</div>
-                                                <div className="text-xs text-subtle font-mono">{emp.employee_id}</div>
+                                                <div className="text-xs text-dim-foreground font-mono">{emp.employee_id}</div>
                                             </td>
                                             <td className="text-base-content truncate">{emp.department}</td>
                                             <td className="text-right font-semibold text-base-content">{fmt(emp.basic_pay)}</td>
@@ -169,12 +169,12 @@ function DeptBreakdownModal({ open, onClose, data, label, periodLabel }) {
                                 </tfoot>
                             </table>
                         </div>
-                        <div className="px-6 py-4 border-t border-base-300 flex justify-between items-center flex-wrap gap-2">
+                        <div className="px-6 py-4 border-t border-edge flex justify-between items-center flex-wrap gap-2">
                             <div className="flex gap-2 flex-wrap">
-                                <button onClick={printPayrollTable} className="btn btn-soft btn-info btn-sm">
+                                <button onClick={printPayrollTable} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                     <Icon name="tabler--printer" className="size-4" /> Print PDF
                                 </button>
-                                <button onClick={exportPayrollCSV} className="btn btn-soft btn-success btn-sm">
+                                <button onClick={exportPayrollCSV} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-transparent bg-brand px-3 text-xs font-medium text-brand-foreground no-underline transition-colors hover:bg-brand/90">
                                     <Icon name="tabler--file-type-csv" className="size-4" /> Export CSV
                                 </button>
                             </div>
@@ -271,7 +271,7 @@ export default function PayrollIndex({ employees, departments, payrollData, payr
                     empty="No payroll data found."
                     actions={
                         canViewAll && (
-                            <button onClick={() => setDeptOpen(true)} className="btn btn-soft btn-error btn-sm">
+                            <button onClick={() => setDeptOpen(true)} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10">
                                 <Icon name="tabler--stack" className="size-4" /> Breakdown
                             </button>
                         )
@@ -323,7 +323,7 @@ export default function PayrollIndex({ employees, departments, payrollData, payr
                                                         <Link href={`/employees/${employee.id}`} className="font-semibold text-base-content no-underline hover:text-success truncate block">
                                                             {employee.full_name}
                                                         </Link>
-                                                        <div className="text-xs text-subtle font-mono">{employee.employee_id}</div>
+                                                        <div className="text-xs text-dim-foreground font-mono">{employee.employee_id}</div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -337,15 +337,15 @@ export default function PayrollIndex({ employees, departments, payrollData, payr
                                             <td className="text-center">
                                                 <div className="flex gap-2 justify-center">
                                                     {!hasData ? (
-                                                        <button className="btn btn-soft btn-sm btn-disabled" title="No payroll data">
+                                                        <button className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60 btn-disabled" title="No payroll data">
                                                             <Icon name="tabler--eye" className="size-4" />
                                                         </button>
                                                     ) : (
                                                         <>
-                                                            <Link href={`/payroll/${employee.id}${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="btn btn-soft btn-info btn-sm" title="Full details">
+                                                            <Link href={`/payroll/${employee.id}${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60" title="Full details">
                                                                 <Icon name="tabler--eye" className="size-4" />
                                                             </Link>
-                                                            <Link href={`/payroll/${employee.id}/payslip${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="btn btn-soft btn-success btn-sm" title="Download payslip">
+                                                            <Link href={`/payroll/${employee.id}/payslip${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-transparent bg-brand px-3 text-xs font-medium text-brand-foreground no-underline transition-colors hover:bg-brand/90" title="Download payslip">
                                                                 <Icon name="tabler--file-download" className="size-4" />
                                                             </Link>
                                                         </>
@@ -364,7 +364,7 @@ export default function PayrollIndex({ employees, departments, payrollData, payr
                             const p = payrollData[employee.id] || {};
                             const hasData = (p.gross_pay || 0) !== 0 || (p.attendance_data?.days_worked || 0) !== 0;
                             return (
-                                <div key={employee.id} className="card bg-base-100 border border-base-300 p-4">
+                                <div key={employee.id} className="rounded-xl border border-edge bg-card p-4">
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex items-center gap-3">
                                             <div className={`w-10 h-10 rounded-full bg-linear-to-br ${avatarClass} flex items-center justify-center text-white text-sm font-bold flex-shrink-0`}>
@@ -374,10 +374,10 @@ export default function PayrollIndex({ employees, departments, payrollData, payr
                                                 <Link href={`/employees/${employee.id}`} className="font-semibold text-base-content no-underline text-sm hover:text-success">
                                                     {employee.full_name}
                                                 </Link>
-                                                <div className="text-xs text-subtle font-mono">{employee.employee_id}</div>
+                                                <div className="text-xs text-dim-foreground font-mono">{employee.employee_id}</div>
                                             </div>
                                         </div>
-                                        <span className="badge badge-soft badge-warning whitespace-nowrap">{employee.employment_status}</span>
+                                        <span className="inline-flex items-center gap-1 rounded-full border border-transparent bg-warning/15 px-2.5 py-0.5 text-xs font-medium text-warning whitespace-nowrap">{employee.employment_status}</span>
                                     </div>
 
                                     <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-base-content mt-2">
@@ -385,7 +385,7 @@ export default function PayrollIndex({ employees, departments, payrollData, payr
                                         <span><Icon name="tabler--briefcase" className="size-3.5 inline" /> {employee.position}</span>
                                     </div>
 
-                                    <div className="mt-3 border-t border-base-300 flex flex-col gap-2 text-xs">
+                                    <div className="mt-3 border-t border-edge flex flex-col gap-2 text-xs">
                                         <div className="flex justify-between items-center">
                                             <span className="text-base-content">Days Worked:</span>
                                             <span className="text-base-content font-semibold">{p.attendance_data?.days_worked ?? 0}</span>
@@ -402,23 +402,23 @@ export default function PayrollIndex({ employees, departments, payrollData, payr
                                             <span className="text-base-content">Total Deductions:</span>
                                             <span className="text-error font-semibold">-{fmt(p.total_deductions)}</span>
                                         </div>
-                                        <div className="flex justify-between items-center text-sm font-bold text-success pt-1 border-t border-base-300">
+                                        <div className="flex justify-between items-center text-sm font-bold text-success pt-1 border-t border-edge">
                                             <span>Net Pay:</span>
                                             <span>{fmt(p.net_pay)}</span>
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-300">
+                                    <div className="flex gap-2 flex-wrap mt-3 pt-3 border-t border-edge">
                                         {!hasData ? (
-                                            <button className="btn btn-soft btn-sm btn-disabled">
+                                            <button className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60 btn-disabled">
                                                 <Icon name="tabler--eye" className="size-4" /> View Details
                                             </button>
                                         ) : (
                                             <>
-                                                <Link href={`/payroll/${employee.id}${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="btn btn-soft btn-info btn-sm">
+                                                <Link href={`/payroll/${employee.id}${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                                     <Icon name="tabler--eye" className="size-4" /> View Details
                                                 </Link>
-                                                <Link href={`/payroll/${employee.id}/payslip${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="btn btn-soft btn-success btn-sm">
+                                                <Link href={`/payroll/${employee.id}/payslip${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-transparent bg-brand px-3 text-xs font-medium text-brand-foreground no-underline transition-colors hover:bg-brand/90">
                                                     <Icon name="tabler--file-download" className="size-4" /> Payslip
                                                 </Link>
                                             </>

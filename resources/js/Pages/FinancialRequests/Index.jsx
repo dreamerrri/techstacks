@@ -42,12 +42,12 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                     actions={
                         canManage ? (
                             pendingCount > 0 && (
-                                <Link href="/financial-requests?status=pending" className="btn btn-soft btn-warning btn-sm">
+                                <Link href="/financial-requests?status=pending" className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-warning/40 bg-warning/10 px-3 text-xs font-medium text-warning no-underline transition-colors hover:bg-warning/20">
                                     <Icon name="tabler--clock" className="size-4" /> Pending ({pendingCount})
                                 </Link>
                             )
                         ) : (
-                            <Link href="/financial-requests/create" className="btn btn-soft btn-primary btn-sm">
+                            <Link href="/financial-requests/create" className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                 <Icon name="tabler--plus" className="size-4" /> New Request
                             </Link>
                         )
@@ -92,7 +92,7 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                                     </thead>
                                     <tbody>
                                         {financialRequests.map((req) => (
-                                            <tr key={req.id} className="row-hover border-b border-base-300">
+                                            <tr key={req.id} className="row-hover border-b border-edge">
                                                 <td className="text-base-content">{fmtDate(req.created_at)}</td>
                                                 {canManage && (
                                                     <td className="text-base-content font-semibold">{req.employee?.full_name}</td>
@@ -101,7 +101,7 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                                                     <StatusBadge type={typeBadge(req.request_type)}>{typeLabel(req.request_type)}</StatusBadge>
                                                 </td>
                                                 <td className="text-base-content font-semibold">{fmtMoney(req.amount)}</td>
-                                                <td className="text-subtle">{req.description || '-'}</td>
+                                                <td className="text-dim-foreground">{req.description || '-'}</td>
                                                 <td>
                                                     <StatusBadge type={STATUS_META[req.status] ?? 'neutral'}>
                                                         {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
@@ -109,12 +109,12 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                                                 </td>
                                                 <td className="text-center">
                                                     <div className="flex gap-2 justify-center">
-                                                        <Link href={`/financial-requests/${req.id}`} className="btn btn-soft btn-info btn-sm">
+                                                        <Link href={`/financial-requests/${req.id}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                                             <Icon name="tabler--eye" className="size-4" />
                                                         </Link>
                                                         {!canManage && req.status === 'pending' && (
                                                             <>
-                                                                <Link href={`/financial-requests/${req.id}/edit`} className="btn btn-soft btn-warning btn-sm">
+                                                                <Link href={`/financial-requests/${req.id}/edit`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-warning/40 bg-warning/10 px-3 text-xs font-medium text-warning no-underline transition-colors hover:bg-warning/20">
                                                                     <Icon name="tabler--pencil" className="size-4" />
                                                                 </Link>
                                                                 <ConfirmButton
@@ -123,7 +123,7 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                                                                     confirmText="Yes, Cancel"
                                                                     url={`/financial-requests/${req.id}`}
                                                                     method="delete"
-                                                                    className="btn btn-soft btn-error btn-sm"
+                                                                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10"
                                                                 >
                                                                     <Icon name="tabler--x" className="size-4" />
                                                                 </ConfirmButton>
@@ -139,12 +139,12 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
 
                             <div className="md:hidden p-4 flex flex-col gap-3">
                                 {financialRequests.map((req) => (
-                                    <div key={req.id} className="card bg-base-100 border border-base-300 p-4">
+                                    <div key={req.id} className="rounded-xl border border-edge bg-card p-4">
                                         <div className="flex justify-between items-start mb-2">
                                             <div>
                                                 <div className="text-sm text-base-content font-semibold">{fmtDate(req.created_at)}</div>
                                                 {canManage && (
-                                                    <div className="text-xs text-subtle">{req.employee?.full_name}</div>
+                                                    <div className="text-xs text-dim-foreground">{req.employee?.full_name}</div>
                                                 )}
                                             </div>
                                             <StatusBadge type={STATUS_META[req.status] ?? 'neutral'}>
@@ -152,22 +152,22 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                                             </StatusBadge>
                                         </div>
 
-                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
+                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-dim-foreground mt-2">
                                             <StatusBadge type={typeBadge(req.request_type)}>{typeLabel(req.request_type)}</StatusBadge>
                                             <span className="font-semibold text-base-content">{fmtMoney(req.amount)}</span>
                                         </div>
 
                                         {req.description && (
-                                            <div className="text-xs text-subtle mt-2">{req.description}</div>
+                                            <div className="text-xs text-dim-foreground mt-2">{req.description}</div>
                                         )}
 
-                                        <div className="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-200">
-                                            <Link href={`/financial-requests/${req.id}`} className="btn btn-soft btn-info btn-sm">
+                                        <div className="flex gap-2 flex-wrap mt-3 pt-3 border-t border-edge/60">
+                                            <Link href={`/financial-requests/${req.id}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                                 <Icon name="tabler--eye" className="size-4" /> View
                                             </Link>
                                             {!canManage && req.status === 'pending' && (
                                                 <>
-                                                    <Link href={`/financial-requests/${req.id}/edit`} className="btn btn-soft btn-warning btn-sm">
+                                                    <Link href={`/financial-requests/${req.id}/edit`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-warning/40 bg-warning/10 px-3 text-xs font-medium text-warning no-underline transition-colors hover:bg-warning/20">
                                                         <Icon name="tabler--pencil" className="size-4" /> Edit
                                                     </Link>
                                                     <ConfirmButton
@@ -176,7 +176,7 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                                                         confirmText="Yes, Cancel"
                                                         url={`/financial-requests/${req.id}`}
                                                         method="delete"
-                                                        className="btn btn-soft btn-error btn-sm"
+                                                        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10"
                                                     >
                                                         <Icon name="tabler--x" className="size-4" /> Cancel
                                                     </ConfirmButton>
@@ -189,9 +189,9 @@ export default function FinancialRequestsIndex({ financialRequests, pendingCount
                         </>
                     ) : (
                         <div className="card p-12 text-center">
-                            <Icon name="tabler--cash" className="size-10 text-faint mx-auto mb-3" />
-                            <h3 className="text-subtle font-semibold mb-2">No Financial Requests Found</h3>
-                            <p className="text-faint mb-6">
+                            <Icon name="tabler--cash" className="size-10 text-dim-foreground/70 mx-auto mb-3" />
+                            <h3 className="text-dim-foreground font-semibold mb-2">No Financial Requests Found</h3>
+                            <p className="text-dim-foreground/70 mb-6">
                                 {!canManage
                                     ? `${hasFilters ? 'Try adjusting your filters or' : 'Get started by'} creating a new financial request.`
                                     : 'No financial requests match your current filters.'}

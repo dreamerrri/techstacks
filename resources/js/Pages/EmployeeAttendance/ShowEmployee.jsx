@@ -35,7 +35,7 @@ function AttendanceTable({ attendances, employeeId }) {
                             <td className="text-base-content">{timeValue(attendance.time_out)}</td>
                             <td className="text-base-content font-semibold">{fmtNum(attendance.rendered_hours)} hrs</td>
                             <td className="text-base-content font-semibold">{fmtNum(attendance.computed_days)} days</td>
-                            <td className="text-subtle">{attendance.remarks || '-'}</td>
+                            <td className="text-dim-foreground">{attendance.remarks || '-'}</td>
                             <td className="text-center">
                                 <div className="flex gap-2 justify-center">
                                     <ConfirmButton
@@ -45,7 +45,7 @@ function AttendanceTable({ attendances, employeeId }) {
                                         cancelText="Back"
                                         url={`/employee-attendance/${attendance.id}`}
                                         method="delete"
-                                        className="btn btn-soft btn-error btn-sm"
+                                        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10"
                                     >
                                         <Icon name="tabler--trash" className="size-4" />
                                     </ConfirmButton>
@@ -65,7 +65,7 @@ export default function EmployeeAttendanceShowEmployee({ employee, currentPeriod
             <Head title={`${employee.full_name} — Attendance`} />
             <div className="p-2 sm:p-4">
                 <div className="mb-6">
-                    <Link href={`/employees/${employee.id}`} className="text-subtle no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
+                    <Link href={`/employees/${employee.id}`} className="text-dim-foreground no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-brand">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Employee Profile
                     </Link>
                     <div className="flex items-center gap-3 mb-2">
@@ -73,37 +73,37 @@ export default function EmployeeAttendanceShowEmployee({ employee, currentPeriod
                             {employee.user?.photo_url ? (
                                 <img src={employee.user.photo_url} alt={employee.full_name} className="w-full h-full object-cover" />
                             ) : (
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-content text-sm font-bold">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-brand/70 flex items-center justify-center text-brand-foreground text-sm font-bold">
                                     {employee.first_name.charAt(0).toUpperCase()}
                                 </div>
                             )}
                         </div>
-                        <span className="badge badge-soft badge-info">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-transparent bg-highlight/12 px-2.5 py-0.5 text-xs font-medium text-highlight">
                             <Icon name="tabler--clock" className="size-3.5" /> Employee Attendance
                         </span>
                     </div>
                     <h2 className="text-lg font-bold text-base-content mt-2 mb-1">{employee.full_name}</h2>
-                    <p className="text-subtle m-0">{employee.position} — {employee.department}</p>
+                    <p className="text-dim-foreground m-0">{employee.position} — {employee.department}</p>
                 </div>
 
                 {currentPeriod && (
-                    <div className="card bg-base-100 border border-base-300 p-6 mb-6">
+                    <div className="rounded-xl border border-edge bg-card p-6 mb-6">
                         <h3 className="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
-                            <Icon name="tabler--calendar" className="size-4 text-subtle" /> Current Payroll Period
+                            <Icon name="tabler--calendar" className="size-4 text-dim-foreground" /> Current Payroll Period
                         </h3>
                         <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
                             <div className="p-4 bg-base-200 rounded-lg border-l-4 border-info">
-                                <div className="text-xs text-subtle mb-1">Period</div>
+                                <div className="text-xs text-dim-foreground mb-1">Period</div>
                                 <div className="text-sm font-semibold text-base-content">
                                     {fmtDate(currentPeriod.cutoff_start, { month: 'short', day: '2-digit' })} - {fmtDate(currentPeriod.cutoff_end)}
                                 </div>
                             </div>
                             <div className="p-4 bg-base-200 rounded-lg border-l-4 border-success">
-                                <div className="text-xs text-subtle mb-1">Total Rendered Hours</div>
+                                <div className="text-xs text-dim-foreground mb-1">Total Rendered Hours</div>
                                 <div className="text-lg font-bold text-success">{fmtNum(totalHours)} hrs</div>
                             </div>
                             <div className="p-4 bg-base-200 rounded-lg border-l-4 border-accent">
-                                <div className="text-xs text-subtle mb-1">Total Computed Days</div>
+                                <div className="text-xs text-dim-foreground mb-1">Total Computed Days</div>
                                 <div className="text-lg font-bold text-accent">{fmtNum(totalDays)} days</div>
                             </div>
                         </div>
@@ -111,8 +111,8 @@ export default function EmployeeAttendanceShowEmployee({ employee, currentPeriod
                 )}
 
                 {currentPeriod && attendances.length > 0 && (
-                    <div className="card bg-base-100 border border-base-300 p-0 overflow-hidden mb-6">
-                        <div className="px-6 py-5 border-b border-base-300">
+                    <div className="rounded-xl border border-edge bg-card p-0 overflow-hidden mb-6">
+                        <div className="px-6 py-5 border-b border-edge">
                             <h3 className="text-sm font-bold text-base-content m-0">Attendance Records — Current Period</h3>
                         </div>
                         <AttendanceTable attendances={attendances} employeeId={employee.id} />
@@ -120,8 +120,8 @@ export default function EmployeeAttendanceShowEmployee({ employee, currentPeriod
                 )}
 
                 {recentAttendances.length > 0 && (
-                    <div className="card bg-base-100 border border-base-300 p-0 overflow-hidden">
-                        <div className="px-6 py-5 border-b border-base-300">
+                    <div className="rounded-xl border border-edge bg-card p-0 overflow-hidden">
+                        <div className="px-6 py-5 border-b border-edge">
                             <h3 className="text-sm font-bold text-base-content m-0">Recent Attendance (Last 30 Days)</h3>
                         </div>
                         <AttendanceTable attendances={recentAttendances} employeeId={employee.id} />
@@ -130,9 +130,9 @@ export default function EmployeeAttendanceShowEmployee({ employee, currentPeriod
 
                 {!currentPeriod && recentAttendances.length === 0 && (
                     <div className="card p-12 text-center">
-                        <Icon name="tabler--clock-off" className="size-10 text-faint mx-auto mb-3" />
-                        <h3 className="text-subtle font-semibold mb-2">No Attendance Records</h3>
-                        <p className="text-faint mb-6">This employee has no attendance records yet.</p>
+                        <Icon name="tabler--clock-off" className="size-10 text-dim-foreground/70 mx-auto mb-3" />
+                        <h3 className="text-dim-foreground font-semibold mb-2">No Attendance Records</h3>
+                        <p className="text-dim-foreground/70 mb-6">This employee has no attendance records yet.</p>
                     </div>
                 )}
             </div>

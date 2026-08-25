@@ -56,11 +56,11 @@ export default function ManualPayrollAttendanceIndex({ periods, availableYears, 
             <div className="p-2 sm:p-4">
                 <div className="flex justify-between items-center flex-wrap gap-3 mb-6">
                     <div>
-                        <span className="badge badge-soft badge-info mb-2">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-transparent bg-highlight/12 px-2.5 py-0.5 text-xs font-medium text-highlight mb-2">
                             <Icon name="tabler--calendar-stats" className="size-3.5" /> Payroll Attendance Encoding
                         </span>
                         <h2 className="text-lg font-bold text-base-content mt-2 mb-1">Payroll Periods</h2>
-                        <p className="text-subtle m-0">Manually encode attendance totals, overtime, allowances, and deductions for payroll processing.</p>
+                        <p className="text-dim-foreground m-0">Manually encode attendance totals, overtime, allowances, and deductions for payroll processing.</p>
                     </div>
                     <div className="flex gap-2">
                         {isAdmin && (
@@ -76,7 +76,7 @@ export default function ManualPayrollAttendanceIndex({ periods, availableYears, 
                     </div>
                 </div>
 
-                <div className="card bg-base-100 shadow-sm p-4 mb-4">
+                <div className="rounded-xl border border-edge bg-card p-4 mb-4">
                     <div className="flex flex-wrap items-end gap-3">
                         <div className="form-control">
                             <label className="label label-text">Year</label>
@@ -113,14 +113,14 @@ export default function ManualPayrollAttendanceIndex({ periods, availableYears, 
                             </select>
                         </div>
                         <div className="flex gap-2">
-                            <button onClick={clearFilters} className="btn btn-soft btn-neutral btn-sm">
+                            <button onClick={clearFilters} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge px-3 text-xs font-medium no-underline transition-colors hover:bg-dim">
                                 <Icon name="tabler--x" className="size-4" /> Clear
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div className="card bg-base-100 shadow-sm overflow-hidden p-0">
+                <div className="rounded-xl border border-edge bg-card overflow-hidden p-0">
                     {periods.length > 0 ? (
                         <div className="p-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -135,7 +135,7 @@ export default function ManualPayrollAttendanceIndex({ periods, availableYears, 
                                                 <div className="font-semibold text-base-content text-base">
                                                     {fmtShort(period.cutoff_start)} - {fmtDate(period.cutoff_end)}
                                                 </div>
-                                                <div className="text-subtle text-xs mt-1">
+                                                <div className="text-dim-foreground text-xs mt-1">
                                                     Payroll Date: {fmtDate(period.payroll_date)}
                                                 </div>
                                             </div>
@@ -158,13 +158,13 @@ export default function ManualPayrollAttendanceIndex({ periods, availableYears, 
                                                 )}
                                             </div>
                                         </div>
-                                        <div className="flex gap-4 mt-3 pt-3 border-t border-base-200 text-xs">
+                                        <div className="flex gap-4 mt-3 pt-3 border-t border-edge/60 text-xs">
                                             <div>
-                                                <span className="text-subtle">Employees Encoded:</span>
+                                                <span className="text-dim-foreground">Employees Encoded:</span>
                                                 <span className="font-semibold text-base-content ml-1">{period.encoded_count}</span>
                                             </div>
                                             <div>
-                                                <span className="text-subtle">Total Gross:</span>
+                                                <span className="text-dim-foreground">Total Gross:</span>
                                                 <span className="font-semibold text-success ml-1">{fmtMoney(period.total_gross)}</span>
                                             </div>
                                         </div>
@@ -174,9 +174,9 @@ export default function ManualPayrollAttendanceIndex({ periods, availableYears, 
                         </div>
                     ) : (
                         <div className="py-16 px-6 text-center">
-                            <Icon name="tabler--calendar-off" className="size-10 text-faint mx-auto mb-4" />
-                            <h3 className="text-subtle font-semibold mb-2">No Payroll Periods Found</h3>
-                            <p className="text-faint mb-0">Create a payroll period to start encoding attendance.</p>
+                            <Icon name="tabler--calendar-off" className="size-10 text-dim-foreground/70 mx-auto mb-4" />
+                            <h3 className="text-dim-foreground font-semibold mb-2">No Payroll Periods Found</h3>
+                            <p className="text-dim-foreground/70 mb-0">Create a payroll period to start encoding attendance.</p>
                             {canCreate && (
                                 <Link href="/payroll-periods/create" className="btn btn-soft btn-error mt-4">
                                     <Icon name="tabler--plus" className="size-4" /> Create Payroll Period

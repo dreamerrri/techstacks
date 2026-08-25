@@ -20,7 +20,7 @@ const EMPLOYMENT_BADGE = {
 function ContributionInput({ form, name, value, error }) {
     return (
         <div className="bg-base-200 p-4 rounded-xl shadow-sm">
-            <div className="text-xs text-faint uppercase tracking-wider mb-1">Employee Share</div>
+            <div className="text-xs text-dim-foreground/70 uppercase tracking-wider mb-1">Employee Share</div>
             <input
                 type="number"
                 step="0.01"
@@ -29,7 +29,7 @@ function ContributionInput({ form, name, value, error }) {
                 onChange={(e) => form.setData(name, e.target.value === '' ? null : e.target.value)}
                 className="input input-bordered w-full font-bold text-error text-lg"
             />
-            <div className="text-xs text-subtle mt-1 italic">Leave blank to use calculated contribution based on salary</div>
+            <div className="text-xs text-dim-foreground mt-1 italic">Leave blank to use calculated contribution based on salary</div>
             {error && <div className="text-xs text-error mt-1">{error}</div>}
         </div>
     );
@@ -148,43 +148,43 @@ export default function GovernmentContributionsShow({ employee, sssContribution,
             <Head title={`${employee.full_name} - Government Contributions`} />
             <div className="p-2 sm:p-4">
                 <div className="flex justify-between items-center flex-wrap gap-3 mb-5">
-                    <Link href="/government-contributions" className="back-link text-subtle no-underline text-sm hover:text-success flex items-center gap-1">
+                    <Link href="/government-contributions" className="back-link text-dim-foreground no-underline text-sm hover:text-success flex items-center gap-1">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Government Contributions
                     </Link>
                     <div className="flex gap-2">
-                        <button onClick={printDetail} className="btn btn-soft btn-info btn-sm">
+                        <button onClick={printDetail} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                             <Icon name="tabler--printer" className="size-4" /> Print
                         </button>
-                        <button onClick={exportCSV} className="btn btn-soft btn-success btn-sm">
+                        <button onClick={exportCSV} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-transparent bg-brand px-3 text-xs font-medium text-brand-foreground no-underline transition-colors hover:bg-brand/90">
                             <Icon name="tabler--file-type-csv" className="size-4" /> Export CSV
                         </button>
                     </div>
                 </div>
 
-                <div className="card bg-base-100 shadow-sm p-5 flex items-center gap-5 flex-wrap mb-5">
+                <div className="rounded-xl border border-edge bg-card p-5 flex items-center gap-5 flex-wrap mb-5">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-error to-error/80 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
                         {(employee.full_name || '?').charAt(0).toUpperCase()}
                     </div>
                     <div>
                         <h2 className="text-xl font-bold text-base-content m-0 mb-1">{employee.full_name}</h2>
-                        <p className="text-subtle m-0">{employee.position} — {employee.department}</p>
+                        <p className="text-dim-foreground m-0">{employee.position} — {employee.department}</p>
                         <p className="text-base-content font-semibold text-sm mt-1 m-0">Basic Salary: {fmt(employee.basic_salary)}</p>
                         <span className={`badge ${EMPLOYMENT_BADGE[employee.employment_status] || 'badge-soft'} mt-2`}>{employee.employment_status}</span>
                     </div>
                 </div>
 
-                <form onSubmit={submit} className="card bg-base-100 shadow-sm p-6">
+                <form onSubmit={submit} className="rounded-xl border border-edge bg-card p-6">
                     <h2 className="text-sm font-bold text-base-content mb-5 flex items-center gap-2">
                         <Icon name="tabler--id" className="text-error size-4" /> Government Contributions
                     </h2>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         {govIds.map(({ label, value, icon, color, bg }) => (
-                            <div key={label} className="card bg-base-100 shadow-sm p-4 text-center">
+                            <div key={label} className="rounded-xl border border-edge bg-card p-4 text-center">
                                 <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 ${color} ${bg}`}>
                                     <Icon name={icon} className="size-6" />
                                 </div>
-                                <div className="text-xs text-faint uppercase tracking-widest font-medium mb-1">{label}</div>
+                                <div className="text-xs text-dim-foreground/70 uppercase tracking-widest font-medium mb-1">{label}</div>
                                 <div className="font-bold font-mono text-base-content text-xs break-all">{value || '—'}</div>
                             </div>
                         ))}
@@ -196,7 +196,7 @@ export default function GovernmentContributionsShow({ employee, sssContribution,
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="bg-base-200 p-4 rounded-xl shadow-sm">
-                                <div className="text-xs text-faint uppercase tracking-wider mb-1">Monthly Salary Credit</div>
+                                <div className="text-xs text-dim-foreground/70 uppercase tracking-wider mb-1">Monthly Salary Credit</div>
                                 <div className="font-bold text-base-content text-lg">{fmt(sssContribution.salary_credit)}</div>
                             </div>
                             <ContributionInput
@@ -206,7 +206,7 @@ export default function GovernmentContributionsShow({ employee, sssContribution,
                                 error={form.errors.custom_sss_contribution}
                             />
                             <div className="bg-base-200 p-4 rounded-xl shadow-sm">
-                                <div className="text-xs text-faint uppercase tracking-wider mb-1">Total Contribution</div>
+                                <div className="text-xs text-dim-foreground/70 uppercase tracking-wider mb-1">Total Contribution</div>
                                 <div className="font-bold text-base-content text-lg">{fmt(sssContribution.total)}</div>
                             </div>
                         </div>
@@ -218,11 +218,11 @@ export default function GovernmentContributionsShow({ employee, sssContribution,
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="bg-base-200 p-4 rounded-xl shadow-sm">
-                                <div className="text-xs text-faint uppercase tracking-wider mb-1">Salary Basis</div>
+                                <div className="text-xs text-dim-foreground/70 uppercase tracking-wider mb-1">Salary Basis</div>
                                 <div className="font-bold text-base-content text-lg">{fmt(philHealthContribution.salary_basis)}</div>
                             </div>
                             <div className="bg-base-200 p-4 rounded-xl shadow-sm">
-                                <div className="text-xs text-faint uppercase tracking-wider mb-1">Employee Rate</div>
+                                <div className="text-xs text-dim-foreground/70 uppercase tracking-wider mb-1">Employee Rate</div>
                                 <div className="font-bold text-base-content text-lg">{fmtRate(philHealthContribution.employee_rate)}</div>
                             </div>
                             <ContributionInput
@@ -240,12 +240,12 @@ export default function GovernmentContributionsShow({ employee, sssContribution,
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="bg-base-200 p-4 rounded-xl shadow-sm">
-                                <div className="text-xs text-faint uppercase tracking-wider mb-1">Monthly Salary</div>
+                                <div className="text-xs text-dim-foreground/70 uppercase tracking-wider mb-1">Monthly Salary</div>
                                 <div className="font-bold text-base-content text-lg">{fmt(pagIbigContribution.salary)}</div>
                             </div>
                             {pagIbigContribution.employee_rate !== null && (
                                 <div className="bg-base-200 p-4 rounded-xl shadow-sm">
-                                    <div className="text-xs text-faint uppercase tracking-wider mb-1">Employee Rate</div>
+                                    <div className="text-xs text-dim-foreground/70 uppercase tracking-wider mb-1">Employee Rate</div>
                                     <div className="font-bold text-base-content text-lg">{fmtRate(pagIbigContribution.employee_rate)}</div>
                                 </div>
                             )}

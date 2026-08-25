@@ -74,7 +74,7 @@ export default function EmployeeForm({ employee, submitLabel, submitIcon, cancel
     };
 
     const sectionHeader = (icon, label) => (
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4 flex items-center gap-2">
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-dim-foreground/70 border-b-2 border-error/20 pb-2 mb-4 flex items-center gap-2">
             <Icon name={icon} className="size-4 text-error" /> {label}
         </h3>
     );
@@ -158,7 +158,7 @@ export default function EmployeeForm({ employee, submitLabel, submitIcon, cancel
 
             <div className="mb-4">
                 {sectionHeader('ph--identification-card-fill', 'Government Contributions')}
-                <p className="text-xs text-faint mb-4">
+                <p className="text-xs text-dim-foreground/70 mb-4">
                     <Icon name="ph--info-fill" className="size-3.5 inline" /> These fields are optional but must follow the correct format if provided.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

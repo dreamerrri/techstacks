@@ -16,7 +16,7 @@ const csrfToken = () => document.querySelector('meta[name="csrf-token"]')?.conte
 function ApprovedRequests({ approvedRequests }) {
     if (!approvedRequests.length) return null;
     return (
-        <div className="bg-success/10 border border-base-300 rounded-lg p-4 mb-4">
+        <div className="bg-success/10 border border-edge rounded-lg p-4 mb-4">
             <div className="flex items-center mb-4 gap-3">
                 <Icon name="tabler--calendar-check" className="size-5 text-success" />
                 <span className="font-semibold text-success">Approved Work Requests ({approvedRequests.length})</span>
@@ -25,11 +25,11 @@ function ApprovedRequests({ approvedRequests }) {
                 {approvedRequests.map((r) => (
                     <div key={r.id} className="py-2 border-b border-success/20">
                         <span style={{ fontWeight: 600 }}>{r.request_type ? r.request_type.charAt(0).toUpperCase() + r.request_type.slice(1) : ''}</span>
-                        <span className="text-subtle"> | </span>
+                        <span className="text-dim-foreground"> | </span>
                         <span>{fmtDate(r.work_date, { month: 'short', day: '2-digit', year: 'numeric' })}</span>
                         {(r.calculated_overtime_hours || r.estimated_hours) && (
                             <>
-                                <span className="text-subtle"> | </span>
+                                <span className="text-dim-foreground"> | </span>
                                 <span>{fmtNum(r.calculated_overtime_hours || r.estimated_hours, 1)} hrs</span>
                             </>
                         )}
@@ -56,9 +56,9 @@ function CashAdvanceBox({ cashAdvance, isSecondHalf }) {
                         {fullyPaid.map((r, i) => (
                             <div key={i} className="py-2 border-b border-success/20">
                                 <span className="font-semibold">{fmtMoney(r.amount)}</span>
-                                <span className="text-subtle"> | </span>
+                                <span className="text-dim-foreground"> | </span>
                                 <span>{fmtDate(r.request_date, { month: 'short', day: '2-digit', year: 'numeric' })}</span>
-                                <span className="text-subtle"> | </span>
+                                <span className="text-dim-foreground"> | </span>
                                 <span className="font-semibold text-success">Fully Paid: {fmtMoney(r.amount_paid)}</span>
                             </div>
                         ))}
@@ -76,11 +76,11 @@ function CashAdvanceBox({ cashAdvance, isSecondHalf }) {
                         {outstanding.map((r, i) => (
                             <div key={i} className="py-2 border-b border-warning/20">
                                 <span className="font-semibold">{fmtMoney(r.amount)}</span>
-                                <span className="text-subtle"> | </span>
+                                <span className="text-dim-foreground"> | </span>
                                 <span>{fmtDate(r.request_date, { month: 'short', day: '2-digit', year: 'numeric' })}</span>
-                                <span className="text-subtle"> | </span>
+                                <span className="text-dim-foreground"> | </span>
                                 <span>Paid: {fmtMoney(r.amount_paid)}</span>
-                                <span className="text-subtle"> | </span>
+                                <span className="text-dim-foreground"> | </span>
                                 <span className="font-semibold text-warning">Balance: {fmtMoney(r.amount - r.amount_paid)}</span>
                             </div>
                         ))}
@@ -109,7 +109,7 @@ function CashAdvanceBox({ cashAdvance, isSecondHalf }) {
 function Row({ label, value, tone = '' }) {
     return (
         <div className="flex justify-between text-xs mb-3">
-            <span className="text-subtle">{label}</span>
+            <span className="text-dim-foreground">{label}</span>
             <span className={`font-semibold ${tone}`}>{value}</span>
         </div>
     );
@@ -120,7 +120,7 @@ function AllowanceBenefitList({ employee, total }) {
     const benefits = employee.active_benefits || [];
     const hasAny = allowances.length > 0 || benefits.length > 0;
     return (
-        <div className="bg-base-200 border border-base-300 rounded-lg p-4">
+        <div className="bg-base-200 border border-edge rounded-lg p-4">
             {hasAny ? (
                 <>
                     <div className="grid gap-3 mb-4">
@@ -128,7 +128,7 @@ function AllowanceBenefitList({ employee, total }) {
                             <div key={`a-${i}`} className="flex items-center justify-between bg-base-100 border-s-4 border-primary rounded-lg p-3">
                                 <div>
                                     <div className="font-semibold text-xs text-base-content">{a.name}</div>
-                                    <div className="text-subtle text-xs">{a.type}</div>
+                                    <div className="text-dim-foreground text-xs">{a.type}</div>
                                 </div>
                                 <div className="font-bold text-success text-sm">{fmtMoney(Number(a.amount || 0) / 2)}</div>
                             </div>
@@ -137,7 +137,7 @@ function AllowanceBenefitList({ employee, total }) {
                             <div key={`b-${i}`} className="flex items-center justify-between bg-base-100 border-s-4 border-primary rounded-lg p-3">
                                 <div>
                                     <div className="font-semibold text-xs text-base-content">{b.name}</div>
-                                    <div className="text-subtle text-xs">{b.type}</div>
+                                    <div className="text-dim-foreground text-xs">{b.type}</div>
                                 </div>
                                 <div className="font-bold text-sm">{fmtMoney(Number(b.amount || 0) / 2)}</div>
                             </div>
@@ -149,7 +149,7 @@ function AllowanceBenefitList({ employee, total }) {
                     </div>
                 </>
             ) : (
-                <div className="text-center text-xs text-subtle p-4">No allowances or benefits configured for this employee.</div>
+                <div className="text-center text-xs text-dim-foreground p-4">No allowances or benefits configured for this employee.</div>
             )}
         </div>
     );
@@ -241,27 +241,27 @@ export default function ManualPayrollEmployeeForm({
         <AppLayout title={`Encode Attendance - ${employee.first_name || 'Employee'} ${employee.last_name || ''}`}>
             <Head title="Encode Attendance" />
             <div className="p-2 sm:p-4">
-                <Link href={`/manual-payroll-attendance/period/${payrollPeriod.id}`} className="inline-flex items-center text-sm text-subtle mb-4 gap-3 no-underline hover:text-primary">
+                <Link href={`/manual-payroll-attendance/period/${payrollPeriod.id}`} className="inline-flex items-center text-sm text-dim-foreground mb-4 gap-3 no-underline hover:text-brand">
                     <Icon name="tabler--arrow-left" className="size-4" /> Back to Period
                 </Link>
 
                 <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
                     <div>
-                        <span className="badge badge-soft badge-info mb-2">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-transparent bg-highlight/12 px-2.5 py-0.5 text-xs font-medium text-highlight mb-2">
                             <Icon name="tabler--user-edit" className="size-3.5" /> {isEdit ? 'Edit' : 'Encode'} Attendance
                         </span>
                         <h2 className="text-lg font-bold text-base-content mt-2 mb-1">{employee.first_name || 'Employee'} {employee.last_name || ''}</h2>
-                        <p className="text-subtle m-0">
+                        <p className="text-dim-foreground m-0">
                             {employee.employee_id || 'N/A'} | {employee.position || 'N/A'} | {employee.department || 'N/A'} | Period: {periodDates}
                         </p>
                     </div>
                 </div>
 
                 <form onSubmit={submit} className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
-                    <div className="card bg-base-100 border border-base-300 overflow-hidden p-0">
-                        <div className="px-6 py-4 border-b border-base-300">
+                    <div className="rounded-xl border border-edge bg-card overflow-hidden p-0">
+                        <div className="px-6 py-4 border-b border-edge">
                             <h3 className="text-sm font-bold text-base-content m-0">Attendance Details</h3>
-                            <p className="text-sm text-subtle m-0">Enter attendance totals for the payroll period</p>
+                            <p className="text-sm text-dim-foreground m-0">Enter attendance totals for the payroll period</p>
                         </div>
 
                         <div className="p-4">
@@ -270,9 +270,9 @@ export default function ManualPayrollEmployeeForm({
 
                             <div className="mb-4">
                                 <Label>Rate Type</Label>
-                                <div className="text-sm text-base-content bg-base-200 border border-base-300 rounded-lg p-3">
+                                <div className="text-sm text-base-content bg-base-200 border border-edge rounded-lg p-3">
                                     <span className="font-semibold">Daily Rate</span>
-                                    <span className="text-subtle"> (computed using BSM X 12 / 52 / 40 X 8)</span>
+                                    <span className="text-dim-foreground"> (computed using BSM X 12 / 52 / 40 X 8)</span>
                                 </div>
                             </div>
 
@@ -280,7 +280,7 @@ export default function ManualPayrollEmployeeForm({
                                 <div>
                                     <Label>Daily Rate</Label>
                                     <input type="number" step="0.01" min="0" required value={data.daily_rate} onChange={setNum('daily_rate')} className={inputCls(errors.daily_rate)} />
-                                    <p className="text-xs text-subtle mt-1">Based on basic salary ({fmtMoney(employee.basic_salary)})</p>
+                                    <p className="text-xs text-dim-foreground mt-1">Based on basic salary ({fmtMoney(employee.basic_salary)})</p>
                                     {errors.daily_rate && <p className="text-error text-xs mt-1">{errors.daily_rate}</p>}
                                 </div>
                                 <div>
@@ -295,7 +295,7 @@ export default function ManualPayrollEmployeeForm({
                                         className={inputCls(errors.days_worked)}
                                         placeholder={computedDaysFromAttendance ? `Leave blank to use ${fmtNum(computedDaysFromAttendance, 2)} days from attendance` : 'Enter days worked'}
                                     />
-                                    <p className="text-xs text-subtle mt-1">
+                                    <p className="text-xs text-dim-foreground mt-1">
                                         {computedDaysFromAttendance ? `Leave blank to use ${fmtNum(computedDaysFromAttendance, 2)} days from attendance records, or enter a custom value.` : 'Enter days worked for the period.'}
                                     </p>
                                     {errors.days_worked && <p className="text-error text-xs mt-1">{errors.days_worked}</p>}
@@ -305,7 +305,7 @@ export default function ManualPayrollEmployeeForm({
                             <div className="mb-4">
                                 <Label>Weekends Worked</Label>
                                 <input type="number" step="0.5" min="0" value={data.weekends_worked} onChange={setNum('weekends_worked')} className={inputCls(errors.weekends_worked)} />
-                                <p className="text-xs text-subtle mt-1">Number of weekend days worked (paid at 30% premium of daily rate)</p>
+                                <p className="text-xs text-dim-foreground mt-1">Number of weekend days worked (paid at 30% premium of daily rate)</p>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
@@ -322,13 +322,13 @@ export default function ManualPayrollEmployeeForm({
                             <div className="mb-4">
                                 <Label>Holiday Days Worked</Label>
                                 <input type="number" step="0.5" min="0" value={data.holiday_days} onChange={setNum('holiday_days')} className={inputCls(errors.holiday_days)} />
-                                <p className="text-xs text-subtle mt-1">Number of regular holidays worked (paid at 200% of daily rate)</p>
+                                <p className="text-xs text-dim-foreground mt-1">Number of regular holidays worked (paid at 200% of daily rate)</p>
                             </div>
 
                             <div className="mb-4">
                                 <Label>Night Differential Hours</Label>
                                 <input type="number" step="0.5" min="0" value={data.night_differential_hours} onChange={setNum('night_differential_hours')} className={inputCls(errors.night_differential_hours)} />
-                                <p className="text-xs text-subtle mt-1">Hours worked during night shift (paid at 10% premium of hourly rate)</p>
+                                <p className="text-xs text-dim-foreground mt-1">Hours worked during night shift (paid at 10% premium of hourly rate)</p>
                             </div>
 
                             <div className="mb-4">
@@ -346,11 +346,11 @@ export default function ManualPayrollEmployeeForm({
                                 <Label>Reimbursements</Label>
                                 <input type="number" step="0.01" min="0" value={data.reimbursements} onChange={setNum('reimbursements')} className={inputCls(errors.reimbursements)} />
                                 <input type="text" value={data.reimbursements_remarks} onChange={(e) => setData('reimbursements_remarks', e.target.value)} placeholder="Remarks (optional)" className="input input-bordered w-full text-sm mt-2" />
-                                <p className="text-xs text-subtle mt-1">Expense reimbursements to be added to net pay</p>
+                                <p className="text-xs text-dim-foreground mt-1">Expense reimbursements to be added to net pay</p>
                             </div>
 
                             <div className="flex gap-3">
-                                <button type="submit" disabled={processing} className="btn btn-primary">
+                                <button type="submit" disabled={processing} className="inline-flex h-9 items-center gap-2 rounded-lg bg-brand px-4 text-sm font-medium text-brand-foreground no-underline transition-colors hover:bg-brand/90">
                                     <Icon name="tabler--device-floppy" className="size-4" /> {isEdit ? 'Update' : 'Save'} Attendance
                                 </button>
                                 <button type="button" onClick={runPreview} disabled={previewing} className="btn btn-soft btn-neutral">
@@ -360,24 +360,24 @@ export default function ManualPayrollEmployeeForm({
                         </div>
                     </div>
 
-                    <div className="card bg-base-100 border border-base-300 overflow-hidden p-0">
-                        <div className="bg-base-200 px-6 py-4 border-b border-base-300">
+                    <div className="rounded-xl border border-edge bg-card overflow-hidden p-0">
+                        <div className="bg-base-200 px-6 py-4 border-b border-edge">
                             <h3 className="flex items-center gap-3 text-sm font-bold text-base-content m-0">
-                                <Icon name="tabler--receipt-2" className="size-5 text-subtle" /> Payroll Preview
+                                <Icon name="tabler--receipt-2" className="size-5 text-dim-foreground" /> Payroll Preview
                             </h3>
                         </div>
 
                         <div className="p-4">
                             {previewError && (
-                                <div className="alert alert-error mb-4">
+                                <div className="mb-4 flex items-center gap-2 rounded-lg border border-danger/40 bg-danger/10 px-3 py-2.5 text-sm text-danger mb-4">
                                     <Icon name="tabler--alert-circle" className="size-5" />
                                     <span>{previewError}</span>
                                 </div>
                             )}
 
                             {!preview ? (
-                                <div className="text-center text-subtle p-8">
-                                    <Icon name="tabler--calculator" className="size-8 mx-auto mb-3 text-faint" />
+                                <div className="text-center text-dim-foreground p-8">
+                                    <Icon name="tabler--calculator" className="size-8 mx-auto mb-3 text-dim-foreground/70" />
                                     <p className="text-sm m-0">Click "Preview" to see payroll computation</p>
                                 </div>
                             ) : (
@@ -399,7 +399,7 @@ export default function ManualPayrollEmployeeForm({
                                     </div>
 
                                     {isSecondHalfOfMonth && (Number(preview.first_cutoff_gross_pay) > 0 || Number(preview.second_cutoff_gross_pay) > 0) && (
-                                        <div className="bg-info/10 border border-base-300 rounded-lg p-4 mb-4">
+                                        <div className="bg-info/10 border border-edge rounded-lg p-4 mb-4">
                                             <div className="font-semibold text-xs text-info mb-3">Monthly Cutoff Breakdown</div>
                                             <Row label="1st Cutoff Pay:" value={fmtMoney(preview.first_cutoff_gross_pay)} />
                                             <Row label="2nd Cutoff Pay:" value={fmtMoney(preview.second_cutoff_gross_pay)} />
@@ -444,7 +444,7 @@ export default function ManualPayrollEmployeeForm({
                                     </div>
 
                                     {isSecondHalfOfMonth && (Number(preview.first_cutoff_net_pay) > 0 || Number(preview.second_cutoff_net_pay) > 0) && (
-                                        <div className="bg-success/10 border border-base-300 rounded-lg p-4 mb-4">
+                                        <div className="bg-success/10 border border-edge rounded-lg p-4 mb-4">
                                             <div className="font-semibold text-xs mb-3">Monthly Net Pay Breakdown</div>
                                             <Row label="1st Cutoff Net:" value={fmtMoney(preview.first_cutoff_net_pay)} />
                                             <Row label="2nd Cutoff Net:" value={fmtMoney(preview.second_cutoff_net_pay)} />
@@ -455,7 +455,7 @@ export default function ManualPayrollEmployeeForm({
                                         </div>
                                     )}
 
-                                    <div className="rounded-lg p-4 bg-base-100 border border-base-300">
+                                    <div className="rounded-lg p-4 border border-edge bg-card">
                                         <div className="flex justify-between font-bold">
                                             <span>Net Pay:</span>
                                             <span>{fmtMoney(Number(preview.net_pay) + Number(data.reimbursements || 0))}</span>

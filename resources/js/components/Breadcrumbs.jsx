@@ -17,11 +17,11 @@ export default function Breadcrumbs({ items }) {
                         )}
                         <span className="breadcrumb-item inline-flex items-center" style={{ animationDelay: `${index * 60}ms` }}>
                             {isLast ? (
-                                <span className="text-primary font-semibold">{item.label}</span>
+                                <span className="text-brand font-semibold">{item.label}</span>
                             ) : item.href ? (
                                 <Link
                                     href={item.href}
-                                    className="text-base-content no-underline transition-colors duration-200 hover:text-primary"
+                                    className="text-base-content no-underline transition-colors duration-200 hover:text-brand"
                                 >
                                     {item.label}
                                 </Link>

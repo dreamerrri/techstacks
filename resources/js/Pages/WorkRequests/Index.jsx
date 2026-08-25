@@ -40,12 +40,12 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                     actions={
                         canManage ? (
                             pendingCount > 0 && (
-                                <Link href="/work-requests/pending" className="btn btn-soft btn-warning btn-sm">
+                                <Link href="/work-requests/pending" className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-warning/40 bg-warning/10 px-3 text-xs font-medium text-warning no-underline transition-colors hover:bg-warning/20">
                                     <Icon name="tabler--clock" className="size-4" /> Pending ({pendingCount})
                                 </Link>
                             )
                         ) : (
-                            <Link href="/work-requests/create" className="btn btn-soft btn-primary btn-sm">
+                            <Link href="/work-requests/create" className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                 <Icon name="tabler--plus" className="size-4" /> New Request
                             </Link>
                         )
@@ -91,7 +91,7 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                                     </thead>
                                     <tbody>
                                         {workRequests.map((wr) => (
-                                            <tr key={wr.id} className="row-hover border-b border-base-300">
+                                            <tr key={wr.id} className="row-hover border-b border-edge">
                                                 <td className="text-base-content">{fmtDate(wr.created_at)}</td>
                                                 {canManage && (
                                                     <td className="text-base-content font-semibold">{wr.employee?.full_name}</td>
@@ -102,7 +102,7 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                                                     </StatusBadge>
                                                 </td>
                                                 <td className="text-base-content">{fmtDate(wr.work_date)}</td>
-                                                <td className="text-subtle">
+                                                <td className="text-dim-foreground">
                                                     {fmtTime(wr.start_time) || '-'}
                                                     {wr.end_time ? ` - ${fmtTime(wr.end_time)}` : ''}
                                                 </td>
@@ -113,12 +113,12 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                                                 </td>
                                                 <td className="text-center">
                                                     <div className="flex gap-2 justify-center">
-                                                        <Link href={`/work-requests/${wr.id}`} className="btn btn-soft btn-info btn-sm">
+                                                        <Link href={`/work-requests/${wr.id}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                                             <Icon name="tabler--eye" className="size-4" />
                                                         </Link>
                                                         {!canManage && wr.status === 'pending' && (
                                                             <>
-                                                                <Link href={`/work-requests/${wr.id}/edit`} className="btn btn-soft btn-warning btn-sm">
+                                                                <Link href={`/work-requests/${wr.id}/edit`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-warning/40 bg-warning/10 px-3 text-xs font-medium text-warning no-underline transition-colors hover:bg-warning/20">
                                                                     <Icon name="tabler--pencil" className="size-4" />
                                                                 </Link>
                                                                 <ConfirmButton
@@ -127,7 +127,7 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                                                                     confirmText="Yes, Cancel"
                                                                     url={`/work-requests/${wr.id}`}
                                                                     method="delete"
-                                                                    className="btn btn-soft btn-error btn-sm"
+                                                                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10"
                                                                 >
                                                                     <Icon name="tabler--x" className="size-4" />
                                                                 </ConfirmButton>
@@ -143,12 +143,12 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
 
                             <div className="md:hidden p-4 flex flex-col gap-3">
                                 {workRequests.map((wr) => (
-                                    <div key={wr.id} className="card bg-base-100 border border-base-300 p-4">
+                                    <div key={wr.id} className="rounded-xl border border-edge bg-card p-4">
                                         <div className="flex justify-between items-start mb-2">
                                             <div>
                                                 <div className="text-sm text-base-content font-semibold">{fmtDate(wr.created_at)}</div>
                                                 {canManage && (
-                                                    <div className="text-xs text-subtle">{wr.employee?.full_name}</div>
+                                                    <div className="text-xs text-dim-foreground">{wr.employee?.full_name}</div>
                                                 )}
                                             </div>
                                             <StatusBadge type={STATUS_META[wr.status] ?? 'neutral'}>
@@ -156,7 +156,7 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                                             </StatusBadge>
                                         </div>
 
-                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
+                                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-dim-foreground mt-2">
                                             <StatusBadge type={typeBadge(wr.request_type)}>
                                                 {wr.request_type.charAt(0).toUpperCase() + wr.request_type.slice(1)}
                                             </StatusBadge>
@@ -164,13 +164,13 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                                             <span><Icon name="ph--clock-fill" className="size-3.5 inline" /> {fmtTime(wr.start_time) || '-'}{wr.end_time ? ` - ${fmtTime(wr.end_time)}` : ''}</span>
                                         </div>
 
-                                        <div className="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-200">
-                                            <Link href={`/work-requests/${wr.id}`} className="btn btn-soft btn-info btn-sm">
+                                        <div className="flex gap-2 flex-wrap mt-3 pt-3 border-t border-edge/60">
+                                            <Link href={`/work-requests/${wr.id}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                                 <Icon name="ph--eye-fill" className="size-4" /> View
                                             </Link>
                                             {!canManage && wr.status === 'pending' && (
                                                 <>
-                                                    <Link href={`/work-requests/${wr.id}/edit`} className="btn btn-soft btn-warning btn-sm">
+                                                    <Link href={`/work-requests/${wr.id}/edit`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-warning/40 bg-warning/10 px-3 text-xs font-medium text-warning no-underline transition-colors hover:bg-warning/20">
                                                         <Icon name="ph--pencil-fill" className="size-4" /> Edit
                                                     </Link>
                                                     <ConfirmButton
@@ -179,7 +179,7 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                                                         confirmText="Yes, Cancel"
                                                         url={`/work-requests/${wr.id}`}
                                                         method="delete"
-                                                        className="btn btn-soft btn-error btn-sm"
+                                                        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10"
                                                     >
                                                         <Icon name="ph--x" className="size-4" /> Cancel
                                                     </ConfirmButton>
@@ -192,9 +192,9 @@ export default function WorkRequestsIndex({ workRequests, pendingCount, status, 
                         </>
                     ) : (
                         <div className="card p-12 text-center">
-                            <Icon name="tabler--calendar-off" className="size-10 text-faint mx-auto mb-3" />
-                            <h3 className="text-subtle font-semibold mb-2">No Work Requests Found</h3>
-                            <p className="text-faint mb-6">
+                            <Icon name="tabler--calendar-off" className="size-10 text-dim-foreground/70 mx-auto mb-3" />
+                            <h3 className="text-dim-foreground font-semibold mb-2">No Work Requests Found</h3>
+                            <p className="text-dim-foreground/70 mb-6">
                                 {!canManage
                                     ? `${hasFilters ? 'Try adjusting your filters or' : 'Get started by'} creating a new work request.`
                                     : 'No work requests match your current filters.'}

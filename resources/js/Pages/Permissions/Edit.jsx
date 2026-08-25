@@ -28,19 +28,19 @@ export default function PermissionsEdit({ permission }) {
             <Head title="Edit Permission" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href={`/permissions/${permission.id}`} className="back-link text-subtle no-underline text-sm hover:text-success">
+                    <Link href={`/permissions/${permission.id}`} className="back-link text-dim-foreground no-underline text-sm hover:text-success">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Permission
                     </Link>
                 </div>
 
-                <div className="card bg-base-100 shadow-sm p-6">
+                <div className="rounded-xl border border-edge bg-card p-6">
                     <h2 className="text-base font-bold text-base-content mb-6 flex items-center gap-2">
                         <Icon name="ph--pencil-fill" className="size-5 text-error" /> Edit — {permission.name}
                     </h2>
 
                     <form onSubmit={(e) => { e.preventDefault(); put(`/permissions/${permission.id}`); }}>
                         <div className="mb-8">
-                            <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
+                            <h3 className="text-xs font-semibold uppercase tracking-widest text-dim-foreground/70 border-b-2 border-error/20 pb-2 mb-4">
                                 <Icon name="ph--info-fill" className="size-4 text-error inline" /> Permission Details
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -89,13 +89,13 @@ export default function PermissionsEdit({ permission }) {
                                         onChange={(e) => setData('is_active', e.target.checked)}
                                         className="checkbox checkbox-error"
                                     />
-                                    <span className="font-semibold text-muted text-sm">Active</span>
+                                    <span className="font-semibold text-dim-foreground text-sm">Active</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex gap-3 flex-wrap pt-4 border-t border-base-300">
-                            <button type="submit" className="btn btn-error" disabled={processing}>
+                        <div className="flex gap-3 flex-wrap pt-4 border-t border-edge">
+                            <button type="submit" className="inline-flex h-9 items-center gap-2 rounded-lg bg-danger px-4 text-sm font-medium text-danger-foreground no-underline transition-colors hover:bg-danger/90" disabled={processing}>
                                 <Icon name="ph--floppy-disk-fill" className="size-4" /> Update Permission
                             </button>
                             <Link href={`/permissions/${permission.id}`} className="btn btn-soft btn-success">Cancel</Link>

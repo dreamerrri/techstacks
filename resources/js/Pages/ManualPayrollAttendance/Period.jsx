@@ -46,19 +46,19 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
         <AppLayout title={`Encode Attendance - ${payrollPeriod.cutoff_start ? fmtDate(payrollPeriod.cutoff_start, { month: 'short', day: '2-digit' }) : ''} to ${fmtDate(payrollPeriod.cutoff_end)}`}>
             <Head title="Encode Attendance" />
             <div className="p-2 sm:p-4">
-                <Link href="/manual-payroll-attendance" className="inline-flex items-center text-sm text-subtle mb-4 gap-3 no-underline hover:text-primary">
+                <Link href="/manual-payroll-attendance" className="inline-flex items-center text-sm text-dim-foreground mb-4 gap-3 no-underline hover:text-brand">
                     <Icon name="tabler--arrow-left" className="size-4" /> Back to Periods
                 </Link>
 
                 <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
                     <div>
-                        <span className="badge badge-soft badge-info mb-2">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-transparent bg-highlight/12 px-2.5 py-0.5 text-xs font-medium text-highlight mb-2">
                             <Icon name="tabler--calendar" className="size-3.5" /> Payroll Period
                         </span>
                         <h2 className="text-lg font-bold text-base-content mt-2 mb-1">
                             {payrollPeriod.cutoff_start ? fmtDate(payrollPeriod.cutoff_start, { month: 'long', day: '2-digit' }) : 'N/A'} - {fmtDate(payrollPeriod.cutoff_end)}
                         </h2>
-                        <p className="text-subtle m-0">
+                        <p className="text-dim-foreground m-0">
                             Payroll Date: {fmtDate(payrollPeriod.payroll_date)} &nbsp;|&nbsp; Status:{' '}
                             <span className="font-semibold">{payrollPeriod.status ? payrollPeriod.status.charAt(0).toUpperCase() + payrollPeriod.status.slice(1) : ''}</span>
                         </p>
@@ -81,7 +81,7 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
                             )}
                             <button
                                 onClick={() => router.reload({ only: ['payrollPeriod', 'unencodedEmployees'], preserveScroll: true })}
-                                className="btn btn-primary"
+                                className="inline-flex h-9 items-center gap-2 rounded-lg bg-brand px-4 text-sm font-medium text-brand-foreground no-underline transition-colors hover:bg-brand/90"
                             >
                                 <Icon name="tabler--refresh" className="size-4" /> Refresh Summary
                             </button>
@@ -90,28 +90,28 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                    <div className="bg-base-100 border border-base-300 rounded-lg p-4">
-                        <div className="text-xs text-subtle mb-1">Total Employees</div>
+                    <div className="border border-edge bg-card rounded-lg p-4">
+                        <div className="text-xs text-dim-foreground mb-1">Total Employees</div>
                         <div className="font-bold text-xl sm:text-2xl text-base-content">{inputs.length}</div>
                     </div>
-                    <div className="bg-base-100 border border-base-300 rounded-xl p-4">
-                        <div className="text-xs text-subtle mb-1">Total Gross Pay</div>
+                    <div className="border border-edge bg-card rounded-xl p-4">
+                        <div className="text-xs text-dim-foreground mb-1">Total Gross Pay</div>
                         <div className="text-lg sm:text-2xl font-bold text-success break-words">{fmtMoney(payrollPeriod.total_gross)}</div>
                     </div>
-                    <div className="bg-base-100 border border-base-300 rounded-xl p-4">
-                        <div className="text-xs text-subtle mb-1">Total Net Pay</div>
+                    <div className="border border-edge bg-card rounded-xl p-4">
+                        <div className="text-xs text-dim-foreground mb-1">Total Net Pay</div>
                         <div className="text-lg sm:text-2xl font-bold text-info break-words">{fmtMoney(payrollPeriod.total_net)}</div>
                     </div>
-                    <div className="bg-base-100 border border-base-300 rounded-xl p-4">
-                        <div className="text-xs text-subtle mb-1">Total Deductions</div>
+                    <div className="border border-edge bg-card rounded-xl p-4">
+                        <div className="text-xs text-dim-foreground mb-1">Total Deductions</div>
                         <div className="text-lg sm:text-2xl font-bold text-error break-words">{fmtMoney(payrollPeriod.total_deductions)}</div>
                     </div>
                 </div>
 
-                <div className="card bg-base-100 border border-base-300 overflow-hidden p-0 mb-4">
-                    <div className="px-6 py-4 border-b border-base-300">
+                <div className="rounded-xl border border-edge bg-card overflow-hidden p-0 mb-4">
+                    <div className="px-6 py-4 border-b border-edge">
                         <h3 className="text-sm font-bold text-base-content m-0">Encoded Employees</h3>
-                        <p className="text-sm text-subtle m-0">Employees with attendance data for this period</p>
+                        <p className="text-sm text-dim-foreground m-0">Employees with attendance data for this period</p>
                     </div>
 
                     {inputs.length > 0 ? (
@@ -119,15 +119,15 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
                             <table className="table table-sm w-full">
                                 <thead className="bg-base-200">
                                     <tr>
-                                        <th className="text-xs text-subtle">Employee</th>
-                                        <th className="text-right text-xs text-subtle">Days Worked</th>
-                                        <th className="text-right text-xs text-subtle">OT Hours</th>
-                                        <th className="text-right text-xs text-subtle">Late Hours</th>
-                                        <th className="text-right text-xs text-subtle">Allowances</th>
-                                        <th className="text-right text-xs text-subtle">Deductions</th>
-                                        <th className="text-right text-xs text-subtle">Gross Pay</th>
-                                        <th className="text-right text-xs text-subtle">Net Pay</th>
-                                        <th className="text-center text-xs text-subtle">Actions</th>
+                                        <th className="text-xs text-dim-foreground">Employee</th>
+                                        <th className="text-right text-xs text-dim-foreground">Days Worked</th>
+                                        <th className="text-right text-xs text-dim-foreground">OT Hours</th>
+                                        <th className="text-right text-xs text-dim-foreground">Late Hours</th>
+                                        <th className="text-right text-xs text-dim-foreground">Allowances</th>
+                                        <th className="text-right text-xs text-dim-foreground">Deductions</th>
+                                        <th className="text-right text-xs text-dim-foreground">Gross Pay</th>
+                                        <th className="text-right text-xs text-dim-foreground">Net Pay</th>
+                                        <th className="text-center text-xs text-dim-foreground">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -140,7 +140,7 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
                                                     </div>
                                                     <div>
                                                         <div className="font-semibold text-base-content text-sm">{input.employee?.first_name || 'Unknown'} {input.employee?.last_name || ''}</div>
-                                                        <div className="text-xs text-subtle font-mono">{input.employee?.employee_id || 'N/A'}</div>
+                                                        <div className="text-xs text-dim-foreground font-mono">{input.employee?.employee_id || 'N/A'}</div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -157,7 +157,7 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
                                                         <Icon name="tabler--pencil" className="size-3.5" /> Edit
                                                     </Link>
                                                 ) : (
-                                                    <span className="text-xs text-subtle">Finalized</span>
+                                                    <span className="text-xs text-dim-foreground">Finalized</span>
                                                 )}
                                             </td>
                                         </tr>
@@ -166,7 +166,7 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
                             </table>
                         </div>
                     ) : (
-                        <div className="text-center text-subtle p-10">
+                        <div className="text-center text-dim-foreground p-10">
                             <Icon name="tabler--clipboard-text" className="size-6 mx-auto mb-3" />
                             No employees encoded yet for this period.
                         </div>
@@ -174,10 +174,10 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
                 </div>
 
                 {unencodedEmployees.length > 0 && payrollPeriod.is_draft && (
-                    <div className="card bg-base-100 border border-base-300 overflow-hidden p-0">
-                        <div className="px-6 py-4 border-b border-base-300">
+                    <div className="rounded-xl border border-edge bg-card overflow-hidden p-0">
+                        <div className="px-6 py-4 border-b border-edge">
                             <h3 className="text-sm font-bold text-base-content m-0">Pending Encoding</h3>
-                            <p className="text-sm text-subtle m-0">Employees without attendance data for this period</p>
+                            <p className="text-sm text-dim-foreground m-0">Employees without attendance data for this period</p>
                         </div>
 
                         <div className="bg-base-200 p-4">
@@ -201,11 +201,11 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
                                         <option key={s} value={s}>{s}</option>
                                     ))}
                                 </select>
-                                <button onClick={() => { setSearch(''); setDepartment(''); setEmpStatus(''); }} className="btn btn-soft btn-neutral btn-sm">
+                                <button onClick={() => { setSearch(''); setDepartment(''); setEmpStatus(''); }} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge px-3 text-xs font-medium no-underline transition-colors hover:bg-dim">
                                     <Icon name="tabler--x" className="size-4" /> Clear
                                 </button>
                             </div>
-                            <div className="text-xs text-subtle mt-2">
+                            <div className="text-xs text-dim-foreground mt-2">
                                 Showing <span className="font-semibold">{filtered.length}</span> of {unencodedEmployees.length} employees
                             </div>
                         </div>
@@ -214,25 +214,25 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
                             {filtered.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                     {filtered.map((employee) => (
-                                        <div key={employee.id} className="employee-card flex items-center justify-between border border-base-300 rounded-lg p-4">
+                                        <div key={employee.id} className="employee-card flex items-center justify-between border border-edge rounded-lg p-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="flex items-center justify-center font-bold text-xs text-subtle bg-base-200 rounded-lg w-8 h-8">
+                                                <div className="flex items-center justify-center font-bold text-xs text-dim-foreground bg-base-200 rounded-lg w-8 h-8">
                                                     {(employee.first_name || '?').charAt(0).toUpperCase()}
                                                 </div>
                                                 <div>
                                                     <div className="font-semibold text-sm text-base-content">{employee.first_name || 'Unknown'} {employee.last_name || ''}</div>
-                                                    <div className="text-xs text-subtle font-mono">{employee.employee_id || 'N/A'}</div>
-                                                    <div className="text-xs text-subtle mt-1">{employee.department || 'N/A'}{employee.employment_status ? ` • ${employee.employment_status}` : ''}</div>
+                                                    <div className="text-xs text-dim-foreground font-mono">{employee.employee_id || 'N/A'}</div>
+                                                    <div className="text-xs text-dim-foreground mt-1">{employee.department || 'N/A'}{employee.employment_status ? ` • ${employee.employment_status}` : ''}</div>
                                                 </div>
                                             </div>
-                                            <Link href={`/manual-payroll-attendance/period/${payrollPeriod.id}/employee/${employee.id}`} className="btn btn-primary btn-sm">
+                                            <Link href={`/manual-payroll-attendance/period/${payrollPeriod.id}/employee/${employee.id}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-brand px-3 text-xs font-medium text-brand-foreground no-underline transition-colors hover:bg-brand/90">
                                                 <Icon name="tabler--keyboard" className="size-4" /> Encode
                                             </Link>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <div className="text-center text-subtle p-8">
+                                <div className="text-center text-dim-foreground p-8">
                                     <Icon name="tabler--search" className="size-6 mx-auto mb-3" />
                                     No employees match your filters.
                                 </div>

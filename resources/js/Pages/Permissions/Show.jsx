@@ -10,12 +10,12 @@ export default function PermissionsShow({ permission }) {
             <Head title="Permission Details" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/permissions" className="back-link text-subtle no-underline text-sm hover:text-success">
+                    <Link href="/permissions" className="back-link text-dim-foreground no-underline text-sm hover:text-success">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Permissions
                     </Link>
                 </div>
 
-                <div className="card bg-base-100 shadow-sm p-6">
+                <div className="rounded-xl border border-edge bg-card p-6">
                     <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
                         <div className="flex items-center gap-4">
                             <div className="w-14 h-14 rounded-full bg-gradient-to-br from-error to-error/80 flex items-center justify-center text-white text-xl flex-shrink-0">
@@ -23,16 +23,16 @@ export default function PermissionsShow({ permission }) {
                             </div>
                             <div>
                                 <h2 className="text-xl font-bold text-base-content m-0">{permission.name}</h2>
-                                <code className="text-xs text-subtle bg-base-200 px-2 py-0.5 rounded">{permission.slug}</code>
+                                <code className="text-xs text-dim-foreground bg-base-200 px-2 py-0.5 rounded">{permission.slug}</code>
                             </div>
                         </div>
-                        <Link href={`/permissions/${permission.id}/edit`} className="btn btn-soft btn-error btn-sm">
+                        <Link href={`/permissions/${permission.id}/edit`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10">
                             <Icon name="ph--pencil-fill" className="size-4" /> Edit Permission
                         </Link>
                     </div>
 
                     <div className="mb-8">
-                        <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-dim-foreground/70 border-b-2 border-error/20 pb-2 mb-4">
                             <Icon name="ph--info-fill" className="size-4 text-error inline" /> Permission Information
                         </h3>
                         <div className="flex flex-col">
@@ -47,38 +47,38 @@ export default function PermissionsShow({ permission }) {
                             </DetailRow>
                             {permission.description && (
                                 <div className="flex flex-col gap-1 py-3">
-                                    <span className="text-faint font-medium">Description</span>
-                                    <span className="text-muted text-sm">{permission.description}</span>
+                                    <span className="text-dim-foreground/70 font-medium">Description</span>
+                                    <span className="text-dim-foreground text-sm">{permission.description}</span>
                                 </div>
                             )}
                         </div>
                     </div>
 
                     <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-widest text-faint border-b-2 border-error/20 pb-2 mb-4">
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-dim-foreground/70 border-b-2 border-error/20 pb-2 mb-4">
                             <Icon name="tabler--tag" className="size-4 text-error inline" /> Roles with this Permission ({permission.roles?.length ?? 0})
                         </h3>
                         {permission.roles?.length > 0 ? (
                             <div className="flex flex-col gap-2">
                                 {permission.roles.map((role) => (
-                                    <div key={role.id} className="flex justify-between items-center p-3 border border-base-300 rounded-xl hover:shadow-md transition-shadow">
+                                    <div key={role.id} className="flex justify-between items-center p-3 border border-edge rounded-xl hover:shadow-md transition-shadow">
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-error to-error/80 flex items-center justify-center text-white font-bold flex-shrink-0">
                                                 {role.name.charAt(0).toUpperCase()}
                                             </div>
                                             <div>
                                                 <div className="font-semibold text-base-content text-sm">{role.name}</div>
-                                                <code className="text-xs text-subtle">{role.slug}</code>
+                                                <code className="text-xs text-dim-foreground">{role.slug}</code>
                                             </div>
                                         </div>
-                                        <Link href={`/roles/${role.id}`} className="btn btn-soft btn-info btn-sm">
+                                        <Link href={`/roles/${role.id}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                             <Icon name="ph--eye-fill" className="size-4" /> View Role
                                         </Link>
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-faint text-sm m-0">No roles have this permission.</p>
+                            <p className="text-dim-foreground/70 text-sm m-0">No roles have this permission.</p>
                         )}
                     </div>
                 </div>

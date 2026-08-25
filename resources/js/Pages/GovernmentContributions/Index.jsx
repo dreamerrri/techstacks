@@ -101,16 +101,16 @@ function ContributionBreakdownModal({ open, onClose, data, label }) {
     return (
         <div className="fixed inset-0 z-[9999] bg-black/50 items-start justify-center p-5 overflow-y-auto flex" onClick={onClose}>
             <div className="bg-base-100 rounded-2xl w-full max-w-[90vw] mx-auto shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-                <div className="px-7 py-5 border-b border-base-300 flex justify-between items-center">
+                <div className="px-7 py-5 border-b border-edge flex justify-between items-center">
                     <div>
                         <div className="text-base font-bold text-base-content flex items-center gap-2">
                             <Icon name="tabler--stack" className="text-error size-5" /> Contribution Breakdown
                         </div>
-                        <div className="text-xs text-subtle mt-1">
+                        <div className="text-xs text-dim-foreground mt-1">
                             {data.length} employee{data.length !== 1 ? 's' : ''} | {label}
                         </div>
                     </div>
-                    <button onClick={onClose} className="btn btn-soft btn-error btn-sm btn-circle">
+                    <button onClick={onClose} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10 btn-circle">
                         <Icon name="tabler--x" className="size-4" />
                     </button>
                 </div>
@@ -141,11 +141,11 @@ function ContributionBreakdownModal({ open, onClose, data, label }) {
                                             <tr key={emp.id} className="row-hover text-xs">
                                                 <td>
                                                     <div className="font-semibold text-base-content">
-                                                        <Link href={`/government-contributions/${emp.id}`} className="text-base-content no-underline hover:text-primary">{emp.full_name}</Link>
+                                                        <Link href={`/government-contributions/${emp.id}`} className="text-base-content no-underline hover:text-brand">{emp.full_name}</Link>
                                                     </div>
-                                                    <div className="text-xs text-faint font-mono">{emp.employee_id}</div>
+                                                    <div className="text-xs text-dim-foreground/70 font-mono">{emp.employee_id}</div>
                                                 </td>
-                                                <td className="text-subtle">{emp.department}</td>
+                                                <td className="text-dim-foreground">{emp.department}</td>
                                                 <td className="text-right font-semibold text-base-content">{fmt(emp.basic_salary)}</td>
                                                 <td className="text-right text-error">{fmt(sss)}</td>
                                                 <td className="text-right text-info">{fmt(phil)}</td>
@@ -166,19 +166,19 @@ function ContributionBreakdownModal({ open, onClose, data, label }) {
                                 </tfoot>
                             </table>
                         </div>
-                        <div className="px-6 py-4 border-t border-base-300 flex justify-between items-center flex-wrap gap-2">
+                        <div className="px-6 py-4 border-t border-edge flex justify-between items-center flex-wrap gap-2">
                             <div className="flex gap-2 flex-wrap">
-                                <button onClick={printBreakdown} className="btn btn-soft btn-info btn-sm">
+                                <button onClick={printBreakdown} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                     <Icon name="tabler--printer" className="size-4" /> Print PDF
                                 </button>
-                                <button onClick={exportCSV} className="btn btn-soft btn-success btn-sm">
+                                <button onClick={exportCSV} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-transparent bg-brand px-3 text-xs font-medium text-brand-foreground no-underline transition-colors hover:bg-brand/90">
                                     <Icon name="tabler--file-type-csv" className="size-4" /> Export CSV
                                 </button>
                             </div>
                         </div>
                     </>
                 ) : (
-                    <div className="py-10 text-faint flex flex-col items-center justify-center gap-2 w-full">
+                    <div className="py-10 text-dim-foreground/70 flex flex-col items-center justify-center gap-2 w-full">
                         <Icon name="tabler--inbox" className="size-8" />
                         <span>No contribution data for the current filter.</span>
                     </div>
@@ -247,7 +247,7 @@ export default function GovernmentContributionsIndex({ employees, departments, f
                     paginator={employees}
                     empty="No employees found."
                     actions={
-                        <button onClick={() => setOpen(true)} className="btn btn-soft btn-error btn-sm">
+                        <button onClick={() => setOpen(true)} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10">
                             <Icon name="tabler--stack" className="size-4" /> Breakdown
                         </button>
                     }
@@ -267,19 +267,19 @@ export default function GovernmentContributionsIndex({ employees, departments, f
                             <tbody>
                                 {(employees.data || []).map((employee) => (
                                     <tr key={employee.id} className="row-hover">
-                                        <td className="font-mono text-subtle">{employee.employee_id}</td>
+                                        <td className="font-mono text-dim-foreground">{employee.employee_id}</td>
                                         <td className="font-semibold text-base-content">
-                                            <Link href={`/government-contributions/${employee.id}`} className="text-base-content no-underline hover:text-primary">
+                                            <Link href={`/government-contributions/${employee.id}`} className="text-base-content no-underline hover:text-brand">
                                                 {employee.full_name}
                                             </Link>
                                         </td>
-                                        <td className="text-subtle">{employee.department}</td>
-                                        <td className="text-subtle">{employee.position}</td>
+                                        <td className="text-dim-foreground">{employee.department}</td>
+                                        <td className="text-dim-foreground">{employee.position}</td>
                                         <td>
                                             <span className={`badge ${statusBadge(employee.employment_status)} whitespace-nowrap`}>{employee.employment_status}</span>
                                         </td>
                                         <td className="text-center">
-                                            <Link href={`/government-contributions/${employee.id}`} className="btn btn-soft btn-info btn-sm" title="View contributions">
+                                            <Link href={`/government-contributions/${employee.id}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60" title="View contributions">
                                                 <Icon name="tabler--eye" className="size-4" />
                                             </Link>
                                         </td>
@@ -291,30 +291,30 @@ export default function GovernmentContributionsIndex({ employees, departments, f
 
                     <div className="md:hidden p-4 flex flex-col gap-3">
                         {(employees.data || []).map((employee) => (
-                            <div key={employee.id} className="card bg-base-100 border border-base-300 p-4">
+                            <div key={employee.id} className="rounded-xl border border-edge bg-card p-4">
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-error to-error/80 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                                             {(employee.full_name || '?').charAt(0).toUpperCase()}
                                         </div>
                                         <div>
-                                            <Link href={`/government-contributions/${employee.id}`} className="font-semibold text-base-content no-underline text-sm hover:text-primary">
+                                            <Link href={`/government-contributions/${employee.id}`} className="font-semibold text-base-content no-underline text-sm hover:text-brand">
                                                 {employee.full_name}
                                             </Link>
-                                            <div className="text-xs text-subtle font-mono">{employee.employee_id}</div>
+                                            <div className="text-xs text-dim-foreground font-mono">{employee.employee_id}</div>
                                         </div>
                                     </div>
                                     <span className={`badge ${statusBadge(employee.employment_status)} whitespace-nowrap`}>{employee.employment_status}</span>
                                 </div>
 
-                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
+                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-dim-foreground mt-2">
                                     <span><Icon name="tabler--building" className="size-3.5 inline" /> {employee.department}</span>
                                     <span><Icon name="tabler--briefcase" className="size-3.5 inline" /> {employee.position}</span>
                                     <span><Icon name="tabler--cash" className="size-3.5 inline" /> {fmt(employee.basic_salary)}</span>
                                 </div>
 
-                                <div className="mt-3 pt-3 border-t border-base-200">
-                                    <Link href={`/government-contributions/${employee.id}`} className="btn btn-soft btn-info btn-sm">
+                                <div className="mt-3 pt-3 border-t border-edge/60">
+                                    <Link href={`/government-contributions/${employee.id}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                         <Icon name="tabler--eye" className="size-4" /> View Contributions
                                     </Link>
                                 </div>

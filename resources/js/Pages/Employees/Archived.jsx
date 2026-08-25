@@ -22,7 +22,7 @@ export default function EmployeesArchived({ employees }) {
             <Head title="Archived Employees" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/employees" className="back-link text-subtle no-underline text-sm hover:text-success">
+                    <Link href="/employees" className="back-link text-dim-foreground no-underline text-sm hover:text-success">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Employee page
                     </Link>
                 </div>
@@ -48,15 +48,15 @@ export default function EmployeesArchived({ employees }) {
                             <tbody>
                                 {employees.data.map((emp) => (
                                     <tr key={emp.id} className="row-hover">
-                                        <td className="font-mono text-subtle">{emp.employee_id}</td>
+                                        <td className="font-mono text-dim-foreground">{emp.employee_id}</td>
                                         <td>
                                             <div className="flex items-center gap-2">
                                                 {avatar(emp)}
                                                 <span className="font-semibold text-base-content">{emp.full_name}</span>
                                             </div>
                                         </td>
-                                        <td className="text-subtle">{emp.department}</td>
-                                        <td className="text-subtle">{emp.position}</td>
+                                        <td className="text-dim-foreground">{emp.department}</td>
+                                        <td className="text-dim-foreground">{emp.position}</td>
                                         <td>
                                             <ConfirmButton
                                                 title="Restore Employee?"
@@ -65,7 +65,7 @@ export default function EmployeesArchived({ employees }) {
                                                 confirmText="Yes, restore"
                                                 url={`/employees/${emp.id}/restore`}
                                                 method="patch"
-                                                className="btn btn-soft btn-success btn-sm"
+                                                className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-transparent bg-brand px-3 text-xs font-medium text-brand-foreground no-underline transition-colors hover:bg-brand/90"
                                             >
                                                 <Icon name="ph--arrow-counter-clockwise-fill" className="size-4" /> Restore
                                             </ConfirmButton>
@@ -78,24 +78,24 @@ export default function EmployeesArchived({ employees }) {
 
                     <div className="md:hidden p-4 flex flex-col gap-3">
                         {employees.data.map((emp) => (
-                            <div key={emp.id} className="card bg-base-100 border border-base-300 p-4">
+                            <div key={emp.id} className="rounded-xl border border-edge bg-card p-4">
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="flex items-center gap-3">
                                         {avatar(emp, 'w-10 h-10', 'text-sm')}
                                         <div>
                                             <div className="font-semibold text-base-content text-sm">{emp.full_name}</div>
-                                            <div className="text-xs text-subtle font-mono">{emp.employee_id}</div>
+                                            <div className="text-xs text-dim-foreground font-mono">{emp.employee_id}</div>
                                         </div>
                                     </div>
-                                    <span className="badge badge-soft badge-neutral whitespace-nowrap">Archived</span>
+                                    <span className="inline-flex items-center gap-1 rounded-full border border-edge bg-dim px-2.5 py-0.5 text-xs font-medium text-dim-foreground whitespace-nowrap">Archived</span>
                                 </div>
 
-                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
+                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-dim-foreground mt-2">
                                     <span><Icon name="ph--buildings-fill" className="size-3.5 inline" /> {emp.department}</span>
                                     <span><Icon name="ph--briefcase-fill" className="size-3.5 inline" /> {emp.position}</span>
                                 </div>
 
-                                <div className="mt-3 pt-3 border-t border-base-200">
+                                <div className="mt-3 pt-3 border-t border-edge/60">
                                     <ConfirmButton
                                         title="Restore Employee?"
                                         text="This employee will be restored to the active list."
@@ -103,7 +103,7 @@ export default function EmployeesArchived({ employees }) {
                                         confirmText="Yes, restore"
                                         url={`/employees/${emp.id}/restore`}
                                         method="patch"
-                                        className="btn btn-success btn-sm"
+                                        className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-brand px-3 text-xs font-medium text-brand-foreground no-underline transition-colors hover:bg-brand/90"
                                     >
                                         <Icon name="ph--arrow-counter-clockwise-fill" className="size-4" /> Restore
                                     </ConfirmButton>

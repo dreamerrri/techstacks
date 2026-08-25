@@ -89,20 +89,20 @@ export default function EmployeeAttendanceCreate({ todayAttendance }) {
             <Head title="Add Attendance" />
             <div className="p-2 sm:p-4">
                 <div className="mb-6">
-                    <Link href="/employee-attendance" className="text-subtle no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-primary">
+                    <Link href="/employee-attendance" className="text-dim-foreground no-underline text-sm inline-flex items-center gap-1.5 mb-2 hover:text-brand">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Attendance
                     </Link>
                     <div>
-                        <span className="badge badge-soft badge-info mb-2">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-transparent bg-highlight/12 px-2.5 py-0.5 text-xs font-medium text-highlight mb-2">
                             <Icon name="tabler--plus" className="size-3.5" /> Add Attendance
                         </span>
                     </div>
                     <h2 className="text-lg font-bold text-base-content mt-2 mb-1">Record Attendance</h2>
-                    <p className="text-subtle m-0">Add your time-in/time-out record for a specific date</p>
+                    <p className="text-dim-foreground m-0">Add your time-in/time-out record for a specific date</p>
                 </div>
 
-                <div className="card bg-base-100 border border-base-300 p-0 overflow-hidden max-w-[600px]">
-                    <div className="px-6 py-5 border-b border-base-300">
+                <div className="rounded-xl border border-edge bg-card p-0 overflow-hidden max-w-[600px]">
+                    <div className="px-6 py-5 border-b border-edge">
                         <h3 className="text-sm font-bold text-base-content m-0">Attendance Details</h3>
                     </div>
 
@@ -116,19 +116,19 @@ export default function EmployeeAttendanceCreate({ todayAttendance }) {
                         <div className="mb-5">
                             <label className="label text-sm font-semibold text-base-content">Date</label>
                             <input type="date" name="date" readOnly value={data.date} className="input input-bordered w-full bg-base-200" />
-                            <p className="text-subtle text-xs mt-1">Auto-set when you clock in</p>
+                            <p className="text-dim-foreground text-xs mt-1">Auto-set when you clock in</p>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5 mb-5">
                             <div>
                                 <label className="label text-sm font-semibold text-base-content">Time In</label>
                                 <input type="time" name="time_in" readOnly value={data.time_in} className="input input-bordered w-full bg-base-200" />
-                                <p className="text-subtle text-xs mt-1">Auto-set when you clock in</p>
+                                <p className="text-dim-foreground text-xs mt-1">Auto-set when you clock in</p>
                             </div>
                             <div>
                                 <label className="label text-sm font-semibold text-base-content">Time Out</label>
                                 <input type="time" name="time_out" readOnly value={data.time_out} className="input input-bordered w-full bg-base-200" />
-                                <p className="text-subtle text-xs mt-1">Auto-set when you clock out</p>
+                                <p className="text-dim-foreground text-xs mt-1">Auto-set when you clock out</p>
                             </div>
                         </div>
 
@@ -160,7 +160,7 @@ export default function EmployeeAttendanceCreate({ todayAttendance }) {
                                         </span>
                                     </span>
                                 </div>
-                                <span className="text-subtle text-sm">Hover to see expected clock out time</span>
+                                <span className="text-dim-foreground text-sm">Hover to see expected clock out time</span>
                             </div>
                         )}
 

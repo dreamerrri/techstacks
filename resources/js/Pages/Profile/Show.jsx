@@ -61,14 +61,14 @@ function AvatarUpload({ photoUrl, initials, size = 'w-32 h-32' }) {
 
     return (
         <div className="avatar-upload relative flex-shrink-0">
-            <div className={`avatar-circle ${size} rounded-full bg-base-200 border-2 border-base-300 overflow-hidden flex items-center justify-center cursor-pointer text-3xl font-bold text-base-content`}>
+            <div className={`avatar-circle ${size} rounded-full bg-base-200 border-2 border-edge overflow-hidden flex items-center justify-center cursor-pointer text-3xl font-bold text-base-content`}>
                 {photoUrl ? (
                     <img className="avatar-img w-full h-full object-cover" src={photoUrl} alt="" />
                 ) : (
                     <span className="avatar-initials">{initials}</span>
                 )}
             </div>
-            <label className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-base-100 border-2 border-base-300 flex items-center justify-center cursor-pointer shadow-sm">
+            <label className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-base-100 border-2 border-edge flex items-center justify-center cursor-pointer shadow-sm">
                 <Icon name="tabler--camera" className="size-3 text-base-content" />
                 <input type="file" accept="image/*" className="hidden" ref={fileRef} onChange={handleFile} />
             </label>
@@ -141,7 +141,7 @@ export default function ProfileShow({ employee }) {
         <AppLayout>
             <Head title="My Profile" />
             <div className="p-2 sm:p-4">
-                <div className="card bg-base-100 border border-base-300 p-6">
+                <div className="rounded-xl border border-edge bg-card p-6">
                     <div className="w-full mt-16 mb-6">
                         <div className="px-6">
                             <div className="flex flex-wrap justify-center">
@@ -151,17 +151,17 @@ export default function ProfileShow({ employee }) {
                             </div>
                             <div className="text-center mt-2 pb-6">
                                 <h3 className="text-2xl text-base-content font-bold leading-normal mb-1">{user?.name}</h3>
-                                <p className="text-subtle text-sm m-0 mb-2">{user?.email}</p>
-                                <div className="text-xs mt-0 mb-2 text-subtle font-bold uppercase flex items-center justify-center gap-1">
+                                <p className="text-dim-foreground text-sm m-0 mb-2">{user?.email}</p>
+                                <div className="text-xs mt-0 mb-2 text-dim-foreground font-bold uppercase flex items-center justify-center gap-1">
                                     <span className={`badge ${roleClass}`}>{user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : ''}</span>
                                     {employee && (
-                                        <span className="badge badge-soft badge-neutral">{employee.position} — {employee.department}</span>
+                                        <span className="inline-flex items-center gap-1 rounded-full border border-edge bg-dim px-2.5 py-0.5 text-xs font-medium text-dim-foreground">{employee.position} — {employee.department}</span>
                                     )}
                                 </div>
                             </div>
                         </div>
 
-                        <nav className="tabs tabs-bordered overflow-x-auto [&_.tab:hover]:text-primary [&_.tab:hover]:border-primary [&_.tab-active]:border-primary [&_.tab-active]:text-primary" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
+                        <nav className="tabs tabs-bordered overflow-x-auto [&_.tab:hover]:text-brand [&_.tab:hover]:border-primary [&_.tab-active]:border-primary [&_.tab-active]:text-brand" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
                             {tabs.map((tab, index) => (
                                 <button
                                     key={tab.id}
@@ -237,7 +237,7 @@ export default function ProfileShow({ employee }) {
                                                 <DetailRow label="Date Hired">{fmt(employee.date_hired, { month: 'short', day: '2-digit', year: 'numeric' })}</DetailRow>
                                                 <DetailRow label="Salary Type" border={false}>{employee.salary_type}</DetailRow>
                                             </div>
-                                            <div className="mt-3 px-3 py-2 bg-base-200 rounded-lg text-xs text-faint">
+                                            <div className="mt-3 px-3 py-2 bg-base-200 rounded-lg text-xs text-dim-foreground/70">
                                                 <Icon name="ph--info-fill" className="size-3.5 inline" /> Employment details can only be changed by HR.
                                             </div>
                                         </Panel>
@@ -293,14 +293,14 @@ export default function ProfileShow({ employee }) {
                                                     <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 ${color} ${bg}`}>
                                                         <Icon name={icon} className="size-5" />
                                                     </div>
-                                                    <div className="text-xs text-faint uppercase tracking-widest font-medium mb-1">{label}</div>
+                                                    <div className="text-xs text-dim-foreground/70 uppercase tracking-widest font-medium mb-1">{label}</div>
                                                     <div className="font-bold font-mono text-base-content text-xs break-all">{value || '—'}</div>
                                                 </Panel>
                                             ))}
                                         </div>
                                     </Panel>
                                 ) : (
-                                    <Panel padding="p-6" className="text-center text-sm text-subtle">
+                                    <Panel padding="p-6" className="text-center text-sm text-dim-foreground">
                                         No employee record is linked to this account yet, so government contribution details aren&apos;t available.
                                     </Panel>
                                 )
@@ -322,10 +322,10 @@ export default function ProfileShow({ employee }) {
                                                 </FormField>
                                             </div>
 
-                                            <div className="text-xs font-semibold text-faint uppercase tracking-widest mb-2">
+                                            <div className="text-xs font-semibold text-dim-foreground/70 uppercase tracking-widest mb-2">
                                                 Change Password <span className="normal-case font-normal">(leave blank to keep current)</span>
                                             </div>
-                                            <div className="border-t border-base-300 mb-4"></div>
+                                            <div className="border-t border-edge mb-4"></div>
 
                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
                                                 <FormField label="Current Password" error={account.errors.current_password}>
@@ -339,7 +339,7 @@ export default function ProfileShow({ employee }) {
                                                 </FormField>
                                             </div>
 
-                                            <button type="submit" className="btn btn-error" disabled={account.processing}>
+                                            <button type="submit" className="inline-flex h-9 items-center gap-2 rounded-lg bg-danger px-4 text-sm font-medium text-danger-foreground no-underline transition-colors hover:bg-danger/90" disabled={account.processing}>
                                                 <Icon name="ph--floppy-disk-fill" className="size-4" /> Save Changes
                                             </button>
                                         </form>
@@ -349,7 +349,7 @@ export default function ProfileShow({ employee }) {
                                         <PanelHeader icon="ph--palette-fill" color="text-accent" bg="bg-accent/10">
                                             Appearance
                                         </PanelHeader>
-                                        <p className="text-xs text-faint mb-4">
+                                        <p className="text-xs text-dim-foreground/70 mb-4">
                                             Pick a theme — it applies instantly and is saved to your account.
                                         </p>
                                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" id="theme-picker">

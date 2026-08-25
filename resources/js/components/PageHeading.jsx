@@ -11,7 +11,7 @@ export default function PageHeading({ badge, badgeIcon, badgeColor = 'info', tit
                     </span>
                 )}
                 <h2 className="text-lg font-bold text-base-content mt-2 mb-1">{title}</h2>
-                {subtitle && <p className="text-subtle m-0">{subtitle}</p>}
+                {subtitle && <p className="text-dim-foreground m-0">{subtitle}</p>}
             </div>
             {actions && <div className="flex gap-2 flex-wrap">{actions}</div>}
         </div>

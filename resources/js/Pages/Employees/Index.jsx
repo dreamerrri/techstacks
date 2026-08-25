@@ -31,7 +31,7 @@ function SortableTh({ label, sortKey, filters }) {
 
     return (
         <th>
-            <button type="button" onClick={handleSort} className="flex items-center gap-1 normal-case font-medium hover:text-primary cursor-pointer">
+            <button type="button" onClick={handleSort} className="flex items-center gap-1 normal-case font-medium hover:text-brand cursor-pointer">
                 {label}
                 {active ? (
                     <Icon name={filters.direction === 'asc' ? 'tabler--arrow-up' : 'tabler--arrow-down'} className="size-3.5" />
@@ -52,7 +52,7 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
             {emp.user?.photo_url ? (
                 <img src={emp.user.photo_url} alt={emp.full_name} className="w-full h-full object-cover" />
             ) : (
-                <div className={`${size} rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-content ${text} font-bold`}>
+                <div className={`${size} rounded-full bg-gradient-to-br from-brand to-brand/70 flex items-center justify-center text-brand-foreground ${text} font-bold`}>
                     {emp.full_name.charAt(0).toUpperCase()}
                 </div>
             )}
@@ -64,33 +64,33 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
             <Head title="Manage Employees" />
             <div className="p-2 sm:p-4 space-y-6">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-1">
-                    <div className="card bg-base-100 border border-base-300 p-5 text-center">
-                        <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-primary bg-primary/10">
+                    <div className="rounded-xl border border-edge bg-card p-4 text-center sm:p-5">
+                        <div className="mx-auto mb-2 flex size-10 items-center justify-center rounded-lg text-primary bg-primary/10">
                             <Icon name="tabler--user" className="size-5" />
                         </div>
-                        <div className="text-3xl font-bold text-base-content mb-1">{stats.total}</div>
-                        <div className="text-xs text-muted uppercase tracking-widest font-medium">Total Employees</div>
+                        <div className="mb-0.5 text-xl font-bold sm:text-2xl">{stats.total}</div>
+                        <div className="text-[11px] uppercase tracking-widest text-dim-foreground">Total Employees</div>
                     </div>
-                    <div className="card bg-base-100 border border-base-300 p-5 text-center">
-                        <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-success bg-success/10">
+                    <div className="rounded-xl border border-edge bg-card p-4 text-center sm:p-5">
+                        <div className="mx-auto mb-2 flex size-10 items-center justify-center rounded-lg text-success bg-success/10">
                             <Icon name="tabler--circle-check" className="size-5" />
                         </div>
-                        <div className="text-3xl font-bold text-base-content mb-1">{stats.regular}</div>
-                        <div className="text-xs text-muted uppercase tracking-widest font-medium">Regular</div>
+                        <div className="mb-0.5 text-xl font-bold sm:text-2xl">{stats.regular}</div>
+                        <div className="text-[11px] uppercase tracking-widest text-dim-foreground">Regular</div>
                     </div>
-                    <div className="card bg-base-100 border border-base-300 p-5 text-center">
-                        <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-warning bg-warning/10">
+                    <div className="rounded-xl border border-edge bg-card p-4 text-center sm:p-5">
+                        <div className="mx-auto mb-2 flex size-10 items-center justify-center rounded-lg text-warning bg-warning/10">
                             <Icon name="tabler--clock" className="size-5" />
                         </div>
-                        <div className="text-3xl font-bold text-base-content mb-1">{stats.probationary}</div>
-                        <div className="text-xs text-muted uppercase tracking-widest font-medium">Probationary</div>
+                        <div className="mb-0.5 text-xl font-bold sm:text-2xl">{stats.probationary}</div>
+                        <div className="text-[11px] uppercase tracking-widest text-dim-foreground">Probationary</div>
                     </div>
-                    <Link href="/employees/archived" className="card bg-base-100 border border-base-300 p-5 text-center hover:shadow-md transition-shadow cursor-pointer">
-                        <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 text-subtle bg-base-200">
+                    <Link href="/employees/archived" className="rounded-xl border border-edge bg-card p-4 text-center sm:p-5 hover:shadow-md transition-shadow cursor-pointer">
+                        <div className="mx-auto mb-2 flex size-10 items-center justify-center rounded-lg bg-dim text-dim-foreground">
                             <Icon name="tabler--archive" className="size-5" />
                         </div>
-                        <div className="text-3xl font-bold text-base-content mb-1">{stats.archived}</div>
-                        <div className="text-xs text-muted uppercase tracking-widest font-medium">Archived</div>
+                        <div className="mb-0.5 text-xl font-bold sm:text-2xl">{stats.archived}</div>
+                        <div className="text-[11px] uppercase tracking-widest text-dim-foreground">Archived</div>
                     </Link>
                 </div>
 
@@ -125,7 +125,7 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
                     paginator={employees}
                     empty="No employees found."
                     actions={
-                        <Link href="/employees/create" className="btn btn-soft btn-error btn-sm">
+                        <Link href="/employees/create" className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10">
                             <Icon name="tabler--plus" className="size-4" /> Add Employee
                         </Link>
                     }
@@ -146,29 +146,29 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
                             <tbody>
                                 {employees.data.map((emp) => (
                                     <tr key={emp.id} className="row-hover">
-                                        <td className="font-mono text-subtle">{emp.employee_id}</td>
+                                        <td className="font-mono text-dim-foreground">{emp.employee_id}</td>
                                         <td>
                                             <div className="flex items-center gap-2">
                                                 {avatar(emp)}
-                                                <Link href={`/employees/${emp.id}`} className="text-base-content no-underline font-semibold hover:text-primary">
+                                                <Link href={`/employees/${emp.id}`} className="text-base-content no-underline font-semibold hover:text-brand">
                                                     {emp.full_name}
                                                 </Link>
                                             </div>
                                         </td>
-                                        <td className="text-subtle">{emp.department}</td>
-                                        <td className="text-subtle">{emp.position}</td>
+                                        <td className="text-dim-foreground">{emp.department}</td>
+                                        <td className="text-dim-foreground">{emp.position}</td>
                                         <td>
                                             <StatusBadge type={STATUS_META[emp.employment_status] ?? 'neutral'}>
                                                 {emp.employment_status}
                                             </StatusBadge>
                                         </td>
-                                        <td className="text-subtle">{fmtDate(emp.date_hired)}</td>
+                                        <td className="text-dim-foreground">{fmtDate(emp.date_hired)}</td>
                                         <td>
                                             <div className="flex gap-2">
-                                                <Link href={`/employees/${emp.id}`} className="btn btn-soft btn-info btn-sm">
+                                                <Link href={`/employees/${emp.id}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                                     <Icon name="tabler--eye" className="size-4" />
                                                 </Link>
-                                                <Link href={`/employees/${emp.id}/edit`} className="btn btn-soft btn-warning btn-sm">
+                                                <Link href={`/employees/${emp.id}/edit`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-warning/40 bg-warning/10 px-3 text-xs font-medium text-warning no-underline transition-colors hover:bg-warning/20">
                                                     <Icon name="tabler--pencil" className="size-4" />
                                                 </Link>
                                                 {canManage && (
@@ -178,7 +178,7 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
                                                         confirmText="Yes, archive"
                                                         url={`/employees/${emp.id}/archive`}
                                                         method="patch"
-                                                        className="btn btn-soft btn-error btn-sm"
+                                                        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10"
                                                     >
                                                         <Icon name="tabler--archive" className="size-4" />
                                                     </ConfirmButton>
@@ -193,15 +193,15 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
 
                     <div className="md:hidden p-4 flex flex-col gap-3">
                         {employees.data.map((emp) => (
-                            <div key={emp.id} className="card bg-base-100 border border-base-300 p-4">
+                            <div key={emp.id} className="card bg-base-100 border border-edge p-4">
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="flex items-center gap-3">
                                         {avatar(emp, 'w-10 h-10', 'text-sm')}
                                         <div>
-                                            <Link href={`/employees/${emp.id}`} className="text-base-content no-underline font-semibold text-sm hover:text-primary">
+                                            <Link href={`/employees/${emp.id}`} className="text-base-content no-underline font-semibold text-sm hover:text-brand">
                                                 {emp.full_name}
                                             </Link>
-                                            <div className="text-xs text-subtle font-mono">{emp.employee_id}</div>
+                                            <div className="text-xs text-dim-foreground font-mono">{emp.employee_id}</div>
                                         </div>
                                     </div>
                                     <StatusBadge type={STATUS_META[emp.employment_status] ?? 'neutral'} className="whitespace-nowrap">
@@ -209,17 +209,17 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
                                     </StatusBadge>
                                 </div>
 
-                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle mt-2">
+                                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-dim-foreground mt-2">
                                     <span><Icon name="tabler--building" className="size-3.5 inline" /> {emp.department}</span>
                                     <span><Icon name="tabler--briefcase" className="size-3.5 inline" /> {emp.position}</span>
                                     <span><Icon name="tabler--calendar" className="size-3.5 inline" /> {fmtDate(emp.date_hired)}</span>
                                 </div>
 
-                                <div className="flex gap-2 flex-wrap mt-3 pt-3 border-t border-base-300">
-                                    <Link href={`/employees/${emp.id}`} className="btn btn-soft btn-info btn-sm">
+                                <div className="flex gap-2 flex-wrap mt-3 pt-3 border-t border-edge">
+                                    <Link href={`/employees/${emp.id}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                                         <Icon name="tabler--eye" className="size-4" /> View
                                     </Link>
-                                    <Link href={`/employees/${emp.id}/edit`} className="btn btn-soft btn-warning btn-sm">
+                                    <Link href={`/employees/${emp.id}/edit`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-warning/40 bg-warning/10 px-3 text-xs font-medium text-warning no-underline transition-colors hover:bg-warning/20">
                                         <Icon name="tabler--pencil" className="size-4" /> Edit
                                     </Link>
                                     {canManage && (
@@ -229,7 +229,7 @@ export default function EmployeesIndex({ employees, departments, filters, stats 
                                             confirmText="Yes, archive"
                                             url={`/employees/${emp.id}/archive`}
                                             method="patch"
-                                            className="btn btn-soft btn-error btn-sm"
+                                            className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10"
                                         >
                                             <Icon name="tabler--archive" className="size-4" /> Archive
                                         </ConfirmButton>

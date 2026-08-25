@@ -30,17 +30,17 @@ export default function FinancialRequestsEdit({ financialRequest }) {
             <Head title="Edit Financial Request" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href={`/financial-requests/${financialRequest.id}`} className="back-link text-subtle no-underline text-sm hover:text-primary">
+                    <Link href={`/financial-requests/${financialRequest.id}`} className="back-link text-dim-foreground no-underline text-sm hover:text-brand">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Request
                     </Link>
                 </div>
 
-                <div className="card bg-base-100 shadow-md p-6 max-w-3xl">
+                <div className="rounded-xl border border-edge bg-card shadow-md p-6 max-w-3xl">
                     <div className="inline-block font-semibold text-xs text-info bg-info/10 rounded-lg px-3 py-1.5 mb-4">
                         <Icon name="ph--cash-register-fill" className="size-4 inline" /> Edit Request
                     </div>
                     <h2 className="text-lg font-bold text-base-content mb-1">Edit Financial Request #{financialRequest.id}</h2>
-                    <p className="text-subtle text-sm mb-6">
+                    <p className="text-dim-foreground text-sm mb-6">
                         {isCashAdvance ? 'Cash Advance' : 'Reimbursement'} Request
                     </p>
 
@@ -107,11 +107,11 @@ export default function FinancialRequestsEdit({ financialRequest }) {
                                 </FormField>
                                 {financialRequest.receipt_image && (
                                     <div className="mb-4">
-                                        <p className="text-xs text-subtle mb-1">Current receipt:</p>
+                                        <p className="text-xs text-dim-foreground mb-1">Current receipt:</p>
                                         <img
                                             src={`/storage/${financialRequest.receipt_image}`}
                                             alt="Current Receipt"
-                                            className="max-w-full h-auto rounded-lg border border-base-300"
+                                            className="max-w-full h-auto rounded-lg border border-edge"
                                             style={{ maxHeight: '200px' }}
                                         />
                                     </div>
@@ -119,7 +119,7 @@ export default function FinancialRequestsEdit({ financialRequest }) {
                             </>
                         )}
 
-                        <div className="flex gap-3 flex-wrap pt-4 border-t border-base-300">
+                        <div className="flex gap-3 flex-wrap pt-4 border-t border-edge">
                             <button type="submit" className="btn btn-soft btn-primary" disabled={processing}>
                                 <Icon name="ph--floppy-disk-fill" className="size-4" /> Update Request
                             </button>

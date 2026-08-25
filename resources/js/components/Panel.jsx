@@ -8,7 +8,7 @@ export default function Panel({ children, className = '', padding = 'p-6', ...re
     );
 }
 
-export function PanelHeader({ icon, color = 'text-primary', bg = 'bg-primary/10', title, action }) {
+export function PanelHeader({ icon, color = 'text-brand', bg = 'bg-primary/10', title, action }) {
     return (
         <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-base-content flex items-center gap-2">

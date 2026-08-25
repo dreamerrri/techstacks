@@ -1,27 +1,17 @@
-import Icon from './Icon';
+import { Badge } from '@/components/ui/badge';
 
 const STYLES = {
-    success: 'badge-soft badge-success',
-    error: 'badge-soft badge-error',
-    warning: 'badge-soft badge-warning',
-    info: 'badge-soft badge-info',
-    primary: 'badge-soft badge-primary',
-    neutral: 'badge-soft badge-neutral',
-};
-
-const ICONS = {
-    success: 'tabler--circle-check',
-    error: 'tabler--circle-x',
-    warning: 'ph--warning-circle-fill',
-    info: 'ph--info-fill',
-    primary: 'tabler--shield-check',
+    success: 'border-transparent bg-brand/12 text-brand',
+    error: 'border-transparent bg-danger/12 text-danger',
+    warning: 'border-transparent bg-warning/15 text-warning',
+    info: 'border-transparent bg-highlight/12 text-highlight',
+    primary: 'border-transparent bg-brand/12 text-brand',
+    neutral: 'border-edge bg-dim text-dim-foreground',
 };
 
 export default function StatusBadge({ type = 'neutral', icon, children, className = '' }) {
     return (
-        <span className={`badge badge-soft ${STYLES[type] ?? STYLES.neutral} ${className}`}>
-            {icon && <Icon name={icon} className="size-3.5" />}
-            {!icon && ICONS[type] && <Icon name={ICONS[type]} className="size-3.5" />}
+        <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-medium ${STYLES[type] ?? STYLES.neutral} ${className}`}>
             {children}
         </span>
     );

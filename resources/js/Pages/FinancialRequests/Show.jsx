@@ -82,7 +82,7 @@ export default function FinancialRequestsShow({ financialRequest }) {
             <Head title="Financial Request Details" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/financial-requests" className="back-link text-subtle no-underline text-sm hover:text-primary">
+                    <Link href="/financial-requests" className="back-link text-dim-foreground no-underline text-sm hover:text-brand">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Requests
                     </Link>
                 </div>
@@ -91,9 +91,9 @@ export default function FinancialRequestsShow({ financialRequest }) {
                     <Icon name="ph--cash-register-fill" className="size-4 inline" /> Request Details
                 </div>
                 <h2 className="text-lg font-bold text-base-content mb-1">Financial Request #{financialRequest.id}</h2>
-                <p className="text-subtle text-sm mb-6">{isCashAdvance ? 'Cash Advance' : 'Reimbursement'} Request</p>
+                <p className="text-dim-foreground text-sm mb-6">{isCashAdvance ? 'Cash Advance' : 'Reimbursement'} Request</p>
 
-                <div className="card bg-base-100 shadow-sm p-6">
+                <div className="rounded-xl border border-edge bg-card p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <h3 className="text-sm font-bold text-base-content mb-3 flex items-center gap-2">
@@ -116,7 +116,7 @@ export default function FinancialRequestsShow({ financialRequest }) {
                                     <span className="font-bold text-error text-base">{fmtMoney(totalAmount)}</span>
                                 </DetailRow>
                                 <DetailRow label="Maximum Allowed">
-                                    <span className="text-subtle">{fmtMoney(maxAmount)} ({limitDescription})</span>
+                                    <span className="text-dim-foreground">{fmtMoney(maxAmount)} ({limitDescription})</span>
                                 </DetailRow>
                                 <DetailRow label="Request Date">{fmtDate(financialRequest.request_date)}</DetailRow>
                                 <DetailRow label="Status" border={false}>
@@ -131,14 +131,14 @@ export default function FinancialRequestsShow({ financialRequest }) {
                     {financialRequest.description && (
                         <div className="mt-4">
                             <h3 className="text-sm font-bold text-base-content mb-2">Description</h3>
-                            <p className="text-sm text-muted bg-base-200 rounded-lg p-4">{financialRequest.description}</p>
+                            <p className="text-sm text-dim-foreground bg-base-200 rounded-lg p-4">{financialRequest.description}</p>
                         </div>
                     )}
 
                     {financialRequest.reason && (
                         <div className="mt-4">
                             <h3 className="text-sm font-bold text-base-content mb-2">Reason</h3>
-                            <p className="text-sm text-muted bg-base-200 rounded-lg p-4">{financialRequest.reason}</p>
+                            <p className="text-sm text-dim-foreground bg-base-200 rounded-lg p-4">{financialRequest.reason}</p>
                         </div>
                     )}
 
@@ -149,7 +149,7 @@ export default function FinancialRequestsShow({ financialRequest }) {
                                 <img
                                     src={`/storage/${financialRequest.receipt_image}`}
                                     alt="Receipt"
-                                    className="max-w-full h-auto rounded-lg border border-base-300"
+                                    className="max-w-full h-auto rounded-lg border border-edge"
                                     style={{ maxHeight: '400px' }}
                                 />
                             </div>
@@ -161,23 +161,23 @@ export default function FinancialRequestsShow({ financialRequest }) {
                             <h3 className="text-sm font-bold text-base-content mb-2">Payment Information</h3>
                             <div className="bg-base-200 rounded-lg p-4">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-sm text-subtle">Total Amount:</span>
+                                    <span className="text-sm text-dim-foreground">Total Amount:</span>
                                     <span className="font-bold text-base-content">{fmtMoney(totalAmount)}</span>
                                 </div>
                                 <div className="flex justify-between items-center mt-2">
-                                    <span className="text-sm text-subtle">Amount Paid:</span>
+                                    <span className="text-sm text-dim-foreground">Amount Paid:</span>
                                     <span className="font-bold text-success">{fmtMoney(amountPaid)}</span>
                                 </div>
-                                <div className="flex justify-between items-center mt-2 pt-2 border-t border-base-300">
-                                    <span className="text-sm text-subtle">Remaining Balance:</span>
+                                <div className="flex justify-between items-center mt-2 pt-2 border-t border-edge">
+                                    <span className="text-sm text-dim-foreground">Remaining Balance:</span>
                                     <span className="font-bold text-error">{fmtMoney(remaining)}</span>
                                 </div>
-                                <div className="flex justify-between items-center mt-2 pt-2 border-t border-base-300">
-                                    <span className="text-sm text-subtle">Payment Progress:</span>
+                                <div className="flex justify-between items-center mt-2 pt-2 border-t border-edge">
+                                    <span className="text-sm text-dim-foreground">Payment Progress:</span>
                                     <span className="font-semibold text-base-content">{progress}%</span>
                                 </div>
-                                <div className="mt-3 pt-3 border-t border-base-300">
-                                    <p className="text-xs text-subtle text-center">
+                                <div className="mt-3 pt-3 border-t border-edge">
+                                    <p className="text-xs text-dim-foreground text-center">
                                         <Icon name="ph--info-fill" className="size-3.5 inline" /> Payments are automatically deducted at 50% of net pay per payroll cutoff
                                     </p>
                                 </div>
@@ -229,16 +229,16 @@ export default function FinancialRequestsShow({ financialRequest }) {
                             <h3 className="text-sm font-bold text-base-content mb-2">Approval Information</h3>
                             <div className="bg-base-200 rounded-lg p-4">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-sm text-subtle">Approved By:</span>
+                                    <span className="text-sm text-dim-foreground">Approved By:</span>
                                     <span className="font-semibold text-base-content">{financialRequest.approved_by?.name}</span>
                                 </div>
                                 <div className="flex justify-between items-center mt-2">
-                                    <span className="text-sm text-subtle">Approved At:</span>
+                                    <span className="text-sm text-dim-foreground">Approved At:</span>
                                     <span className="font-semibold text-base-content">{fmtDateTime(financialRequest.approved_at)}</span>
                                 </div>
                                 {financialRequest.rejection_reason && (
-                                    <div className="mt-3 pt-3 border-t border-base-300">
-                                        <span className="text-sm text-subtle">Rejection Reason:</span>
+                                    <div className="mt-3 pt-3 border-t border-edge">
+                                        <span className="text-sm text-dim-foreground">Rejection Reason:</span>
                                         <p className="text-sm text-error mt-1">{financialRequest.rejection_reason}</p>
                                     </div>
                                 )}
@@ -248,7 +248,7 @@ export default function FinancialRequestsShow({ financialRequest }) {
                 </div>
 
                 {(canManage && isPending) || (!canManage && isPending) ? (
-                    <div className="card bg-base-100 shadow-sm p-4 mt-4">
+                    <div className="rounded-xl border border-edge bg-card p-4 mt-4">
                         <div className="flex gap-3 flex-wrap">
                             {canManage && (
                                 <>

@@ -29,7 +29,7 @@ function StatCard({ tone, icon, title, value, sub }) {
                 </div>
                 <p className="payroll-stat-card__title">{title}</p>
                 <p className="payroll-stat-card__paragraph">{value}</p>
-                <div className="text-subtle">{sub}</div>
+                <div className="text-dim-foreground">{sub}</div>
             </div>
             <div className="payroll-stat-card__ribbon">
                 <div className="payroll-stat-card__ribbon-label">
@@ -45,10 +45,10 @@ function StatCard({ tone, icon, title, value, sub }) {
 
 function EarningsRow({ label, sub, value, tone = 'text-success', prefix = '+' }) {
     return (
-        <div className="flex justify-between items-start py-2.5 border-b border-base-200">
+        <div className="flex justify-between items-start py-2.5 border-b border-edge/60">
             <div>
-                <div className="text-subtle">{label}</div>
-                <div className="text-xs text-faint">{sub}</div>
+                <div className="text-dim-foreground">{label}</div>
+                <div className="text-xs text-dim-foreground/70">{sub}</div>
             </div>
             <span className={`font-semibold ${tone} ml-4 whitespace-nowrap`}>{prefix}{fmt(value)}</span>
         </div>
@@ -97,24 +97,24 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                 `}</style>
 
                 <div className="flex justify-between items-center flex-wrap gap-3 mb-5">
-                    <Link href="/payroll" className="back-link text-subtle no-underline text-sm hover:text-primary flex items-center gap-1">
+                    <Link href="/payroll" className="back-link text-dim-foreground no-underline text-sm hover:text-brand flex items-center gap-1">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Payroll List
                     </Link>
                     {hasGross && payslipUrl && (
-                        <a href={payslipUrl} className="btn btn-soft btn-info btn-sm">
+                        <a href={payslipUrl} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge bg-dim px-3 text-xs font-medium no-underline transition-colors hover:bg-dim/60">
                             <Icon name="tabler--file-download" className="size-4" /> Download Payslip
                         </a>
                     )}
                 </div>
 
-                <div className="card bg-base-100 shadow-sm p-5 flex items-center gap-5 flex-wrap mb-5">
+                <div className="rounded-xl border border-edge bg-card p-5 flex items-center gap-5 flex-wrap mb-5">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-error to-error/80 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
                         {(employee.full_name || '?').charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1">
                         <h2 className="text-xl font-bold text-base-content m-0 mb-1">{employee.full_name}</h2>
-                        <p className="text-subtle m-0">{employee.position} — {employee.department}</p>
-                        <div className="flex flex-wrap gap-3 mt-1 text-xs text-subtle">
+                        <p className="text-dim-foreground m-0">{employee.position} — {employee.department}</p>
+                        <div className="flex flex-wrap gap-3 mt-1 text-xs text-dim-foreground">
                             <span><Icon name="tabler--id-badge" className="size-3.5 inline" /> {employee.employee_id}</span>
                             <span><Icon name="tabler--calendar" className="size-3.5 inline" /> {fmtDate(employee.date_hired)}</span>
                             <span><Icon name="tabler--moneybag" className="size-3.5 inline" /> {employee.salary_type} Salary</span>
@@ -123,17 +123,17 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                     <span className={`badge ${EMPLOYMENT_BADGE[employee.employment_status] || 'badge-soft'}`}>{employee.employment_status}</span>
                 </div>
 
-                <div className="card bg-base-100 shadow-sm p-5 mb-5">
+                <div className="rounded-xl border border-edge bg-card p-5 mb-5">
                     <h2 className="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
                         <Icon name="tabler--id" className="size-4 text-error" /> Government IDs
                     </h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {govIds.map((g) => (
-                            <div key={g.label} className="card bg-base-100 shadow-sm p-4 text-center">
+                            <div key={g.label} className="rounded-xl border border-edge bg-card p-4 text-center">
                                 <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 ${g.color} ${g.bg}`}>
                                     <Icon name={g.icon} className="size-5" />
                                 </div>
-                                <div className="text-xs text-faint uppercase tracking-widest font-medium mb-1">{g.label}</div>
+                                <div className="text-xs text-dim-foreground/70 uppercase tracking-widest font-medium mb-1">{g.label}</div>
                                 <div className="font-bold font-mono text-base-content text-xs break-all">{g.value || '—'}</div>
                             </div>
                         ))}
@@ -166,7 +166,7 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
 
                 {selectedPeriod && isSecondHalf && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
-                        <div className="card bg-base-100 shadow-sm p-5 border-l-4 border-info bg-info/10">
+                        <div className="rounded-xl border border-edge bg-card p-5 border-l-4 border-info bg-info/10">
                             <div className="text-xs font-bold text-info uppercase tracking-wider mb-3">Monthly Gross Breakdown</div>
                             <div className="flex flex-col gap-2 text-sm">
                                 <div className="flex justify-between font-bold text-info"><span>1st Cutoff Gross:</span><span>{fmt(p.first_cutoff_gross_pay)}</span></div>
@@ -174,7 +174,7 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                                 <div className="flex justify-between pt-2 border-t border-info/20 font-bold text-info"><span>Total Monthly Gross:</span><span>{fmt(p.total_monthly_gross_pay)}</span></div>
                             </div>
                         </div>
-                        <div className="card bg-base-100 shadow-sm p-5 border-l-4 border-error bg-error/10">
+                        <div className="rounded-xl border border-edge bg-card p-5 border-l-4 border-error bg-error/10">
                             <div className="text-xs font-bold text-error uppercase tracking-wider mb-3">Monthly Contributions</div>
                             <div className="flex flex-col gap-2 text-sm">
                                 <div className="flex justify-between font-bold text-error"><span>1st Cutoff Gov't:</span><span>{fmt(p.first_cutoff_contributions)}</span></div>
@@ -182,7 +182,7 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                                 <div className="flex justify-between pt-2 border-t border-error/20 font-bold text-error"><span>Total Monthly Gov't:</span><span>{fmt((p.first_cutoff_contributions || 0) + (p.current_cutoff_contributions || 0))}</span></div>
                             </div>
                         </div>
-                        <div className="card bg-base-100 shadow-sm p-5 border-l-4 border-success bg-success/10">
+                        <div className="rounded-xl border border-edge bg-card p-5 border-l-4 border-success bg-success/10">
                             <div className="text-xs font-bold text-success uppercase tracking-wider mb-3">Monthly Net Pay Breakdown</div>
                             <div className="flex flex-col gap-2 text-sm">
                                 <div className="flex justify-between font-bold text-success"><span>1st Cutoff Net:</span><span>{fmt(p.first_cutoff_net_pay)}</span></div>
@@ -194,7 +194,7 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                 )}
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div className="card bg-base-100 shadow-sm p-5">
+                    <div className="rounded-xl border border-edge bg-card p-5">
                         <h2 className="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
                             <span className="w-7 h-7 rounded-md bg-success/10 flex items-center justify-center text-success text-xs flex-shrink-0">
                                 <Icon name="tabler--clock" className="size-4" />
@@ -216,13 +216,13 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                             <EarningsRow label="Benefits" sub="Total active benefits" value={p.benefits} />
                             <EarningsRow label="Allowances" sub="Total active allowances" value={p.allowances} />
                         </div>
-                        <div className="flex justify-between items-center mt-3 pt-3 border-t-2 border-base-300 font-bold text-sm">
+                        <div className="flex justify-between items-center mt-3 pt-3 border-t-2 border-edge font-bold text-sm">
                             <span className="text-base-content">Total Earnings</span>
                             <span className="text-success">{fmt(totalEarnings)}</span>
                         </div>
                     </div>
 
-                    <div className="card bg-base-100 shadow-sm p-5">
+                    <div className="rounded-xl border border-edge bg-card p-5">
                         <h2 className="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
                             <span className="w-7 h-7 rounded-md bg-info/10 flex items-center justify-center text-info text-xs flex-shrink-0">
                                 <Icon name="tabler--building-bank" className="size-4" />
@@ -236,13 +236,13 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                             <EarningsRow label="Late Deduction" sub={`${fmtNum(a.late_hours)} late hrs × ${fmt(p.hourly_rate)}/hr`} value={p.late_deduction} tone="text-error" prefix="-" />
                             <EarningsRow label="Manual Deductions" sub="Deductions from manual payroll attendance" value={p.manual_deductions} tone="text-error" prefix="-" />
                         </div>
-                        <div className="flex justify-between items-center mt-3 pt-3 border-t-2 border-base-300 font-bold text-sm">
+                        <div className="flex justify-between items-center mt-3 pt-3 border-t-2 border-edge font-bold text-sm">
                             <span className="text-base-content">Net Contributions & Deductions</span>
                             <span className="text-error">-{fmt(totalGovDeductions)}</span>
                         </div>
                     </div>
 
-                    <div className="card bg-base-100 shadow-sm p-5">
+                    <div className="rounded-xl border border-edge bg-card p-5">
                         <h2 className="text-sm font-bold text-base-content mb-4 flex items-center gap-2">
                             <span className="w-7 h-7 rounded-md bg-error/10 flex items-center justify-center text-error text-xs flex-shrink-0">
                                 <Icon name="tabler--file-text" className="size-4" />
@@ -250,24 +250,24 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                             Tax Information
                         </h2>
                         <div className="flex flex-col text-sm">
-                            <div className="flex justify-between items-start py-2.5 border-b border-base-200">
+                            <div className="flex justify-between items-start py-2.5 border-b border-edge/60">
                                 <div>
-                                    <div className="text-subtle">Taxable Income</div>
-                                    <div className="text-xs text-faint">After government contributions</div>
+                                    <div className="text-dim-foreground">Taxable Income</div>
+                                    <div className="text-xs text-dim-foreground/70">After government contributions</div>
                                 </div>
                                 <span className="font-semibold text-base-content ml-4">{fmt(p.taxable_income)}</span>
                             </div>
                             <div className="flex justify-between items-start py-2.5">
                                 <div>
-                                    <div className="text-subtle">Withholding Tax</div>
-                                    <div className="text-xs text-faint">Based on Philippine tax brackets</div>
+                                    <div className="text-dim-foreground">Withholding Tax</div>
+                                    <div className="text-xs text-dim-foreground/70">Based on Philippine tax brackets</div>
                                 </div>
                                 <span className="font-semibold text-error ml-4">-{fmt(p.withholding_tax)}</span>
                             </div>
                         </div>
-                        <div className="mt-4 p-4 bg-base-300 rounded-xl text-xs text-subtle leading-relaxed">
-                            <strong className="text-muted">Note:</strong> Allowances are included in gross pay but deducted from taxable income for withholding tax computation.<br />
-                            <strong className="text-muted">Tax Bracket Reference:</strong><br />
+                        <div className="mt-4 p-4 bg-base-300 rounded-xl text-xs text-dim-foreground leading-relaxed">
+                            <strong className="text-dim-foreground">Note:</strong> Allowances are included in gross pay but deducted from taxable income for withholding tax computation.<br />
+                            <strong className="text-dim-foreground">Tax Bracket Reference:</strong><br />
                             • ₱0 – ₱20,832: 0%<br />
                             • ₱20,833 – ₱33,333: 20%<br />
                             • ₱33,334 – ₱66,667: 25%<br />
@@ -282,15 +282,15 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
                             <Icon name="tabler--receipt" className="size-4 text-error" /> Pay Summary
                         </h2>
                         <div className="flex flex-col text-sm">
-                            <div className="flex justify-between items-center py-3 border-b border-base-200">
+                            <div className="flex justify-between items-center py-3 border-b border-edge/60">
                                 <span className="text-base-content">Gross Pay</span>
                                 <span className="font-semibold text-base-content">{fmt(p.gross_pay)}</span>
                             </div>
-                            <div className="flex justify-between items-center py-3 border-b border-base-200">
+                            <div className="flex justify-between items-center py-3 border-b border-edge/60">
                                 <span className="text-error">Less: Government Contributions & Deductions</span>
                                 <span className="font-semibold text-error">-{fmt(totalGovDeductions)}</span>
                             </div>
-                            <div className="flex justify-between items-center py-3 border-b-2 border-base-300">
+                            <div className="flex justify-between items-center py-3 border-b-2 border-edge">
                                 <span className="text-error">Less: Withholding Tax</span>
                                 <span className="font-semibold text-error">-{fmt(p.withholding_tax)}</span>
                             </div>

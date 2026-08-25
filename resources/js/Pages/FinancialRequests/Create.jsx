@@ -43,17 +43,17 @@ export default function FinancialRequestsCreate({ employee }) {
             <Head title="New Financial Request" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
-                    <Link href="/financial-requests" className="back-link text-subtle no-underline text-sm hover:text-primary">
+                    <Link href="/financial-requests" className="back-link text-dim-foreground no-underline text-sm hover:text-brand">
                         <Icon name="ph--arrow-left-fill" className="size-4" /> Back to Requests
                     </Link>
                 </div>
 
-                <div className="card bg-base-100 shadow-md p-6 max-w-3xl">
+                <div className="rounded-xl border border-edge bg-card shadow-md p-6 max-w-3xl">
                     <div className="inline-block font-semibold text-xs text-info bg-info/10 rounded-lg px-3 py-1.5 mb-4">
                         <Icon name="ph--cash-register-fill" className="size-4 inline" /> New Request
                     </div>
                     <h2 className="text-lg font-bold text-base-content mb-1">Create Financial Request</h2>
-                    <p className="text-subtle text-sm mb-6">Submit a request for cash advance or reimbursement</p>
+                    <p className="text-dim-foreground text-sm mb-6">Submit a request for cash advance or reimbursement</p>
 
                     <form onSubmit={submit}>
                         <FormField label="Request Type" required error={errors.request_type}>
@@ -123,7 +123,7 @@ export default function FinancialRequestsCreate({ employee }) {
                             </FormField>
                         )}
 
-                        <div className="flex gap-3 flex-wrap pt-4 border-t border-base-300">
+                        <div className="flex gap-3 flex-wrap pt-4 border-t border-edge">
                             <button type="submit" className="btn btn-soft btn-primary" disabled={processing}>
                                 <Icon name="ph--paper-plane-fill" className="size-4" /> Submit Request
                             </button>
