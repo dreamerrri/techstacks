@@ -62,7 +62,7 @@ export default function AppLayout({ children, title }) {
             />
 
             <div className="flex min-w-0 flex-1 flex-col sm:ps-[var(--sidebar-w)] overlay-minified:sm:ps-[var(--sidebar-w-mini)] transition-[padding] duration-300">
-                <Navbar onOpenSidebar={() => setMobileOpen(true)} onToggleMinified={toggleMinified} breadcrumbs={breadcrumbs} />
+                <Navbar onOpenSidebar={() => setMobileOpen(true)} onToggleMinified={toggleMinified} breadcrumbs={breadcrumbs} minified={minified} />
 
                 <main className="min-w-0 flex-1 p-3 sm:p-4 overflow-x-hidden">
                     {children}

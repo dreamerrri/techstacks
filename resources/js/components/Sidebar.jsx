@@ -1,163 +1,152 @@
 import { useEffect, useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import Icon from './Icon';
+import { ChevronDown } from 'lucide-react';
 import NAV from '../Config/nav';
+import { cn } from '@/lib/utils';
 
 function isRouteActive(patterns, currentUrl) {
     return patterns.some((p) => currentUrl.startsWith(`/${p}`) || currentUrl === `/${p}`);
+}
+
+function Brand({ minified, onClick }) {
+    return (
+        <Link href="/dashboard" onClick={onClick} className="flex h-16 shrink-0 items-center gap-2.5 border-b border-edge px-4 no-underline">
+            <svg fill="currentColor" viewBox="0 0 1813 1441" className="size-8 shrink-0 text-brand">
+                <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fillRule="evenodd" />
+                <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fillRule="evenodd" />
+            </svg>
+            {!minified && (
+                <div className="leading-tight">
+                    <span className="block text-base font-semibold tracking-wide">Techstacks</span>
+                    <span className="block text-xs text-dim-foreground">Logify</span>
+                </div>
+            )}
+        </Link>
+    );
 }
 
 export default function Sidebar({ open, onClose, minified }) {
     const { url } = usePage();
     const role = usePage().props.role ?? 'user';
     const nav = NAV[role] ?? NAV.user;
-
     const currentUrl = url.split('?')[0];
     const [openGroups, setOpenGroups] = useState({});
 
-    // Auto-open groups containing the current route.
     useEffect(() => {
-        const next = {};
-        nav.groups.forEach((group) => {
-            const anyActive = group.items.some((item) => isRouteActive(item.active, currentUrl));
-            if (anyActive) next[group.label] = true;
-        });
         setOpenGroups((prev) => {
-            const merged = { ...prev };
-            Object.entries(next).forEach(([k, v]) => (merged[k] = v));
-            return merged;
+            const next = { ...prev };
+            nav.groups.forEach((group) => {
+                if (group.items.some((item) => isRouteActive(item.active, currentUrl))) next[group.label] = true;
+            });
+            return next;
         });
     }, [currentUrl]);
 
-    const toggleGroup = (label) =>
-        setOpenGroups((prev) => {
-            const next = {};
-            Object.keys(prev).forEach((k) => {
-                if (k !== label && prev[k]) next[k] = false;
-            });
-            next[label] = !prev[label];
-            return next;
-        });
-
-    const header = (
-        <div className={`drawer-header py-2 w-full flex items-center ${minified ? 'justify-center' : ''}`}>
-            <Link href="/dashboard" className="techicon flex items-center gap-2 no-underline max-sm:gap-1.5" onClick={onClose}>
-                <svg fill="currentColor" viewBox="0 0 1813 1441" xmlns="http://www.w3.org/2000/svg" className="brand-logo-icon shrink-0 text-primary size-8 max-sm:size-6">
-                    <path d="M0 720.5 710.6 9.9v417.8L417.8 720.5l292.8 292.8v417.8zm1813 0-719.7 719.8v-417.9l301.9-301.9-301.9-301.9V.8z" fillRule="evenodd"></path>
-                    <path d="M1266.4 674.9h-209.8l-59 451H806.3l-59-451H546.6L697 524.6h419z" fillRule="evenodd"></path>
-                </svg>
-                {!minified && (
-                    <div className="tech drawer-title tracking-wide">
-                        <span className="block text-xl font-semibold text-primary max-sm:text-base">Techstacks</span>
-                        <span className="block text-xs text-primary/60">
-                            {role === 'admin' ? 'Admin Portal' : role === 'hr' ? 'HR Portal' : 'Employee Portal'}
-                        </span>
-                    </div>
-                )}
-            </Link>
-        </div>
-    );
-
-    const navLinkClass = (item) =>
-        `tooltip-toggle ${isRouteActive(item.active, currentUrl) ? 'active' : ''}`;
-
-    const ExpandedNav = (
-        <nav className="drawer-body px-2 pt-4 max-sm:pt-2" aria-label="Primary">
-            <ul className="menu p-0 max-sm:text-sm">
-                <li>
-                    <Link href="/dashboard" className={currentUrl === '/dashboard' ? 'active' : ''} onClick={onClose}>
-                        <span className="icon-[tabler--home] size-5 max-sm:size-4"></span>
-                        <span>Dashboard</span>
-                    </Link>
-                </li>
-
-                {nav.groups.map((group) => {
-                    const isOpen = !!openGroups[group.label];
-                    const groupActive = group.items.some((item) => isRouteActive(item.active, currentUrl));
-                    return (
-                        <li key={group.label} className={`dropdown relative [--strategy:static] --prevent-on-load-init ${isOpen ? 'open' : ''}`}>
-                            <button
-                                type="button"
-                                className="dropdown-toggle"
-                                aria-haspopup="menu"
-                                aria-expanded={isOpen}
-                                onClick={() => toggleGroup(group.label)}
-                            >
-                                <span className={`icon-[${group.icon}] size-5 max-sm:size-4`}></span>
-                                <span>{group.label}</span>
-                                <span className={`icon-[tabler--chevron-down] size-4 max-sm:size-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`}></span>
-                            </button>
-                            {isOpen && (
-                                <ul className={`dropdown-menu dropdown-open:opacity-100 mt-0 shadow-none min-w-40 ms-6 ps-2 border-s border-base-content/20 rounded-none`} role="menu">
-                                    {group.items.map((item) => (
-                                        <li key={item.title}>
-                                            <Link href={item.href} className={navLinkClass(item)} onClick={onClose}>
-                                                <span className={`icon-[${item.icon}] size-5 max-sm:size-4`}></span>
-                                                <span className="text-md max-sm:text-xs">{item.title}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </li>
-                    );
-                })}
-            </ul>
-        </nav>
-    );
-
-    const CollapsedNav = (
-        <nav className="drawer-body px-2 pt-4" aria-label="Primary (collapsed)">
-            <ul className="menu p-0 items-center gap-1">
-                {nav.flat.map((item) => (
-                    <li key={item.title} className="tooltip [--placement:right]">
-                        <Link href={item.href} className={navLinkClass(item)} aria-label={item.title} onClick={onClose}>
-                            <span className={`icon-[${item.icon}] size-5`}></span>
-                        </Link>
-                        <span className="tooltip-content tooltip-shown:opacity-100 z-999 tooltip-shown:visible" role="tooltip">
-                            <span className="tooltip-body">{item.title}</span>
-                        </span>
-                    </li>
-                ))}
-            </ul>
-        </nav>
-    );
-
-    // Close the mobile drawer on Escape
     useEffect(() => {
         if (!open) return;
-        const onKey = (e) => {
-            if (e.key === 'Escape') onClose();
-        };
+        const onKey = (e) => e.key === 'Escape' && onClose();
         document.addEventListener('keydown', onKey);
         return () => document.removeEventListener('keydown', onKey);
     }, [open, onClose]);
 
+    const toggleGroup = (label) =>
+        setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
+
+    const itemClass = (item) =>
+        cn(
+            'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium no-underline transition-colors',
+            isRouteActive(item.active, currentUrl)
+                ? 'bg-brand/10 font-semibold text-brand'
+                : 'text-dim-foreground hover:bg-dim hover:text-canvas-foreground'
+        );
+
+    const ExpandedNav = (
+        <nav className="flex-1 space-y-4 overflow-y-auto overflow-x-hidden p-3" aria-label="Primary">
+            <div className="space-y-1">
+                <Link href="/dashboard" onClick={onClose} className={cn(itemClass({ active: ['dashboard'] }), !isRouteActive(['dashboard'], currentUrl) && 'text-dim-foreground')}>
+                    <span className="icon-[tabler--home] size-5" />
+                    Dashboard
+                </Link>
+            </div>
+
+            {nav.groups.map((group) => {
+                const isOpen = !!openGroups[group.label];
+                return (
+                    <div key={group.label}>
+                        <button
+                            type="button"
+                            onClick={() => toggleGroup(group.label)}
+                            aria-expanded={isOpen}
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-dim-foreground transition-colors hover:text-canvas-foreground"
+                        >
+                            <span className={`icon-[${group.icon}] size-5`} />
+                            {group.label}
+                            <ChevronDown className={cn('ml-auto size-4 opacity-60 transition-transform', isOpen && 'rotate-180')} />
+                        </button>
+                        {isOpen && (
+                            <ul className="mt-1 space-y-1 border-l border-edge pl-3">
+                                {group.items.map((item) => (
+                                    <li key={item.title}>
+                                        <Link href={item.href} onClick={onClose} className={itemClass(item)}>
+                                            <span className={`icon-[${item.icon}] size-5`} />
+                                            {item.title}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                );
+            })}
+        </nav>
+    );
+
+    const CollapsedNav = (
+        <nav className="flex flex-1 flex-col items-center gap-2 overflow-y-auto p-2" aria-label="Primary (collapsed)">
+            {nav.flat.map((item) => (
+                <Link
+                    key={item.title}
+                    href={item.href}
+                    onClick={onClose}
+                    title={item.title}
+                    aria-label={item.title}
+                    className={cn(
+                        'flex size-10 items-center justify-center rounded-lg transition-colors',
+                        isRouteActive(item.active, currentUrl)
+                            ? 'bg-brand/10 text-brand'
+                            : 'text-dim-foreground hover:bg-dim hover:text-canvas-foreground'
+                    )}
+                >
+                    <span className={`icon-[${item.icon}] size-5`} />
+                </Link>
+            ))}
+        </nav>
+    );
+
     return (
         <>
-            {/* Mobile backdrop — click to close */}
+            {/* Mobile backdrop */}
             <div
-                className={`fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 sm:hidden ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                className={cn(
+                    'fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 sm:hidden',
+                    open ? 'opacity-100' : 'pointer-events-none opacity-0'
+                )}
                 onClick={onClose}
                 aria-hidden="true"
             />
+
             <aside
-                id="collapsible-mini-sidebar"
-                className={[
-                    'border-r border-base-300 drawer drawer-start',
-                    'fixed inset-y-0 start-0 z-[70] flex flex-col transition-transform duration-300',
-                    'w-[var(--sidebar-w)] max-sm:w-52',
-                    minified ? 'minified sm:w-[var(--sidebar-w-mini)]' : '',
-                    // Mobile: slides in/out via React state
+                className={cn(
+                    'fixed inset-y-0 left-0 z-[70] flex w-60 flex-col border-r border-edge bg-card transition-transform duration-300',
+                    'max-sm:w-64',
                     open ? 'max-sm:translate-x-0 max-sm:shadow-2xl' : 'max-sm:-translate-x-full rtl:max-sm:translate-x-full',
-                    // Desktop: pinned visible; z-30 keeps hover tooltips above
-                    // main-content stickies (navbar is z-20)
-                    'sm:z-30 sm:translate-x-0 rtl:sm:translate-x-0',
-                ].join(' ')}
+                    minified ? 'sm:w-[var(--sidebar-w-mini)]' : 'sm:w-[var(--sidebar-w)]',
+                    'sm:translate-x-0 rtl:sm:translate-x-0'
+                )}
                 role="dialog"
-                tabIndex="-1"
+                aria-label="Sidebar"
             >
-                {header}
+                <Brand minified={minified} onClick={() => {}} />
                 {minified ? CollapsedNav : ExpandedNav}
             </aside>
         </>
