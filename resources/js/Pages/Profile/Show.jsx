@@ -7,6 +7,7 @@ import DetailRow from '../../components/DetailRow';
 import FormField from '../../components/FormField';
 import StatusBadge from '../../components/StatusBadge';
 import { toast } from '../../components/toast';
+import NativeSelect from '../../components/NativeSelect';
 
 const THEMES = [
     'techstacks', 'techstacks-light', 'light', 'dark', 'black', 'claude', 'corporate',
@@ -202,14 +203,14 @@ export default function ProfileShow({ employee }) {
                                                         <input type="date" value={personal.data.birthdate} onChange={(e) => personal.setData('birthdate', e.target.value)} className="input input-bordered w-full" required max={(() => { const t = new Date(Date.now() - 86400000); t.setMinutes(t.getMinutes() - t.getTimezoneOffset()); return t.toISOString().split('T')[0]; })()} />
                                                     </FormField>
                                                     <FormField label="Gender" error={personal.errors.gender}>
-                                                        <select value={personal.data.gender} onChange={(e) => personal.setData('gender', e.target.value)} className="select select-bordered w-full" required>
+                                                        <NativeSelect value={personal.data.gender} onChange={(e) => personal.setData('gender', e.target.value)} className="select select-bordered w-full" required>
                                                             {['Male', 'Female', 'Other'].map((g) => <option key={g} value={g}>{g}</option>)}
-                                                        </select>
+                                                        </NativeSelect>
                                                     </FormField>
                                                     <FormField label="Civil Status" error={personal.errors.civil_status}>
-                                                        <select value={personal.data.civil_status} onChange={(e) => personal.setData('civil_status', e.target.value)} className="select select-bordered w-full" required>
+                                                        <NativeSelect value={personal.data.civil_status} onChange={(e) => personal.setData('civil_status', e.target.value)} className="select select-bordered w-full" required>
                                                             {['Single', 'Married', 'Widowed', 'Separated'].map((cs) => <option key={cs} value={cs}>{cs}</option>)}
-                                                        </select>
+                                                        </NativeSelect>
                                                     </FormField>
                                                     <FormField label="Contact Number" error={personal.errors.contact_number}>
                                                         <input type="text" value={personal.data.contact_number} placeholder="09XXXXXXXXX" maxLength={11} onChange={(e) => personal.setData('contact_number', e.target.value)} className="input input-bordered w-full" />

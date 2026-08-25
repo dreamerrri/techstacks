@@ -3,6 +3,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { Search } from 'lucide-react';
 import Pagination from './Pagination';
 import { cn } from '@/lib/utils';
+import NativeSelect from './NativeSelect';
 
 export default function DataTable({
     title,
@@ -101,7 +102,7 @@ export default function DataTable({
                         </div>
                     )}
                     {filters.map((filter) => (
-                        <select
+                        <NativeSelect
                             key={filter.name}
                             name={filter.name}
                             value={filter.value}
@@ -116,7 +117,7 @@ export default function DataTable({
                                     {opt.label}
                                 </option>
                             ))}
-                        </select>
+                        </NativeSelect>
                     ))}
                     {hasActiveFilters() && (
                         <Link

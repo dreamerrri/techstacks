@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import Icon from './Icon';
 import { cn } from '@/lib/utils';
+import NativeSelect from './NativeSelect';
 
 const THEMES = [
     { id: 'techstacks', label: 'Techstacks Dark' },
@@ -31,7 +32,7 @@ export default function ThemeDropdown({ label = 'Theme' }) {
     return (
         <div className={cn('flex items-center gap-1.5 rounded-full border border-edge bg-card px-3 py-1.5')}>
             <Icon name="tabler--palette" className="size-4 text-brand" />
-            <select
+            <NativeSelect
                 value={selectedTheme}
                 onChange={(e) => selectTheme(e.target.value)}
                 aria-label={`${label} switcher`}
@@ -42,7 +43,7 @@ export default function ThemeDropdown({ label = 'Theme' }) {
                         {theme.label}
                     </option>
                 ))}
-            </select>
+            </NativeSelect>
             <Icon name="tabler--chevron-down" className="size-3.5 opacity-60" />
         </div>
     );

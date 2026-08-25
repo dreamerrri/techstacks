@@ -5,6 +5,7 @@ import Icon from '../../components/Icon';
 import DetailRow from '../../components/DetailRow';
 import StatusBadge from '../../components/StatusBadge';
 import ConfirmButton from '../../components/ConfirmButton';
+import NativeSelect from '../../components/NativeSelect';
 
 const groupByModule = (items) => {
     const groups = {};
@@ -100,7 +101,7 @@ export default function RolesShow({ roleData: role, availableUsers }) {
 
                         {availableUsers?.length > 0 && (
                             <form onSubmit={assignUser} className="flex gap-2 items-center flex-wrap mb-5">
-                                <select
+                                <NativeSelect
                                     name="user_id"
                                     value={data.user_id}
                                     onChange={(e) => setData('user_id', e.target.value)}
@@ -111,7 +112,7 @@ export default function RolesShow({ roleData: role, availableUsers }) {
                                     {availableUsers.map((user) => (
                                         <option key={user.id} value={user.id}>{user.name} ({user.email})</option>
                                     ))}
-                                </select>
+                                </NativeSelect>
                                 <button type="submit" className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-danger/40 px-3 text-xs font-medium text-danger no-underline transition-colors hover:bg-danger/10" disabled={processing}>
                                     <Icon name="tabler--user-plus" className="size-4" /> Assign User
                                 </button>

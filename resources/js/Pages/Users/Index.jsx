@@ -5,6 +5,7 @@ import Avatar from '../../components/Avatar';
 import StatusBadge from '../../components/StatusBadge';
 import DataTable from '../../components/DataTable';
 import ConfirmButton from '../../components/ConfirmButton';
+import NativeSelect from '../../components/NativeSelect';
 
 const ROLE_BADGE = {
     admin: 'badge-soft badge-error',
@@ -59,7 +60,7 @@ export default function UsersIndex({ users, filters, stats, pendingCount = 0 }) 
     );
 
     const roleSelect = (user) => (
-        <select
+        <NativeSelect
             name="role"
             value={user.role}
             disabled={user.id === currentUserId}
@@ -69,7 +70,7 @@ export default function UsersIndex({ users, filters, stats, pendingCount = 0 }) 
             <option value="admin">Admin</option>
             <option value="hr">HR</option>
             <option value="employee">Employee</option>
-        </select>
+        </NativeSelect>
     );
 
     const toggleButton = (user) => {

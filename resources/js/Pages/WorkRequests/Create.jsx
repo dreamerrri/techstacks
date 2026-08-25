@@ -3,6 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '../../components/AppLayout';
 import Icon from '../../components/Icon';
 import FormField from '../../components/FormField';
+import NativeSelect from '../../components/NativeSelect';
 
 // Local date (not UTC) so min/max are correct for the user's timezone
 const toLocalISO = (d) => {
@@ -73,7 +74,7 @@ export default function WorkRequestsCreate({ upcomingHolidays }) {
 
                     <form onSubmit={submit}>
                         <FormField label="Request Type" required error={errors.request_type}>
-                            <select
+                            <NativeSelect
                                 name="request_type"
                                 value={data.request_type}
                                 onChange={(e) => setData('request_type', e.target.value)}
@@ -85,7 +86,7 @@ export default function WorkRequestsCreate({ upcomingHolidays }) {
                                 <option value="holiday">Holiday Work</option>
                                 <option value="overtime">Overtime</option>
                                 <option value="half_day">Half Day</option>
-                            </select>
+                            </NativeSelect>
                         </FormField>
 
                         <FormField label="Work Date" required error={errors.work_date} help="Date must be today or in the future">

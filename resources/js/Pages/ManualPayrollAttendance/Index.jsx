@@ -3,6 +3,7 @@ import { Head, Link, usePage, router } from '@inertiajs/react';
 import AppLayout from '../../components/AppLayout';
 import Icon from '../../components/Icon';
 import ConfirmButton from '../../components/ConfirmButton';
+import NativeSelect from '../../components/NativeSelect';
 
 const MONTH_NAMES = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -80,37 +81,37 @@ export default function ManualPayrollAttendanceIndex({ periods, availableYears, 
                     <div className="flex flex-wrap items-end gap-3">
                         <div className="form-control">
                             <label className="label label-text">Year</label>
-                            <select className="select select-bordered select-sm w-32" value={year} onChange={(e) => { setYear(e.target.value); applyFilters({ year: e.target.value }); }}>
+                            <NativeSelect className="select select-bordered select-sm w-32" value={year} onChange={(e) => { setYear(e.target.value); applyFilters({ year: e.target.value }); }}>
                                 <option value="">All Years</option>
                                 {availableYears.map((y) => (
                                     <option key={y} value={y}>{y}</option>
                                 ))}
-                            </select>
+                            </NativeSelect>
                         </div>
                         <div className="form-control">
                             <label className="label label-text">Month</label>
-                            <select className="select select-bordered select-sm w-40" value={month} onChange={(e) => { setMonth(e.target.value); applyFilters({ month: e.target.value }); }}>
+                            <NativeSelect className="select select-bordered select-sm w-40" value={month} onChange={(e) => { setMonth(e.target.value); applyFilters({ month: e.target.value }); }}>
                                 <option value="">All Months</option>
                                 {availableMonths.map((m) => (
                                     <option key={m} value={m}>{MONTH_NAMES[m]}</option>
                                 ))}
-                            </select>
+                            </NativeSelect>
                         </div>
                         <div className="form-control">
                             <label className="label label-text">Phase</label>
-                            <select className="select select-bordered select-sm w-36" value={phase} onChange={(e) => { setPhase(e.target.value); applyFilters({ phase: e.target.value }); }}>
+                            <NativeSelect className="select select-bordered select-sm w-36" value={phase} onChange={(e) => { setPhase(e.target.value); applyFilters({ phase: e.target.value }); }}>
                                 <option value="">All Phases</option>
                                 <option value="1">1st Half</option>
                                 <option value="2">2nd Half</option>
-                            </select>
+                            </NativeSelect>
                         </div>
                         <div className="form-control">
                             <label className="label label-text">Status</label>
-                            <select className="select select-bordered select-sm w-36" value={status} onChange={(e) => { setStatus(e.target.value); applyFilters({ status: e.target.value }); }}>
+                            <NativeSelect className="select select-bordered select-sm w-36" value={status} onChange={(e) => { setStatus(e.target.value); applyFilters({ status: e.target.value }); }}>
                                 <option value="">All Statuses</option>
                                 <option value="draft">Draft</option>
                                 <option value="finalized">Finalized</option>
-                            </select>
+                            </NativeSelect>
                         </div>
                         <div className="flex gap-2">
                             <button onClick={clearFilters} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge px-3 text-xs font-medium no-underline transition-colors hover:bg-dim">

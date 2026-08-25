@@ -3,6 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '../../components/AppLayout';
 import Icon from '../../components/Icon';
 import FormField from '../../components/FormField';
+import NativeSelect from '../../components/NativeSelect';
 
 const MAX_REIMBURSEMENT = 15000;
 
@@ -57,7 +58,7 @@ export default function FinancialRequestsCreate({ employee }) {
 
                     <form onSubmit={submit}>
                         <FormField label="Request Type" required error={errors.request_type}>
-                            <select
+                            <NativeSelect
                                 name="request_type"
                                 value={data.request_type}
                                 onChange={(e) => setData('request_type', e.target.value)}
@@ -67,7 +68,7 @@ export default function FinancialRequestsCreate({ employee }) {
                                 <option value="">Select type...</option>
                                 <option value="cash_advance">Cash Advance</option>
                                 <option value="reimbursement">Reimbursement</option>
-                            </select>
+                            </NativeSelect>
                         </FormField>
 
                         <FormField label="Amount (₱)" required error={errors.amount} help={amountHelp}>

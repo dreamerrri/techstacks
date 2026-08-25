@@ -1,6 +1,7 @@
 import { useForm } from '@inertiajs/react';
 import Icon from '../../components/Icon';
 import FormField from '../../components/FormField';
+import NativeSelect from '../../components/NativeSelect';
 
 // Local dates (not UTC) so min/max are correct for the user's timezone
 const toLocalISO = (d) => {
@@ -97,16 +98,16 @@ export default function EmployeeForm({ employee, submitLabel, submitIcon, cancel
                         <input type="date" value={data.birthdate} max={YESTERDAY} onChange={(e) => setData('birthdate', e.target.value)} className="input input-bordered w-full" required />
                     </FormField>
                     <FormField label="Gender" required error={errors.gender}>
-                        <select value={data.gender} onChange={(e) => setData('gender', e.target.value)} className="select select-bordered w-full" required>
+                        <NativeSelect value={data.gender} onChange={(e) => setData('gender', e.target.value)} className="select select-bordered w-full" required>
                             <option value="">Select Gender</option>
                             {GENDERS.map((g) => <option key={g} value={g}>{g}</option>)}
-                        </select>
+                        </NativeSelect>
                     </FormField>
                     <FormField label="Civil Status" required error={errors.civil_status}>
-                        <select value={data.civil_status} onChange={(e) => setData('civil_status', e.target.value)} className="select select-bordered w-full" required>
+                        <NativeSelect value={data.civil_status} onChange={(e) => setData('civil_status', e.target.value)} className="select select-bordered w-full" required>
                             <option value="">Select Civil Status</option>
                             {CIVIL_STATUSES.map((cs) => <option key={cs} value={cs}>{cs}</option>)}
-                        </select>
+                        </NativeSelect>
                     </FormField>
                     <FormField label="Contact Number" required error={errors.contact_number} help="Must be 11 digits starting with 09">
                         <input type="text" value={data.contact_number} placeholder="09XXXXXXXXX" maxLength="11" onChange={(e) => setData('contact_number', e.target.value)} className="input input-bordered w-full" required />
@@ -124,31 +125,31 @@ export default function EmployeeForm({ employee, submitLabel, submitIcon, cancel
                 {sectionHeader('ph--briefcase-fill', 'Employment Details')}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <FormField label="Department" required error={errors.department}>
-                        <select value={data.department} onChange={(e) => setData('department', e.target.value)} className="select select-bordered w-full" required>
+                        <NativeSelect value={data.department} onChange={(e) => setData('department', e.target.value)} className="select select-bordered w-full" required>
                             <option value="">Select Department</option>
                             {DEPARTMENTS.map((dept) => <option key={dept} value={dept}>{dept}</option>)}
-                        </select>
+                        </NativeSelect>
                     </FormField>
                     <FormField label="Position" required error={errors.position}>
-                        <select value={data.position} onChange={(e) => setData('position', e.target.value)} className="select select-bordered w-full" required>
+                        <NativeSelect value={data.position} onChange={(e) => setData('position', e.target.value)} className="select select-bordered w-full" required>
                             <option value="">Select Position</option>
                             {POSITIONS.map((pos) => <option key={pos} value={pos}>{pos}</option>)}
-                        </select>
+                        </NativeSelect>
                     </FormField>
                     <FormField label="Employment Status" required error={errors.employment_status}>
-                        <select value={data.employment_status} onChange={(e) => setData('employment_status', e.target.value)} className="select select-bordered w-full" required>
+                        <NativeSelect value={data.employment_status} onChange={(e) => setData('employment_status', e.target.value)} className="select select-bordered w-full" required>
                             <option value="">Select Status</option>
                             {EMPLOYMENT_STATUSES.map((es) => <option key={es} value={es}>{es}</option>)}
-                        </select>
+                        </NativeSelect>
                     </FormField>
                     <FormField label="Date Hired" required error={errors.date_hired}>
                         <input type="date" value={data.date_hired} max={TODAY} onChange={(e) => setData('date_hired', e.target.value)} className="input input-bordered w-full" required />
                     </FormField>
                     <FormField label="Salary Type" required error={errors.salary_type}>
-                        <select value={data.salary_type} onChange={(e) => setData('salary_type', e.target.value)} className="select select-bordered w-full" required>
+                        <NativeSelect value={data.salary_type} onChange={(e) => setData('salary_type', e.target.value)} className="select select-bordered w-full" required>
                             <option value="">Select Salary Type</option>
                             {SALARY_TYPES.map((st) => <option key={st} value={st}>{st}</option>)}
-                        </select>
+                        </NativeSelect>
                     </FormField>
                     <FormField label="Basic Salary (PHP)" required error={errors.basic_salary} help="Must be greater than 0">
                         <input type="number" step="0.01" min="0" value={data.basic_salary} onChange={(e) => setData('basic_salary', e.target.value)} className="input input-bordered w-full" required />

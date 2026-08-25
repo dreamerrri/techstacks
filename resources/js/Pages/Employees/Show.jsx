@@ -6,6 +6,7 @@ import DetailRow from '../../components/DetailRow';
 import StatusBadge from '../../components/StatusBadge';
 import ConfirmButton from '../../components/ConfirmButton';
 import { toast } from '../../components/toast';
+import NativeSelect from '../../components/NativeSelect';
 
 const STATUS_META = {
     Regular: 'success',
@@ -86,10 +87,10 @@ export default function EmployeesShow({ employee, payrollInput }) {
                     </div>
                     <div className="fieldset">
                         <label className="label text-xs text-dim-foreground">Type</label>
-                        <select value={allowance.data.type} onChange={(e) => allowance.setData('type', e.target.value)} className="select select-bordered select-sm w-full">
+                        <NativeSelect value={allowance.data.type} onChange={(e) => allowance.setData('type', e.target.value)} className="select select-bordered select-sm w-full">
                             <option value="monthly">Monthly</option>
                             <option value="one-time">One-time</option>
-                        </select>
+                        </NativeSelect>
                     </div>
                 </div>
                 <div className="fieldset mb-3">
@@ -126,10 +127,10 @@ export default function EmployeesShow({ employee, payrollInput }) {
                     </div>
                     <div className="fieldset">
                         <label className="label text-xs text-dim-foreground">Type</label>
-                        <select value={benefit.data.type} onChange={(e) => benefit.setData('type', e.target.value)} className="select select-bordered select-sm w-full">
+                        <NativeSelect value={benefit.data.type} onChange={(e) => benefit.setData('type', e.target.value)} className="select select-bordered select-sm w-full">
                             <option value="monthly">Monthly</option>
                             <option value="one-time">One-time</option>
-                        </select>
+                        </NativeSelect>
                     </div>
                 </div>
                 <div className="fieldset mb-3">

@@ -3,6 +3,7 @@ import { Head, Link, usePage, router } from '@inertiajs/react';
 import AppLayout from '../../components/AppLayout';
 import Icon from '../../components/Icon';
 import ConfirmButton from '../../components/ConfirmButton';
+import NativeSelect from '../../components/NativeSelect';
 
 const fmtDate = (value, opts = { month: 'long', day: '2-digit', year: 'numeric' }) => {
     if (!value) return 'N/A';
@@ -189,18 +190,18 @@ export default function ManualPayrollPeriod({ payrollPeriod, unencodedEmployees 
                                     placeholder="Search by name or employee ID..."
                                     className="w-full sm:w-auto flex-1 min-w-40 text-sm input input-bordered input-sm"
                                 />
-                                <select className="select select-bordered select-sm min-w-40" value={department} onChange={(e) => setDepartment(e.target.value)}>
+                                <NativeSelect className="select select-bordered select-sm min-w-40" value={department} onChange={(e) => setDepartment(e.target.value)}>
                                     <option value="">All Departments</option>
                                     {departments.map((d) => (
                                         <option key={d} value={d}>{d}</option>
                                     ))}
-                                </select>
-                                <select className="select select-bordered select-sm min-w-36" value={empStatus} onChange={(e) => setEmpStatus(e.target.value)}>
+                                </NativeSelect>
+                                <NativeSelect className="select select-bordered select-sm min-w-36" value={empStatus} onChange={(e) => setEmpStatus(e.target.value)}>
                                     <option value="">All Status</option>
                                     {EMPLOYMENT_STATUSES.map((s) => (
                                         <option key={s} value={s}>{s}</option>
                                     ))}
-                                </select>
+                                </NativeSelect>
                                 <button onClick={() => { setSearch(''); setDepartment(''); setEmpStatus(''); }} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-edge px-3 text-xs font-medium no-underline transition-colors hover:bg-dim">
                                     <Icon name="tabler--x" className="size-4" /> Clear
                                 </button>

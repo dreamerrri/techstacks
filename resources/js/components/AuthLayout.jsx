@@ -20,11 +20,6 @@ export default function AuthLayout({ children, title }) {
     const canvasRef = useRef(null);
 
     useEffect(() => {
-        document.body.classList.add('auth-page');
-        return () => document.body.classList.remove('auth-page');
-    }, []);
-
-    useEffect(() => {
         let renderer, controls, animationId;
         let cancelled = false;
 
@@ -67,7 +62,7 @@ export default function AuthLayout({ children, title }) {
                 '/3d/techstacks-logo.gltf',
                 (gltf) => { logo = gltf.scene; scene.add(logo); },
                 undefined,
-                (err) => console.error('GLTF load error:', err)
+                () => {}
             );
 
             function animate() {
@@ -92,20 +87,34 @@ export default function AuthLayout({ children, title }) {
     return (
         <>
             <Head title={title} />
-            <div className="auth-layout">
-                <div className="auth-image-panel">
-                    <div className="auth-image-overlay"></div>
-                    <div className="auth-image-content">
-                        <div ref={containerRef} id="logo3d-container" className="w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80 mb-4">
-                            <canvas ref={canvasRef} id="logo3d" className="w-full h-full"></canvas>
+            <div className="flex min-h-screen">
+                {/* Brand panel */}
+                <div
+                    className="relative hidden w-[45%] items-center justify-center overflow-hidden lg:flex"
+                    style={{ background: 'linear-gradient(to bottom right, #0a2018, #00896a)' }}
+                >
+                    <div
+                        className="pointer-events-none absolute inset-0"
+                        style={{
+                            background:
+                                'linear-gradient(to top, rgba(0, 0, 0, 0.35), transparent 60%)',
+                        }}
+                    />
+                    <div className="relative z-10 flex max-w-md flex-col items-center px-10 text-center text-white">
+                        <div ref={containerRef} className="mb-6 h-64 w-64 xl:h-80 xl:w-80">
+                            <canvas ref={canvasRef} className="size-full" />
                         </div>
-                        <p className="text-sm font-semibold tracking-[2px] uppercase opacity-75 mb-5">Techstacks</p>
-                        <h2>LogiPay</h2>
-                        <p>Streamline your human resources and payroll operations with our comprehensive management platform.</p>
+                        <p className="mb-4 text-sm font-semibold uppercase tracking-[3px] text-brand">Techstacks</p>
+                        <h2 className="m-0 text-3xl font-bold">LogiPay</h2>
+                        <p className="mt-3 leading-relaxed text-dim-foreground">
+                            Streamline your human resources and payroll operations with our comprehensive management platform.
+                        </p>
                     </div>
                 </div>
-                <div className="auth-form-panel">
-                    <div className="auth-form-inner">{children}</div>
+
+                {/* Form panel */}
+                <div className="flex flex-1 items-center justify-center bg-canvas p-6 sm:p-10">
+                    <div className="w-full max-w-md">{children}</div>
                 </div>
             </div>
         </>

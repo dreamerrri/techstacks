@@ -3,6 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '../../components/AppLayout';
 import Icon from '../../components/Icon';
 import Pagination from '../../components/Pagination';
+import NativeSelect from '../../components/NativeSelect';
 
 const ACTION_BADGE = {
     create: 'badge-soft badge-success text-xs',
@@ -71,21 +72,21 @@ export default function AuditLogsIndex({ logs, modules = [], actions = [], filte
                     <div className="flex flex-wrap items-end gap-3">
                         <div className="form-control">
                             <label className="label label-text">Module</label>
-                            <select className="select select-bordered select-sm w-40" value={module} onChange={(e) => setModule(e.target.value)}>
+                            <NativeSelect className="select select-bordered select-sm w-40" value={module} onChange={(e) => setModule(e.target.value)}>
                                 <option value="">All Modules</option>
                                 {moduleList.map((m) => (
                                     <option key={m} value={m}>{m.charAt(0).toUpperCase() + m.slice(1)}</option>
                                 ))}
-                            </select>
+                            </NativeSelect>
                         </div>
                         <div className="form-control">
                             <label className="label label-text">Action</label>
-                            <select className="select select-bordered select-sm w-36" value={action} onChange={(e) => setAction(e.target.value)}>
+                            <NativeSelect className="select select-bordered select-sm w-36" value={action} onChange={(e) => setAction(e.target.value)}>
                                 <option value="">All Actions</option>
                                 {actionList.map((a) => (
                                     <option key={a} value={a}>{a.charAt(0).toUpperCase() + a.slice(1)}</option>
                                 ))}
-                            </select>
+                            </NativeSelect>
                         </div>
                         <div className="form-control">
                             <label className="label label-text">Date From</label>
