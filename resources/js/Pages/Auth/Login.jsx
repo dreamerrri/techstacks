@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useForm } from '@inertiajs/react';
+import { CircleAlert, Eye, EyeOff, LoaderCircle, LogIn } from 'lucide-react';
 import AuthLayout from '../../components/AuthLayout';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export default function Login() {
     const { data, setData, post, processing, errors } = useForm({
@@ -24,31 +29,28 @@ export default function Login() {
 
     return (
         <AuthLayout title="Login">
-            <div className="form-header">
-                <h3>Welcome Back</h3>
-                <p>Sign in to access your dashboard</p>
+            <div className="mb-6 text-center">
+                <h3 className="m-0 text-xl font-bold">Welcome Back</h3>
+                <p className="mt-1 text-sm text-dim-foreground">Sign in to access your dashboard</p>
             </div>
 
             {Object.keys(errors).length > 0 && (
-                <div className="alert alert-error">
-                    <i className="icon-[ph--warning-circle-fill]"></i>
+                <div className="mb-4 flex items-center gap-2 rounded-lg border border-danger/40 bg-danger/10 px-3 py-2.5 text-sm text-danger">
+                    <CircleAlert className="size-4 shrink-0" />
                     {errors.email || errors.password || Object.values(errors)[0]}
                 </div>
             )}
 
             {flash.success && (
-                <div className="alert alert-success">
-                    <i className="icon-[tabler--circle-check]"></i>
+                <div className="mb-4 flex items-center gap-2 rounded-lg border border-brand/40 bg-brand/10 px-3 py-2.5 text-sm text-brand">
                     {flash.success}
                 </div>
             )}
 
-            <form onSubmit={submit} noValidate id="loginForm">
-                <div className="form-group">
-                    <label htmlFor="email">
-                        <i className="icon-[ph--envelope-fill]"></i> Email Address
-                    </label>
-                    <input
+            <form onSubmit={submit} noValidate id="loginForm" className="space-y-4">
+                <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
                         ref={inputRef}
                         type="email"
                         id="email"
@@ -57,21 +59,17 @@ export default function Login() {
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}
                         required
+                        autoFocus
                     />
                     {errors.email && (
-                        <div className="error-message">
-                            <i className="icon-[tabler--circle-x]"></i>
-                            {errors.email}
-                        </div>
+                        <p className="m-0 text-xs text-danger">{errors.email}</p>
                     )}
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="password">
-                        <i className="icon-[ph--lock-fill]"></i> Password
-                    </label>
+                <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
                     <div className="relative">
-                        <input
+                        <Input
                             type={showPassword ? 'text' : 'password'}
                             id="password"
                             name="password"
@@ -79,48 +77,48 @@ export default function Login() {
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             required
-                            className="w-full pe-12"
+                            className="pr-10"
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword((v) => !v)}
-                            className="absolute end-3 top-1/2 -translate-y-1/2 bg-transparent border-0 cursor-pointer text-subtle p-0"
+                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer border-0 bg-transparent p-0 text-dim-foreground hover:text-canvas-foreground"
                         >
-                            <i className={showPassword ? 'icon-[ph--eye-slash-fill]' : 'icon-[ph--eye-fill]'}></i>
+                            {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                         </button>
                     </div>
                     {errors.password && (
-                        <div className="error-message">
-                            <i className="icon-[tabler--circle-x]"></i>
-                            {errors.password}
-                        </div>
+                        <p className="m-0 text-xs text-danger">{errors.password}</p>
                     )}
                 </div>
 
-                <div className="remember-forgot">
-                    <label>
-                        <input
-                            type="checkbox"
+                <div className="flex items-center justify-between">
+                    <label className="flex cursor-pointer items-center gap-2 text-sm">
+                        <Checkbox
                             name="remember"
                             checked={data.remember}
-                            onChange={(e) => setData('remember', e.target.checked)}
-                        />{' '}
+                            onCheckedChange={(checked) => setData('remember', !!checked)}
+                        />
                         Remember me
                     </label>
-                    <Link href="/reset">Forgot password?</Link>
+                    <Link href="/reset" className="text-sm font-medium text-brand no-underline hover:underline">
+                        Forgot password?
+                    </Link>
                 </div>
 
-                <button type="submit" className="login-btn" id="loginBtn" disabled={processing}>
-                    <i className={processing ? 'icon-[ph--spinner-fill] spin' : 'icon-[ph--sign-in-fill]'}></i>
-                    <span>{processing ? ' Signing in...' : 'Sign In'}</span>
-                </button>
+                <Button type="submit" id="loginBtn" disabled={processing} className="w-full">
+                    {processing ? <LoaderCircle className="size-4 animate-spin" /> : <LogIn className="size-4" />}
+                    {processing ? 'Signing in…' : 'Sign In'}
+                </Button>
             </form>
 
-            <div className="auth-footer-link">
-                <p>
-                    Don&apos;t have an account? <Link href="/register">Register here</Link>
-                </p>
-            </div>
+            <p className="mt-6 mb-0 text-center text-sm text-dim-foreground">
+                Don&apos;t have an account?{' '}
+                <Link href="/register" className="font-medium text-brand no-underline hover:underline">
+                    Register here
+                </Link>
+            </p>
         </AuthLayout>
     );
 }

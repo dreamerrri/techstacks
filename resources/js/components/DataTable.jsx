@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
-import Icon from './Icon';
+import { Search } from 'lucide-react';
 import Pagination from './Pagination';
+import { cn } from '@/lib/utils';
 
 export default function DataTable({
     title,
@@ -23,7 +24,6 @@ export default function DataTable({
         return params.get('search') || '';
     });
 
-    // Build params from the live URL so sort/direction set elsewhere are preserved
     const navigateWithParams = (mutate) => {
         const path = baseUrl.split('?')[0];
         const params = new URLSearchParams(window.location.search);
@@ -67,80 +67,81 @@ export default function DataTable({
     useEffect(() => () => clearTimeout(searchTimerRef.current), []);
 
     return (
-        <div className="card w-full min-w-0 border border-base-300 flex flex-col p-0">
-            <div className="sticky top-0 px-4 sm:px-7 pt-5 rounded-t-2xl bg-base-100 z-10">
-                <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-                    <h2 className="text-sm font-semibold uppercase tracking-widest text-faint flex items-center gap-2 m-0">
-                        {icon && <Icon name={icon} className="size-4 text-primary" />}
-                        <span>{title}</span>
-                        {tooltip && (
-                            <span className="tooltip [--placement:right]">
-                                <span className="tooltip-toggle cursor-pointer text-base-content">
-                                    <Icon name="tabler--info-circle" className="size-4" />
-                                </span>
-                                <span className="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible" role="tooltip">
-                                    <span className="tooltip-body bg-primary shadow-md rounded-lg px-3 py-2 text-xs normal-case text-primary-content">
-                                        {tooltip}
-                                    </span>
-                                </span>
+        <div className="flex w-full min-w-0 flex-col rounded-xl border border-edge bg-card">
+            <div className="flex flex-wrap items-center justify-between gap-3 px-5 pt-5 pb-4">
+                <h2 className="m-0 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-dim-foreground">
+                    {icon && <span className={`icon-[${icon}] size-4 text-brand`} />}
+                    <span>{title}</span>
+                    {tooltip && (
+                        <span className="tooltip [--placement:right] cursor-help" tabIndex={0}>
+                            <span className="tooltip-toggle text-dim-foreground/70">
+                                <span className="icon-[tabler--info-circle] size-3.5" />
                             </span>
-                        )}
-                    </h2>
-                    {actions && <div className="flex gap-2">{actions}</div>}
-                </div>
-
-                {(search || filters.length > 0) && (
-                    <div className="flex flex-col md:flex-row md:items-center gap-3 pb-4">
-                        {search && (
-                            <div className="join flex-none w-full md:w-64 min-w-40">
-                                <input
-                                    type="text"
-                                    value={searchValue}
-                                    onChange={(e) => handleSearch(e.target.value)}
-                                    placeholder={searchPlaceholder}
-                                    className="input input-bordered input-sm bg-base-200 join-item w-full"
-                                />
-                                <button type="button" className="btn btn-soft btn-primary btn-sm join-item" onClick={() => handleSearch(searchValue)}>
-                                    <Icon name="tabler--search" className="size-4" />
-                                </button>
-                            </div>
-                        )}
-                        {filters.map((filter) => (
-                            <select
-                                key={filter.name}
-                                name={filter.name}
-                                value={filter.value}
-                                onChange={(e) => handleFilter(filter.name, e.target.value)}
-                                className="select select-bordered select-sm"
-                            >
-                                {filter.options.map((opt) => (
-                                    <option key={opt.value} value={opt.value}>
-                                        {opt.label}
-                                    </option>
-                                ))}
-                            </select>
-                        ))}
-                        {hasActiveFilters() && (
-                            <Link href={baseUrl.split('?')[0]} className="btn btn-soft btn-sm" preserveScroll>
-                                Clear
-                            </Link>
-                        )}
-                    </div>
-                )}
+                            <span className="tooltip-content tooltip-shown:opacity-100 tooltip-shown:visible z-50" role="tooltip">
+                                <span className="tooltip-body rounded-lg bg-dim px-3 py-2 text-xs normal-case shadow-md">{tooltip}</span>
+                            </span>
+                        </span>
+                    )}
+                </h2>
+                {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
             </div>
+
+            {(search || filters.length > 0) && (
+                <div className="flex flex-col gap-3 border-b border-edge px-5 pb-4 md:flex-row md:items-center">
+                    {search && (
+                        <div className="relative w-full md:w-64">
+                            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-dim-foreground" />
+                            <input
+                                type="text"
+                                value={searchValue}
+                                onChange={(e) => handleSearch(e.target.value)}
+                                placeholder={searchPlaceholder}
+                                className="h-9 w-full rounded-lg border border-field bg-canvas pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-dim-foreground focus:border-brand focus:ring-2 focus:ring-focusring/30"
+                            />
+                        </div>
+                    )}
+                    {filters.map((filter) => (
+                        <select
+                            key={filter.name}
+                            name={filter.name}
+                            value={filter.value}
+                            onChange={(e) => handleFilter(filter.name, e.target.value)}
+                            className={cn(
+                                'h-9 cursor-pointer rounded-lg border border-field bg-card px-3 text-sm outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-focusring/30',
+                                filter.name === 'payroll_period_id' && 'md:w-auto'
+                            )}
+                        >
+                            {filter.options.map((opt) => (
+                                <option key={String(opt.value)} value={opt.value}>
+                                    {opt.label}
+                                </option>
+                            ))}
+                        </select>
+                    ))}
+                    {hasActiveFilters() && (
+                        <Link
+                            href={baseUrl.split('?')[0]}
+                            className="inline-flex h-8 items-center rounded-lg border border-edge px-3 text-xs font-medium no-underline transition-colors hover:bg-dim"
+                            preserveScroll
+                        >
+                            Clear
+                        </Link>
+                    )}
+                </div>
+            )}
 
             {children}
 
             {paginator && paginator.total > 0 && (
-                <div className="px-6 py-4 border-t border-base-300">
+                <div className="border-t border-edge px-6 py-3">
                     <Pagination paginator={paginator} />
                 </div>
             )}
 
             {empty && (!paginator || paginator.total === 0) && (
-                <div className="px-6 py-10 text-center">
-                    <Icon name="tabler--database-off" className="size-10 text-faint mx-auto mb-3" />
-                    <p className="text-sm text-subtle">{typeof empty === 'string' ? empty : 'No records found.'}</p>
+                <div className="px-6 py-12 text-center">
+                    <span className="icon-[tabler--database-off] mx-auto mb-3 block size-10 text-dim-foreground/50" />
+                    <p className="text-sm text-dim-foreground">{typeof empty === 'string' ? empty : 'No records found.'}</p>
                 </div>
             )}
         </div>

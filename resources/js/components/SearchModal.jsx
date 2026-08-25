@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Icon from './Icon';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { Search } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const PAGES = {
     admin: [
@@ -44,30 +46,9 @@ export default function SearchModal({ open, onClose }) {
             setQuery('');
             setRecordGroups([]);
             setActiveIndex(0);
-            setTimeout(() => inputRef.current?.focus(), 100);
+            setTimeout(() => inputRef.current?.focus(), 50);
         }
     }, [open]);
-
-    useEffect(() => {
-        if (!open) return;
-        const onKeyDown = (e) => {
-            if (e.key === 'Escape') onClose();
-            if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                setActiveIndex((i) => (flatResults.length ? (i + 1) % flatResults.length : 0));
-            }
-            if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                setActiveIndex((i) => (flatResults.length ? (i - 1 + flatResults.length) % flatResults.length : 0));
-            }
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                select(activeIndex);
-            }
-        };
-        window.addEventListener('keydown', onKeyDown);
-        return () => window.removeEventListener('keydown', onKeyDown);
-    }, [open, query, recordGroups, activeIndex]);
 
     const pages = PAGES[role] ?? PAGES.user;
 
@@ -85,6 +66,7 @@ export default function SearchModal({ open, onClose }) {
         return items;
     }, [pageResults, recordGroups]);
 
+    // Debounced record search with abort on change/close
     useEffect(() => {
         if (!open) return;
         const controller = new AbortController();
@@ -117,73 +99,66 @@ export default function SearchModal({ open, onClose }) {
         if (item) window.location.href = item.url;
     };
 
-    if (!open) return null;
-
     return (
-        <>
-            <div
-                id="search-modal-backdrop"
-                className={`overlay-backdrop fixed inset-0 z-[79] bg-base-300/60 backdrop-blur-sm transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-                onClick={onClose}
-                aria-hidden="true"
-            />
-            <div id="search-modal" className={`overlay modal overlay-open:opacity-100 overlay-open:duration-300 ${open ? 'open' : ''}`} role="dialog" tabIndex="-1">
-                <div className="modal-dialog overflow-x-hidden" onClick={(e) => e.stopPropagation()}>
-                    <div className="modal-content max-h-full">
-                        <div className="modal-header block">
-                            <div className="relative">
-                                <input
-                                    ref={inputRef}
-                                    type="text"
-                                    className="input ps-8"
-                                    placeholder="Search or type a command"
-                                    value={query}
-                                    onChange={(e) => {
-                                        setQuery(e.target.value);
-                                        setActiveIndex(0);
-                                    }}
-                                />
-                                <Icon name="tabler--search" className="text-base-content absolute start-3 top-1/2 size-4 shrink-0 -translate-y-1/2" />
-                            </div>
-                        </div>
-                        <div className="modal-body">
-                            <div className="overflow-y-auto max-h-72 space-y-0.5">
-                                {flatResults.map((item, index) => (
-                                    <div key={item.group + '-' + item.url}>
-                                        {(index === 0 || flatResults[index - 1].group !== item.group) && (
-                                            <div className="px-2 pt-2 pb-1 text-xs font-semibold uppercase text-subtle">{item.group}</div>
-                                        )}
-                                        <button
-                                            type="button"
-                                            className={`flex w-full items-center gap-2 rounded-lg px-2 py-2 text-start text-sm ${index === activeIndex ? 'bg-base-200' : 'hover:bg-base-200'}`}
-                                            onClick={() => select(index)}
-                                            onMouseEnter={() => setActiveIndex(index)}
-                                        >
-                                            <Icon name={item.icon} className="size-4 shrink-0 text-subtle" />
-                                            <span className="min-w-0 flex-1">
-                                                <span className="block truncate">{item.title}</span>
-                                                {item.subtitle && <span className="block truncate text-xs text-subtle">{item.subtitle}</span>}
-                                            </span>
-                                        </button>
-                                    </div>
-                                ))}
+        <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+            <DialogContent className="top-[15%] max-w-lg translate-y-0 gap-0 overflow-hidden p-0">
+                <DialogTitle className="sr-only">Search</DialogTitle>
+                <DialogDescription className="sr-only">Search pages and records</DialogDescription>
 
-                                {loading && (
-                                    <div className="flex items-center justify-center py-4">
-                                        <span className="loading loading-spinner loading-sm text-subtle"></span>
-                                    </div>
-                                )}
-
-                                {!loading && query.trim().length > 0 && flatResults.length === 0 && (
-                                    <div className="px-2 py-6 text-center text-sm text-subtle">
-                                        No results for &quot;{query}&quot;
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+                <div className="relative border-b border-edge">
+                    <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-dim-foreground" />
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        value={query}
+                        onChange={(e) => {
+                            setQuery(e.target.value);
+                            setActiveIndex(0);
+                        }}
+                        placeholder="Search pages and records…"
+                        className="h-12 w-full bg-transparent pl-10 pr-4 text-sm outline-none placeholder:text-dim-foreground"
+                    />
                 </div>
-            </div>
-        </>
+
+                <div className="max-h-72 overflow-y-auto p-2">
+                    {flatResults.map((item, index) => (
+                        <div key={item.group + '-' + item.url}>
+                            {(index === 0 || flatResults[index - 1].group !== item.group) && (
+                                <div className="px-2 pb-1 pt-3 text-[11px] font-semibold uppercase tracking-wider text-dim-foreground">
+                                    {item.group}
+                                </div>
+                            )}
+                            <button
+                                type="button"
+                                onClick={() => select(index)}
+                                onMouseEnter={() => setActiveIndex(index)}
+                                className={cn(
+                                    'flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-start text-sm',
+                                    index === activeIndex ? 'bg-brand/10 text-brand' : 'hover:bg-dim'
+                                )}
+                            >
+                                <span className={`icon-[${item.icon}] size-4 shrink-0 ${index === activeIndex ? 'text-brand' : 'text-dim-foreground'}`} />
+                                <span className="min-w-0 flex-1 truncate">{item.title}</span>
+                                {item.subtitle && (
+                                    <span className="truncate text-xs text-dim-foreground">{item.subtitle}</span>
+                                )}
+                            </button>
+                        </div>
+                    ))}
+
+                    {loading && (
+                        <div className="flex items-center justify-center py-6">
+                            <span className="size-5 animate-spin rounded-full border-2 border-edge border-t-brand" />
+                        </div>
+                    )}
+
+                    {!loading && query.trim().length > 0 && flatResults.length === 0 && (
+                        <p className="px-2 py-8 text-center text-sm text-dim-foreground">
+                            No results for &ldquo;{query}&rdquo;
+                        </p>
+                    )}
+                </div>
+            </DialogContent>
+        </Dialog>
     );
 }

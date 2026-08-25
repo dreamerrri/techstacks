@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { CalendarDays } from 'lucide-react';
 import AppLayout from '../components/AppLayout';
+import { Badge } from '@/components/ui/badge';
 
 // FullCalendar is heavy (~250KB with plugins) — load it in the background
 // instead of blocking the dashboard's first paint on it
@@ -8,184 +10,183 @@ const FullCalendarWidget = lazy(() => import('../components/FullCalendarWidget')
 
 function CalendarSkeleton() {
     return (
-        <div className="card bg-base-100 border border-base-300 p-6 mb-4 animate-pulse">
-            <div className="h-6 w-40 bg-base-200 rounded mb-4"></div>
-            <div className="h-64 bg-base-200 rounded"></div>
+        <div className="mb-4 animate-pulse space-y-3">
+            <div className="h-6 w-40 rounded bg-dim" />
+            <div className="h-64 rounded bg-dim" />
         </div>
     );
 }
 
-export default function Dashboard({ counts }) {
-    const { user } = usePage().props.auth;
+const EMP_STATUS_COLOR = {
+    Regular: 'text-success bg-success/10',
+    Probationary: 'text-warning bg-warning/10',
+    Contractual: 'text-highlight bg-highlight/10',
+    'Part-time': 'text-dim-foreground bg-dim',
+};
+
+export default function Dashboard() {
+    const { props } = usePage();
+    const user = props.auth.user;
+    const counts = props.counts ?? {};
+    const emp = user.employee;
     const isAdmin = user.role === 'admin';
     const isHR = user.role === 'hr';
-    const emp = user.employee || null;
     const empStatus = emp?.employment_status;
-    const empStatusColor = {
-        Regular: 'text-success bg-success/10',
-        Probationary: 'text-warning bg-warning/10',
-        Contractual: 'text-info bg-info/10',
-        'Part-time': 'text-base-content bg-base-200',
-    }[empStatus] || 'text-base-content bg-base-200';
+    const empStatusColor =
+        EMP_STATUS_COLOR[empStatus] || 'text-canvas-foreground bg-dim';
 
-    const statCard = (href, icon, colorClass, value, label, small) => (
-        <Link href={href || '#'} className={`${href ? 'hover:shadow-md transition-shadow cursor-pointer' : ''} card bg-base-100 border border-base-300 p-5 text-center`}>
-            <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl mx-auto mb-3 ${colorClass}`}>
-                <i className={icon}></i>
+    const statCard = (href, icon, colorClass, value, label) => (
+        <Link
+            href={href || '#'}
+            className={`${href ? 'cursor-pointer transition-shadow hover:shadow-md' : ''} block rounded-xl border border-edge bg-card p-4 text-center no-underline sm:p-5`}
+        >
+            <div className={`mx-auto mb-2 flex size-10 items-center justify-center rounded-lg ${colorClass}`}>
+                <span className={`icon-[${icon}] size-5`} />
             </div>
-            <div className={`${small ? 'text-lg sm:text-2xl font-small break-words' : 'text-2xl sm:text-3xl font-bold'} text-base-content mb-1`}>{value}</div>
-            <div className="text-xs text-muted uppercase tracking-widest">{label}</div>
+            <div className="mb-1 break-words text-lg font-bold text-canvas-foreground sm:text-xl">{value}</div>
+            <div className="text-[11px] uppercase tracking-widest text-dim-foreground">{label}</div>
         </Link>
     );
 
     const actionBtn = (href, icon, label) => (
-        <a href={href || '#'} className="btn btn-soft flex-col h-auto py-5 gap-2">
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl text-primary bg-primary/10">
-                <i className={icon}></i>
-            </div>
-            <span className="text-muted">{label}</span>
-        </a>
+        <Link
+            href={href || '#'}
+            className="flex h-auto flex-col items-center gap-2 rounded-xl border border-edge bg-card p-4 no-underline transition-colors hover:bg-dim"
+        >
+            <span className={`icon-[${icon}] size-6 text-brand`} />
+            <span className="text-xs text-dim-foreground">{label}</span>
+        </Link>
     );
 
     return (
-        <AppLayout>
-            <Head title={isAdmin ? 'Admin Dashboard' : isHR ? 'HR Dashboard' : 'Dashboard'} />
-            <div className="p-6 space-y-6">
-                {isAdmin && (
-                    <span className="badge badge-soft badge-primary">
-                        <i className="icon-[tabler--shield-check]"></i> Administrator Access
-                    </span>
-                )}
-                {isHR && (
-                    <span className="badge badge-soft badge-primary">
-                        <i className="icon-[tabler--user]"></i> HR Department Access
-                    </span>
-                )}
-
-                <div className="text-base-content text-lg">
-                    Welcome back, <strong>{user.name}</strong>
-                    {isAdmin && ' — You have full administrative access.'}
-                    {isHR && ' — You have HR access privileges.'}
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <AppLayout title="Dashboard">
+            <Head title="Dashboard" />
+            <div className="space-y-5 p-3 sm:p-4">
+                <div>
                     {isAdmin && (
-                        <>
-                            {statCard('/users', 'icon-[tabler--users]', 'text-primary bg-primary/10', counts.total_users, 'Total Users')}
-                            {statCard('/users', 'icon-[tabler--shield-check]', 'text-error bg-error/10', counts.admin_users, 'Admin Users')}
-                            {statCard('/users', 'icon-[tabler--user]', 'text-warning bg-warning/10', counts.hr_users, 'HR Personnel')}
-                            {statCard('/users', 'icon-[tabler--circle-check]', 'text-success bg-success/10', counts.active_users, 'Active Accounts')}
-                        </>
+                        <Badge variant="outline" className="border-brand/50 text-brand">
+                            Administrator Access
+                        </Badge>
                     )}
                     {isHR && (
-                        <>
-                            {statCard('/employees', 'icon-[tabler--users]', 'text-primary bg-primary/10', counts.total_employees, 'Total Employees')}
-                            {statCard(null, 'icon-[tabler--calendar-check]', 'text-success bg-success/10', counts.regular, 'Regular')}
-                            {statCard(null, 'icon-[tabler--clock]', 'text-warning bg-warning/10', counts.probationary, 'Probationary')}
-                            {statCard(null, 'icon-[tabler--archive]', 'text-base-content bg-base-200', counts.archived, 'Archived')}
-                        </>
+                        <Badge variant="outline" className="border-highlight/50 text-highlight">
+                            HR Department Access
+                        </Badge>
                     )}
                     {!isAdmin && !isHR && (
-                        <>
-                            {statCard(null, 'icon-[tabler--building]', 'text-primary bg-primary/10', emp?.department ?? '—', 'Department', true)}
-                            {statCard(null, 'icon-[tabler--id-badge]', 'text-secondary bg-secondary/10', emp?.position ?? '—', 'Position', true)}
-                            {statCard(null, 'icon-[tabler--briefcase]', empStatusColor, empStatus ?? '—', 'Employment Status', true)}
-                            {statCard(
-                                null,
-                                'icon-[tabler--calendar]',
-                                'text-accent bg-accent/10',
-                                emp?.date_hired ? new Date(emp.date_hired).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) : '—',
-                                'Date Hired',
-                                true
-                            )}
-                        </>
+                        <Badge variant="outline">Employee Portal</Badge>
                     )}
+
+                    <h1 className="mt-3 text-lg font-bold sm:text-xl">
+                        Welcome back, {user.name}
+                        {isAdmin && ' — full administrative access'}
+                        {isHR && ' — HR access privileges'}
+                    </h1>
                 </div>
 
-                <div className="card border border-base-300 shadow-sm p-6">
-                    <h2 className="text-xs font-semibold uppercase tracking-widest text-primary mb-4 flex items-center gap-2">
-                        <i className="icon-[ph--lightning-fill]"></i>
-                        {isAdmin ? 'Administrative Actions' : isHR ? 'HR Actions' : 'Quick Actions'}
-                    </h2>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {(isAdmin || isHR) && (
+                    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                        {isAdmin &&
+                            [
+                                ['/users', 'tabler--users', 'text-brand bg-brand/10', counts.total_users, 'Total Users'],
+                                ['/users', 'tabler--shield-check', 'text-danger bg-danger/10', counts.admin_users, 'Admins'],
+                                ['/users', 'tabler--user', 'text-warning bg-warning/10', counts.hr_users, 'HR Personnel'],
+                                ['/users', 'tabler--circle-check', 'text-success bg-success/10', counts.active_users, 'Active Accounts'],
+                            ].map(([href, icon, color, value, label]) => statCard(href, icon, color, value ?? 0, label))}
+                        {isHR &&
+                            [
+                                ['/employees', 'tabler--users-group', 'text-brand bg-brand/10', counts.total_employees, 'Total Employees'],
+                                [null, 'tabler--calendar-check', 'text-success bg-success/10', counts.regular, 'Regular'],
+                                [null, 'tabler--clock', 'text-warning bg-warning/10', counts.probationary, 'Probationary'],
+                                [null, 'tabler--archive', 'text-dim-foreground bg-dim', counts.archived, 'Archived'],
+                            ].map(([href, icon, color, value, label]) => statCard(href, icon, color, value ?? 0, label))}
+                    </div>
+                )}
+
+                {!isAdmin && !isHR && (
+                    <div className="grid grid-cols-2 gap-3">
+                        {statCard(null, 'tabler--building', 'text-brand bg-brand/10', emp?.department ?? '—', 'Department')}
+                        {statCard(null, 'tabler--id-badge', 'text-secondary/80 bg-secondary/10', emp?.position ?? '—', 'Position')}
+                        {statCard(null, 'tabler--briefcase', empStatusColor, empStatus ?? '—', 'Employment Status')}
+                        {statCard(
+                            null,
+                            'tabler--calendar',
+                            'text-highlight bg-highlight/10',
+                            emp?.date_hired
+                                ? new Date(emp.date_hired).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+                                : '—',
+                            'Date Hired'
+                        )}
+                    </div>
+                )}
+
+                {/* Quick actions */}
+                <div>
+                    <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-dim-foreground">Quick Actions</h2>
+                    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                         {isAdmin && (
                             <>
-                                {actionBtn('/employees/create', 'icon-[tabler--user-plus]', 'Create Users')}
-                                {actionBtn('/roles', 'icon-[tabler--lock]', 'Manage Roles')}
-                                {actionBtn(null, 'icon-[tabler--database]', 'System Backup')}
-                                {actionBtn('/audit-logs', 'icon-[tabler--history]', 'View Logs')}
+                                {actionBtn('/users', 'tabler--users', 'Manage Users')}
+                                {actionBtn('/employees/create', 'tabler--user-plus', 'Add Employee')}
+                                {actionBtn('/roles', 'tabler--lock', 'Manage Roles')}
+                                {actionBtn('/audit-logs', 'tabler--history', 'View Logs')}
                             </>
                         )}
                         {isHR && (
                             <>
-                                {actionBtn('/employees/create', 'icon-[tabler--user-plus]', 'Add Employee')}
-                                {actionBtn('/payroll', 'icon-[tabler--calculator]', 'Payroll')}
-                                {actionBtn(null, 'icon-[tabler--inbox]', 'Leave Requests')}
-                                {actionBtn(null, 'icon-[tabler--file-type-pdf]', 'Reports')}
+                                {actionBtn('/employees/create', 'tabler--user-plus', 'Add Employee')}
+                                {actionBtn('/payroll', 'tabler--calculator', 'Payroll')}
+                                {actionBtn('/work-requests', 'tabler--inbox', 'Work Requests')}
+                                {actionBtn('/government-contributions', 'tabler--file-type-pdf', 'Contributions')}
                             </>
                         )}
                         {!isAdmin && !isHR && (
                             <>
-                                {actionBtn('/profile', 'icon-[tabler--user]', 'My Profile')}
-                                {actionBtn('/payroll', 'icon-[tabler--receipt]', 'Payslips')}
-                                {actionBtn(null, 'icon-[tabler--calendar-off]', 'Leave Request')}
-                                {actionBtn(null, 'icon-[tabler--clock]', 'Attendance')}
+                                {actionBtn('/profile', 'tabler--user', 'My Profile')}
+                                {actionBtn('/payroll', 'tabler--receipt', 'Payslips')}
+                                {actionBtn('/work-requests/create', 'tabler--calendar-off', 'New Request')}
+                                {actionBtn('/employee-attendance', 'tabler--clock', 'Attendance')}
                             </>
                         )}
                     </div>
                 </div>
 
-                <div className="card border border-base-300 shadow-sm p-6">
-                    <h2 className="text-xs font-semibold uppercase tracking-widest text-primary mb-4 flex items-center gap-2">
-                        <i className="icon-[tabler--calendar]"></i>
+                <div className="rounded-xl border border-edge bg-card p-5">
+                    <h2 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand">
+                        <CalendarDays className="size-4" />
                         Calendar
                     </h2>
-                    <div className="card flex not-prose p-4 w-full">
-                        <Suspense fallback={<CalendarSkeleton />}>
-                            <FullCalendarWidget />
-                        </Suspense>
-                    </div>
+                    <Suspense fallback={<CalendarSkeleton />}>
+                        <FullCalendarWidget />
+                    </Suspense>
                 </div>
 
-                <div className="card bg-base-100 border border-base-300 p-6">
-                    <h2 className="text-xs font-semibold uppercase tracking-widest text-primary mb-4 flex items-center gap-2">
-                        <i className="icon-[tabler--id-badge]"></i>
+                <div className="rounded-xl border border-edge bg-card p-5">
+                    <h2 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand">
+                        <span className="icon-[tabler--id-badge] size-4" />
                         System Information
                     </h2>
                     <div className="flex flex-col">
-                        <div className="flex justify-between items-center py-3 border-b border-base-200">
-                            <span className="text-muted">Name</span>
-                            <span className="font-semibold text-base-content text-right">{user.name}</span>
-                        </div>
-                        <div className="flex justify-between items-center py-3 border-b border-base-200">
-                            <span className="text-muted">Email</span>
-                            <span className="font-semibold text-base-content text-right">{user.email}</span>
-                        </div>
-                        <div className="flex justify-between items-center py-3 border-b border-base-200">
-                            <span className="text-muted">Role</span>
-                            <span className="font-semibold text-base-content text-right">
-                                {isAdmin ? 'Administrator' : isHR ? 'HR Personnel' : 'Employee'}
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center py-3 border-b border-base-200">
-                            <span className="text-muted">Account Status</span>
-                            <span className="font-semibold text-base-content text-right">
-                                {user.is_active ? (
-                                    <span className="badge badge-soft badge-primary">
-                                        <i className="icon-[tabler--circle-check]"></i> Active
-                                    </span>
-                                ) : (
-                                    <span className="badge badge-soft badge-error">
-                                        <i className="icon-[tabler--circle-x]"></i> Inactive
-                                    </span>
-                                )}
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center py-3">
-                            <span className="text-muted">Last Login</span>
-                            <span className="font-semibold text-base-content text-right">
-                                {user.last_login_at ? new Date(user.last_login_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) + ' ' + new Date(user.last_login_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'First Login'}
-                            </span>
+                        {[
+                            ['Name', user.name],
+                            ['Email', user.email],
+                            ['Role', isAdmin ? 'Administrator' : isHR ? 'HR Personnel' : 'Employee'],
+                            ['Last Login', user.last_login_at
+                                ? new Date(user.last_login_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) +
+                                  ' ' +
+                                  new Date(user.last_login_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+                                : 'First Login'],
+                        ].map(([label, value], i, arr) => (
+                            <div key={label} className={`flex items-center justify-between gap-4 py-3 ${i < arr.length - 1 ? 'border-b border-edge' : ''}`}>
+                                <span className="text-sm text-dim-foreground">{label}</span>
+                                <span className="text-right text-sm font-semibold">{value}</span>
+                            </div>
+                        ))}
+                        <div className="flex items-center justify-between py-3">
+                            <span className="text-sm text-dim-foreground">Account Status</span>
+                            <Badge className={user.is_active ? 'border-transparent bg-brand/15 text-brand' : 'bg-danger/15 text-danger'}>
+                                {user.is_active ? 'Active' : 'Inactive'}
+                            </Badge>
                         </div>
                     </div>
                 </div>
