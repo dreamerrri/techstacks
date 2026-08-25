@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { usePage } from '@inertiajs/react';
+import { Toaster } from '@/components/ui/sonner';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import { toast } from './toast';
@@ -51,7 +52,8 @@ export default function AppLayout({ children, title }) {
     };
 
     return (
-        <div className="flex flex-col flex-1 min-w-0 sm:ps-[var(--sidebar-w)] overlay-minified:sm:ps-[var(--sidebar-w-mini)] transition-[padding] duration-300">
+        <div className="flex min-h-screen bg-canvas text-canvas-foreground">
+            <Toaster position="top-right" richColors closeButton />
             <Sidebar
                 open={mobileOpen}
                 onClose={() => setMobileOpen(false)}
@@ -59,10 +61,10 @@ export default function AppLayout({ children, title }) {
                 onToggleMinified={toggleMinified}
             />
 
-            <div className="flex flex-col flex-1 min-w-0">
+            <div className="flex min-w-0 flex-1 flex-col sm:ps-[var(--sidebar-w)] overlay-minified:sm:ps-[var(--sidebar-w-mini)] transition-[padding] duration-300">
                 <Navbar onOpenSidebar={() => setMobileOpen(true)} onToggleMinified={toggleMinified} breadcrumbs={breadcrumbs} />
 
-                <main className="min-w-0 p-3 sm:p-4 overflow-x-hidden">
+                <main className="min-w-0 flex-1 p-3 sm:p-4 overflow-x-hidden">
                     {children}
                 </main>
             </div>

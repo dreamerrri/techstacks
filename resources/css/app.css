@@ -53,3 +53,78 @@
 @import './auth.css';
 
 
+
+/* „Ÿ„Ÿ shadcn/ui design tokens „Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
+   Raw values live in --sc-* vars scoped per data-theme; the @theme inline
+   block exposes them as utilities. Kit components use non-colliding
+   aliases (brand/soft/dim/highlight) so legacy FlyonUI utilities
+   (primary/secondary/accent/muted) stay untouched during migration. */
+:root,
+[data-theme='techstacks'] {
+    --sc-background: #232C30;
+    --sc-foreground: #F5F7F8;
+    --sc-card: #313D42;
+    --sc-card-foreground: #F5F7F8;
+    --sc-popover: #313D42;
+    --sc-popover-foreground: #F5F7F8;
+    --sc-primary: #24D6AE;
+    --sc-primary-foreground: #0D1515;
+    --sc-secondary: #2B353A;
+    --sc-secondary-foreground: #F5F7F8;
+    --sc-muted: #3A464C;
+    --sc-muted-foreground: #9CAFB5;
+    --sc-accent: #32C8FF;
+    --sc-accent-foreground: #0D1515;
+    --sc-destructive: #FF6464;
+    --sc-destructive-foreground: #FFFFFF;
+    --sc-border: rgba(255, 255, 255, 0.14);
+    --sc-input: rgba(255, 255, 255, 0.18);
+    --sc-ring: #24D6AE;
+    --sc-radius: 0.5rem;
+}
+
+[data-theme='techstacks-light'] {
+    --sc-background: #EEF2F3;
+    --sc-foreground: #1C2427;
+    --sc-card: #FFFFFF;
+    --sc-card-foreground: #1C2427;
+    --sc-popover: #FFFFFF;
+    --sc-popover-foreground: #1C2427;
+    --sc-primary: #15B79E;
+    --sc-primary-foreground: #FFFFFF;
+    --sc-secondary: #E2E8EA;
+    --sc-secondary-foreground: #1C2427;
+    --sc-muted: #EDF1F2;
+    --sc-muted-foreground: #5B6B71;
+    --sc-accent: #0F8FC4;
+    --sc-accent-foreground: #FFFFFF;
+    --sc-destructive: #D64545;
+    --sc-destructive-foreground: #FFFFFF;
+    --sc-border: rgba(28, 36, 39, 0.15);
+    --sc-input: rgba(28, 36, 39, 0.20);
+    --sc-ring: #15B79E;
+    --sc-radius: 0.5rem;
+}
+
+@theme inline {
+    --color-canvas: var(--sc-background);
+    --color-canvas-foreground: var(--sc-foreground);
+    --color-card: var(--sc-card);
+    --color-card-foreground: var(--sc-card-foreground);
+    --color-popover: var(--sc-popover);
+    --color-popover-foreground: var(--sc-popover-foreground);
+    --color-brand: var(--sc-primary);
+    --color-brand-foreground: var(--sc-primary-foreground);
+    --color-soft: var(--sc-secondary);
+    --color-soft-foreground: var(--sc-secondary-foreground);
+    --color-dim: var(--sc-muted);
+    --color-dim-foreground: var(--sc-muted-foreground);
+    --color-highlight: var(--sc-accent);
+    --color-highlight-foreground: var(--sc-accent-foreground);
+    --color-danger: var(--sc-destructive);
+    --color-danger-foreground: var(--sc-destructive-foreground);
+    --color-edge: var(--sc-border);
+    --color-field: var(--sc-input);
+    --color-focusring: var(--sc-ring);
+    --radius-shad: var(--sc-radius);
+}
