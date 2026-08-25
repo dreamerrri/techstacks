@@ -63,20 +63,6 @@ php artisan serve
 > **Note:** If your local PHP version differs from `composer.json` requirements, use:
 > `composer install --prefer-dist --ignore-platform-req=php`
 
-## Development Notes
-
-### Iconify icons
-
-Icons are rendered as literal class strings like `icon-[tabler--home]`. Only icon names present in the manifest at `resources/js/Config/iconify.js` are compiled into CSS by Tailwind. When adding a new icon anywhere in JSX, add it to the manifest first, otherwise it will silently not render.
-
-### Themes
-
-Themes are applied client-side via `data-theme` on `<html>` and stored in `localStorage`. The selected theme is persisted server-side through a plain `fetch` PATCH to `/settings/theme` (not an Inertia request).
-
-### Case-sensitive imports
-
-The project deploys to Linux — import paths must match on-disk casing exactly (e.g., `../../components/AppLayout`, not `../../Components/AppLayout`). Windows will not catch these mistakes; only CI/Linux builds will.
-
 ## License
 
 This project is proprietary software.
