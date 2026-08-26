@@ -179,7 +179,7 @@ export default function ProfileShow({ employee }) {
                             ))}
                         </nav>
 
-                        <div className="mt-3 px-6 pb-6">
+                        <div key={activeTab} className="mt-3 px-6 pb-6 animate-fade-slide">
                             {activeTab === 'account' && (
                                 employee ? (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
