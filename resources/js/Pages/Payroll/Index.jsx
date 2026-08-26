@@ -345,7 +345,13 @@ export default function PayrollIndex({ employees, departments, payrollData, payr
                                                             <Link href={`/payroll/${employee.id}${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="btn btn-soft btn-info btn-sm" title="Full details">
                                                                 <Icon name="tabler--eye" className="size-4" />
                                                             </Link>
-                                                            <Link href={`/payroll/${employee.id}/payslip${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="btn btn-soft btn-success btn-sm" title="Download payslip">
+                                                            <Link
+                                                                href={employee.payslipUrl || `/payroll/${employee.id}/payslip${filters.period ? `?payroll_period_id=${filters.period}` : ''}`}
+                                                                className="btn btn-soft btn-success btn-sm"
+                                                                title={employee.payslipUrl ? 'Download payslip' : 'No payroll data for the selected cutoff'}
+                                                                aria-disabled={!employee.payslipUrl}
+                                                                style={!employee.payslipUrl ? { pointerEvents: 'none', opacity: 0.4 } : undefined}
+                                                            >
                                                                 <Icon name="tabler--file-download" className="size-4" />
                                                             </Link>
                                                         </>
@@ -418,7 +424,13 @@ export default function PayrollIndex({ employees, departments, payrollData, payr
                                                 <Link href={`/payroll/${employee.id}${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="btn btn-soft btn-info btn-sm">
                                                     <Icon name="tabler--eye" className="size-4" /> View Details
                                                 </Link>
-                                                <Link href={`/payroll/${employee.id}/payslip${filters.period ? `?payroll_period_id=${filters.period}` : ''}`} className="btn btn-soft btn-success btn-sm">
+                                                <Link
+                                                    href={employee.payslipUrl || `/payroll/${employee.id}/payslip${filters.period ? `?payroll_period_id=${filters.period}` : ''}`}
+                                                    className="btn btn-soft btn-success btn-sm"
+                                                    title={employee.payslipUrl ? undefined : 'No payroll data for the selected cutoff'}
+                                                    aria-disabled={!employee.payslipUrl}
+                                                    style={!employee.payslipUrl ? { pointerEvents: 'none', opacity: 0.4 } : undefined}
+                                                >
                                                     <Icon name="tabler--file-download" className="size-4" /> Payslip
                                                 </Link>
                                             </>
