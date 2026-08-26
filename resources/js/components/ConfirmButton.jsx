@@ -1,57 +1,62 @@
 import { useRef } from 'react';
-import Swal from 'sweetalert2';
+import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { router } from '@inertiajs/react';
 
-const themeColors = () => {
-    if (typeof document === 'undefined') return { error: '#dc2626', neutral: '#6b7280' };
-    const style = getComputedStyle(document.documentElement);
-    return {
-        error: style.getPropertyValue('--color-error').trim() || '#dc2626',
-        neutral: style.getPropertyValue('--color-neutral').trim() || '#6b7280',
-    };
-};
-
+/**
+ * Confirmation dialog built on Radix AlertDialog, styled with FlyonUI
+ * theme variables so it matches whichever data-theme is active.
+ * Same props API as before (title/text/confirmText/url/method/onConfirm).
+ */
 export default function ConfirmButton({
     title = 'Confirm Action',
     text = 'Are you sure you want to proceed?',
-    icon = 'warning',
     confirmText = 'Yes, proceed',
     cancelText = 'Cancel',
-    confirmButtonColor,
-    cancelButtonColor,
     onConfirm,
     method = 'delete',
     url,
-    className = 'btn btn-soft btn-error btn-sm',
+    className = '',
     children,
     disabled = false,
 }) {
     const confirmRef = useRef(onConfirm);
+    confirmRef.current = onConfirm;
 
-    const handleClick = () => {
-        const colors = themeColors();
-        Swal.fire({
-            title,
-            text,
-            icon,
-            showCancelButton: true,
-            confirmButtonColor: confirmButtonColor || colors.error,
-            cancelButtonColor: cancelButtonColor || colors.neutral,
-            confirmButtonText: confirmText,
-            cancelButtonText: cancelText,
-        }).then((result) => {
-            if (!result.isConfirmed) return;
-            if (url) {
-                router[method](url, {}, { preserveScroll: true });
-            } else if (confirmRef.current) {
-                confirmRef.current();
-            }
-        });
+    const handleConfirmed = () => {
+        if (url) {
+            router[method](url, {}, { preserveScroll: true });
+        } else if (confirmRef.current) {
+            confirmRef.current();
+        }
     };
 
     return (
-        <button type="button" className={className} onClick={handleClick} disabled={disabled}>
-            {children}
-        </button>
+        <AlertDialog.Root>
+            <AlertDialog.Trigger asChild>
+                <button type="button" className={className} disabled={disabled}>
+                    {children}
+                </button>
+            </AlertDialog.Trigger>
+            <AlertDialog.Portal>
+                <AlertDialog.Overlay className="confirm-overlay" />
+                <AlertDialog.Content className="confirm-panel">
+                    <AlertDialog.Title className="confirm-title">{title}</AlertDialog.Title>
+                    <AlertDialog.Description className="confirm-description">
+                        {text}
+                    </AlertDialog.Description>
+                    <div className="confirm-footer">
+                        <AlertDialog.Cancel className="confirm-cancel">
+                            {cancelText}
+                        </AlertDialog.Cancel>
+                        <AlertDialog.Action
+                            className="confirm-action"
+                            onClick={handleConfirmed}
+                        >
+                            {confirmText}
+                        </AlertDialog.Action>
+                    </div>
+                </AlertDialog.Content>
+            </AlertDialog.Portal>
+        </AlertDialog.Root>
     );
 }

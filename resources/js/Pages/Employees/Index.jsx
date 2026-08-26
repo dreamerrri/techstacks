@@ -31,7 +31,7 @@ function SortableTh({ label, sortKey, filters }) {
 
     return (
         <th>
-            <button type="button" onClick={handleSort} className="flex items-center gap-1 normal-case font-medium hover:text-primary cursor-pointer">
+            <button type="button" onClick={handleSort} className="flex items-center gap-1 text-sm font-semibold uppercase tracking-wider hover:text-brand cursor-pointer">
                 {label}
                 {active ? (
                     <Icon name={filters.direction === 'asc' ? 'tabler--arrow-up' : 'tabler--arrow-down'} className="size-3.5" />

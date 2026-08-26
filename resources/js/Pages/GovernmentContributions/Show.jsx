@@ -144,9 +144,9 @@ export default function GovernmentContributionsShow({ employee, sssContribution,
     };
 
     return (
-        <AppLayout title={`${employee.full_name} - Government Contributions`}>
+        <AppLayout title={employee.full_name}>
             <Head title={`${employee.full_name} - Government Contributions`} />
-            <div className="p-2 sm:p-4">
+            <div className="sp-2 sm:p-4">
                 <div className="flex justify-between items-center flex-wrap gap-3 mb-5">
                     <Link href="/government-contributions" className="back-link text-subtle no-underline text-sm hover:text-success flex items-center gap-1">
                         <Icon name="tabler--arrow-left" className="size-4" /> Back to Government Contributions
