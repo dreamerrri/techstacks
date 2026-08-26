@@ -1,39 +1,18 @@
-import { Notyf } from 'notyf';
-import 'notyf/notyf.min.css';
+import { toast as sonner } from 'sonner';
 
-let notyf;
-
-function getNotyf() {
-    if (!notyf) {
-        notyf = new Notyf({
-            duration: 5000,
-            position: { x: 'right', y: 'top' },
-            dismissible: true,
-            types: [
-                {
-                    type: 'warning',
-                    background: 'var(--color-warning)',
-                    icon: { className: 'icon-[ph--warning-fill]', tagName: 'i', color: 'white' },
-                },
-                {
-                    type: 'info',
-                    background: 'var(--color-info)',
-                    icon: { className: 'icon-[ph--info-fill]', tagName: 'i', color: 'white' },
-                },
-            ],
-        });
-    }
-    return notyf;
-}
-
+/**
+ * Legacy-compatible API backed by sonner (shadcn-style toasts).
+ * Theme-reactive: colors come from FlyonUI CSS variables, so popups
+ * automatically match whichever data-theme is active.
+ */
 export function toast(type = 'success', message) {
     if (!message) return;
-    const n = getNotyf();
-    if (typeof n[type] === 'function') {
-        n[type](message);
+    const fn = sonner[type];
+    if (typeof fn === 'function') {
+        fn(message);
     } else {
-        n.open({ type, message });
+        sonner(message);
     }
 }
 
-export { getNotyf };
+export default toast;

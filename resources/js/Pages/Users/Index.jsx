@@ -17,10 +17,10 @@ export default function UsersIndex({ users, filters, stats, pendingCount = 0 }) 
     const currentUserId = auth?.user?.id;
 
     const statCards = [
-        { icon: 'icon-[tabler--users]', color: 'text-primary bg-primary/10', value: stats.total_users, label: 'Total Users' },
-        { icon: 'icon-[tabler--shield-check]', color: 'text-error bg-error/10', value: stats.admin_users, label: 'Admins' },
-        { icon: 'icon-[tabler--user]', color: 'text-warning bg-warning/10', value: stats.hr_users, label: 'HR Personnel' },
-        { icon: 'icon-[tabler--circle-check]', color: 'text-success bg-success/10', value: stats.active_users, label: 'Active Accounts' },
+        { icon: 'tabler--users', color: 'text-primary bg-primary/10', value: stats.total_users, label: 'Total Users' },
+        { icon: 'tabler--shield-check', color: 'text-error bg-error/10', value: stats.admin_users, label: 'Admins' },
+        { icon: 'tabler--user', color: 'text-warning bg-warning/10', value: stats.hr_users, label: 'HR Personnel' },
+        { icon: 'tabler--circle-check', color: 'text-success bg-success/10', value: stats.active_users, label: 'Active Accounts' },
     ];
 
     const changeRole = (user, role) => {

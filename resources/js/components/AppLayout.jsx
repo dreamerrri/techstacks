@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { usePage } from '@inertiajs/react';
+import { Toaster } from 'sonner';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import { toast } from './toast';
@@ -52,6 +53,16 @@ export default function AppLayout({ children, title }) {
 
     return (
         <div className="flex flex-col flex-1 min-w-0 sm:ps-[var(--sidebar-w)] overlay-minified:sm:ps-[var(--sidebar-w-mini)] transition-[padding] duration-300">
+            <Toaster
+                position="top-right"
+                closeButton
+                style={{
+                    '--normal-bg': 'var(--color-base-100)',
+                    '--normal-text': 'var(--color-base-content)',
+                    '--normal-border': 'var(--color-base-300)',
+                    '--border-radius': 'var(--radius-box)',
+                }}
+            />
             <Sidebar
                 open={mobileOpen}
                 onClose={() => setMobileOpen(false)}
