@@ -73,7 +73,8 @@ export default function PayrollShow({ employee, payrollData, selectedPeriod, pay
     const totalEarnings = (p.base_pay || 0) + (p.overtime_pay || 0) + (p.night_differential_pay || 0) + (p.holiday_pay || 0) + (p.benefits || 0) + (p.allowances || 0);
 
     return (
-        <AppLayout title={`Payroll Details - ${employee.full_name}`}>
+        <AppLayout title={employee.full_name}>
+            
             <Head title="Payroll Details" />
             <div className="p-2 sm:p-4">
                 <style>{`

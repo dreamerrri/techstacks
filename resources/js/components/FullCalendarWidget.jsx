@@ -101,6 +101,6 @@ export default function FullCalendarWidget() {
     }, []);
 
     return (
-        <div id="calendar-custom" ref={containerRef} style={{ minHeight: 500 }}></div>
+        <div id="calendar-custom" ref={containerRef} style={{ minHeight: 400 }}></div>
     );
 }

@@ -24,8 +24,8 @@ export default function AuditLogsShow({ auditLog }) {
     };
 
     return (
-        <AppLayout title="Audit Log Detail">
-            <Head title="Audit Log Detail" />
+        <AppLayout title={`Audit Log #${auditLog.id} (${String(auditLog.action).toUpperCase()})`}>
+            <Head title={`Audit Log #${auditLog.id}`} />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
                     <Link href="/audit-logs" className="back-link text-subtle no-underline text-sm hover:text-primary flex items-center gap-1">

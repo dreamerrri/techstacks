@@ -150,7 +150,7 @@ export default function EmployeesShow({ employee, payrollInput }) {
     );
 
     return (
-        <AppLayout>
+        <AppLayout title={employee.full_name}>
             <Head title={employee.full_name} />
             <div className="p-2 sm:p-4">
                 <div className="flex justify-between items-center flex-wrap gap-3 mb-5">

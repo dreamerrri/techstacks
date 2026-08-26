@@ -5,7 +5,7 @@ import EmployeeForm from './EmployeeForm';
 
 export default function EmployeesEdit({ employee }) {
     return (
-        <AppLayout>
+        <AppLayout title={employee.full_name}>
             <Head title="Edit Employee" />
             <div className="p-2 sm:p-4">
                 <div className="mb-5">
