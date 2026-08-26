@@ -19,7 +19,7 @@ return new class extends Migration
     public function down(): void
     {
         // Intentionally left empty: dropping live cache/session/job tables
-        // during rollback would destroy data for no benefit.
+        // during rollback would destroy data for 
     }
 
     private function statements(): array
